@@ -19,7 +19,7 @@ const VALID_PRICE_IDS = new Set([
 // POST /api/stripe/create-checkout
 // Creates a Stripe hosted checkout page for the selected plan
 router.post('/create-checkout', async (req, res) => {
-  const { name, email, password, priceId } = req.body;
+  const { name, email, password, priceId, addons } = req.body;
 
   if (!name || !email || !password || !priceId) {
     return res.status(400).json({ error: 'All fields are required.' });
@@ -50,6 +50,10 @@ router.post('/create-checkout', async (req, res) => {
       ON CONFLICT (email) DO NOTHING
     `, [name, email.toLowerCase().trim(), hashedPassword, priceId]);
 
+    // Build add-ons metadata (Stripe values max 500 chars)
+    const addonList = Array.isArray(addons) ? addons : [];
+    const addonNames = addonList.map(a => a.name).join(', ');
+
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -58,7 +62,10 @@ router.post('/create-checkout', async (req, res) => {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${process.env.APP_URL}/signup-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/signup`,
-      metadata: { email: email.toLowerCase().trim() }
+      metadata: {
+        email: email.toLowerCase().trim(),
+        addons: addonNames.slice(0, 500)
+      }
     });
 
     res.json({ url: session.url });

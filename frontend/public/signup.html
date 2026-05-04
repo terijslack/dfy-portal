@@ -38,18 +38,6 @@
       padding: 0 24px 40px;
     }
 
-    .plans-section h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.3rem;
-      font-weight: 400;
-      text-align: center;
-      margin-bottom: 24px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.85rem;
-    }
-
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -149,6 +137,183 @@
       opacity: 1;
     }
 
+    /* Add-ons section */
+    .addons-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+
+    .addons-section > .section-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .addons-section > .section-heading span {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .addons-section > .section-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .addons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .addon-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 20px 4px;
+    }
+
+    .addon-group-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .addon-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-top: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .addon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      flex: 1;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .addon-label input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      position: relative;
+    }
+
+    .addon-label input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .addon-label input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #0f0f11;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .addon-label:hover input[type="checkbox"] {
+      border-color: var(--accent-dim);
+    }
+
+    .addon-price {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Order summary */
+    .order-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+
+    .summary-heading {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      padding: 6px 0;
+    }
+
+    .summary-row .summary-label {
+      color: var(--text-muted);
+    }
+
+    .summary-row .summary-value {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 0;
+    }
+
+    .summary-row.total {
+      padding-top: 4px;
+    }
+
+    .summary-row.total .summary-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .summary-row.total .summary-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .summary-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
     /* Signup form */
     .signup-form-section {
       max-width: 480px;
@@ -210,6 +375,10 @@
         grid-template-columns: 1fr;
       }
 
+      .addons-grid {
+        grid-template-columns: 1fr;
+      }
+
       .signup-header h1 {
         font-size: 1.8rem;
       }
@@ -230,7 +399,7 @@
     <div class="plans-grid">
 
       <!-- Starter Presence -->
-      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Starter Presence" data-price="$800/mo" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Starter Presence" data-price="$800/mo" data-price-num="800" onclick="selectPlan(this)">
         <div class="plan-name">Starter Presence</div>
         <div class="plan-price">$800<span>/mo</span></div>
         <div class="plan-onboarding">+ $300 one-time onboarding fee</div>
@@ -246,7 +415,7 @@
       </div>
 
       <!-- Growth Engine -->
-      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" onclick="selectPlan(this)">
+      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" data-price-num="1500" onclick="selectPlan(this)">
         <div class="popular-badge">Most Popular</div>
         <div class="plan-name">Growth Engine</div>
         <div class="plan-price">$1,500<span>/mo</span></div>
@@ -264,7 +433,7 @@
       </div>
 
       <!-- Marketing Partner -->
-      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Marketing Partner" data-price="$2,800/mo" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Marketing Partner" data-price="$2,800/mo" data-price-num="2800" onclick="selectPlan(this)">
         <div class="plan-name">Marketing Partner</div>
         <div class="plan-price">$2,800<span>/mo</span></div>
         <div class="plan-onboarding">+ $700 one-time onboarding fee</div>
@@ -282,6 +451,153 @@
         <div class="plan-select-indicator">✓ Selected</div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Add-ons -->
+  <div class="addons-section">
+    <h2 class="section-heading">Customize with add-ons <span>(optional)</span></h2>
+    <p class="section-sub">Enhance your package with additional services.</p>
+
+    <div class="addons-grid">
+
+      <!-- One-time -->
+      <div class="addon-group">
+        <div class="addon-group-label">One-Time Setup Fees</div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Google Business Profile creation" data-price="250" data-type="one-time" onchange="updateTotal()">
+            Google Business Profile creation
+          </label>
+          <span class="addon-price">$250</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Google Business Profile cleanup" data-price="200" data-type="one-time" onchange="updateTotal()">
+            Google Business Profile cleanup
+          </label>
+          <span class="addon-price">$200</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Social media account setup (per platform)" data-price="250" data-type="one-time" onchange="updateTotal()">
+            Social media account setup (per platform)
+          </label>
+          <span class="addon-price">$250</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Website refresh" data-price="500" data-type="one-time" onchange="updateTotal()">
+            Website refresh
+          </label>
+          <span class="addon-price">$500</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Landing page or lead capture form" data-price="300" data-type="one-time" onchange="updateTotal()">
+            Landing page or lead capture form
+          </label>
+          <span class="addon-price">$300</span>
+        </div>
+      </div>
+
+      <!-- Recurring -->
+      <div class="addon-group">
+        <div class="addon-group-label">Recurring Monthly Add-Ons</div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Additional social platform" data-price="200" data-type="recurring" onchange="updateTotal()">
+            Additional social platform
+          </label>
+          <span class="addon-price">+$200/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Additional 4 posts/month" data-price="150" data-type="recurring" onchange="updateTotal()">
+            Additional 4 posts/month
+          </label>
+          <span class="addon-price">+$150/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Social media inbox management (per platform)" data-price="150" data-type="recurring" onchange="updateTotal()">
+            Social media inbox management (per platform)
+          </label>
+          <span class="addon-price">+$150/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="2 blog posts/month" data-price="300" data-type="recurring" onchange="updateTotal()">
+            2 blog posts/month
+          </label>
+          <span class="addon-price">+$300/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Additional email campaign" data-price="100" data-type="recurring" onchange="updateTotal()">
+            Additional email campaign
+          </label>
+          <span class="addon-price">+$100/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Paid ads management" data-price="500" data-type="recurring" onchange="updateTotal()">
+            Paid ads management
+          </label>
+          <span class="addon-price">+$500/mo</span>
+        </div>
+
+        <div class="addon-item">
+          <label class="addon-label">
+            <input type="checkbox" class="addon-check" data-name="Content capture planning" data-price="100" data-type="recurring" onchange="updateTotal()">
+            Content capture planning
+          </label>
+          <span class="addon-price">+$100/mo</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Running total -->
+    <div class="order-summary">
+      <div class="summary-heading">Order Summary</div>
+
+      <div class="summary-row">
+        <span class="summary-label">Base plan</span>
+        <span class="summary-value" id="summaryBasePlan">Select a plan above</span>
+      </div>
+
+      <div class="summary-row" id="summaryMonthlyRow" style="display:none">
+        <span class="summary-label">Monthly add-ons</span>
+        <span class="summary-value" id="summaryMonthlyAddons"></span>
+      </div>
+
+      <div class="summary-row" id="summaryOneTimeRow" style="display:none">
+        <span class="summary-label">One-time fees</span>
+        <span class="summary-value" id="summaryOneTime"></span>
+      </div>
+
+      <hr class="summary-divider" id="summaryDivider" style="display:none">
+
+      <div class="summary-row total" id="summaryTotalRow" style="display:none">
+        <span class="summary-label">Monthly total</span>
+        <span class="summary-value" id="summaryTotal"></span>
+      </div>
+
+      <p class="summary-note" id="summaryNote" style="display:none">
+        One-time fees are charged at checkout. Monthly billing begins after the first payment.
+      </p>
     </div>
   </div>
 
@@ -322,18 +638,75 @@
 
   <script>
     let selectedPriceId = null;
+    let selectedPriceNum = 0;
 
     function selectPlan(card) {
-      // Deselect all
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-      // Select clicked
       card.classList.add('selected');
       selectedPriceId = card.dataset.priceId;
+      selectedPriceNum = parseInt(card.dataset.priceNum);
 
-      // Update summary
       document.getElementById('planSummaryName').textContent = card.dataset.name;
       document.getElementById('planSummaryPrice').textContent = card.dataset.price;
       document.getElementById('planSummary').classList.add('visible');
+      document.getElementById('summaryBasePlan').textContent = card.dataset.price;
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      let recurringTotal = 0;
+      let oneTimeTotal = 0;
+
+      document.querySelectorAll('.addon-check:checked').forEach(cb => {
+        const price = parseInt(cb.dataset.price);
+        if (cb.dataset.type === 'recurring') {
+          recurringTotal += price;
+        } else {
+          oneTimeTotal += price;
+        }
+      });
+
+      const fmt = n => '$' + n.toLocaleString();
+
+      // Monthly add-ons row
+      const monthlyRow = document.getElementById('summaryMonthlyRow');
+      if (recurringTotal > 0) {
+        document.getElementById('summaryMonthlyAddons').textContent = '+' + fmt(recurringTotal) + '/mo';
+        monthlyRow.style.display = '';
+      } else {
+        monthlyRow.style.display = 'none';
+      }
+
+      // One-time row
+      const oneTimeRow = document.getElementById('summaryOneTimeRow');
+      if (oneTimeTotal > 0) {
+        document.getElementById('summaryOneTime').textContent = fmt(oneTimeTotal) + ' one-time';
+        oneTimeRow.style.display = '';
+      } else {
+        oneTimeRow.style.display = 'none';
+      }
+
+      // Total row + divider (only when plan is selected)
+      const hasPlan = selectedPriceId !== null;
+      const hasAddons = recurringTotal > 0 || oneTimeTotal > 0;
+
+      document.getElementById('summaryDivider').style.display = hasPlan ? '' : 'none';
+      document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
+      document.getElementById('summaryNote').style.display = (hasPlan && oneTimeTotal > 0) ? '' : 'none';
+
+      if (hasPlan) {
+        const monthlyTotal = selectedPriceNum + recurringTotal;
+        document.getElementById('summaryTotal').textContent = fmt(monthlyTotal) + '/mo';
+      }
+    }
+
+    function getSelectedAddons() {
+      return Array.from(document.querySelectorAll('.addon-check:checked')).map(cb => ({
+        name: cb.dataset.name,
+        price: parseInt(cb.dataset.price),
+        type: cb.dataset.type
+      }));
     }
 
     async function handleSignup() {
@@ -367,7 +740,13 @@
         const res = await fetch('/api/stripe/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, priceId: selectedPriceId })
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            priceId: selectedPriceId,
+            addons: getSelectedAddons()
+          })
         });
 
         const data = await res.json();
@@ -379,7 +758,6 @@
           return;
         }
 
-        // Redirect to Stripe checkout
         window.location.href = data.url;
 
       } catch (err) {
