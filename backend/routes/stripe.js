@@ -10,13 +10,24 @@ const bcrypt = require('bcryptjs');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
+const PLAN_PRICE_IDS = {
+  'Starter Presence': 'price_1TTK4hJaMlIvd3H414Ffw3Hr',
+  'Growth Engine':    'price_1TTK5DJaMlIvd3H4V0LeAYL7',
+  'Marketing Partner':'price_1TTK5jJaMlIvd3H4NFHH6hPl',
+};
+
 // POST /api/stripe/create-checkout
 // Creates a Stripe hosted checkout page for the selected plan
 router.post('/create-checkout', async (req, res) => {
-  const { name, email, password, priceId } = req.body;
+  const { name, email, password, plan } = req.body;
 
-  if (!name || !email || !password || !priceId) {
+  if (!name || !email || !password || !plan) {
     return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  const priceId = PLAN_PRICE_IDS[plan];
+  if (!priceId) {
+    return res.status(400).json({ error: 'Invalid plan selected.' });
   }
 
   try {
@@ -38,7 +49,7 @@ router.post('/create-checkout', async (req, res) => {
       INSERT INTO clients (name, email, password, is_admin, status, stripe_price_id)
       VALUES ($1, $2, $3, false, 'pending', $4)
       ON CONFLICT (email) DO NOTHING
-    `, [name, email.toLowerCase().trim(), hashedPassword, priceId]);
+    `, [name, email.toLowerCase().trim(), hashedPassword, plan]);
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({

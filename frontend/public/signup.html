@@ -321,14 +321,14 @@
   </div>
 
   <script>
-    let selectedPriceId = null;
+    let selectedPlan = null;
 
     function selectPlan(card) {
       // Deselect all
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
       // Select clicked
       card.classList.add('selected');
-      selectedPriceId = card.dataset.priceId;
+      selectedPlan = card.dataset.name;
 
       // Update summary
       document.getElementById('planSummaryName').textContent = card.dataset.name;
@@ -345,7 +345,7 @@
 
       errorMsg.textContent = '';
 
-      if (!selectedPriceId) {
+      if (!selectedPlan) {
         errorMsg.textContent = 'Please select a plan first.';
         return;
       }
@@ -367,7 +367,7 @@
         const res = await fetch('/api/stripe/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, priceId: selectedPriceId })
+          body: JSON.stringify({ name, email, password, plan: selectedPlan })
         });
 
         const data = await res.json();
