@@ -230,7 +230,7 @@
     <div class="plans-grid">
 
       <!-- Starter Presence -->
-      <div class="plan-card" data-price-id="price_1TTHsVJaMllvd3H4ACsoeaNi" data-name="Starter Presence" data-price="$800/mo" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Starter Presence" data-price="$800/mo" onclick="selectPlan(this)">
         <div class="plan-name">Starter Presence</div>
         <div class="plan-price">$800<span>/mo</span></div>
         <div class="plan-onboarding">+ $300 one-time onboarding fee</div>
@@ -246,7 +246,7 @@
       </div>
 
       <!-- Growth Engine -->
-      <div class="plan-card popular" data-price-id="price_1TTHt7JaMllvd3H41rlAPKBb" data-name="Growth Engine" data-price="$1,500/mo" onclick="selectPlan(this)">
+      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" onclick="selectPlan(this)">
         <div class="popular-badge">Most Popular</div>
         <div class="plan-name">Growth Engine</div>
         <div class="plan-price">$1,500<span>/mo</span></div>
@@ -264,7 +264,7 @@
       </div>
 
       <!-- Marketing Partner -->
-      <div class="plan-card" data-price-id="price_1TTHtpJaMllvd3H49BSXVCAQ" data-name="Marketing Partner" data-price="$2,800/mo" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Marketing Partner" data-price="$2,800/mo" onclick="selectPlan(this)">
         <div class="plan-name">Marketing Partner</div>
         <div class="plan-price">$2,800<span>/mo</span></div>
         <div class="plan-onboarding">+ $700 one-time onboarding fee</div>
@@ -321,14 +321,14 @@
   </div>
 
   <script>
-    let selectedPlan = null;
+    let selectedPriceId = null;
 
     function selectPlan(card) {
       // Deselect all
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
       // Select clicked
       card.classList.add('selected');
-      selectedPlan = card.dataset.name;
+      selectedPriceId = card.dataset.priceId;
 
       // Update summary
       document.getElementById('planSummaryName').textContent = card.dataset.name;
@@ -345,7 +345,7 @@
 
       errorMsg.textContent = '';
 
-      if (!selectedPlan) {
+      if (!selectedPriceId) {
         errorMsg.textContent = 'Please select a plan first.';
         return;
       }
@@ -367,7 +367,7 @@
         const res = await fetch('/api/stripe/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, plan: selectedPlan })
+          body: JSON.stringify({ name, email, password, priceId: selectedPriceId })
         });
 
         const data = await res.json();
