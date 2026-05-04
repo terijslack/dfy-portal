@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started — Done For You Marketing</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .signup-page {
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,169,110,0.06) 0%, transparent 70%);
+    }
+
+    .signup-header {
+      text-align: center;
+      padding: 48px 24px 32px;
+    }
+
+    .signup-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    .signup-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Plan selector */
+    .plans-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+
+    .plans-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.85rem;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.1s;
+      position: relative;
+    }
+
+    .plan-card:hover {
+      border-color: var(--accent-dim);
+    }
+
+    .plan-card.selected {
+      border-color: var(--accent);
+      background: rgba(200, 169, 110, 0.05);
+    }
+
+    .plan-card.popular {
+      border-color: var(--accent-dim);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #0f0f11;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .plan-price {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .plan-price span {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .plan-onboarding {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .plan-features {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .plan-features li::before {
+      content: '✓ ';
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .plan-select-indicator {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .plan-card.selected .plan-select-indicator {
+      opacity: 1;
+    }
+
+    /* Signup form */
+    .signup-form-section {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .signup-form-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .signup-form-section .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .selected-plan-summary {
+      background: rgba(200, 169, 110, 0.08);
+      border: 1px solid rgba(200, 169, 110, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .selected-plan-summary.visible {
+      display: block;
+    }
+
+    .selected-plan-summary strong {
+      color: var(--accent);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    .login-link a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .signup-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body class="signup-page">
+
+  <div class="signup-header">
+    <div class="brand-mark">DFY</div>
+    <p class="brand-sub">Done For You Marketing</p>
+    <h1 style="margin-top: 32px;">Choose your plan</h1>
+    <p>Pick the package that fits your business. You'll enter payment details on the next screen.</p>
+  </div>
+
+  <!-- Plans -->
+  <div class="plans-section">
+    <div class="plans-grid">
+
+      <!-- Starter Presence -->
+      <div class="plan-card" data-price-id="price_1TTHsVJaMllvd3H4ACsoeaNi" data-name="Starter Presence" data-price="$800/mo" onclick="selectPlan(this)">
+        <div class="plan-name">Starter Presence</div>
+        <div class="plan-price">$800<span>/mo</span></div>
+        <div class="plan-onboarding">+ $300 one-time onboarding fee</div>
+        <ul class="plan-features">
+          <li>1 platform managed for you</li>
+          <li>8 posts/month</li>
+          <li>Caption writing + AI visuals</li>
+          <li>Google Business Profile setup</li>
+          <li>Monthly performance summary</li>
+          <li>Client approval dashboard</li>
+        </ul>
+        <div class="plan-select-indicator">✓ Selected</div>
+      </div>
+
+      <!-- Growth Engine -->
+      <div class="plan-card popular" data-price-id="price_1TTHt7JaMllvd3H41rlAPKBb" data-name="Growth Engine" data-price="$1,500/mo" onclick="selectPlan(this)">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-name">Growth Engine</div>
+        <div class="plan-price">$1,500<span>/mo</span></div>
+        <div class="plan-onboarding">+ $500 one-time onboarding fee</div>
+        <ul class="plan-features">
+          <li>3 platforms managed for you</li>
+          <li>16 posts/month</li>
+          <li>Caption writing + branded AI visuals</li>
+          <li>Google Business Profile management</li>
+          <li>Automated review request workflow</li>
+          <li>2 email newsletters/month</li>
+          <li>Full client dashboard + monthly report</li>
+        </ul>
+        <div class="plan-select-indicator">✓ Selected</div>
+      </div>
+
+      <!-- Marketing Partner -->
+      <div class="plan-card" data-price-id="price_1TTHtpJaMllvd3H49BSXVCAQ" data-name="Marketing Partner" data-price="$2,800/mo" onclick="selectPlan(this)">
+        <div class="plan-name">Marketing Partner</div>
+        <div class="plan-price">$2,800<span>/mo</span></div>
+        <div class="plan-onboarding">+ $700 one-time onboarding fee</div>
+        <ul class="plan-features">
+          <li>3-4 platforms managed for you</li>
+          <li>24 posts/month</li>
+          <li>Custom campaign planning</li>
+          <li>Google Business Profile — full channel</li>
+          <li>Review management + AI responses</li>
+          <li>4 email campaigns/month</li>
+          <li>1 landing page or promo/month</li>
+          <li>Monthly strategy check-in call</li>
+          <li>Priority support</li>
+        </ul>
+        <div class="plan-select-indicator">✓ Selected</div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" style="max-width: 480px; margin: 0 auto 40px;" />
+
+  <!-- Account form -->
+  <div class="signup-form-section">
+    <h2>Create your account</h2>
+    <p class="subtitle">You'll be taken to a secure checkout page to enter payment details.</p>
+
+    <div class="selected-plan-summary" id="planSummary">
+      Selected: <strong id="planSummaryName">—</strong> at <strong id="planSummaryPrice">—</strong>
+    </div>
+
+    <div class="field">
+      <label>Full name</label>
+      <input type="text" id="name" placeholder="Jane Smith" />
+    </div>
+
+    <div class="field">
+      <label>Business email</label>
+      <input type="email" id="email" placeholder="jane@yourbusiness.com" />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="At least 8 characters" />
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="btn-primary" id="submitBtn" onclick="handleSignup()">
+      Continue to Payment →
+    </button>
+
+    <p class="login-link">Already have an account? <a href="/">Sign in</a></p>
+  </div>
+
+  <script>
+    let selectedPriceId = null;
+
+    function selectPlan(card) {
+      // Deselect all
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      // Select clicked
+      card.classList.add('selected');
+      selectedPriceId = card.dataset.priceId;
+
+      // Update summary
+      document.getElementById('planSummaryName').textContent = card.dataset.name;
+      document.getElementById('planSummaryPrice').textContent = card.dataset.price;
+      document.getElementById('planSummary').classList.add('visible');
+    }
+
+    async function handleSignup() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const btn = document.getElementById('submitBtn');
+
+      errorMsg.textContent = '';
+
+      if (!selectedPriceId) {
+        errorMsg.textContent = 'Please select a plan first.';
+        return;
+      }
+
+      if (!name || !email || !password) {
+        errorMsg.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      if (password.length < 8) {
+        errorMsg.textContent = 'Password must be at least 8 characters.';
+        return;
+      }
+
+      btn.textContent = 'Loading…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/stripe/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, priceId: selectedPriceId })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Something went wrong.';
+          btn.textContent = 'Continue to Payment →';
+          btn.disabled = false;
+          return;
+        }
+
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Please try again.';
+        btn.textContent = 'Continue to Payment →';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

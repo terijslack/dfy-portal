@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DFY Marketing — Client Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <div class="login-brand">
+      <div class="brand-mark">DFY</div>
+      <p class="brand-sub">Marketing Client Portal</p>
+    </div>
+
+    <form class="login-form" id="loginForm">
+      <h1 class="login-title">Welcome back</h1>
+      <p class="login-subtitle">Sign in to review your posts</p>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">Sign in</button>
+    </form>
+  </div>
+
+  <script>
+    // Check if already logged in — redirect immediately
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        if (data.user) {
+          // Send admin to admin page, clients to dashboard
+          window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+        }
+      })
+      .catch(() => {}); // not logged in = stay on this page
+
+    // Handle login form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const btn = document.getElementById('submitBtn');
+
+      // Show loading state
+      btn.textContent = 'Signing in…';
+      btn.disabled = true;
+      errorMsg.textContent = '';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          // Show the error message from the server
+          errorMsg.textContent = data.error || 'Login failed. Try again.';
+          btn.textContent = 'Sign in';
+          btn.disabled = false;
+          return;
+        }
+
+        // Redirect based on role
+        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Check your connection.';
+        btn.textContent = 'Sign in';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — DFY Marketing</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="admin-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand-mark small">DFY</div>
+      <div class="header-right">
+        <span class="admin-badge">Admin</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main admin-main">
+
+    <!-- Left sidebar: client list -->
+    <aside class="client-sidebar">
+      <h2>Clients</h2>
+      <div id="clientList"><div class="loading">Loading…</div></div>
+    </aside>
+
+    <!-- Right: posts for selected client -->
+    <section class="client-posts-section">
+      <div id="clientPostsHeader" class="client-posts-header">
+        <p class="select-prompt">← Select a client to see their posts</p>
+      </div>
+
+      <div id="addPostForm" class="add-post-form hidden">
+        <h3>Add New Post</h3>
+        <div class="form-row">
+          <div class="field">
+            <label>Platform</label>
+            <select id="newPlatform">
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="twitter">Twitter / X</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="tiktok">TikTok</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Scheduled Date</label>
+            <input type="date" id="newDate" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Caption</label>
+          <textarea id="newCaption" rows="4" placeholder="Write the post caption here…"></textarea>
+        </div>
+        <button class="btn-primary" id="addPostBtn">Add Post</button>
+      </div>
+
+      <div id="adminPostsGrid" class="posts-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- Edit post modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h2>Edit Post</h2>
+      <input type="hidden" id="editPostId" />
+      <div class="field">
+        <label>Platform</label>
+        <select id="editPlatform">
+          <option value="instagram">Instagram</option>
+          <option value="facebook">Facebook</option>
+          <option value="twitter">Twitter / X</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="tiktok">TikTok</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Scheduled Date</label>
+        <input type="date" id="editDate" />
+      </div>
+      <div class="field">
+        <label>Caption</label>
+        <textarea id="editCaption" rows="5"></textarea>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="editStatus">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="changes_requested">Changes Requested</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelEdit">Cancel</button>
+        <button class="btn-primary" id="saveEdit">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedClientId = null;
+    let selectedClientName = '';
+
+    async function init() {
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
+
+      if (!meData.user || !meData.user.is_admin) {
+        window.location.href = meData.user ? '/dashboard' : '/';
+        return;
+      }
+
+      loadClients();
+    }
+
+    async function loadClients() {
+      try {
+        const res = await fetch('/api/admin/clients');
+        const data = await res.json();
+        renderClients(data.clients || []);
+      } catch (err) {
+        document.getElementById('clientList').innerHTML = '<div class="error">Could not load clients.</div>';
+      }
+    }
+
+    function renderClients(clients) {
+      const list = document.getElementById('clientList');
+
+      if (clients.length === 0) {
+        list.innerHTML = '<p class="empty-state">No clients yet. Add one via Terminal.</p>';
+        return;
+      }
+
+      list.innerHTML = clients.map(client => `
+        <div class="client-item ${client.id == selectedClientId ? 'active' : ''}" onclick="selectClient(${client.id}, '${escapeHtml(client.name)}')">
+          <div class="client-name">${escapeHtml(client.name)}</div>
+          <div class="client-stats">
+            <span class="stat pending">${client.pending} pending</span>
+            <span class="stat changes">${client.changes_requested} changes</span>
+            <span class="stat approved">${client.approved} approved</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function selectClient(clientId, clientName) {
+      selectedClientId = clientId;
+      selectedClientName = clientName;
+
+      // Update header
+      document.getElementById('clientPostsHeader').innerHTML = `<h2>${escapeHtml(clientName)}'s Posts</h2>`;
+      document.getElementById('addPostForm').classList.remove('hidden');
+
+      // Highlight selected client
+      document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      loadClientPosts(clientId);
+    }
+
+    async function loadClientPosts(clientId) {
+      const grid = document.getElementById('adminPostsGrid');
+      grid.innerHTML = '<div class="loading">Loading posts…</div>';
+
+      try {
+        const res = await fetch(`/api/admin/clients/${clientId}/posts`);
+        const data = await res.json();
+        renderAdminPosts(data.posts || []);
+      } catch (err) {
+        grid.innerHTML = '<div class="error">Could not load posts.</div>';
+      }
+    }
+
+    function renderAdminPosts(posts) {
+      const grid = document.getElementById('adminPostsGrid');
+
+      if (posts.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No posts yet. Add one above.</div>';
+        return;
+      }
+
+      grid.innerHTML = posts.map(post => `
+        <div class="post-card status-${post.status}" data-id="${post.id}">
+          <div class="post-meta">
+            <span class="post-platform">${capitalize(post.platform)}</span>
+            <span class="post-date">📅 ${formatDate(post.scheduled_date)}</span>
+            <span class="post-status-badge status-badge-${post.status}">${statusLabel(post.status)}</span>
+          </div>
+
+          <div class="post-caption">${escapeHtml(post.caption)}</div>
+
+          ${post.change_notes ? `<div class="change-notes-display">💬 Client notes: <strong>${escapeHtml(post.change_notes)}</strong></div>` : ''}
+
+          <div class="post-actions">
+            <button class="btn-edit" onclick="openEditModal(${post.id}, '${escapeHtml(post.platform)}', '${post.scheduled_date.slice(0,10)}', ${JSON.stringify(escapeHtml(post.caption))}, '${post.status}')">✏️ Edit</button>
+            <button class="btn-delete" onclick="deletePost(${post.id})">🗑 Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Add new post
+    document.getElementById('addPostBtn').addEventListener('click', async () => {
+      const caption = document.getElementById('newCaption').value.trim();
+      const platform = document.getElementById('newPlatform').value;
+      const scheduled_date = document.getElementById('newDate').value;
+
+      if (!caption || !scheduled_date) {
+        alert('Please fill in the caption and date.');
+        return;
+      }
+
+      const btn = document.getElementById('addPostBtn');
+      btn.textContent = 'Adding…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/admin/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client_id: selectedClientId, caption, platform, scheduled_date })
+        });
+
+        if (res.ok) {
+          document.getElementById('newCaption').value = '';
+          document.getElementById('newDate').value = '';
+          loadClientPosts(selectedClientId);
+          loadClients(); // refresh stats in sidebar
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Could not add post.');
+        }
+      } catch (err) {
+        alert('Network error. Try again.');
+      }
+
+      btn.textContent = 'Add Post';
+      btn.disabled = false;
+    });
+
+    // Edit post modal
+    function openEditModal(id, platform, date, caption, status) {
+      document.getElementById('editPostId').value = id;
+      document.getElementById('editPlatform').value = platform;
+      document.getElementById('editDate').value = date;
+      document.getElementById('editCaption').value = caption;
+      document.getElementById('editStatus').value = status;
+      document.getElementById('editModal').classList.add('active');
+    }
+
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+      document.getElementById('editModal').classList.remove('active');
+    });
+
+    document.getElementById('saveEdit').addEventListener('click', async () => {
+      const id = document.getElementById('editPostId').value;
+      const btn = document.getElementById('saveEdit');
+      btn.textContent = 'Saving…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/admin/posts/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            caption: document.getElementById('editCaption').value,
+            platform: document.getElementById('editPlatform').value,
+            scheduled_date: document.getElementById('editDate').value,
+            status: document.getElementById('editStatus').value
+          })
+        });
+
+        if (res.ok) {
+          document.getElementById('editModal').classList.remove('active');
+          loadClientPosts(selectedClientId);
+          loadClients();
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Could not save.');
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+
+      btn.textContent = 'Save Changes';
+      btn.disabled = false;
+    });
+
+    async function deletePost(postId) {
+      if (!confirm('Delete this post? This cannot be undone.')) return;
+
+      try {
+        await fetch(`/api/admin/posts/${postId}`, { method: 'DELETE' });
+        loadClientPosts(selectedClientId);
+        loadClients();
+      } catch (err) {
+        alert('Could not delete. Try again.');
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
+
+    function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+    function statusLabel(status) {
+      const labels = { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested' };
+      return labels[status] || status;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    init();
+  </script>
+</body>
+</html>
