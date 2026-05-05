@@ -7,6 +7,7 @@ const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const { createGHLContact } = require('../services/ghl');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -94,14 +95,30 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const email = session.metadata?.email || session.customer_email;
 
     try {
-      // Activate the client account
-      await pool.query(`
-        UPDATE clients 
+      // Activate the client account and return their info for GHL
+      const result = await pool.query(`
+        UPDATE clients
         SET status = 'active', stripe_customer_id = $1
         WHERE email = $2
+        RETURNING name, stripe_price_id
       `, [session.customer, email]);
 
       console.log(`✅ Client activated: ${email}`);
+
+      // Create GHL contact — errors here are non-fatal
+      const client = result.rows[0];
+      if (client && process.env.GHL_API_KEY && process.env.GHL_LOCATION_ID) {
+        createGHLContact({
+          name: client.name,
+          email,
+          stripePriceId: client.stripe_price_id,
+          addons: session.metadata?.addons || '',
+        }).then(() => {
+          console.log(`✅ GHL contact created: ${email}`);
+        }).catch(err => {
+          console.error(`GHL contact creation failed for ${email}:`, err.response?.data || err.message);
+        });
+      }
     } catch (err) {
       console.error('Webhook DB error:', err);
     }
