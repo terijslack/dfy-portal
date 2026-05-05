@@ -1,0 +1,143 @@
+/* ============================================================
+   DFY Marketing Group — Brand Color Palette
+   Drop-in CSS variables. Include once, use everywhere.
+   ============================================================ */
+
+:root {
+  /* ---------- Core palette ---------- */
+  --color-cream:        #F5F2EA;   /* page background */
+  --color-cream-2:      #EFEBDF;   /* alt section bg */
+  --color-green:        #2D6B4F;   /* primary brand */
+  --color-green-dark:   #235640;   /* primary hover */
+  --color-forest:       #1F3D2C;   /* headlines, dark sections */
+  --color-slate:        #6B756B;   /* body text */
+  --color-slate-light:  #9AA199;   /* helper / placeholder text */
+  --color-rust:         #7D2A03;   /* primary CTA */
+  --color-rust-hover:   #621F02;   /* CTA hover */
+  --color-tan:          #EBC99B;   /* accents, light-on-dark text */
+  --color-tan-soft:     rgba(235, 201, 155, 0.35);  /* tinted backgrounds */
+  --color-white:        #FFFFFF;
+  --color-border:       rgba(31, 61, 44, 0.10);
+  --color-border-strong: rgba(31, 61, 44, 0.20);
+
+  /* ---------- Semantic aliases ----------
+     Use these in components instead of the raw colors above.
+     If you ever rebrand, change them here in one place. */
+  --bg-page:        var(--color-cream);
+  --bg-surface:     var(--color-white);
+  --bg-surface-alt: var(--color-cream-2);
+  --bg-dark:        var(--color-forest);
+
+  --text-heading:   var(--color-forest);
+  --text-body:      var(--color-slate);
+  --text-muted:     var(--color-slate-light);
+  --text-on-dark:   var(--color-cream);
+  --text-accent:    var(--color-rust);
+
+  --action-primary:        var(--color-rust);
+  --action-primary-hover:  var(--color-rust-hover);
+  --action-secondary:      var(--color-green);
+  --action-secondary-hover: var(--color-green-dark);
+
+  --border-subtle:  var(--color-border);
+  --border-strong:  var(--color-border-strong);
+
+  /* ---------- Typography ---------- */
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+
+  /* ---------- Layout tokens ---------- */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+}
+
+/* ============================================================
+   Base element styles
+   ============================================================ */
+
+body {
+  background: var(--bg-page);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-heading);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+a {
+  color: var(--action-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--action-secondary-hover); }
+
+/* ============================================================
+   Utility classes for quick use
+   ============================================================ */
+
+.bg-cream    { background: var(--color-cream); }
+.bg-surface  { background: var(--color-white); }
+.bg-forest   { background: var(--color-forest); color: var(--color-cream); }
+.bg-green    { background: var(--color-green); color: var(--color-cream); }
+
+.text-forest { color: var(--color-forest); }
+.text-green  { color: var(--color-green); }
+.text-rust   { color: var(--color-rust); }
+.text-slate  { color: var(--color-slate); }
+.text-tan    { color: var(--color-tan); }
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--action-primary);
+  color: var(--color-cream);
+}
+.btn-primary:hover {
+  background: var(--action-primary-hover);
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--action-secondary);
+  border: 1px solid var(--action-secondary);
+}
+.btn-secondary:hover {
+  background: var(--action-secondary);
+  color: var(--color-cream);
+}
+.btn-dark {
+  background: var(--bg-dark);
+  color: var(--color-cream);
+}
+.btn-dark:hover { background: #14291D; }
+
+/* Eyebrow tag */
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--color-rust);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
