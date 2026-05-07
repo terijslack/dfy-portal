@@ -17,7 +17,7 @@ router.get('/clients', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
-        c.id, c.name, c.email, c.created_at,
+        c.id, c.name, c.email, c.business_name, c.created_at,
         COUNT(p.id) AS total_posts,
         COUNT(CASE WHEN p.status = 'pending' THEN 1 END) AS pending,
         COUNT(CASE WHEN p.status = 'approved' THEN 1 END) AS approved,

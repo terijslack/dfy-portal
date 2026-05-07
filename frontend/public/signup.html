@@ -613,6 +613,11 @@
     </div>
 
     <div class="field">
+      <label>Business name</label>
+      <input type="text" id="business_name" placeholder="Bloom Wellness" />
+    </div>
+
+    <div class="field">
       <label>Full name</label>
       <input type="text" id="name" placeholder="Jane Smith" />
     </div>
@@ -710,6 +715,7 @@
     }
 
     async function handleSignup() {
+      const business_name = document.getElementById('business_name').value.trim();
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -723,7 +729,7 @@
         return;
       }
 
-      if (!name || !email || !password) {
+      if (!business_name || !name || !email || !password) {
         errorMsg.textContent = 'Please fill in all fields.';
         return;
       }
@@ -741,6 +747,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            business_name,
             name,
             email,
             password,

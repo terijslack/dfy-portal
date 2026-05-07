@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
     // Create a JWT token that expires in 7 days
     // This is what proves they're logged in on future requests
     const token = jwt.sign(
-      { id: client.id, email: client.email, name: client.name, is_admin: client.is_admin },
+      { id: client.id, email: client.email, name: client.name, is_admin: client.is_admin, business_name: client.business_name || null },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
 
     res.json({
       success: true,
-      user: { id: client.id, name: client.name, email: client.email, is_admin: client.is_admin }
+      user: { id: client.id, name: client.name, email: client.email, is_admin: client.is_admin, business_name: client.business_name || null }
     });
 
   } catch (err) {
@@ -74,8 +74,20 @@ router.post('/logout', (req, res) => {
 });
 
 // GET /api/auth/me — returns logged-in user info (used by frontend to check if logged in)
-router.get('/me', requireLogin, (req, res) => {
-  res.json({ user: req.user });
+// Does a fresh DB lookup so business_name and other fields are always current
+router.get('/me', requireLogin, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, name, email, is_admin, business_name FROM clients WHERE id = $1',
+      [req.user.id]
+    );
+    const client = result.rows[0];
+    if (!client) return res.status(401).json({ error: 'Account not found.' });
+    res.json({ user: client });
+  } catch (err) {
+    console.error('Me error:', err);
+    res.status(500).json({ error: 'Could not load user.' });
+  }
 });
 
 module.exports = router;

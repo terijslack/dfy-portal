@@ -32,6 +32,10 @@
         <div class="account-section">
           <h2>Profile</h2>
           <div class="account-row">
+            <span class="account-label">Business</span>
+            <span class="account-value" id="accountBusiness">—</span>
+          </div>
+          <div class="account-row">
             <span class="account-label">Name</span>
             <span class="account-value" id="accountName">—</span>
           </div>
@@ -108,6 +112,7 @@
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
 
       document.getElementById('welcomeName').textContent = meData.user.name;
+      document.getElementById('accountBusiness').textContent = meData.user.business_name || '—';
       document.getElementById('accountName').textContent = meData.user.name;
       document.getElementById('accountEmail').textContent = meData.user.email;
 

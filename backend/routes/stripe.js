@@ -20,7 +20,7 @@ const VALID_PRICE_IDS = new Set([
 // POST /api/stripe/create-checkout
 // Creates a Stripe hosted checkout page for the selected plan
 router.post('/create-checkout', async (req, res) => {
-  const { name, email, password, priceId, addons } = req.body;
+  const { business_name, name, email, password, priceId, addons } = req.body;
 
   if (!name || !email || !password || !priceId) {
     return res.status(400).json({ error: 'All fields are required.' });
@@ -46,10 +46,10 @@ router.post('/create-checkout', async (req, res) => {
 
     // Store pending signup in DB (status = 'pending' until payment succeeds)
     await pool.query(`
-      INSERT INTO clients (name, email, password, is_admin, status, stripe_price_id)
-      VALUES ($1, $2, $3, false, 'pending', $4)
+      INSERT INTO clients (name, email, password, business_name, is_admin, status, stripe_price_id)
+      VALUES ($1, $2, $3, $4, false, 'pending', $5)
       ON CONFLICT (email) DO NOTHING
-    `, [name, email.toLowerCase().trim(), hashedPassword, priceId]);
+    `, [name, email.toLowerCase().trim(), hashedPassword, business_name || null, priceId]);
 
     // Build add-ons metadata (Stripe values max 500 chars)
     const addonList = Array.isArray(addons) ? addons : [];
