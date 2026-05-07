@@ -57,6 +57,10 @@
             </div>
 
             <div class="account-row">
+              <span class="account-label">Platforms managed</span>
+              <span class="account-value" id="planPlatforms">—</span>
+            </div>
+            <div class="account-row">
               <span class="account-label">Posts per month</span>
               <span class="account-value" id="planPosts">—</span>
             </div>
@@ -120,8 +124,9 @@
         currentPlan = data.plan;
         availablePlans = data.available_plans;
 
-        document.getElementById('planName').textContent = data.plan + ' Plan';
+        document.getElementById('planName').textContent = data.plan;
         document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
+        document.getElementById('planPlatforms').textContent = data.platforms;
         document.getElementById('planPosts').textContent = data.posts_per_month + ' posts';
         document.getElementById('billingDate').textContent = formatDate(data.billing_date);
 
@@ -144,10 +149,10 @@
       grid.innerHTML = availablePlans.map(plan => `
         <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" 
              onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" 
-             id="plan-${plan.key}">
+             id="plan-${plan.key.replace(/\s+/g, '-')}">
           <div class="plan-option-name">${plan.label}</div>
           <div class="plan-option-price">$${plan.price.toLocaleString()}<span>/mo</span></div>
-          <div class="plan-option-posts">${plan.posts} posts/month</div>
+          <div class="plan-option-posts">${plan.posts} posts · ${plan.platforms}</div>
           ${plan.current ? '<div class="plan-option-tag">Current</div>' : ''}
         </div>
       `).join('');

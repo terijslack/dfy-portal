@@ -10,9 +10,9 @@ const { requireLogin } = require('../middleware/auth');
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 const PLANS = {
-  Starter:      { price: 497,  posts: 12, label: 'Starter'      },
-  Growth:       { price: 997,  posts: 30, label: 'Growth'        },
-  Scale:        { price: 1497, posts: 60, label: 'Scale'         },
+  'Starter Presence':  { price: 800,  posts: 8,  platforms: '1 platform',    label: 'Starter Presence'  },
+  'Growth Engine':     { price: 1500, posts: 16, platforms: '3 platforms',   label: 'Growth Engine'     },
+  'Marketing Partner': { price: 2800, posts: 24, platforms: '3–4 platforms', label: 'Marketing Partner' },
 };
 
 // GET /api/account/subscription
@@ -26,19 +26,21 @@ router.get('/subscription', requireLogin, async (req, res) => {
     const row = result.rows[0];
     if (!row) return res.status(404).json({ error: 'Account not found.' });
 
-    const planKey = row.plan || 'Starter';
-    const planInfo = PLANS[planKey] || PLANS['Starter'];
+    const planKey = row.plan || 'Starter Presence';
+    const planInfo = PLANS[planKey] || PLANS['Starter Presence'];
 
     res.json({
       plan: planKey,
       price: planInfo.price,
       posts_per_month: planInfo.posts,
+      platforms: planInfo.platforms,
       billing_date: row.billing_date,
       available_plans: Object.entries(PLANS).map(([key, val]) => ({
         key,
         label: val.label,
         price: val.price,
         posts: val.posts,
+        platforms: val.platforms,
         current: key === planKey
       }))
     });
