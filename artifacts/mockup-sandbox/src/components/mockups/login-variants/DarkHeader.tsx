@@ -11,7 +11,7 @@ export function DarkHeader() {
 
       <header
         style={{
-          background: "#1F3D2C",
+          background: "#2D6B4F",
           padding: "18px 32px",
           display: "flex",
           alignItems: "center",
