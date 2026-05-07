@@ -22,10 +22,10 @@ export function SmallerLogo() {
           <img
             src="/__mockup/images/logo.png"
             alt="DFY Marketing"
-            style={{ height: 78, width: "auto", display: "block", margin: "0 auto 8px" }}
+            style={{ height: 110, width: "auto", display: "block", margin: "0 auto 8px" }}
           />
           <p style={{ color: "#9AA199", fontSize: 13, letterSpacing: "0.04em" }}>
-            Marketing Client Portal
+            Client Portal
           </p>
         </div>
 
