@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Account — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/dashboard"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
+      <div class="header-right">
+        <span class="welcome-name" id="welcomeName">Loading…</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <a href="/dashboard" class="back-link">← Back to portal</a>
+      <h1>Your Account</h1>
+      <p class="page-subtitle">Your profile and subscription details.</p>
+    </div>
+
+    <div class="account-card">
+      <div class="account-section">
+        <h2>Profile</h2>
+        <div class="account-row">
+          <span class="account-label">Name</span>
+          <span class="account-value" id="accountName">—</span>
+        </div>
+        <div class="account-row">
+          <span class="account-label">Email</span>
+          <span class="account-value" id="accountEmail">—</span>
+        </div>
+      </div>
+
+      <hr class="account-divider" />
+
+      <div class="account-section">
+        <h2>Subscription</h2>
+        <div class="placeholder-note" style="margin-top: 12px;">
+          To make changes to your plan or billing, please <a href="/contact" class="accent-link">contact us</a> and we'll take care of it for you.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function init() {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (!data.user) { window.location.href = '/'; return; }
+      if (data.user.is_admin) { window.location.href = '/admin'; return; }
+      document.getElementById('welcomeName').textContent = data.user.name;
+      document.getElementById('accountName').textContent = data.user.name;
+      document.getElementById('accountEmail').textContent = data.user.email;
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+
+    init();
+  </script>
+</body>
+</html>

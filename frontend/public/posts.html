@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Posts — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/dashboard"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
+      <div class="header-right">
+        <span class="welcome-name" id="welcomeName">Loading…</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <a href="/dashboard" class="back-link">← Back to portal</a>
+      <h1>Your Scheduled Posts</h1>
+      <p class="page-subtitle">Review each post below. Click <strong>Approve</strong> to queue it, or <strong>Request Changes</strong> to send notes.</p>
+    </div>
+
+    <div class="summary-bar" id="summaryBar">
+      <div class="summary-item">
+        <span class="summary-number" id="totalCount">—</span>
+        <span class="summary-label">Total Posts</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-number pending" id="pendingCount">—</span>
+        <span class="summary-label">Awaiting Review</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-number approved" id="approvedCount">—</span>
+        <span class="summary-label">Approved</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-number changes" id="changesCount">—</span>
+        <span class="summary-label">Changes Requested</span>
+      </div>
+    </div>
+
+    <div class="posts-grid" id="postsGrid">
+      <div class="loading">Loading your posts…</div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Request Changes</h2>
+      <p>Tell us what you'd like changed and we'll revise it for you.</p>
+      <textarea id="changeNotes" placeholder="e.g. Can we change the call to action to mention our spring sale instead?" rows="4"></textarea>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelModal">Cancel</button>
+        <button class="btn-primary" id="submitChanges">Send Request</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPostId = null;
+    let allPosts = [];
+
+    async function init() {
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
+
+      if (!meData.user) {
+        window.location.href = '/';
+        return;
+      }
+
+      if (meData.user.is_admin) {
+        window.location.href = '/admin';
+        return;
+      }
+
+      document.getElementById('welcomeName').textContent = meData.user.name;
+      loadPosts();
+    }
+
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        const data = await res.json();
+        allPosts = data.posts || [];
+        renderPosts(allPosts);
+        updateSummary(allPosts);
+      } catch (err) {
+        document.getElementById('postsGrid').innerHTML = '<div class="error">Could not load posts. Try refreshing.</div>';
+      }
+    }
+
+    function updateSummary(posts) {
+      document.getElementById('totalCount').textContent = posts.length;
+      document.getElementById('pendingCount').textContent = posts.filter(p => p.status === 'pending').length;
+      document.getElementById('approvedCount').textContent = posts.filter(p => p.status === 'approved').length;
+      document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
+    }
+
+    function renderPosts(posts) {
+      const grid = document.getElementById('postsGrid');
+
+      if (posts.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No posts yet. Check back soon!</div>';
+        return;
+      }
+
+      grid.innerHTML = posts.map(post => `
+        <div class="post-card status-${post.status}" data-id="${post.id}">
+          <div class="post-meta">
+            <span class="post-platform platform-${post.platform}">${platformIcon(post.platform)} ${capitalize(post.platform)}</span>
+            <span class="post-date">📅 ${formatDate(post.scheduled_date)}</span>
+            <span class="post-status-badge status-badge-${post.status}">${statusLabel(post.status)}</span>
+          </div>
+
+          <div class="post-caption">${escapeHtml(post.caption)}</div>
+
+          ${post.change_notes ? `<div class="change-notes-display">💬 Your notes: ${escapeHtml(post.change_notes)}</div>` : ''}
+
+          ${post.status === 'pending' || post.status === 'changes_requested' ? `
+            <div class="post-actions">
+              <button class="btn-approve" onclick="approvePost(${post.id})">✓ Approve</button>
+              <button class="btn-changes" onclick="openChangesModal(${post.id})">✏️ Request Changes</button>
+            </div>
+          ` : ''}
+
+          ${post.status === 'approved' ? `<div class="approved-note">✅ Approved — queued in Buffer</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    async function approvePost(postId) {
+      const card = document.querySelector(`[data-id="${postId}"]`);
+      card.style.opacity = '0.6';
+
+      try {
+        const res = await fetch(`/api/posts/${postId}/approve`, { method: 'POST' });
+        const data = await res.json();
+
+        if (res.ok) {
+          loadPosts();
+        } else {
+          alert(data.error || 'Could not approve. Try again.');
+          card.style.opacity = '1';
+        }
+      } catch (err) {
+        alert('Network error. Try again.');
+        card.style.opacity = '1';
+      }
+    }
+
+    function openChangesModal(postId) {
+      currentPostId = postId;
+      document.getElementById('changeNotes').value = '';
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    document.getElementById('cancelModal').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('active');
+    });
+
+    document.getElementById('submitChanges').addEventListener('click', async () => {
+      const notes = document.getElementById('changeNotes').value.trim();
+
+      if (!notes) {
+        alert('Please write what you\'d like changed.');
+        return;
+      }
+
+      const btn = document.getElementById('submitChanges');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/posts/${currentPostId}/request-changes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('modalOverlay').classList.remove('active');
+          loadPosts();
+        } else {
+          alert(data.error || 'Could not submit. Try again.');
+        }
+      } catch (err) {
+        alert('Network error. Try again.');
+      }
+
+      btn.textContent = 'Send Request';
+      btn.disabled = false;
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function platformIcon(platform) {
+      const icons = { instagram: '📸', facebook: '👥', twitter: '🐦', linkedin: '💼', tiktok: '🎵' };
+      return icons[platform] || '📱';
+    }
+
+    function statusLabel(status) {
+      const labels = { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' };
+      return labels[status] || status;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    init();
+  </script>
+</body>
+</html>

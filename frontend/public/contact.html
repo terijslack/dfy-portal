@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/dashboard"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
+      <div class="header-right">
+        <span class="welcome-name" id="welcomeName">Loading…</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <a href="/dashboard" class="back-link">← Back to portal</a>
+      <h1>Contact Us</h1>
+      <p class="page-subtitle">We're here to help. Reach out anytime.</p>
+    </div>
+
+    <div class="contact-layout">
+
+      <div class="contact-info-card">
+        <h2>Get in Touch</h2>
+        <p>Have a question about your posts, your plan, or anything else? Send us a message and we'll get back to you within one business day.</p>
+
+        <div class="contact-detail">
+          <span class="contact-detail-icon">📧</span>
+          <div>
+            <div class="contact-detail-label">Email</div>
+            <a href="mailto:hello@dfymarketing.com" class="contact-detail-value">hello@dfymarketing.com</a>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <span class="contact-detail-icon">📞</span>
+          <div>
+            <div class="contact-detail-label">Phone</div>
+            <span class="contact-detail-value">Available upon request</span>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <span class="contact-detail-icon">🕐</span>
+          <div>
+            <div class="contact-detail-label">Response Time</div>
+            <span class="contact-detail-value">Within 1 business day</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-card">
+        <h2>Send a Message</h2>
+
+        <div class="field">
+          <label>Subject</label>
+          <input type="text" id="subject" placeholder="What's this about?" />
+        </div>
+
+        <div class="field">
+          <label>Message</label>
+          <textarea id="message" rows="5" placeholder="Tell us what's on your mind…"></textarea>
+        </div>
+
+        <div class="success-msg" id="successMsg" style="display:none">
+          ✅ Message sent! We'll be in touch shortly.
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+
+        <button class="btn-primary" id="sendBtn" onclick="sendMessage()">Send Message</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    let userName = '';
+    let userEmail = '';
+
+    async function init() {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (!data.user) { window.location.href = '/'; return; }
+      if (data.user.is_admin) { window.location.href = '/admin'; return; }
+      document.getElementById('welcomeName').textContent = data.user.name;
+      userName = data.user.name;
+      userEmail = data.user.email;
+    }
+
+    function sendMessage() {
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      errorMsg.textContent = '';
+
+      if (!subject || !message) {
+        errorMsg.textContent = 'Please fill in both fields.';
+        return;
+      }
+
+      const btn = document.getElementById('sendBtn');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('subject').value = '';
+        document.getElementById('message').value = '';
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      }, 800);
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+
+    init();
+  </script>
+</body>
+</html>

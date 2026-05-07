@@ -49,6 +49,22 @@ app.get('/signup-success', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/signup-success.html'));
 });
 
+app.get('/posts', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/posts.html'));
+});
+
+app.get('/analytics', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/analytics.html'));
+});
+
+app.get('/account', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/account.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/contact.html'));
+});
+
 // Anything else → send to the login page
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/index.html'));
