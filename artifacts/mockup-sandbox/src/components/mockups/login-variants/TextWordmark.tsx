@@ -19,7 +19,7 @@ export function TextWordmark() {
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ marginBottom: 4 }}>
+          <div style={{ marginBottom: 1 }}>
             <span
               style={{
                 fontFamily: "'Fraunces', Georgia, serif",
