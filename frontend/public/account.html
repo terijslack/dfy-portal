@@ -26,45 +26,191 @@
       <p class="page-subtitle">Your profile and subscription details.</p>
     </div>
 
-    <div class="account-card">
-      <div class="account-section">
-        <h2>Profile</h2>
-        <div class="account-row">
-          <span class="account-label">Name</span>
-          <span class="account-value" id="accountName">—</span>
-        </div>
-        <div class="account-row">
-          <span class="account-label">Email</span>
-          <span class="account-value" id="accountEmail">—</span>
+    <div class="account-sections">
+
+      <div class="account-card">
+        <div class="account-section">
+          <h2>Profile</h2>
+          <div class="account-row">
+            <span class="account-label">Name</span>
+            <span class="account-value" id="accountName">—</span>
+          </div>
+          <div class="account-row">
+            <span class="account-label">Email</span>
+            <span class="account-value" id="accountEmail">—</span>
+          </div>
         </div>
       </div>
 
-      <hr class="account-divider" />
+      <div class="account-card" id="subscriptionCard">
+        <div class="account-section">
+          <h2>Subscription</h2>
+          <div id="subscriptionLoading" class="sub-loading">Loading…</div>
 
-      <div class="account-section">
-        <h2>Subscription</h2>
-        <div class="placeholder-note" style="margin-top: 12px;">
-          To make changes to your plan or billing, please <a href="/contact" class="accent-link">contact us</a> and we'll take care of it for you.
+          <div id="subscriptionContent" style="display:none">
+            <div class="plan-banner" id="planBanner">
+              <div class="plan-banner-left">
+                <div class="plan-name" id="planName">—</div>
+                <div class="plan-price" id="planPrice">—</div>
+              </div>
+              <div class="plan-badge" id="planBadge">Current Plan</div>
+            </div>
+
+            <div class="account-row">
+              <span class="account-label">Posts per month</span>
+              <span class="account-value" id="planPosts">—</span>
+            </div>
+            <div class="account-row">
+              <span class="account-label">Next billing date</span>
+              <span class="account-value" id="billingDate">—</span>
+            </div>
+
+            <div class="plan-change-section">
+              <button class="btn-plan-change" id="changePlanBtn" onclick="openChangePlanModal()">Change Plan</button>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   </main>
 
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal modal-wide">
+      <h2>Change Your Plan</h2>
+      <p class="modal-subtitle">Select a plan below and we'll reach out to confirm the change.</p>
+
+      <div class="plan-grid" id="planGrid"></div>
+
+      <div class="success-msg" id="modalSuccess" style="display:none"></div>
+      <div class="error-msg" id="modalError"></div>
+
+      <div class="modal-actions" id="modalActions">
+        <button class="btn-secondary" id="cancelModal">Cancel</button>
+        <button class="btn-primary" id="confirmPlanBtn" disabled>Request Change</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let selectedPlan = null;
+    let currentPlan = null;
+    let availablePlans = [];
+
     async function init() {
-      const res = await fetch('/api/auth/me');
-      const data = await res.json();
-      if (!data.user) { window.location.href = '/'; return; }
-      if (data.user.is_admin) { window.location.href = '/admin'; return; }
-      document.getElementById('welcomeName').textContent = data.user.name;
-      document.getElementById('accountName').textContent = data.user.name;
-      document.getElementById('accountEmail').textContent = data.user.email;
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
+      if (!meData.user) { window.location.href = '/'; return; }
+      if (meData.user.is_admin) { window.location.href = '/admin'; return; }
+
+      document.getElementById('welcomeName').textContent = meData.user.name;
+      document.getElementById('accountName').textContent = meData.user.name;
+      document.getElementById('accountEmail').textContent = meData.user.email;
+
+      loadSubscription();
     }
+
+    async function loadSubscription() {
+      try {
+        const res = await fetch('/api/account/subscription');
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error);
+
+        currentPlan = data.plan;
+        availablePlans = data.available_plans;
+
+        document.getElementById('planName').textContent = data.plan + ' Plan';
+        document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
+        document.getElementById('planPosts').textContent = data.posts_per_month + ' posts';
+        document.getElementById('billingDate').textContent = formatDate(data.billing_date);
+
+        document.getElementById('subscriptionLoading').style.display = 'none';
+        document.getElementById('subscriptionContent').style.display = 'block';
+
+      } catch (err) {
+        document.getElementById('subscriptionLoading').textContent = 'Could not load subscription info.';
+      }
+    }
+
+    function openChangePlanModal() {
+      selectedPlan = null;
+      document.getElementById('modalError').textContent = '';
+      document.getElementById('modalSuccess').style.display = 'none';
+      document.getElementById('modalActions').style.display = 'flex';
+      document.getElementById('confirmPlanBtn').disabled = true;
+
+      const grid = document.getElementById('planGrid');
+      grid.innerHTML = availablePlans.map(plan => `
+        <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" 
+             onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" 
+             id="plan-${plan.key}">
+          <div class="plan-option-name">${plan.label}</div>
+          <div class="plan-option-price">$${plan.price.toLocaleString()}<span>/mo</span></div>
+          <div class="plan-option-posts">${plan.posts} posts/month</div>
+          ${plan.current ? '<div class="plan-option-tag">Current</div>' : ''}
+        </div>
+      `).join('');
+
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function selectPlan(key) {
+      selectedPlan = key;
+      document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
+      const el = document.getElementById('plan-' + key);
+      if (el) el.classList.add('plan-option-selected');
+      document.getElementById('confirmPlanBtn').disabled = false;
+    }
+
+    document.getElementById('confirmPlanBtn').addEventListener('click', async () => {
+      if (!selectedPlan) return;
+
+      const btn = document.getElementById('confirmPlanBtn');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      document.getElementById('modalError').textContent = '';
+
+      try {
+        const res = await fetch('/api/account/change-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ new_plan: selectedPlan })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          document.getElementById('modalError').textContent = data.error || 'Could not submit. Try again.';
+          btn.textContent = 'Request Change';
+          btn.disabled = false;
+          return;
+        }
+
+        document.getElementById('modalSuccess').textContent = data.message;
+        document.getElementById('modalSuccess').style.display = 'block';
+        document.getElementById('modalActions').style.display = 'none';
+        document.getElementById('planGrid').style.opacity = '0.4';
+        document.getElementById('planGrid').style.pointerEvents = 'none';
+
+      } catch (err) {
+        document.getElementById('modalError').textContent = 'Network error. Try again.';
+        btn.textContent = 'Request Change';
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('cancelModal').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('active');
+    });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await fetch('/api/auth/logout', { method: 'POST' });
       window.location.href = '/';
     });
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
 
     init();
   </script>

@@ -28,6 +28,7 @@ app.use('/api/auth', require('./backend/routes/auth'));     // login, logout, /m
 app.use('/api/posts', require('./backend/routes/posts'));   // client post actions
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
+app.use('/api/account', require('./backend/routes/account')); // subscription management
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file
