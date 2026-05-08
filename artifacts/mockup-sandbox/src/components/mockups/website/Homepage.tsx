@@ -126,7 +126,7 @@ export function Homepage() {
             {[
               "Overpriced marketing firms",
               "Inconsistent, hard-to-manage contractors",
-              "Doing it yourself — or pushing it onto your team",
+              "Juggling it yourself — or passing it to your team",
             ].map(item => (
               <li key={item} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, fontSize: 16, color: "#6B756B" }}>
                 <span style={{ color: "#7D2A03", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>✕</span>
