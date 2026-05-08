@@ -152,8 +152,8 @@ export function Homepage() {
           </div>
         </div>
 
-        {/* Hero testimonial */}
-        <div style={{ position: "relative" }}>
+        {/* Hero testimonials */}
+        <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 16 }}>
           <div style={{
             background: "#1F3D2C",
             borderRadius: 20,
@@ -220,6 +220,40 @@ export function Homepage() {
                   <div style={{ fontSize: 11, color: "rgba(245,242,234,0.50)", marginTop: 2 }}>{label}</div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Second testimonial — light card */}
+          <div style={{
+            background: "#fff",
+            borderRadius: 16,
+            padding: "24px 28px",
+            boxShadow: "0 2px 16px rgba(31,61,44,0.08)",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 16,
+          }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: "50%",
+              background: "rgba(45,107,79,0.10)",
+              border: "2px solid rgba(45,107,79,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontSize: 16, fontWeight: 600, color: "#2D6B4F",
+              flexShrink: 0, marginTop: 2,
+            }}>J</div>
+            <div>
+              <div style={{ display: "flex", gap: 2, marginBottom: 8 }}>
+                {[1,2,3,4,5].map(i => <span key={i} style={{ color: "#EBC99B", fontSize: 13 }}>★</span>)}
+              </div>
+              <p style={{
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontSize: 15, fontStyle: "italic", fontWeight: 400,
+                color: "#1F3D2C", lineHeight: 1.55, marginBottom: 10,
+              }}>
+                "Managing my online presence was a full-time job on top of my actual job. It's such a relief to have it off my plate so I can focus on my clients."
+              </p>
+              <div style={{ fontSize: 12, color: "#9AA199" }}>Jamie R. · Owner, local service business</div>
             </div>
           </div>
         </div>
