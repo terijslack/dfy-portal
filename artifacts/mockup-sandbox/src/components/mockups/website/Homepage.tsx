@@ -123,7 +123,7 @@ export function Homepage() {
             Marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: "#6B756B", marginBottom: 36, maxWidth: 440 }}>
-            Stop piecing together contractors, overpaying agencies, or trying to do it yourself. Tell us what your business needs — and consider it done. You stay in control. We do the work.
+            No overpriced marketing firms. No inconsistent contractors. No pulling your team away from the work that actually pays. Just tell us what you need — and it's done. Focus on running your business. We've got the rest.
           </p>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             <a href="#pricing" style={{
