@@ -75,6 +75,18 @@
     }
     .step-connector.done { background: var(--accent); }
 
+    .exit-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 6px 0;
+      transition: color 0.2s;
+    }
+    .exit-link:hover { color: var(--rust); }
+
     /* ── Step container ── */
     .step-container {
       max-width: 680px;
@@ -265,6 +277,7 @@
       <span class="brand-wordmark-serif">Done For You</span>
       <span class="brand-wordmark-sans">Marketing</span>
     </a>
+    <a href="/dashboard" class="exit-link">✕ Exit without saving</a>
     <div class="progress-steps" id="progressSteps">
       <div class="progress-step">
         <div class="step-circle active" id="circle-1">1</div>
