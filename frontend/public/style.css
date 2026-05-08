@@ -354,14 +354,17 @@ body {
 
 /* ── BACK LINK ───────────────────────────────────────── */
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.875rem;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: var(--accent);
   text-decoration: none;
   margin-bottom: 16px;
-  transition: color 0.2s;
+  transition: color 0.2s, gap 0.2s;
 }
-.back-link:hover { color: var(--accent); }
+.back-link:hover { color: var(--accent-dim); gap: 10px; }
 
 /* ── CLIENT HOME PAGE ────────────────────────────────── */
 .home-hero {
