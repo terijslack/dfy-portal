@@ -120,7 +120,7 @@ export function Homepage() {
             letterSpacing: "-0.02em",
             marginBottom: 24,
           }}>
-            Your business presence,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>built and run.</em>
+            Marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: "#6B756B", marginBottom: 36, maxWidth: 440 }}>
             Stop piecing together contractors, overpaying agencies, or trying to do it yourself. Tell us what your business needs — and consider it done. You stay in control. We do the work.
