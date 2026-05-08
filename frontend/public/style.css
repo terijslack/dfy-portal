@@ -176,6 +176,23 @@ body {
   margin-bottom: 28px;
 }
 
+.login-back {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-back-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-back-link:hover {
+  color: var(--accent-dim);
+}
+
 /* ── FORM FIELDS ────────────────────────────────────── */
 .field {
   margin-bottom: 18px;
