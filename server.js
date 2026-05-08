@@ -29,6 +29,7 @@ app.use('/api/posts', require('./backend/routes/posts'));   // client post actio
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
 app.use('/api/account', require('./backend/routes/account')); // subscription management
+app.use('/api/onboarding', require('./backend/routes/onboarding')); // client intake form
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file
@@ -72,6 +73,10 @@ app.get('/account', (req, res) => {
 
 app.get('/contact', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/contact.html'));
+});
+
+app.get('/onboarding', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/onboarding.html'));
 });
 
 // Anything else → send to the login page

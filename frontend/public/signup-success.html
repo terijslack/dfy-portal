@@ -4,22 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome! — Done For You Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .success-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 52px 40px;
+      text-align: center;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .success-emoji { font-size: 52px; margin-bottom: 20px; }
+    .success-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 12px;
+    }
+    .success-body {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .success-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-onboarding {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 500;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-onboarding:hover { background: var(--accent-dim); }
+    .btn-skip {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .btn-skip:hover { color: var(--text); }
+    .next-steps {
+      background: rgba(45,107,79,0.06);
+      border: 1px solid rgba(45,107,79,0.15);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+    .next-steps-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .next-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .next-step-item:last-child { margin-bottom: 0; }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  </style>
 </head>
 <body class="login-page">
-  <div class="login-container" style="text-align: center;">
-    <a href="/"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
-    <div style="margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px 36px;">
-      <div style="font-size: 3rem; margin-bottom: 16px;">🎉</div>
-      <h1 style="font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 12px;">You're in!</h1>
-      <p style="color: var(--text-muted); margin-bottom: 32px; line-height: 1.6;">
-        Your account has been created and your subscription is active.<br />
-        Welcome to Done For You Marketing!
+  <div class="login-container">
+    <a href="/" class="brand-wordmark" style="text-decoration:none; display:flex; justify-content:center; margin-bottom:40px;">
+      <span class="brand-wordmark-serif">Done For You</span>
+      <span class="brand-wordmark-sans">Marketing</span>
+    </a>
+
+    <div class="success-card">
+      <div class="success-emoji">🎉</div>
+      <h1 class="success-title">You're officially in!</h1>
+      <p class="success-body">
+        Your account is active and your subscription is confirmed.<br>
+        Welcome to Done For You Marketing — let's get started.
       </p>
-      <a href="/" class="btn-primary" style="display: inline-block; text-decoration: none; width: auto; padding: 12px 32px;">
-        Go to your dashboard →
-      </a>
+
+      <div class="next-steps">
+        <div class="next-steps-label">What happens next</div>
+        <div class="next-step-item">
+          <div class="step-num">1</div>
+          <span>Fill out your business intake form so we know your brand, platforms, and goals.</span>
+        </div>
+        <div class="next-step-item">
+          <div class="step-num">2</div>
+          <span>We create your first batch of posts within 48 hours.</span>
+        </div>
+        <div class="next-step-item">
+          <div class="step-num">3</div>
+          <span>You review and approve each post in your client portal before it goes live.</span>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <a href="/onboarding" class="btn-onboarding">Complete your intake form →</a>
+        <a href="/dashboard" class="btn-skip">Skip for now — go to my dashboard</a>
+      </div>
     </div>
   </div>
 </body>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Intake — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .onboarding-page {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    /* ── Progress bar ── */
+    .progress-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface);
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .step-circle.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .step-circle.done {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .step-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: color 0.3s;
+    }
+    .step-label.active { color: var(--accent); }
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 12px;
+      transition: background 0.3s;
+    }
+    .step-connector.done { background: var(--accent); }
+
+    /* ── Step container ── */
+    .step-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 52px 24px 80px;
+    }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    .step-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--rust);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .step-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    /* ── Form fields ── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field-full { grid-column: 1 / -1; }
+
+    /* ── Platform checkboxes ── */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .platform-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .platform-card:hover { border-color: var(--accent-dim); }
+    .platform-card.selected {
+      border-color: var(--accent);
+      background: rgba(45,107,79,0.06);
+    }
+    .platform-card input[type="checkbox"] { display: none; }
+    .platform-icon { font-size: 20px; }
+    .platform-name { font-size: 13px; font-weight: 500; color: var(--text); }
+
+    /* Platform handle inputs (shown when platform selected) */
+    .platform-handle { display: none; }
+    .platform-handle.visible { display: block; }
+
+    /* ── Voice selector ── */
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .voice-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .voice-card:hover { border-color: var(--accent-dim); }
+    .voice-card.selected {
+      border-color: var(--accent);
+      background: rgba(45,107,79,0.06);
+    }
+    .voice-card input { display: none; }
+    .voice-title { font-size: 14px; font-weight: 600; color: var(--forest); margin-bottom: 4px; }
+    .voice-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── Goal selector ── */
+    .goal-list { display: flex; flex-direction: column; gap: 10px; }
+    .goal-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .goal-card:hover { border-color: var(--accent-dim); }
+    .goal-card.selected {
+      border-color: var(--accent);
+      background: rgba(45,107,79,0.06);
+    }
+    .goal-card input { display: none; }
+    .goal-icon { font-size: 20px; }
+    .goal-text { font-size: 14px; font-weight: 500; color: var(--text); }
+
+    /* ── Nav buttons ── */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-back {
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 10px 0;
+      font-family: var(--font-sans);
+    }
+    .btn-back:hover { color: var(--text); }
+    .btn-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.2s;
+    }
+    .btn-next:hover { background: var(--accent-dim); }
+    .btn-next:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Success screen ── */
+    .success-screen {
+      text-align: center;
+      padding: 80px 24px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .success-icon { font-size: 56px; margin-bottom: 24px; }
+    .success-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 12px;
+    }
+    .success-body {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    @media (max-width: 600px) {
+      .progress-header { padding: 16px 20px; }
+      .step-label { display: none; }
+      .field-row { grid-template-columns: 1fr; }
+      .platform-grid { grid-template-columns: 1fr 1fr; }
+      .voice-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="onboarding-page">
+
+  <!-- Header with progress -->
+  <div class="progress-header">
+    <a href="/dashboard" class="brand-wordmark" style="text-decoration:none; flex-shrink:0;">
+      <span class="brand-wordmark-serif">Done For You</span>
+      <span class="brand-wordmark-sans">Marketing</span>
+    </a>
+    <div class="progress-steps" id="progressSteps">
+      <div class="progress-step">
+        <div class="step-circle active" id="circle-1">1</div>
+        <div class="step-label active" id="label-1">Your Business</div>
+      </div>
+      <div class="step-connector" id="conn-1"></div>
+      <div class="progress-step">
+        <div class="step-circle" id="circle-2">2</div>
+        <div class="step-label" id="label-2">Social Media</div>
+      </div>
+      <div class="step-connector" id="conn-2"></div>
+      <div class="progress-step">
+        <div class="step-circle" id="circle-3">3</div>
+        <div class="step-label" id="label-3">Brand & Voice</div>
+      </div>
+      <div class="step-connector" id="conn-3"></div>
+      <div class="progress-step">
+        <div class="step-circle" id="circle-4">4</div>
+        <div class="step-label" id="label-4">Goals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="step-container">
+
+    <!-- ── STEP 1: Your Business ── -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-eyebrow">Step 1 of 4</div>
+      <h1 class="step-title">Tell us about your business</h1>
+      <p class="step-desc">This helps us create content that accurately represents your brand and speaks to your audience.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Business name</label>
+          <input type="text" id="business_name" placeholder="Bloom Wellness" />
+        </div>
+        <div class="field">
+          <label>Industry / Niche</label>
+          <input type="text" id="industry" placeholder="Health & wellness, Real estate…" />
+        </div>
+        <div class="field">
+          <label>Business website</label>
+          <input type="url" id="website" placeholder="https://yourbusiness.com" />
+        </div>
+        <div class="field">
+          <label>Business phone</label>
+          <input type="tel" id="phone" placeholder="(916) 555-0100" />
+        </div>
+        <div class="field field-full">
+          <label>City & State</label>
+          <input type="text" id="location" placeholder="Sacramento, CA" />
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div></div>
+        <button class="btn-next" onclick="goToStep(2)">Next: Social Media →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: Social Media ── -->
+    <div class="step-panel" id="step-2">
+      <div class="step-eyebrow">Step 2 of 4</div>
+      <h1 class="step-title">Your social media presence</h1>
+      <p class="step-desc">Select every platform you're currently on, and add your username or profile handle for each.</p>
+
+      <div class="platform-grid">
+        <label class="platform-card" onclick="togglePlatform('instagram', this)">
+          <input type="checkbox" id="plat-instagram">
+          <span class="platform-icon">📸</span>
+          <span class="platform-name">Instagram</span>
+        </label>
+        <label class="platform-card" onclick="togglePlatform('facebook', this)">
+          <input type="checkbox" id="plat-facebook">
+          <span class="platform-icon">📘</span>
+          <span class="platform-name">Facebook</span>
+        </label>
+        <label class="platform-card" onclick="togglePlatform('linkedin', this)">
+          <input type="checkbox" id="plat-linkedin">
+          <span class="platform-icon">💼</span>
+          <span class="platform-name">LinkedIn</span>
+        </label>
+        <label class="platform-card" onclick="togglePlatform('tiktok', this)">
+          <input type="checkbox" id="plat-tiktok">
+          <span class="platform-icon">🎵</span>
+          <span class="platform-name">TikTok</span>
+        </label>
+        <label class="platform-card" onclick="togglePlatform('google', this)">
+          <input type="checkbox" id="plat-google">
+          <span class="platform-icon">📍</span>
+          <span class="platform-name">Google Business</span>
+        </label>
+        <label class="platform-card" onclick="togglePlatform('x', this)">
+          <input type="checkbox" id="plat-x">
+          <span class="platform-icon">𝕏</span>
+          <span class="platform-name">X / Twitter</span>
+        </label>
+      </div>
+
+      <!-- Handle inputs, shown dynamically -->
+      <div id="handle-fields" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;"></div>
+
+      <div class="field" style="margin-top: 24px;">
+        <label>Anything else we should know about your accounts?</label>
+        <textarea id="social_notes" rows="2" placeholder="e.g. I have login access, need a new account set up, account was previously inactive…"></textarea>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(1)">← Back</button>
+        <button class="btn-next" onclick="goToStep(3)">Next: Brand & Voice →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: Brand & Voice ── -->
+    <div class="step-panel" id="step-3">
+      <div class="step-eyebrow">Step 3 of 4</div>
+      <h1 class="step-title">Your brand & voice</h1>
+      <p class="step-desc">We'll use this to write captions that sound like you — not generic filler.</p>
+
+      <div class="field" style="margin-bottom: 28px;">
+        <label style="margin-bottom: 12px; display: block;">Choose your brand voice</label>
+        <div class="voice-grid">
+          <div class="voice-card" onclick="selectVoice('Professional & trustworthy', this)">
+            <div class="voice-title">Professional & Trustworthy</div>
+            <div class="voice-desc">Authoritative and polished. Builds credibility and confidence.</div>
+          </div>
+          <div class="voice-card" onclick="selectVoice('Friendly & conversational', this)">
+            <div class="voice-title">Friendly & Conversational</div>
+            <div class="voice-desc">Warm and approachable. Feels like talking to a knowledgeable friend.</div>
+          </div>
+          <div class="voice-card" onclick="selectVoice('Fun & witty', this)">
+            <div class="voice-title">Fun & Witty</div>
+            <div class="voice-desc">Light-hearted with personality. Great for lifestyle and consumer brands.</div>
+          </div>
+          <div class="voice-card" onclick="selectVoice('Inspirational & motivational', this)">
+            <div class="voice-title">Inspirational & Motivational</div>
+            <div class="voice-desc">Uplifting and empowering. Moves your audience to take action.</div>
+          </div>
+          <div class="voice-card" onclick="selectVoice('Educational & informative', this)">
+            <div class="voice-title">Educational & Informative</div>
+            <div class="voice-desc">Tips, how-tos, and insights. Positions you as an expert.</div>
+          </div>
+          <div class="voice-card" onclick="selectVoice('Luxe & aspirational', this)">
+            <div class="voice-title">Luxe & Aspirational</div>
+            <div class="voice-desc">Elevated and exclusive. Perfect for premium products and services.</div>
+          </div>
+        </div>
+        <input type="hidden" id="brand_voice" />
+      </div>
+
+      <div class="field">
+        <label>Who is your target audience?</label>
+        <textarea id="target_audience" rows="2" placeholder="e.g. Women 30–50 in Sacramento interested in holistic health, local small business owners…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>What topics or themes should we post about?</label>
+        <textarea id="content_themes" rows="3" placeholder="e.g. Behind-the-scenes, tips &amp; education, client success stories, seasonal promotions, product highlights…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Anything we should <em>never</em> post about?</label>
+        <textarea id="avoid_content" rows="2" placeholder="e.g. Politics, competitor mentions, pricing details, personal photos…"></textarea>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(2)">← Back</button>
+        <button class="btn-next" onclick="goToStep(4)">Next: Your Goals →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: Goals ── -->
+    <div class="step-panel" id="step-4">
+      <div class="step-eyebrow">Step 4 of 4</div>
+      <h1 class="step-title">What are you hoping to achieve?</h1>
+      <p class="step-desc">We'll align your content strategy around what matters most to your business.</p>
+
+      <div class="field" style="margin-bottom: 28px;">
+        <label style="margin-bottom: 12px; display: block;">Primary goal</label>
+        <div class="goal-list">
+          <div class="goal-card" onclick="selectGoal('Build brand awareness', this)">
+            <span class="goal-icon">📣</span>
+            <span class="goal-text">Build brand awareness — more people knowing who we are</span>
+          </div>
+          <div class="goal-card" onclick="selectGoal('Grow followers & engagement', this)">
+            <span class="goal-icon">📈</span>
+            <span class="goal-text">Grow followers & engagement on social media</span>
+          </div>
+          <div class="goal-card" onclick="selectGoal('Generate leads & sales', this)">
+            <span class="goal-icon">💰</span>
+            <span class="goal-text">Generate leads and drive more sales</span>
+          </div>
+          <div class="goal-card" onclick="selectGoal('Build community & loyalty', this)">
+            <span class="goal-icon">🤝</span>
+            <span class="goal-text">Build a loyal community around my brand</span>
+          </div>
+          <div class="goal-card" onclick="selectGoal('Establish thought leadership', this)">
+            <span class="goal-icon">🧠</span>
+            <span class="goal-text">Establish myself as an expert in my field</span>
+          </div>
+        </div>
+        <input type="hidden" id="primary_goal" />
+      </div>
+
+      <div class="field">
+        <label>Anything else we should know before we get started?</label>
+        <textarea id="additional_notes" rows="3" placeholder="Previous agency experience, upcoming events, seasonal campaigns, specific requests…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>How did you hear about us?</label>
+        <select id="referral_source">
+          <option value="">— Select one —</option>
+          <option>Google search</option>
+          <option>Referral from a friend or colleague</option>
+          <option>Social media</option>
+          <option>Networking event</option>
+          <option>Existing client</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(3)">← Back</button>
+        <button class="btn-next" id="submitBtn" onclick="submitForm()">Submit →</button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div class="step-panel" id="step-success">
+      <div class="success-screen">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-title">We're all set!</h1>
+        <p class="success-body">
+          Thanks for filling out your intake form. Your team has everything they need to start creating content for you.<br><br>
+          We'll be in touch within <strong>48 hours</strong> to confirm your first content calendar.
+        </p>
+        <a href="/dashboard" class="btn-primary" style="display:inline-block; text-decoration:none; padding:14px 32px;">
+          Back to my dashboard →
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+    const selectedPlatforms = {};
+    let selectedVoice = null;
+    let selectedGoal = null;
+
+    // ── Auth check ──
+    fetch('/api/auth/me').then(r => r.json()).then(data => {
+      if (!data.user) { window.location.href = '/login'; return; }
+      // Pre-fill business name from account
+      if (data.user.business_name) {
+        const el = document.getElementById('business_name');
+        if (el && !el.value) el.value = data.user.business_name;
+      }
+    });
+
+    // ── Step navigation ──
+    function goToStep(n) {
+      document.getElementById('step-' + currentStep).classList.remove('active');
+      document.getElementById('step-' + n).classList.add('active');
+      currentStep = n;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgress() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const circle = document.getElementById('circle-' + i);
+        const label  = document.getElementById('label-' + i);
+        circle.classList.remove('active', 'done');
+        label.classList.remove('active');
+
+        if (i < currentStep) {
+          circle.classList.add('done');
+          circle.textContent = '✓';
+        } else if (i === currentStep) {
+          circle.classList.add('active');
+          circle.textContent = i;
+          label.classList.add('active');
+        } else {
+          circle.textContent = i;
+        }
+
+        if (i < totalSteps) {
+          const conn = document.getElementById('conn-' + i);
+          if (i < currentStep) conn.classList.add('done');
+          else conn.classList.remove('done');
+        }
+      }
+    }
+
+    // ── Platform selection ──
+    function togglePlatform(name, card) {
+      const checkbox = card.querySelector('input[type="checkbox"]');
+      checkbox.checked = !checkbox.checked;
+      card.classList.toggle('selected', checkbox.checked);
+
+      const container = document.getElementById('handle-fields');
+
+      if (checkbox.checked) {
+        selectedPlatforms[name] = '';
+        const div = document.createElement('div');
+        div.className = 'field platform-handle visible';
+        div.id = 'handle-field-' + name;
+        div.innerHTML = `<label>${card.querySelector('.platform-name').textContent} username / handle</label>
+          <input type="text" id="handle-${name}" placeholder="@yourusername" oninput="selectedPlatforms['${name}'] = this.value" />`;
+        container.appendChild(div);
+      } else {
+        delete selectedPlatforms[name];
+        const el = document.getElementById('handle-field-' + name);
+        if (el) el.remove();
+      }
+    }
+
+    // ── Voice selection ──
+    function selectVoice(name, card) {
+      document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedVoice = name;
+      document.getElementById('brand_voice').value = name;
+    }
+
+    // ── Goal selection ──
+    function selectGoal(name, card) {
+      document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedGoal = name;
+      document.getElementById('primary_goal').value = name;
+    }
+
+    // ── Submit ──
+    async function submitForm() {
+      const btn = document.getElementById('submitBtn');
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      if (!selectedGoal) {
+        errorMsg.textContent = 'Please select your primary goal.';
+        return;
+      }
+
+      const platforms = Object.entries(selectedPlatforms).map(([name, handle]) => ({
+        name,
+        handle: document.getElementById('handle-' + name)?.value || handle
+      }));
+
+      const payload = {
+        industry:          document.getElementById('industry').value.trim(),
+        website:           document.getElementById('website').value.trim(),
+        phone:             document.getElementById('phone').value.trim(),
+        location:          document.getElementById('location').value.trim(),
+        platforms,
+        brand_voice:       selectedVoice,
+        target_audience:   document.getElementById('target_audience').value.trim(),
+        content_themes:    document.getElementById('content_themes').value.trim(),
+        avoid_content:     document.getElementById('avoid_content').value.trim(),
+        primary_goal:      selectedGoal,
+        additional_notes:  document.getElementById('additional_notes').value.trim(),
+        referral_source:   document.getElementById('referral_source').value,
+      };
+
+      btn.textContent = 'Saving…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/onboarding', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Something went wrong. Please try again.';
+          btn.textContent = 'Submit →';
+          btn.disabled = false;
+          return;
+        }
+
+        // Show success
+        document.getElementById('step-4').classList.remove('active');
+        document.getElementById('step-success').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Please try again.';
+        btn.textContent = 'Submit →';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
