@@ -122,21 +122,23 @@ export function Homepage() {
           }}>
             Marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
           </h1>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>No more:</p>
-          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
+          <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.5, marginBottom: 16, maxWidth: 440 }}>
+            Marketing made simpler for busy business owners.
+          </p>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px 0" }}>
             {[
-              "Overpriced marketing firms",
-              "Inconsistent, hard-to-manage contractors",
-              "Juggling it yourself — or overloading your team",
+              "Professional support without building an in-house team",
+              "Reliable execution without managing multiple contractors",
+              "Consistent visibility without adding more to your plate",
             ].map(item => (
-              <li key={item} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, fontSize: 16, color: "#6B756B" }}>
-                <span style={{ color: "#7D2A03", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>✕</span>
+              <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10, fontSize: 15, color: "#6B756B" }}>
+                <span style={{ color: "#2D6B4F", fontWeight: 700, fontSize: 15, flexShrink: 0, marginTop: 1 }}>✓</span>
                 {item}
               </li>
             ))}
           </ul>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: "#1F3D2C", fontWeight: 500, marginBottom: 36, maxWidth: 440 }}>
-            Just tell us what you need — and it's done for you.
+            You focus on running your business. We'll handle the marketing.
           </p>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             <a href="#pricing" style={{
