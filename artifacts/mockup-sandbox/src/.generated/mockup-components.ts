@@ -6,5 +6,6 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-header/StyledText.tsx": () => import("../components/mockups/dashboard-header/StyledText.tsx"),
   "./components/mockups/login-variants/DarkHeader.tsx": () => import("../components/mockups/login-variants/DarkHeader.tsx"),
   "./components/mockups/login-variants/SmallerLogo.tsx": () => import("../components/mockups/login-variants/SmallerLogo.tsx"),
-  "./components/mockups/login-variants/TextWordmark.tsx": () => import("../components/mockups/login-variants/TextWordmark.tsx")
+  "./components/mockups/login-variants/TextWordmark.tsx": () => import("../components/mockups/login-variants/TextWordmark.tsx"),
+  "./components/mockups/website/Homepage.tsx": () => import("../components/mockups/website/Homepage.tsx")
 };
