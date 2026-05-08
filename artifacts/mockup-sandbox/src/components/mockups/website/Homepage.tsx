@@ -280,7 +280,7 @@ export function Homepage() {
             <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 38, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.15, marginBottom: 12 }}>
               Simple, transparent pricing
             </h2>
-            <p style={{ fontSize: 15, color: "#9AA199", maxWidth: 400, margin: "0 auto" }}>No contracts. Cancel anytime. Your posts, your approval.</p>
+            <p style={{ fontSize: 15, color: "#9AA199", maxWidth: 400, margin: "0 auto" }}>No hidden fees. Cancel anytime. Your posts, your approval.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {plans.map(plan => (
