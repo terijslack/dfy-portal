@@ -315,15 +315,48 @@ export function Homepage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background: "#1F3D2C", padding: "40px 48px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, fontWeight: 600, color: "#F5F2EA" }}>Done For You</span>
-          <span style={{ fontSize: 9, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.16em", textTransform: "uppercase" }}>Marketing</span>
-        </div>
-        <div style={{ display: "flex", gap: 28 }}>
-          <a href="#" style={{ color: "rgba(245,242,234,0.50)", fontSize: 13, textDecoration: "none" }}>Services</a>
-          <a href="#" style={{ color: "rgba(245,242,234,0.50)", fontSize: 13, textDecoration: "none" }}>Pricing</a>
-          <a href="/login" style={{ color: "#EBC99B", fontSize: 13, textDecoration: "none", fontWeight: 500 }}>Client Login →</a>
+      <footer style={{ background: "#1F3D2C", padding: "48px 48px 36px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40 }}>
+            {/* Brand */}
+            <div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginBottom: 12 }}>
+                <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, fontWeight: 600, color: "#F5F2EA" }}>Done For You</span>
+                <span style={{ fontSize: 9, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.16em", textTransform: "uppercase" }}>Marketing</span>
+              </div>
+              <p style={{ fontSize: 13, color: "rgba(245,242,234,0.50)", maxWidth: 240, lineHeight: 1.6 }}>
+                Social media management that keeps you in control.
+              </p>
+            </div>
+
+            {/* Links */}
+            <div style={{ display: "flex", gap: 48 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.10em", textTransform: "uppercase", marginBottom: 14 }}>Company</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <a href="#services" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>Services</a>
+                  <a href="#pricing" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>Pricing</a>
+                  <a href="#about" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>About</a>
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.10em", textTransform: "uppercase", marginBottom: 14 }}>Contact</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <a href="mailto:hello@dfymarketinggroup.com" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>hello@dfymarketinggroup.com</a>
+                  <a href="tel:+19169708443" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>(916) 970-8443</a>
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.10em", textTransform: "uppercase", marginBottom: 14 }}>Portal</div>
+                <a href="/login" style={{ color: "#EBC99B", fontSize: 13, textDecoration: "none", fontWeight: 500 }}>Client Login →</a>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 12, color: "rgba(245,242,234,0.30)" }}>© 2026 Done For You Marketing Group. All rights reserved.</span>
+          </div>
         </div>
       </footer>
     </div>
