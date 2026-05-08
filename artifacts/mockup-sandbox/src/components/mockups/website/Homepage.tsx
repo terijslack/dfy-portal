@@ -208,19 +208,6 @@ export function Homepage() {
               </div>
             </div>
 
-            {/* Result callout */}
-            <div style={{
-              borderTop: "1px solid rgba(255,255,255,0.10)",
-              paddingTop: 20,
-              display: "flex", gap: 24,
-            }}>
-              {[["~15 hrs", "saved per month"], ["3×", "more consistent posting"], ["$0", "agency overhead"]].map(([val, label]) => (
-                <div key={label}>
-                  <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 600, color: "#EBC99B" }}>{val}</div>
-                  <div style={{ fontSize: 11, color: "rgba(245,242,234,0.50)", marginTop: 2 }}>{label}</div>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Second testimonial — light card */}
