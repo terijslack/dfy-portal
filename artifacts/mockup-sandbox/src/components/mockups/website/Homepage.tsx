@@ -122,7 +122,7 @@ export function Homepage() {
           }}>
             Marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
           </h1>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>No more of this:</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>No more:</p>
           <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
             {[
               "Overpriced marketing firms",
