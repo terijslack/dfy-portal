@@ -122,8 +122,20 @@ export function Homepage() {
           }}>
             Marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
           </h1>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "#6B756B", marginBottom: 36, maxWidth: 440 }}>
-            No overpriced marketing firms. No inconsistent contractors. No pulling your team away from the work that actually pays. Just tell us what you need — and it's done. Focus on running your business. We've got the rest.
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
+            {[
+              "Overpriced marketing firms",
+              "Inconsistent, hard-to-manage contractors",
+              "Pulling your team off real work to do marketing",
+            ].map(item => (
+              <li key={item} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, fontSize: 16, color: "#6B756B" }}>
+                <span style={{ color: "#7D2A03", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>✕</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p style={{ fontSize: 16, lineHeight: 1.6, color: "#1F3D2C", fontWeight: 500, marginBottom: 36, maxWidth: 440 }}>
+            Just tell us what you need — and it's done for you.
           </p>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             <a href="#pricing" style={{

@@ -76,12 +76,37 @@
       margin-bottom: 24px;
     }
     .hero h1 em { font-style: italic; font-weight: 300; }
+    .hero-pain-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px 0;
+    }
+    .hero-pain-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      color: #6B756B;
+      margin-bottom: 10px;
+    }
+    .pain-x {
+      color: #7D2A03;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
     .hero-body {
       font-size: 17px;
       line-height: 1.7;
       color: #6B756B;
       margin-bottom: 36px;
       max-width: 440px;
+    }
+    .hero-closer {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1F3D2C;
+      margin-bottom: 36px;
     }
     .hero-ctas { display: flex; gap: 14px; align-items: center; }
     .btn-primary-hero {
@@ -253,7 +278,12 @@
     <div>
       <div class="hero-eyebrow">Done For You</div>
       <h1>Marketing,<br><em>handled.</em></h1>
-      <p class="hero-body">No overpriced marketing firms. No inconsistent contractors. No pulling your team away from the work that actually pays. Just tell us what you need — and it's done. Focus on running your business. We've got the rest.</p>
+      <ul class="hero-pain-list">
+        <li><span class="pain-x">✕</span> Overpriced marketing firms</li>
+        <li><span class="pain-x">✕</span> Inconsistent, hard-to-manage contractors</li>
+        <li><span class="pain-x">✕</span> Pulling your team off real work to do marketing</li>
+      </ul>
+      <p class="hero-body hero-closer">Just tell us what you need — and it's done for you.</p>
       <div class="hero-ctas">
         <a href="#pricing" class="btn-primary-hero">View Packages</a>
         <a href="#services" class="btn-ghost-hero">See what we handle →</a>
