@@ -156,7 +156,7 @@ export function Homepage() {
             }}>See what we handle →</a>
           </div>
           <div style={{ marginTop: 40, display: "flex", gap: 32 }}>
-            {[["100%", "Your approval, always"], ["48hr", "Content turnaround"], ["0", "Contractors to manage"]].map(([val, label]) => (
+            {[["100%", "Your approval, always"], ["Fast", "Content turnaround"], ["0", "Contractors to manage"]].map(([val, label]) => (
               <div key={label}>
                 <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 26, fontWeight: 600, color: "#1F3D2C" }}>{val}</div>
                 <div style={{ fontSize: 12, color: "#9AA199", marginTop: 2 }}>{label}</div>
@@ -360,7 +360,7 @@ export function Homepage() {
             Ready to have your marketing handled?
           </h2>
           <p style={{ fontSize: 15, color: "rgba(245,242,234,0.70)", marginBottom: 32 }}>
-            Pick a plan, fill out a quick intake form, and we'll have your first deliverables ready within 48 hours.
+            Pick a plan, complete a short intake form, and we'll get started on your content right away.
           </p>
           <a href="#pricing" style={{
             background: "#7D2A03",
