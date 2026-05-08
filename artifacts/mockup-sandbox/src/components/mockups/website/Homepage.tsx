@@ -36,12 +36,12 @@ export function Homepage() {
   ];
 
   const services = [
-    { icon: "✍️", title: "Content Creation", desc: "Professionally written captions, hooks, and copy crafted to match your brand voice." },
-    { icon: "📅", title: "Scheduling & Publishing", desc: "We handle the calendar so you never have to think about when to post again." },
-    { icon: "✅", title: "Client Approval Portal", desc: "Review and approve every post before it goes live — all in one clean dashboard." },
-    { icon: "📊", title: "Analytics & Reporting", desc: "Clear, plain-English reports on what's working and where we're growing." },
-    { icon: "🎯", title: "Strategy & Positioning", desc: "We align your content with your business goals, not just follower counts." },
-    { icon: "🤝", title: "Dedicated Support", desc: "A real person who knows your account — not a ticket queue." },
+    { icon: "📱", title: "Social Media Management", desc: "Content calendars, captions, posting, and platform management across Instagram, Facebook, LinkedIn, and more." },
+    { icon: "📍", title: "Google Business Profile", desc: "Setup, optimization, weekly posts, review responses, and full profile management so you rank locally." },
+    { icon: "📧", title: "Email Campaigns", desc: "Newsletters, promotions, and automated sequences written and sent for you — no copywriter needed." },
+    { icon: "🌐", title: "Website & Landing Pages", desc: "Updates, new pages, lead capture forms, and seasonal promos — handled without a developer retainer." },
+    { icon: "📊", title: "Analytics & Reporting", desc: "Plain-English reports on what's working, what to improve, and where your audience is growing." },
+    { icon: "🎯", title: "Strategy & Brand Voice", desc: "We define your content pillars, campaign calendar, and brand positioning — then execute on it consistently." },
   ];
 
   return (
@@ -110,7 +110,7 @@ export function Homepage() {
             letterSpacing: "0.14em",
             textTransform: "uppercase",
             marginBottom: 20,
-          }}>Social Media Management</div>
+          }}>Done For You</div>
           <h1 style={{
             fontFamily: "'Fraunces', Georgia, serif",
             fontSize: 52,
@@ -120,10 +120,10 @@ export function Homepage() {
             letterSpacing: "-0.02em",
             marginBottom: 24,
           }}>
-            Your marketing,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>handled.</em>
+            Your business presence,<br /><em style={{ fontStyle: "italic", fontWeight: 300 }}>built and run.</em>
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: "#6B756B", marginBottom: 36, maxWidth: 440 }}>
-            We create, schedule, and publish social media content for your business — so you can focus on what you do best. Every post approved by you, before it goes live.
+            Stop piecing together contractors, overpaying agencies, or trying to do it yourself. Tell us what your business needs — and consider it done. You stay in control. We do the work.
           </p>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             <a href="#pricing" style={{
@@ -140,10 +140,10 @@ export function Homepage() {
               fontSize: 14,
               textDecoration: "none",
               fontWeight: 500,
-            }}>See how it works →</a>
+            }}>See what we handle →</a>
           </div>
           <div style={{ marginTop: 40, display: "flex", gap: 32 }}>
-            {[["100%", "Posts approved by you"], ["3", "Platforms managed"], ["48hr", "Content turnaround"]].map(([val, label]) => (
+            {[["100%", "Your approval, always"], ["48hr", "Content turnaround"], ["0", "Contractors to manage"]].map(([val, label]) => (
               <div key={label}>
                 <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 26, fontWeight: 600, color: "#1F3D2C" }}>{val}</div>
                 <div style={{ fontSize: 12, color: "#9AA199", marginTop: 2 }}>{label}</div>
@@ -202,11 +202,12 @@ export function Homepage() {
       {/* ── SERVICES ── */}
       <section id="services" style={{ background: "#fff", padding: "80px 48px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ marginBottom: 48, maxWidth: 520 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 12 }}>What We Do</div>
-            <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 38, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.15 }}>
-              Everything your social media needs
+          <div style={{ marginBottom: 48, maxWidth: 620 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 12 }}>What We Handle</div>
+            <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 38, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.15, marginBottom: 14 }}>
+              One team. Everything your business needs to show up online.
             </h2>
+            <p style={{ fontSize: 15, color: "#6B756B", lineHeight: 1.7 }}>No contractors to vet, no agencies to overpay, no in-house team to manage. You tell us what you need — we handle it end to end.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28 }}>
             {services.map(s => (
@@ -296,10 +297,10 @@ export function Homepage() {
       <section style={{ background: "#2D6B4F", padding: "64px 48px" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, fontWeight: 400, color: "#F5F2EA", marginBottom: 14, lineHeight: 1.2 }}>
-            Ready to hand off your social media?
+            Ready to stop doing it all yourself?
           </h2>
           <p style={{ fontSize: 15, color: "rgba(245,242,234,0.70)", marginBottom: 32 }}>
-            Pick a plan, complete a quick onboarding form, and we'll start creating content within 48 hours.
+            Pick a plan, fill out a quick intake form, and we'll have your first deliverables ready within 48 hours.
           </p>
           <a href="#pricing" style={{
             background: "#7D2A03",
