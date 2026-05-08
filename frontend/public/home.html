@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Done For You Marketing — Social Media Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F2EA; color: #6B756B; }
+    a { text-decoration: none; }
+
+    /* ── NAV ── */
+    .site-nav {
+      background: #fff;
+      border-bottom: 1px solid rgba(31,61,44,0.10);
+      padding: 0 48px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-wordmark { display: flex; align-items: baseline; gap: 7px; }
+    .nav-wordmark-serif { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; color: #1F3D2C; }
+    .nav-wordmark-sans { font-size: 10px; font-weight: 600; color: #2D6B4F; letter-spacing: 0.16em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { color: #6B756B; font-size: 14px; }
+    .nav-links a:hover { color: #1F3D2C; }
+    .btn-nav-login {
+      border: 1px solid rgba(31,61,44,0.25);
+      border-radius: 6px;
+      padding: 7px 18px;
+      font-size: 13px;
+      color: #1F3D2C;
+      font-weight: 500;
+    }
+    .btn-nav-login:hover { background: rgba(31,61,44,0.05); }
+    .btn-nav-cta {
+      background: #7D2A03;
+      border-radius: 6px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #F5F2EA;
+      font-weight: 500;
+    }
+    .btn-nav-cta:hover { background: #6a2303; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 96px 48px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: #7D2A03;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 52px;
+      font-weight: 400;
+      color: #1F3D2C;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 em { font-style: italic; font-weight: 300; }
+    .hero-body {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #6B756B;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; }
+    .btn-primary-hero {
+      background: #7D2A03;
+      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      color: #F5F2EA;
+      font-weight: 500;
+    }
+    .btn-primary-hero:hover { background: #6a2303; }
+    .btn-ghost-hero { color: #2D6B4F; font-size: 14px; font-weight: 500; }
+    .btn-ghost-hero:hover { color: #1F3D2C; }
+    .hero-stats { margin-top: 40px; display: flex; gap: 32px; }
+    .stat-val { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; color: #1F3D2C; }
+    .stat-label { font-size: 12px; color: #9AA199; margin-top: 2px; }
+
+    /* Hero card */
+    .hero-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 40px rgba(31,61,44,0.12);
+    }
+    .hero-card-header { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .hero-card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(45,107,79,0.12);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .hero-card-biz { font-size: 13px; font-weight: 600; color: #1F3D2C; }
+    .hero-card-sub { font-size: 11px; color: #9AA199; }
+    .hero-card-tag { margin-left: auto; font-size: 11px; color: #9AA199; }
+    .hero-card-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(31,61,44,0.07);
+    }
+    .hero-card-row:last-child { border-bottom: none; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .row-platform { font-size: 13px; color: #1F3D2C; font-weight: 500; }
+    .row-caption { font-size: 11px; color: #9AA199; }
+    .row-badge {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+    }
+    .badge-pending { background: rgba(235,201,155,0.40); color: #7D5A2A; }
+    .badge-approved { background: rgba(45,107,79,0.12); color: #2D6B4F; }
+
+    /* ── SERVICES ── */
+    .services-section { background: #fff; padding: 80px 48px; }
+    .services-inner { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 600; color: #7D2A03;
+      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-heading {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 38px; font-weight: 400; color: #1F3D2C; line-height: 1.15;
+    }
+    .services-header { margin-bottom: 48px; max-width: 520px; }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .service-card { background: #F5F2EA; border-radius: 12px; padding: 28px 24px; }
+    .service-icon { font-size: 26px; margin-bottom: 14px; }
+    .service-title { font-size: 15px; font-weight: 600; color: #1F3D2C; margin-bottom: 8px; }
+    .service-desc { font-size: 13.5px; line-height: 1.6; color: #6B756B; }
+
+    /* ── PRICING ── */
+    .pricing-section { padding: 80px 48px; }
+    .pricing-inner { max-width: 1100px; margin: 0 auto; }
+    .pricing-header { text-align: center; margin-bottom: 52px; }
+    .pricing-header .section-heading { margin-bottom: 12px; }
+    .pricing-subhead { font-size: 15px; color: #9AA199; max-width: 400px; margin: 0 auto; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .plan-card {
+      background: #fff;
+      border: 1px solid rgba(31,61,44,0.10);
+      border-radius: 14px;
+      padding: 32px 28px;
+      position: relative;
+    }
+    .plan-card.featured { background: #1F3D2C; border: none; }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: #EBC99B; color: #1F3D2C;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 14px; border-radius: 20px;
+      letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+    }
+    .plan-name { font-size: 13px; font-weight: 500; color: #9AA199; margin-bottom: 8px; }
+    .plan-price { display: flex; align-items: baseline; gap: 2px; margin-bottom: 20px; }
+    .plan-amount { font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 600; color: #1F3D2C; }
+    .plan-card.featured .plan-amount { color: #F5F2EA; }
+    .plan-period { font-size: 14px; color: #9AA199; }
+    .plan-meta { font-size: 12px; color: #2D6B4F; margin-bottom: 4px; }
+    .plan-card.featured .plan-meta { color: #EBC99B; }
+    .plan-divider { width: 100%; height: 1px; background: rgba(31,61,44,0.08); margin: 20px 0; }
+    .plan-card.featured .plan-divider { background: rgba(255,255,255,0.10); }
+    .plan-features { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 10px; }
+    .plan-features li { font-size: 13.5px; color: #6B756B; display: flex; align-items: center; gap: 8px; }
+    .plan-card.featured .plan-features li { color: #EFEBDF; }
+    .plan-check { color: #2D6B4F; font-size: 12px; }
+    .plan-card.featured .plan-check { color: #EBC99B; }
+    .btn-plan {
+      display: block; text-align: center;
+      padding: 12px; border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      border: 1px solid rgba(31,61,44,0.25);
+      color: #1F3D2C; background: transparent;
+    }
+    .btn-plan:hover { background: rgba(31,61,44,0.05); }
+    .plan-card.featured .btn-plan {
+      background: #7D2A03; border: none; color: #F5F2EA;
+    }
+    .plan-card.featured .btn-plan:hover { background: #6a2303; }
+
+    /* ── CTA BAND ── */
+    .cta-band { background: #2D6B4F; padding: 64px 48px; }
+    .cta-band-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .cta-band h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 36px; font-weight: 400; color: #F5F2EA; margin-bottom: 14px; line-height: 1.2;
+    }
+    .cta-band p { font-size: 15px; color: rgba(245,242,234,0.70); margin-bottom: 32px; }
+    .btn-cta-band {
+      background: #7D2A03; border-radius: 8px;
+      padding: 14px 32px; font-size: 15px;
+      color: #F5F2EA; font-weight: 500; display: inline-block;
+    }
+    .btn-cta-band:hover { background: #6a2303; }
+
+    /* ── FOOTER ── */
+    .site-footer { background: #1F3D2C; padding: 48px 48px 36px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .footer-brand-wordmark { display: flex; align-items: baseline; gap: 7px; margin-bottom: 12px; }
+    .footer-brand-serif { font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600; color: #F5F2EA; }
+    .footer-brand-sans { font-size: 9px; font-weight: 600; color: #EBC99B; letter-spacing: 0.16em; text-transform: uppercase; }
+    .footer-tagline { font-size: 13px; color: rgba(245,242,234,0.50); max-width: 240px; line-height: 1.6; }
+    .footer-cols { display: flex; gap: 48px; }
+    .footer-col-head { font-size: 11px; font-weight: 600; color: #EBC99B; letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 14px; }
+    .footer-col-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col-links a { color: rgba(245,242,234,0.60); font-size: 13px; }
+    .footer-col-links a:hover { color: #F5F2EA; }
+    .footer-login-link { color: #EBC99B !important; font-weight: 500; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; }
+    .footer-copy { font-size: 12px; color: rgba(245,242,234,0.30); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-wordmark">
+      <span class="nav-wordmark-serif">Done For You</span>
+      <span class="nav-wordmark-sans">Marketing</span>
+    </div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
+      <a href="mailto:hello@dfymarketinggroup.com">Contact</a>
+      <a href="/login" class="btn-nav-login">Client Login</a>
+      <a href="#pricing" class="btn-nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-eyebrow">Social Media Management</div>
+      <h1>Your marketing,<br><em>handled.</em></h1>
+      <p class="hero-body">We create, schedule, and publish social media content for your business — so you can focus on what you do best. Every post approved by you, before it goes live.</p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn-primary-hero">View Packages</a>
+        <a href="#services" class="btn-ghost-hero">See how it works →</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Posts approved by you</div>
+        </div>
+        <div>
+          <div class="stat-val">3</div>
+          <div class="stat-label">Platforms managed</div>
+        </div>
+        <div>
+          <div class="stat-val">48hr</div>
+          <div class="stat-label">Content turnaround</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero card mockup -->
+    <div>
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <div class="hero-card-icon">🌿</div>
+          <div>
+            <div class="hero-card-biz">Bloom Wellness</div>
+            <div class="hero-card-sub">3 posts pending review</div>
+          </div>
+          <div class="hero-card-tag">Client Portal</div>
+        </div>
+        <div class="hero-card-row">
+          <div class="dot" style="background:#E1306C"></div>
+          <div style="flex:1">
+            <div class="row-platform">Instagram · May 12</div>
+            <div class="row-caption">✨ Spring wellness tips post</div>
+          </div>
+          <div class="row-badge badge-pending">Pending</div>
+        </div>
+        <div class="hero-card-row">
+          <div class="dot" style="background:#1877F2"></div>
+          <div style="flex:1">
+            <div class="row-platform">Facebook · May 14</div>
+            <div class="row-caption">✨ Spring wellness tips post</div>
+          </div>
+          <div class="row-badge badge-approved">Approved</div>
+        </div>
+        <div class="hero-card-row">
+          <div class="dot" style="background:#0077B5"></div>
+          <div style="flex:1">
+            <div class="row-platform">LinkedIn · May 16</div>
+            <div class="row-caption">✨ Spring wellness tips post</div>
+          </div>
+          <div class="row-badge badge-pending">Pending</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="services-section">
+    <div class="services-inner">
+      <div class="services-header">
+        <div class="section-eyebrow">What We Do</div>
+        <h2 class="section-heading">Everything your social media needs</h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">✍️</div>
+          <div class="service-title">Content Creation</div>
+          <div class="service-desc">Professionally written captions, hooks, and copy crafted to match your brand voice.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📅</div>
+          <div class="service-title">Scheduling & Publishing</div>
+          <div class="service-desc">We handle the calendar so you never have to think about when to post again.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">✅</div>
+          <div class="service-title">Client Approval Portal</div>
+          <div class="service-desc">Review and approve every post before it goes live — all in one clean dashboard.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📊</div>
+          <div class="service-title">Analytics & Reporting</div>
+          <div class="service-desc">Clear, plain-English reports on what's working and where we're growing.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🎯</div>
+          <div class="service-title">Strategy & Positioning</div>
+          <div class="service-desc">We align your content with your business goals, not just follower counts.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🤝</div>
+          <div class="service-title">Dedicated Support</div>
+          <div class="service-desc">A real person who knows your account — not a ticket queue.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="pricing-section">
+    <div class="pricing-inner">
+      <div class="pricing-header">
+        <div class="section-eyebrow">Packages</div>
+        <h2 class="section-heading">Simple, transparent pricing</h2>
+        <p class="pricing-subhead">No contracts. Cancel anytime. Your posts, your approval.</p>
+      </div>
+      <div class="pricing-grid">
+
+        <div class="plan-card">
+          <div class="plan-name">Starter Presence</div>
+          <div class="plan-price">
+            <span class="plan-amount">$800</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-meta">8 posts/month · 1 platform</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> Content calendar</li>
+            <li><span class="plan-check">✓</span> Post copywriting</li>
+            <li><span class="plan-check">✓</span> Client approval portal</li>
+            <li><span class="plan-check">✓</span> Monthly report</li>
+          </ul>
+          <a href="/signup" class="btn-plan">Get Started</a>
+        </div>
+
+        <div class="plan-card featured">
+          <div class="plan-badge">Most Popular</div>
+          <div class="plan-name">Growth Engine</div>
+          <div class="plan-price">
+            <span class="plan-amount">$1,500</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-meta">16 posts/month · 3 platforms</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> Content calendar</li>
+            <li><span class="plan-check">✓</span> Post copywriting</li>
+            <li><span class="plan-check">✓</span> Client approval portal</li>
+            <li><span class="plan-check">✓</span> Bi-weekly reports</li>
+            <li><span class="plan-check">✓</span> Story & reel content</li>
+            <li><span class="plan-check">✓</span> Priority support</li>
+          </ul>
+          <a href="/signup" class="btn-plan">Get Started</a>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-name">Marketing Partner</div>
+          <div class="plan-price">
+            <span class="plan-amount">$2,800</span>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-meta">24 posts/month · 3–4 platforms</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✓</span> Everything in Growth</li>
+            <li><span class="plan-check">✓</span> Ad campaign management</li>
+            <li><span class="plan-check">✓</span> Influencer outreach</li>
+            <li><span class="plan-check">✓</span> Weekly strategy calls</li>
+            <li><span class="plan-check">✓</span> Dedicated account manager</li>
+            <li><span class="plan-check">✓</span> Custom reporting</li>
+          </ul>
+          <a href="/signup" class="btn-plan">Get Started</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <div class="cta-band-inner">
+      <h2>Ready to hand off your social media?</h2>
+      <p>Pick a plan, complete a quick onboarding form, and we'll start creating content within 48 hours.</p>
+      <a href="#pricing" class="btn-cta-band">Choose Your Package</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand-wordmark">
+            <span class="footer-brand-serif">Done For You</span>
+            <span class="footer-brand-sans">Marketing</span>
+          </div>
+          <p class="footer-tagline">Social media management that keeps you in control.</p>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <div class="footer-col-head">Company</div>
+            <div class="footer-col-links">
+              <a href="#services">Services</a>
+              <a href="#pricing">Pricing</a>
+              <a href="mailto:hello@dfymarketinggroup.com">Contact</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-head">Contact</div>
+            <div class="footer-col-links">
+              <a href="mailto:hello@dfymarketinggroup.com">hello@dfymarketinggroup.com</a>
+              <a href="tel:+19169708443">(916) 970-8443</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-head">Portal</div>
+            <div class="footer-col-links">
+              <a href="/login" class="footer-login-link">Client Login →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 Done For You Marketing Group. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

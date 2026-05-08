@@ -34,6 +34,14 @@ app.use('/api/account', require('./backend/routes/account')); // subscription ma
 // For any URL that isn't an API route, send the appropriate HTML file
 // This lets clients go to /dashboard and get dashboard.html
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/home.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/login.html'));
+});
+
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/dashboard.html'));
 });
@@ -68,7 +76,7 @@ app.get('/contact', (req, res) => {
 
 // Anything else → send to the login page
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend/public/index.html'));
+  res.sendFile(path.join(__dirname, 'frontend/public/login.html'));
 });
 
 // ─── START SERVER ─────────────────────────────────────────────
