@@ -152,49 +152,75 @@ export function Homepage() {
           </div>
         </div>
 
-        {/* Hero visual */}
+        {/* Hero testimonial */}
         <div style={{ position: "relative" }}>
           <div style={{
-            background: "#fff",
-            borderRadius: 16,
-            padding: 24,
-            boxShadow: "0 8px 40px rgba(31,61,44,0.12)",
+            background: "#1F3D2C",
+            borderRadius: 20,
+            padding: "40px 36px",
+            boxShadow: "0 8px 40px rgba(31,61,44,0.20)",
+            position: "relative",
+            overflow: "hidden",
           }}>
-            <div style={{ marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(45,107,79,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🌿</div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#1F3D2C" }}>Bloom Wellness</div>
-                <div style={{ fontSize: 11, color: "#9AA199" }}>3 posts pending review</div>
-              </div>
-              <div style={{ marginLeft: "auto", fontSize: 11, color: "#9AA199" }}>Client Portal</div>
+            {/* Decorative quote mark */}
+            <div style={{
+              position: "absolute", top: 20, right: 28,
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontSize: 120, lineHeight: 1,
+              color: "rgba(255,255,255,0.05)",
+              fontWeight: 600, userSelect: "none",
+            }}>"</div>
+
+            {/* Stars */}
+            <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
+              {[1,2,3,4,5].map(i => (
+                <span key={i} style={{ color: "#EBC99B", fontSize: 16 }}>★</span>
+              ))}
             </div>
-            {[
-              { platform: "Instagram", status: "Pending", date: "May 12", color: "#E1306C" },
-              { platform: "Facebook", status: "Approved", date: "May 14", color: "#1877F2" },
-              { platform: "LinkedIn", status: "Pending", date: "May 16", color: "#0077B5" },
-            ].map(p => (
-              <div key={p.platform} style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "12px 0",
-                borderBottom: "1px solid rgba(31,61,44,0.07)",
-              }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: p.color, flexShrink: 0 }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, color: "#1F3D2C", fontWeight: 500 }}>{p.platform} · {p.date}</div>
-                  <div style={{ fontSize: 11, color: "#9AA199" }}>✨ Spring wellness tips post</div>
-                </div>
-                <div style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  padding: "3px 10px",
-                  borderRadius: 20,
-                  background: p.status === "Approved" ? "rgba(45,107,79,0.12)" : "rgba(235,201,155,0.40)",
-                  color: p.status === "Approved" ? "#2D6B4F" : "#7D5A2A",
-                }}>{p.status}</div>
+
+            {/* Quote */}
+            <p style={{
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontSize: 20,
+              fontWeight: 400,
+              fontStyle: "italic",
+              color: "#F5F2EA",
+              lineHeight: 1.55,
+              marginBottom: 28,
+            }}>
+              "I used to spend half my week on marketing. Now I just approve what they send me — and everything looks better than it ever did when I was doing it myself."
+            </p>
+
+            {/* Attribution */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: "50%",
+                background: "rgba(235,201,155,0.20)",
+                border: "2px solid rgba(235,201,155,0.30)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontSize: 17, fontWeight: 600, color: "#EBC99B",
+                flexShrink: 0,
+              }}>S</div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#F5F2EA" }}>Sarah M.</div>
+                <div style={{ fontSize: 12, color: "rgba(245,242,234,0.55)" }}>Owner, Bloom Wellness · Sacramento, CA</div>
               </div>
-            ))}
+            </div>
+
+            {/* Result callout */}
+            <div style={{
+              borderTop: "1px solid rgba(255,255,255,0.10)",
+              paddingTop: 20,
+              display: "flex", gap: 24,
+            }}>
+              {[["~15 hrs", "saved per month"], ["3×", "more consistent posting"], ["$0", "agency overhead"]].map(([val, label]) => (
+                <div key={label}>
+                  <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 600, color: "#EBC99B" }}>{val}</div>
+                  <div style={{ fontSize: 11, color: "rgba(245,242,234,0.50)", marginTop: 2 }}>{label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
