@@ -357,7 +357,7 @@ export function Homepage() {
       <section style={{ background: "#2D6B4F", padding: "64px 48px" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, fontWeight: 400, color: "#F5F2EA", marginBottom: 14, lineHeight: 1.2 }}>
-            Ready to stop doing it all yourself?
+            Ready to have your marketing handled?
           </h2>
           <p style={{ fontSize: 15, color: "rgba(245,242,234,0.70)", marginBottom: 32 }}>
             Pick a plan, fill out a quick intake form, and we'll have your first deliverables ready within 48 hours.
