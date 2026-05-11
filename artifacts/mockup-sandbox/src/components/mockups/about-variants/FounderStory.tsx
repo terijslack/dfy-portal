@@ -7,11 +7,11 @@ export default function FounderStory() {
 
         {/* Left — big pull quote */}
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 22, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 28 }}>About Us</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>About Us</div>
           <blockquote style={{
             fontFamily: "'Fraunces', Georgia, serif",
-            fontSize: 38, fontWeight: 300, fontStyle: "italic",
-            color: "#1F3D2C", lineHeight: 1.25, margin: 0,
+            fontSize: 38, fontWeight: 400, fontStyle: "italic",
+            color: "#1F3D2C", lineHeight: 1.15, margin: 0,
             borderLeft: "3px solid #EBC99B", paddingLeft: 28,
             textAlign: "left",
           }}>
@@ -21,13 +21,13 @@ export default function FounderStory() {
 
         {/* Right — full copy */}
         <div>
-          <p style={{ fontSize: 16, color: "#4A5249", lineHeight: 1.85, marginBottom: 22 }}>
+          <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.8, marginBottom: 20 }}>
             We started Done For You Marketing because we kept seeing the same thing. Hardworking small business owners doing everything themselves, and watching their marketing fall to the bottom of the to-do list. Not because they didn't care, but because there simply weren't enough hours in the day.
           </p>
-          <p style={{ fontSize: 16, color: "#4A5249", lineHeight: 1.85, marginBottom: 22 }}>
+          <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.8, marginBottom: 20 }}>
             We're a small team with a big belief: you shouldn't have to choose between running your business and growing it.
           </p>
-          <p style={{ fontSize: 16, color: "#4A5249", lineHeight: 1.85 }}>
+          <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.8 }}>
             Our job is to show up for your brand the way you show up for your customers, consistently, creatively, and with real care. We handle the content, the strategy, and the presence so you can stay focused on what you do best.
           </p>
         </div>
