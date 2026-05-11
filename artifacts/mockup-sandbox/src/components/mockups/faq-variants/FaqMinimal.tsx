@@ -5,7 +5,7 @@ const faqs = [
   { q: "How does the approval process work?", a: "Before anything goes live, you'll review and approve every post through your client portal. Nothing gets published without your sign-off." },
   { q: "How long does it take to get started?", a: "Most clients are up and running within one week of signing on. We handle the onboarding, account setup, and first content calendar." },
   { q: "What platforms do you manage?", a: "We manage Instagram, Facebook, LinkedIn, Google Business Profile, and more. The platforms we focus on depend on your plan and your audience." },
-  { q: "What if I don't like the content?", a: "We revise until you're happy. Your feedback is part of the process — and the more we work together, the better we get at matching your voice." },
+  { q: "Will the content you create sound like my brand?", a: "You approve every post before it goes live. If you're unhappy with a post, we can revise or start over entirely to make it right." },
   { q: "Can I upgrade or downgrade my plan?", a: "Yes, anytime. Just let us know and we'll adjust your plan at the start of the next billing cycle." },
 ];
 
