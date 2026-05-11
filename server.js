@@ -30,6 +30,7 @@ app.use('/api/admin', require('./backend/routes/admin'));   // admin-only action
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
 app.use('/api/account', require('./backend/routes/account')); // subscription management
 app.use('/api/onboarding', require('./backend/routes/onboarding')); // client intake form
+app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file

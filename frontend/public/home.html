@@ -247,6 +247,42 @@
     .btn-cta-band:hover { background: #6a2303; }
 
     /* ── FOOTER ── */
+    /* ── CONTACT SECTION ── */
+    .contact-section { background: #F5F2EA; padding: 80px 48px; }
+    .contact-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-info-eyebrow { font-size: 11px; font-weight: 600; color: #7D2A03; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
+    .contact-info h2 { font-family: 'Fraunces', Georgia, serif; font-size: 38px; font-weight: 400; color: #1F3D2C; line-height: 1.15; margin-bottom: 20px; }
+    .contact-info p { font-size: 15px; color: #6B756B; line-height: 1.7; margin-bottom: 32px; }
+    .contact-detail { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .contact-detail-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(45,107,79,0.10); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .contact-detail-text { font-size: 14px; color: #1F3D2C; font-weight: 500; }
+    .contact-detail-text a { color: #1F3D2C; text-decoration: none; }
+    .contact-detail-text a:hover { color: #2D6B4F; }
+    .contact-form-card { background: #fff; border-radius: 20px; padding: 40px; box-shadow: 0 4px 24px rgba(31,61,44,0.08); }
+    .contact-form-card h3 { font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 400; color: #1F3D2C; margin-bottom: 6px; }
+    .contact-form-card .form-sub { font-size: 14px; color: #9AA199; margin-bottom: 28px; }
+    .contact-field { margin-bottom: 20px; }
+    .contact-field label { display: block; font-size: 13px; font-weight: 600; color: #1F3D2C; margin-bottom: 6px; }
+    .contact-field input, .contact-field textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid rgba(31,61,44,0.15);
+      border-radius: 8px; font-size: 14px; color: #1F3D2C; background: #FAFAF8;
+      box-sizing: border-box; font-family: 'Inter', sans-serif; outline: none;
+      transition: border-color 0.15s;
+    }
+    .contact-field input:focus, .contact-field textarea:focus { border-color: #2D6B4F; background: #fff; }
+    .contact-field textarea { resize: vertical; min-height: 120px; }
+    .btn-contact-submit {
+      width: 100%; padding: 14px; background: #2D6B4F; color: #F5F2EA;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s;
+    }
+    .btn-contact-submit:hover { background: #1F3D2C; }
+    .btn-contact-submit:disabled { background: #9AA199; cursor: not-allowed; }
+    .contact-success { display: none; text-align: center; padding: 32px 0; }
+    .contact-success-icon { font-size: 40px; margin-bottom: 12px; }
+    .contact-success h4 { font-family: 'Fraunces', Georgia, serif; font-size: 22px; color: #1F3D2C; margin-bottom: 8px; }
+    .contact-success p { font-size: 14px; color: #6B756B; }
+
     .site-footer { background: #1F3D2C; padding: 48px 48px 36px; }
     .footer-inner { max-width: 1100px; margin: 0 auto; }
     .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -275,7 +311,7 @@
     <div class="nav-links">
       <a href="#services">Services</a>
       <a href="#pricing">Pricing</a>
-      <a href="mailto:hello@dfymarketinggroup.com">Contact</a>
+      <a href="#contact">Contact</a>
       <a href="/login" class="btn-nav-login">Client Login</a>
       <a href="#pricing" class="btn-nav-cta">Get Started</a>
     </div>
@@ -463,6 +499,49 @@
   </section>
 
   <!-- FOOTER -->
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <div class="contact-info-eyebrow">Get In Touch</div>
+        <h2>Let's talk about your business.</h2>
+        <p>Have questions about our services or ready to get started? Reach out and we'll get back to you promptly.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <div class="contact-detail-text"><a href="mailto:hello@dfymarketinggroup.com">hello@dfymarketinggroup.com</a></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📞</div>
+          <div class="contact-detail-text"><a href="tel:+19169708443">(916) 970-8443</a></div>
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <h3>Send us a message</h3>
+        <p class="form-sub">We'll respond within one business day.</p>
+        <form id="contactForm">
+          <div class="contact-field">
+            <label for="contactName">Your Name</label>
+            <input type="text" id="contactName" placeholder="Jane Smith" required />
+          </div>
+          <div class="contact-field">
+            <label for="contactEmail">Email Address</label>
+            <input type="email" id="contactEmail" placeholder="jane@yourbusiness.com" required />
+          </div>
+          <div class="contact-field">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" placeholder="Tell us a bit about your business and what you need..." required></textarea>
+          </div>
+          <button type="submit" class="btn-contact-submit" id="contactSubmitBtn">Send Message</button>
+        </form>
+        <div class="contact-success" id="contactSuccess">
+          <div class="contact-success-icon">✅</div>
+          <h4>Message received!</h4>
+          <p>We'll be in touch within one business day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-top">
@@ -479,7 +558,7 @@
             <div class="footer-col-links">
               <a href="#services">Services</a>
               <a href="#pricing">Pricing</a>
-              <a href="mailto:hello@dfymarketinggroup.com">Contact</a>
+              <a href="#contact">Contact</a>
             </div>
           </div>
           <div>
@@ -503,5 +582,38 @@
     </div>
   </footer>
 
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    const body = {
+      name: document.getElementById('contactName').value,
+      email: document.getElementById('contactEmail').value,
+      message: document.getElementById('contactMessage').value,
+    };
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('contactSuccess').style.display = 'block';
+      } else {
+        const data = await res.json();
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        alert(data.error || 'Something went wrong. Please try again.');
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+      alert('Network error. Please try again.');
+    }
+  });
+</script>
 </body>
 </html>
