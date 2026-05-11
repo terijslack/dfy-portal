@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const faqs = [
-  { q: "Do I need to sign a long-term contract?", a: "No contracts, ever. All of our plans are month-to-month. We keep clients by doing great work — not by locking them in." },
+  { q: "Do I need to sign a long-term contract?", a: "No contracts, ever. All of our plans are month-to-month. We keep clients by doing great work — not by locking them in. That said, we recommend at least three months to start seeing meaningful analytics and real growth in your presence." },
   { q: "How does the approval process work?", a: "Before anything goes live, you'll review and approve every post through your client portal. Nothing gets published without your sign-off." },
   { q: "How long does it take to get started?", a: "Most clients are up and running within one week of signing on. We handle the onboarding, account setup, and first content calendar." },
   { q: "What platforms do you manage?", a: "We manage Instagram, Facebook, LinkedIn, Google Business Profile, and more. The platforms we focus on depend on your plan and your audience." },
