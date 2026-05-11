@@ -265,6 +265,29 @@
     .btn-cta-band:hover { background: #6a2303; }
 
     /* ── FOOTER ── */
+    /* ── FAQ ── */
+    .faq-section { background: #F5F2EA; padding: 80px 48px; }
+    .faq-inner { max-width: 780px; margin: 0 auto; }
+    .faq-list { margin-top: 48px; }
+    .faq-item { border-top: 1px solid rgba(31,61,44,0.12); }
+    .faq-item:last-child { border-bottom: 1px solid rgba(31,61,44,0.12); }
+    .faq-btn {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 0; background: none; border: none; cursor: pointer; text-align: left; gap: 16px;
+    }
+    .faq-question { font-size: 16px; font-weight: 500; color: #1F3D2C; line-height: 1.4; }
+    .faq-toggle {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid rgba(31,61,44,0.30);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #1F3D2C; background: transparent;
+      transition: background 0.2s, color 0.2s; line-height: 1;
+    }
+    .faq-item.open .faq-toggle { background: #1F3D2C; color: #F5F2EA; }
+    .faq-answer { display: none; padding-bottom: 24px; padding-right: 44px; }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-answer p { font-size: 15px; color: #6B756B; line-height: 1.75; }
+
     /* ── CONTACT SECTION ── */
     .contact-section { background: #F5F2EA; padding: 80px 48px; }
     .contact-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
@@ -534,6 +557,65 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section id="faq" class="faq-section">
+    <div class="faq-inner">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 class="section-heading">Common questions, answered.</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">Do I need to sign a long-term contract?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>No contracts, ever. All of our plans are month-to-month. We keep clients by doing great work — not by locking them in. That said, we recommend at least three months to start seeing meaningful analytics and real growth in your presence.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">How does the approval process work?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>Before anything goes live, you'll review and approve every post through your client portal. Nothing gets published without your sign-off.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">How long does it take to get started?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>Most clients are up and running within one week of signing on. We handle the onboarding, account setup, and first content calendar.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">What platforms do you manage?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>We manage Instagram, Facebook, LinkedIn, Google Business Profile, and more. The platforms we focus on depend on your plan and your audience.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">Will the content you create sound like my brand?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>You approve every post before it goes live. If you're unhappy with a post, we can revise or start over entirely to make it right.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-question">Can I upgrade or change my plan as my business grows?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer"><p>Yes, anytime. You are able to change your plan in the client portal and it will update at the start of your next billing cycle.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <!-- CONTACT -->
   <section id="contact" class="contact-section">
@@ -619,6 +701,19 @@
   </footer>
 
 <script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-toggle').textContent = '+';
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.querySelector('.faq-toggle').textContent = '−';
+    }
+  }
+
   document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = document.getElementById('contactSubmitBtn');
