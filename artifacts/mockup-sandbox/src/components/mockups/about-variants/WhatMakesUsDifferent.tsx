@@ -1,72 +1,54 @@
 export default function WhatMakesUsDifferent() {
-  const points = [
-    {
-      icon: "👤",
-      title: "One team. One point of contact.",
-      desc: "No account managers, no handoffs, no explaining yourself twice. The person who plans your content is the person who creates it.",
-    },
-    {
-      icon: "✅",
-      title: "You approve everything before it goes live.",
-      desc: "Nothing gets published without your sign-off. You stay in control without having to do any of the work.",
-    },
-    {
-      icon: "📍",
-      title: "Local presence, professional execution.",
-      desc: "We're Sacramento-based and we treat your business like it's in our own backyard — because it is.",
-    },
-    {
-      icon: "🔄",
-      title: "Cancel anytime. No retainer games.",
-      desc: "Month-to-month, no hidden fees. We keep clients by delivering results — not by locking them into contracts.",
-    },
-  ];
-
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", padding: "80px 64px" }}>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" />
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", width: "100%", textAlign: "center" }}>
 
-          {/* Left */}
-          <div style={{ position: "sticky", top: 80 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>Why Choose Us</div>
-            <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.15, marginBottom: 20 }}>
-              What makes us different.
-            </h2>
-            <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.8, marginBottom: 32 }}>
-              There's no shortage of marketing options out there. Here's why business owners who've tried them all choose to work with us instead.
-            </p>
-            <div style={{
-              background: "#1F3D2C", borderRadius: 16, padding: "24px 28px",
-              display: "inline-flex", alignItems: "center", gap: 14,
+        <div style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>About Us</div>
+
+        <h2 style={{
+          fontFamily: "'Fraunces', Georgia, serif",
+          fontSize: 42, fontWeight: 400, color: "#1F3D2C",
+          lineHeight: 1.2, marginBottom: 40,
+        }}>
+          A small team.<br />A big belief.
+        </h2>
+
+        {/* Divider */}
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 40 }}>
+          <div style={{ flex: 1, height: 1, background: "rgba(31,61,44,0.12)" }} />
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#EBC99B" }} />
+          <div style={{ flex: 1, height: 1, background: "rgba(31,61,44,0.12)" }} />
+        </div>
+
+        <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.9, marginBottom: 24, maxWidth: 660, margin: "0 auto 24px" }}>
+          We started Done For You Marketing because we kept seeing the same thing. Hardworking small business owners doing everything themselves, and watching their marketing fall to the bottom of the to-do list. Not because they didn't care, but because there simply weren't enough hours in the day.
+        </p>
+
+        <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.9, marginBottom: 24, maxWidth: 660, margin: "0 auto 24px" }}>
+          We're a small team with a big belief: you shouldn't have to choose between running your business and growing it.
+        </p>
+
+        <p style={{ fontSize: 16, color: "#6B756B", lineHeight: 1.9, maxWidth: 660, margin: "0 auto 48px" }}>
+          Our job is to show up for your brand the way you show up for your customers — consistently, creatively, and with real care. We handle the content, the strategy, and the presence so you can stay focused on what you do best.
+        </p>
+
+        {/* Three accent words */}
+        <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
+          {[
+            { word: "Consistently", icon: "🔄" },
+            { word: "Creatively", icon: "✦" },
+            { word: "With real care", icon: "🤝" },
+          ].map(({ word, icon }) => (
+            <div key={word} style={{
+              background: "#F5F2EA", borderRadius: 40,
+              padding: "10px 22px", fontSize: 13, fontWeight: 500,
+              color: "#2D6B4F", display: "flex", alignItems: "center", gap: 8,
             }}>
-              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(235,201,155,0.20)", border: "2px solid rgba(235,201,155,0.30)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, fontWeight: 600, color: "#EBC99B" }}>D</div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#F5F2EA" }}>Sacramento-based</div>
-                <div style={{ fontSize: 12, color: "rgba(245,242,234,0.50)" }}>Done For You Marketing Group</div>
-              </div>
+              <span>{icon}</span> {word}
             </div>
-          </div>
-
-          {/* Right — differentiators */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            {points.map((p, i) => (
-              <div key={i} style={{
-                background: "#F5F2EA", borderRadius: 16, padding: "24px 28px",
-                border: "1.5px solid rgba(31,61,44,0.06)",
-              }}>
-                <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(45,107,79,0.10)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{p.icon}</div>
-                  <div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: "#1F3D2C", marginBottom: 6 }}>{p.title}</div>
-                    <div style={{ fontSize: 14, color: "#6B756B", lineHeight: 1.65 }}>{p.desc}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </div>
