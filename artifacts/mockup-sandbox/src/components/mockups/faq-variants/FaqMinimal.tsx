@@ -6,7 +6,7 @@ const faqs = [
   { q: "How long does it take to get started?", a: "Most clients are up and running within one week of signing on. We handle the onboarding, account setup, and first content calendar." },
   { q: "What platforms do you manage?", a: "We manage Instagram, Facebook, LinkedIn, Google Business Profile, and more. The platforms we focus on depend on your plan and your audience." },
   { q: "Will the content you create sound like my brand?", a: "You approve every post before it goes live. If you're unhappy with a post, we can revise or start over entirely to make it right." },
-  { q: "Can I upgrade or downgrade my plan?", a: "Yes, anytime. Just let us know and we'll adjust your plan at the start of the next billing cycle." },
+  { q: "Can I upgrade or change my plan as my business grows?", a: "Yes, anytime. You are able to change your plan in the client portal and it will update at the start of your next billing cycle." },
 ];
 
 export default function FaqMinimal() {
