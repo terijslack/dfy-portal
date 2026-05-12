@@ -606,7 +606,7 @@
       </div>
 
       <p class="summary-note" id="summaryNote" style="display:none">
-        Monthly billing begins after your first payment.
+        Due today includes your first month + any one-time fees. Monthly billing renews on the same date each month.
       </p>
     </div>
   </div>
@@ -722,10 +722,12 @@
       document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryNote').style.display = hasPlan ? '' : 'none';
 
-      // Due today row — only show when there are one-time charges
+      // Due today row — first month + all one-time charges
       const dueTodayRow = document.getElementById('summaryDueTodayRow');
-      if (hasPlan && totalOneTime > 0) {
-        document.getElementById('summaryDueToday').textContent = fmt(totalOneTime);
+      if (hasPlan) {
+        const monthlyTotal = selectedPriceNum + recurringTotal;
+        const dueToday = monthlyTotal + totalOneTime;
+        document.getElementById('summaryDueToday').textContent = fmt(dueToday);
         dueTodayRow.style.display = '';
       } else {
         dueTodayRow.style.display = 'none';
