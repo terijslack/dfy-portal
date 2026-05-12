@@ -1,8 +1,8 @@
 const team = [
   { name: "Teri Slack", role: "Founder & Lead Strategist", bio: "A natural big-picture thinker, Teri specializes in building brand presence and long-term growth strategies that let business owners focus on what they do best." },
-  { name: "Frankie Lanoue", role: "Client Operations Manager", bio: "With a background in customer service and a natural eye for detail, Frankie makes sure every client feels heard, every deadline is met, and nothing slips through the cracks." },
-  { name: "Zane Starkewolfe", role: "Corporate Development Consultant", bio: "15+ years of experience in corporate development, Zane brings a sharp strategic mind and a proven track record of closing deals, forming partnerships, and launching ventures that drive real growth." },
-  { name: "Ivory Townsend", role: "Content Analytics Director", bio: "A multidisciplinary creative with a background spanning content creation, social media, startup launches, and the arts, Ivory brings a unique blend of analytical thinking and storytelling that helps our clients' brands truly come to life." },
+  { name: "Frankie Lanoue", role: "Client Operations Manager", bio: "With a background in customer service and an eye for detail, Frankie makes sure every client feels heard, every deadline is met, and nothing slips through the cracks." },
+  { name: "Zane Starkewolfe", role: "Corporate Development Consultant", bio: "With 15+ years in corporate development, Zane brings a sharp strategic mind and a proven track record of closing deals, building partnerships, and driving real growth." },
+  { name: "Ivory Townsend", role: "Content Analytics Director", bio: "A creative with a background in content, social media, and the arts, Ivory blends analytical thinking and storytelling to help our clients' brands truly come to life." },
 ];
 
 const initials = (name: string) => name.split(" ").map(n => n[0]).join("");
