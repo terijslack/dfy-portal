@@ -578,13 +578,18 @@
         <span class="summary-value" id="summaryBasePlan">Select a plan above</span>
       </div>
 
+      <div class="summary-row" id="summaryOnboardingRow" style="display:none">
+        <span class="summary-label">Onboarding fee</span>
+        <span class="summary-value" id="summaryOnboarding"></span>
+      </div>
+
       <div class="summary-row" id="summaryMonthlyRow" style="display:none">
         <span class="summary-label">Monthly add-ons</span>
         <span class="summary-value" id="summaryMonthlyAddons"></span>
       </div>
 
       <div class="summary-row" id="summaryOneTimeRow" style="display:none">
-        <span class="summary-label">One-time fees</span>
+        <span class="summary-label">Add-on fees</span>
         <span class="summary-value" id="summaryOneTime"></span>
       </div>
 
@@ -676,7 +681,16 @@
       });
 
       const fmt = n => '$' + n.toLocaleString();
-      const oneTimeTotal = selectedOnboarding + addonOneTimeTotal;
+      const totalOneTime = selectedOnboarding + addonOneTimeTotal;
+
+      // Onboarding fee row (plan-level, always shown when plan selected)
+      const onboardingRow = document.getElementById('summaryOnboardingRow');
+      if (selectedOnboarding > 0) {
+        document.getElementById('summaryOnboarding').textContent = fmt(selectedOnboarding) + ' one-time';
+        onboardingRow.style.display = '';
+      } else {
+        onboardingRow.style.display = 'none';
+      }
 
       // Monthly add-ons row
       const monthlyRow = document.getElementById('summaryMonthlyRow');
@@ -687,10 +701,10 @@
         monthlyRow.style.display = 'none';
       }
 
-      // One-time row (onboarding fee + any one-time add-ons)
+      // Add-on one-time fees row (separate from onboarding)
       const oneTimeRow = document.getElementById('summaryOneTimeRow');
-      if (oneTimeTotal > 0) {
-        document.getElementById('summaryOneTime').textContent = fmt(oneTimeTotal) + ' one-time';
+      if (addonOneTimeTotal > 0) {
+        document.getElementById('summaryOneTime').textContent = fmt(addonOneTimeTotal) + ' one-time';
         oneTimeRow.style.display = '';
       } else {
         oneTimeRow.style.display = 'none';
@@ -701,7 +715,7 @@
 
       document.getElementById('summaryDivider').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
-      document.getElementById('summaryNote').style.display = (hasPlan && oneTimeTotal > 0) ? '' : 'none';
+      document.getElementById('summaryNote').style.display = (hasPlan && totalOneTime > 0) ? '' : 'none';
 
       if (hasPlan) {
         const monthlyTotal = selectedPriceNum + recurringTotal;
