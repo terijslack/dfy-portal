@@ -849,6 +849,44 @@ a.contact-detail-value:hover { color: var(--accent); }
   font-weight: 500;
 }
 
+.approved-history {
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.approved-history-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-align: left;
+}
+
+.approved-history-toggle:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.toggle-arrow {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+.approved-grid {
+  margin-top: 20px;
+}
+
 .change-notes-display {
   background: rgba(232, 168, 56, 0.08);
   border: 1px solid rgba(232, 168, 56, 0.2);

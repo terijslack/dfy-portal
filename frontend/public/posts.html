@@ -45,8 +45,18 @@
       </div>
     </div>
 
-    <div class="posts-grid" id="postsGrid">
-      <div class="loading">Loading your posts…</div>
+    <div class="posts-section" id="pendingSection">
+      <div class="posts-grid" id="postsGrid">
+        <div class="loading">Loading your posts…</div>
+      </div>
+    </div>
+
+    <div class="approved-history" id="approvedHistory" style="display:none">
+      <button class="approved-history-toggle" id="approvedToggle" onclick="toggleApproved()">
+        <span id="approvedToggleLabel">Show Previously Approved Posts</span>
+        <span class="toggle-arrow" id="toggleArrow">▼</span>
+      </button>
+      <div class="posts-grid approved-grid" id="approvedGrid" style="display:none"></div>
     </div>
   </main>
 
@@ -103,15 +113,49 @@
       document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
     }
 
-    function renderPosts(posts) {
-      const grid = document.getElementById('postsGrid');
+    let approvedOpen = false;
 
-      if (posts.length === 0) {
-        grid.innerHTML = '<div class="empty-state">No posts yet. Check back soon!</div>';
-        return;
+    function toggleApproved() {
+      approvedOpen = !approvedOpen;
+      const grid = document.getElementById('approvedGrid');
+      const label = document.getElementById('approvedToggleLabel');
+      const arrow = document.getElementById('toggleArrow');
+      const approvedPosts = allPosts.filter(p => p.status === 'approved' || p.status === 'queued');
+      grid.style.display = approvedOpen ? '' : 'none';
+      arrow.textContent = approvedOpen ? '▲' : '▼';
+      label.textContent = approvedOpen ? 'Hide Previously Approved Posts' : `Show Previously Approved Posts (${approvedPosts.length})`;
+    }
+
+    function renderPosts(posts) {
+      const activePosts = posts.filter(p => p.status === 'pending' || p.status === 'changes_requested');
+      const approvedPosts = posts.filter(p => p.status === 'approved' || p.status === 'queued');
+
+      // Active / needs-review grid
+      const grid = document.getElementById('postsGrid');
+      if (activePosts.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No posts awaiting review. Check back soon!</div>';
+      } else {
+        grid.innerHTML = activePosts.map(post => postCardHtml(post, true)).join('');
       }
 
-      grid.innerHTML = posts.map(post => `
+      // Approved history section
+      const historySection = document.getElementById('approvedHistory');
+      const approvedGrid = document.getElementById('approvedGrid');
+      const toggleLabel = document.getElementById('approvedToggleLabel');
+
+      if (approvedPosts.length > 0) {
+        historySection.style.display = '';
+        toggleLabel.textContent = approvedOpen
+          ? 'Hide Previously Approved Posts'
+          : `Show Previously Approved Posts (${approvedPosts.length})`;
+        approvedGrid.innerHTML = approvedPosts.map(post => postCardHtml(post, false)).join('');
+      } else {
+        historySection.style.display = 'none';
+      }
+    }
+
+    function postCardHtml(post, showActions) {
+      return `
         <div class="post-card status-${post.status}" data-id="${post.id}">
           <div class="post-meta">
             <span class="post-platform platform-${post.platform}">${platformIcon(post.platform)} ${capitalize(post.platform)}</span>
@@ -123,16 +167,16 @@
 
           ${post.change_notes ? `<div class="change-notes-display">💬 Your notes: ${escapeHtml(post.change_notes)}</div>` : ''}
 
-          ${post.status === 'pending' || post.status === 'changes_requested' ? `
+          ${showActions && (post.status === 'pending' || post.status === 'changes_requested') ? `
             <div class="post-actions">
               <button class="btn-approve" onclick="approvePost(${post.id})">✓ Approve</button>
               <button class="btn-changes" onclick="openChangesModal(${post.id})">✏️ Request Changes</button>
             </div>
           ` : ''}
 
-          ${post.status === 'approved' ? `<div class="approved-note">✅ Approved — queued in Buffer</div>` : ''}
+          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">✅ Approved — queued in Buffer</div>` : ''}
         </div>
-      `).join('');
+      `;
     }
 
     async function approvePost(postId) {
