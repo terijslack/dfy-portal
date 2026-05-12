@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Calendar — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/dashboard" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+      <div class="header-right">
+        <span class="welcome-name" id="welcomeName">Loading…</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <a href="/dashboard" class="back-link">← Back to portal</a>
+      <h1>Post Calendar</h1>
+      <p class="page-subtitle">A monthly view of all your approved posts.</p>
+    </div>
+
+    <div class="cal-nav">
+      <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
+      <h2 class="cal-month-label" id="calMonthLabel"></h2>
+      <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
+    </div>
+
+    <div class="cal-legend">
+      <span class="cal-legend-item"><span class="cal-dot platform-instagram"></span> Instagram</span>
+      <span class="cal-legend-item"><span class="cal-dot platform-facebook"></span> Facebook</span>
+      <span class="cal-legend-item"><span class="cal-dot platform-linkedin"></span> LinkedIn</span>
+      <span class="cal-legend-item"><span class="cal-dot platform-twitter"></span> Twitter</span>
+      <span class="cal-legend-item"><span class="cal-dot platform-tiktok"></span> TikTok</span>
+    </div>
+
+    <div class="cal-grid-wrap">
+      <div class="cal-weekdays">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="cal-grid" id="calGrid">
+        <div class="loading">Loading calendar…</div>
+      </div>
+    </div>
+
+    <div class="cal-detail-panel" id="detailPanel" style="display:none">
+      <div class="cal-detail-header">
+        <span id="detailDate"></span>
+        <button class="cal-detail-close" id="detailClose">✕</button>
+      </div>
+      <div id="detailPosts"></div>
+    </div>
+  </main>
+
+  <script>
+    let allPosts = [];
+    let currentYear, currentMonth;
+
+    const platformColors = {
+      instagram: '#C13584',
+      facebook: '#1877F2',
+      twitter: '#1DA1F2',
+      linkedin: '#0A66C2',
+      tiktok: '#010101'
+    };
+
+    const platformIcons = {
+      instagram: '📸',
+      facebook: '👥',
+      twitter: '🐦',
+      linkedin: '💼',
+      tiktok: '🎵'
+    };
+
+    async function init() {
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
+
+      if (!meData.user) { window.location.href = '/'; return; }
+      if (meData.user.is_admin) { window.location.href = '/admin'; return; }
+
+      document.getElementById('welcomeName').textContent = meData.user.name;
+
+      const now = new Date();
+      currentYear = now.getFullYear();
+      currentMonth = now.getMonth();
+
+      await loadPosts();
+      renderCalendar();
+    }
+
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        const data = await res.json();
+        allPosts = data.posts || [];
+      } catch (err) {
+        allPosts = [];
+      }
+    }
+
+    function renderCalendar() {
+      const label = document.getElementById('calMonthLabel');
+      label.textContent = new Date(currentYear, currentMonth, 1)
+        .toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      const grid = document.getElementById('calGrid');
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const today = new Date();
+
+      // Group posts by date string YYYY-MM-DD
+      const postsByDate = {};
+      allPosts.forEach(p => {
+        const d = p.scheduled_date ? p.scheduled_date.slice(0, 10) : null;
+        if (!d) return;
+        if (!postsByDate[d]) postsByDate[d] = [];
+        postsByDate[d].push(p);
+      });
+
+      let cells = '';
+
+      // Empty leading cells
+      for (let i = 0; i < firstDay; i++) {
+        cells += `<div class="cal-cell cal-cell-empty"></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const posts = postsByDate[dateStr] || [];
+        const isToday = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === day;
+
+        const dots = posts.slice(0, 4).map(p => {
+          const statusClass = p.status === 'approved' || p.status === 'queued' ? 'dot-approved' : p.status === 'changes_requested' ? 'dot-changes' : 'dot-pending';
+          return `<span class="cal-dot platform-${p.platform} ${statusClass}" title="${capitalize(p.platform)}"></span>`;
+        }).join('');
+
+        const overflow = posts.length > 4 ? `<span class="cal-overflow">+${posts.length - 4}</span>` : '';
+
+        cells += `
+          <div class="cal-cell ${isToday ? 'cal-cell-today' : ''} ${posts.length ? 'cal-cell-has-posts' : ''}" 
+               data-date="${dateStr}" onclick="showDetail('${dateStr}')">
+            <span class="cal-day-num">${day}</span>
+            ${posts.length ? `<div class="cal-dots">${dots}${overflow}</div>` : ''}
+          </div>`;
+      }
+
+      grid.innerHTML = cells;
+    }
+
+    function showDetail(dateStr) {
+      const posts = allPosts.filter(p => p.scheduled_date && p.scheduled_date.slice(0, 10) === dateStr);
+      if (!posts.length) return;
+
+      const panel = document.getElementById('detailPanel');
+      const date = new Date(dateStr + 'T00:00:00');
+      document.getElementById('detailDate').textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+      document.getElementById('detailPosts').innerHTML = posts.map(p => `
+        <div class="cal-detail-post">
+          <div class="cal-detail-meta">
+            <span class="post-platform platform-${p.platform}">${platformIcons[p.platform] || '📱'} ${capitalize(p.platform)}</span>
+            <span class="post-status-badge status-badge-${p.status}">${statusLabel(p.status)}</span>
+          </div>
+          <div class="cal-detail-caption">${escapeHtml(p.caption)}</div>
+          ${p.change_notes ? `<div class="change-notes-display">💬 ${escapeHtml(p.change_notes)}</div>` : ''}
+        </div>
+      `).join('');
+
+      panel.style.display = '';
+
+      // Highlight selected cell
+      document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-cell-selected'));
+      const cell = document.querySelector(`[data-date="${dateStr}"]`);
+      if (cell) cell.classList.add('cal-cell-selected');
+    }
+
+    document.getElementById('detailClose').addEventListener('click', () => {
+      document.getElementById('detailPanel').style.display = 'none';
+      document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-cell-selected'));
+    });
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      document.getElementById('detailPanel').style.display = 'none';
+      renderCalendar();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      document.getElementById('detailPanel').style.display = 'none';
+      renderCalendar();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+
+    function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+    function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function statusLabel(status) {
+      const labels = { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' };
+      return labels[status] || status;
+    }
+
+    init();
+  </script>
+</body>
+</html>

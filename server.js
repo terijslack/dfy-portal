@@ -64,6 +64,10 @@ app.get('/posts', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/posts.html'));
 });
 
+app.get('/calendar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/calendar.html'));
+});
+
 app.get('/analytics', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/analytics.html'));
 });
