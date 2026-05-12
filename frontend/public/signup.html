@@ -600,8 +600,13 @@
         <span class="summary-value" id="summaryTotal"></span>
       </div>
 
+      <div class="summary-row total" id="summaryDueTodayRow" style="display:none">
+        <span class="summary-label">Due today</span>
+        <span class="summary-value" id="summaryDueToday"></span>
+      </div>
+
       <p class="summary-note" id="summaryNote" style="display:none">
-        One-time fees are charged at checkout. Monthly billing begins after the first payment.
+        Monthly billing begins after your first payment.
       </p>
     </div>
   </div>
@@ -710,12 +715,21 @@
         oneTimeRow.style.display = 'none';
       }
 
-      // Total row + divider (only when plan is selected)
+      // Total rows + divider (only when plan is selected)
       const hasPlan = selectedPriceId !== null;
 
       document.getElementById('summaryDivider').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
-      document.getElementById('summaryNote').style.display = (hasPlan && totalOneTime > 0) ? '' : 'none';
+      document.getElementById('summaryNote').style.display = hasPlan ? '' : 'none';
+
+      // Due today row — only show when there are one-time charges
+      const dueTodayRow = document.getElementById('summaryDueTodayRow');
+      if (hasPlan && totalOneTime > 0) {
+        document.getElementById('summaryDueToday').textContent = fmt(totalOneTime);
+        dueTodayRow.style.display = '';
+      } else {
+        dueTodayRow.style.display = 'none';
+      }
 
       if (hasPlan) {
         const monthlyTotal = selectedPriceNum + recurringTotal;
