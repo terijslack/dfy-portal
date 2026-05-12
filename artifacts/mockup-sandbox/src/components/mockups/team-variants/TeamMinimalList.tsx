@@ -1,8 +1,8 @@
 const team = [
   { name: "Teri Slack", role: "Founder & Lead Strategist", bio: "10+ years helping small businesses grow their presence without the agency overhead." },
-  { name: "Frankie Lanoue", role: "Content Director", bio: "Former brand journalist who knows how to make every post earn its place in a feed." },
-  { name: "Zane Starkewolfe", role: "Social Media Manager", bio: "Platform-obsessed and data-driven — he turns analytics into better content every week." },
-  { name: "Ivory Townsend", role: "Client Success Lead", bio: "Your main point of contact. She makes sure everything runs smoothly from day one." },
+  { name: "Frankie Lanoue", role: "Client Operations Manager", bio: "Former brand journalist who knows how to make every post earn its place in a feed." },
+  { name: "Zane Starkewolfe", role: "Corporate Development Consultant", bio: "Platform-obsessed and data-driven — he turns analytics into better content every week." },
+  { name: "Ivory Townsend", role: "Content Analytics Director", bio: "Your main point of contact. She makes sure everything runs smoothly from day one." },
 ];
 
 export default function TeamMinimalList() {
