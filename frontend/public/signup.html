@@ -399,10 +399,9 @@
     <div class="plans-grid">
 
       <!-- Starter Presence -->
-      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Starter Presence" data-price="$800/mo" data-price-num="800" data-onboarding="300" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Starter Presence" data-price="$800/mo" data-price-num="800" onclick="selectPlan(this)">
         <div class="plan-name">Starter Presence</div>
         <div class="plan-price">$800<span>/mo</span></div>
-        <div class="plan-onboarding">+ $300 one-time onboarding fee</div>
         <ul class="plan-features">
           <li>1 platform managed for you</li>
           <li>8 posts/month</li>
@@ -415,11 +414,10 @@
       </div>
 
       <!-- Growth Engine -->
-      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" data-price-num="1500" data-onboarding="500" onclick="selectPlan(this)">
+      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" data-price-num="1500" onclick="selectPlan(this)">
         <div class="popular-badge">Most Popular</div>
         <div class="plan-name">Growth Engine</div>
         <div class="plan-price">$1,500<span>/mo</span></div>
-        <div class="plan-onboarding">+ $500 one-time onboarding fee</div>
         <ul class="plan-features">
           <li>3 platforms managed for you</li>
           <li>16 posts/month</li>
@@ -433,10 +431,9 @@
       </div>
 
       <!-- Marketing Partner -->
-      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Marketing Partner" data-price="$2,800/mo" data-price-num="2800" data-onboarding="700" onclick="selectPlan(this)">
+      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Marketing Partner" data-price="$2,800/mo" data-price-num="2800" onclick="selectPlan(this)">
         <div class="plan-name">Marketing Partner</div>
         <div class="plan-price">$2,800<span>/mo</span></div>
-        <div class="plan-onboarding">+ $700 one-time onboarding fee</div>
         <ul class="plan-features">
           <li>3-4 platforms managed for you</li>
           <li>24 posts/month</li>
@@ -578,11 +575,6 @@
         <span class="summary-value" id="summaryBasePlan">Select a plan above</span>
       </div>
 
-      <div class="summary-row" id="summaryOnboardingRow" style="display:none">
-        <span class="summary-label">Onboarding fee</span>
-        <span class="summary-value" id="summaryOnboarding"></span>
-      </div>
-
       <div class="summary-row" id="summaryMonthlyRow" style="display:none">
         <span class="summary-label">Monthly add-ons</span>
         <span class="summary-value" id="summaryMonthlyAddons"></span>
@@ -655,14 +647,12 @@
   <script>
     let selectedPriceId = null;
     let selectedPriceNum = 0;
-    let selectedOnboarding = 0;
 
     function selectPlan(card) {
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       selectedPriceId = card.dataset.priceId;
       selectedPriceNum = parseInt(card.dataset.priceNum);
-      selectedOnboarding = parseInt(card.dataset.onboarding) || 0;
 
       document.getElementById('planSummaryName').textContent = card.dataset.name;
       document.getElementById('planSummaryPrice').textContent = card.dataset.price;
@@ -686,16 +676,7 @@
       });
 
       const fmt = n => '$' + n.toLocaleString();
-      const totalOneTime = selectedOnboarding + addonOneTimeTotal;
-
-      // Onboarding fee row (plan-level, always shown when plan selected)
-      const onboardingRow = document.getElementById('summaryOnboardingRow');
-      if (selectedOnboarding > 0) {
-        document.getElementById('summaryOnboarding').textContent = fmt(selectedOnboarding) + ' one-time';
-        onboardingRow.style.display = '';
-      } else {
-        onboardingRow.style.display = 'none';
-      }
+      const totalOneTime = addonOneTimeTotal;
 
       // Monthly add-ons row
       const monthlyRow = document.getElementById('summaryMonthlyRow');
@@ -722,11 +703,11 @@
       document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryNote').style.display = hasPlan ? '' : 'none';
 
-      // Due today row — first month + all one-time charges
+      // Due today row — first month + any one-time add-ons
       const dueTodayRow = document.getElementById('summaryDueTodayRow');
       if (hasPlan) {
         const monthlyTotal = selectedPriceNum + recurringTotal;
-        const dueToday = monthlyTotal + totalOneTime;
+        const dueToday = monthlyTotal + addonOneTimeTotal;
         document.getElementById('summaryDueToday').textContent = fmt(dueToday);
         dueTodayRow.style.display = '';
       } else {
