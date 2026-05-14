@@ -231,7 +231,7 @@ export default function LayoutB() {
               <>
                 <p style={{ fontSize: 12, color: "#9AA199", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Selected plan</p>
                 <p style={{ fontSize: 18, fontWeight: 600, color: "#1F3D2C", margin: 0 }}>
-                  {selectedPlan.name} <span style={{ color: "#6B756B", fontWeight: 400, fontSize: 15 }}>— {selectedPlan.price}/mo</span>
+                  {selectedPlan.name}
                 </p>
               </>
             ) : (
