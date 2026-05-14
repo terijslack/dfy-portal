@@ -71,8 +71,8 @@ router.post('/create-checkout', async (req, res) => {
       mode: 'subscription',
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.APP_URL}/signup-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.APP_URL}/signup`,
+      success_url: `${process.env.APP_URL || 'https://' + process.env.REPLIT_DEV_DOMAIN}/signup-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.APP_URL || 'https://' + process.env.REPLIT_DEV_DOMAIN}/signup`,
       metadata: {
         email: email.toLowerCase().trim(),
         addons: addonNames.slice(0, 500)
