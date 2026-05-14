@@ -1,4 +1,4 @@
-const team = [
+const team: { name: string; role: string; bio: string; img: string; initials: string; scale?: number }[] = [
   {
     name: "Teri Slack",
     role: "Founder & Lead Strategist",
@@ -26,6 +26,7 @@ const team = [
     bio: "A creative with a background in content, social media, and the arts, Ivory blends analytical thinking and storytelling to help our clients' brands truly come to life.",
     img: "/__mockup/images/team/ivory-townsend-nobg.png",
     initials: "IT",
+    scale: 1.35,
   },
 ];
 
@@ -53,7 +54,7 @@ export function CenteredPortraits() {
                 <img
                   src={member.img}
                   alt={member.name}
-                  style={{ width: "92%", height: "92%", objectFit: "contain", objectPosition: "bottom" }}
+                  style={{ width: "92%", height: "92%", objectFit: "contain", objectPosition: "bottom", transform: `scale(${member.scale ?? 1})`, transformOrigin: "bottom center" }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
                   }}
