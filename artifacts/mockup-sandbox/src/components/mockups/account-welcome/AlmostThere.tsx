@@ -49,56 +49,11 @@ export default function AlmostThere() {
 
       {/* Welcome block — two-tone heading */}
       <div style={{ maxWidth: 460, margin: "40px auto 0", padding: "0 24px" }}>
-        {/* ── OPTION 1: Inline text label (no background) ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
           <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
           <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
           <span style={{ fontSize: 13, color: "#6B756B" }}>$1,500/mo</span>
-        </div>
-
-        {/* ── OPTION 2: Rust-accented tag ── */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: "1px solid rgba(125,42,3,0.2)", borderRadius: 8, padding: "8px 14px", marginBottom: 20 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#7D2A03", display: "inline-block", flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
-          <span style={{ fontSize: 12, color: "#9AA199" }}>· $1,500/mo</span>
-        </div>
-
-        {/* ── OPTION 3: Underline accent ── */}
-        <div style={{ marginBottom: 24, paddingBottom: 12, borderBottom: "2px solid #7D2A03", display: "inline-block" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#7D2A03", marginBottom: 3 }}>Selected plan</div>
-          <div style={{ fontSize: 15, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine &nbsp;<span style={{ fontWeight: 400, color: "#6B756B", fontSize: 13 }}>$1,500/mo</span></div>
-        </div>
-
-        {/* (original pill hidden) */}
-        <div
-          style={{
-            display: "none",
-            alignItems: "center",
-            gap: 8,
-            background: "#EEF5F1",
-            border: "1px solid rgba(45,107,79,0.25)",
-            borderRadius: 999,
-            padding: "7px 16px",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#2D6B4F",
-            marginBottom: 24,
-          }}
-        >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="#2D6B4F"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M2 6l3 3 5-5" />
-          </svg>
-          Growth Engine — $1,500/mo
         </div>
 
         <h1
