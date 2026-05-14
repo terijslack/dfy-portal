@@ -14,23 +14,23 @@ export default function BrandForward() {
 
       {/* Welcome block — brand-forward banner */}
       <div style={{ maxWidth: 460, margin: "36px auto 0", padding: "0 24px" }}>
-        <div style={{ background: "#1F3D2C", borderRadius: 16, padding: "28px 28px 24px", marginBottom: 28, textAlign: "center" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#EBC99B", marginBottom: 10 }}>
+        <div style={{ marginBottom: 28, textAlign: "center" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#2D6B4F", marginBottom: 10 }}>
             Done For You Marketing
           </p>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "1.75rem", fontWeight: 400, color: "#F5F2EA", margin: "0 0 10px", lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "1.75rem", fontWeight: 400, color: "#1F3D2C", margin: "0 0 10px", lineHeight: 1.2 }}>
             Welcome! Please create an account to continue.
           </h1>
           <div style={{ width: 36, height: 2, background: "#7D2A03", margin: "0 auto 14px" }} />
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(235,201,155,0.7)" }}>Your plan</span>
-            <span style={{ width: 1, height: 12, background: "rgba(255,255,255,0.2)", display: "inline-block" }} />
-            <span style={{ fontSize: 14, fontWeight: 600, color: "#F5F2EA" }}>Growth Engine</span>
-            <span style={{ fontSize: 13, color: "rgba(235,201,155,0.85)" }}>$1,500/mo</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
+            <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
+            <span style={{ fontSize: 13, color: "#6B756B" }}>$1,500/mo</span>
           </div>
 
           {/* Plan features */}
-          <div style={{ marginTop: 18, textAlign: "left", borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
+          <div style={{ marginTop: 18, textAlign: "left", borderTop: "1px solid rgba(31,61,44,0.12)", paddingTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
             {[
               "Up to 4 social media platforms",
               "Up to 32 posts (total)",
@@ -40,8 +40,8 @@ export default function BrandForward() {
               "Google Business Profile management",
             ].map(f => (
               <div key={f} style={{ display: "flex", gap: 7, alignItems: "flex-start" }}>
-                <span style={{ color: "#EBC99B", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
-                <span style={{ fontSize: 12, color: "rgba(245,242,234,0.75)", lineHeight: 1.4 }}>{f}</span>
+                <span style={{ color: "#2D6B4F", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: 12, color: "#6B756B", lineHeight: 1.4 }}>{f}</span>
               </div>
             ))}
           </div>
