@@ -87,10 +87,8 @@ export default function AlmostThere() {
             lineHeight: 1.65,
             margin: "12px 0 20px",
           }}
-        >
-          Welcome to Done For You Marketing. Fill in your details below and
-          we'll get everything set up for you.
-        </p>
+        >Welcome to Done For You Marketing!
+        Fill in your details below and let's get started!</p>
 
         {/* Plan features */}
         <div
