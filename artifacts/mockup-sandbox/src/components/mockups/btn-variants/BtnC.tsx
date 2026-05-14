@@ -14,18 +14,28 @@ export default function BtnC() {
             fontFamily: "Inter, sans-serif",
             fontSize: "15px",
             fontWeight: 500,
-            padding: "4px 0",
-            borderBottom: "1.5px solid #EBC99B",
+            padding: "10px 24px",
+            border: "1.5px solid #EBC99B",
+            borderRadius: "6px",
             textDecoration: "none",
             letterSpacing: "0.01em",
+            transition: "border-color 0.15s, color 0.15s, background 0.15s",
           }}
-          onMouseEnter={e => { e.currentTarget.style.color = "#7D2A03"; e.currentTarget.style.borderColor = "#7D2A03"; }}
-          onMouseLeave={e => { e.currentTarget.style.color = "#1F3D2C"; e.currentTarget.style.borderColor = "#EBC99B"; }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = "#F5F2EA";
+            e.currentTarget.style.background = "#1F3D2C";
+            e.currentTarget.style.borderColor = "#1F3D2C";
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = "#1F3D2C";
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.borderColor = "#EBC99B";
+          }}
         >
           Get Started →
         </a>
         <p style={{ marginTop: "16px", fontFamily: "Inter, sans-serif", fontSize: "12px", color: "#9AA199" }}>
-          Understated — tan underline accent, rust on hover
+          Tan border box, fills forest green on hover
         </p>
       </div>
     </div>
