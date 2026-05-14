@@ -24,9 +24,28 @@ export default function AlmostThere() {
           <span style={{ fontSize: "2.2rem" }}>Create your account</span>
         </h1>
 
-        <p style={{ fontSize: 15, color: "#6B756B", lineHeight: 1.65, margin: "12px 0 32px" }}>
+        <p style={{ fontSize: 15, color: "#6B756B", lineHeight: 1.65, margin: "12px 0 20px" }}>
           Welcome to Done For You Marketing. Fill in your details below and we'll get everything set up for you.
         </p>
+
+        {/* Plan features */}
+        <div style={{ background: "#F5F2EA", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "16px 20px", marginBottom: 8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px 16px" }}>
+            {[
+              "Up to 4 social media platforms",
+              "Up to 32 posts (total)",
+              "Caption writing",
+              "2 promotional emails/month",
+              "Automated Google Review requests",
+              "Google Business Profile management",
+            ].map(f => (
+              <div key={f} style={{ display: "flex", gap: 7, alignItems: "flex-start" }}>
+                <span style={{ color: "#2D6B4F", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: 12, color: "#6B756B", lineHeight: 1.4 }}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Form preview */}

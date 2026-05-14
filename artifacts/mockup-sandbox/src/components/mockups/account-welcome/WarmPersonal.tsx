@@ -25,9 +25,28 @@ export default function WarmPersonal() {
         </p>
 
         {/* Plan pill */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#EEF5F1", border: "1px solid rgba(45,107,79,0.25)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 500, color: "#2D6B4F", marginBottom: 36 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#EEF5F1", border: "1px solid rgba(45,107,79,0.25)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 500, color: "#2D6B4F", marginBottom: 20 }}>
           <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="#2D6B4F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
           Growth Engine — $1,500/mo
+        </div>
+
+        {/* Plan features */}
+        <div style={{ background: "#fff", border: "1px solid rgba(45,107,79,0.14)", borderRadius: 12, padding: "16px 20px", marginBottom: 28, textAlign: "left" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px 16px" }}>
+            {[
+              "Up to 4 social media platforms",
+              "Up to 32 posts (total)",
+              "Caption writing",
+              "2 promotional emails/month",
+              "Automated Google Review requests",
+              "Google Business Profile management",
+            ].map(f => (
+              <div key={f} style={{ display: "flex", gap: 7, alignItems: "flex-start" }}>
+                <span style={{ color: "#2D6B4F", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: 12, color: "#6B756B", lineHeight: 1.4 }}>{f}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
