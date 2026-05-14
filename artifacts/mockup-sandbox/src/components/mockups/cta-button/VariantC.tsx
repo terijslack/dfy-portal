@@ -1,0 +1,72 @@
+export default function VariantC() {
+  return (
+    <div style={{
+      background: "#F5F2EA",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "'Inter', sans-serif",
+      padding: "40px 24px",
+    }}>
+      <div style={{ maxWidth: 740, width: "100%", textAlign: "center" }}>
+
+        <p style={{ color: "#7D2A03", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
+          Beyond the Packages
+        </p>
+
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 48, fontWeight: 500, color: "#1F3D2C", margin: "0 0 40px", lineHeight: 1.15 }}>
+          Custom Services
+        </h2>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginBottom: 36 }}>
+          {["Website Refresh or Update", "Build a Website", "Landing Page or Lead Capture", "Add Platforms or Posts", "A La Carte Services"].map(tag => (
+            <span key={tag} style={{ padding: "10px 22px", borderRadius: 999, border: "1.5px solid #EBC99B", fontSize: 15, fontWeight: 500, color: "#1F3D2C" }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <p style={{ fontSize: 15, color: "#6B756B", marginBottom: 40, lineHeight: 1.6 }}>
+          Not sure what you need? Tell us your goals and we'll build the right plan.
+        </p>
+
+        {/* VARIANT C: Two-button pair — primary rust + ghost green side by side */}
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <a href="#" style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: "#7D2A03", color: "#fff",
+            padding: "17px 44px", borderRadius: 999,
+            fontSize: 16, fontWeight: 600,
+            textDecoration: "none",
+            boxShadow: "0 2px 16px rgba(125,42,3,0.22)",
+          }}>
+            Get Started
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a href="#" style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: "transparent", color: "#2D6B4F",
+            padding: "17px 36px", borderRadius: 999,
+            border: "1.5px solid #2D6B4F",
+            fontSize: 16, fontWeight: 500,
+            textDecoration: "none",
+          }}>
+            See Packages
+          </a>
+        </div>
+
+        <p style={{ fontSize: 13, color: "#9AA199", marginTop: 18 }}>
+          Or explore our standard plans above
+        </p>
+
+        <div style={{ marginTop: 48, padding: "12px 0", borderTop: "1px solid rgba(107,117,107,0.15)", textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "#9AA199", textTransform: "uppercase" }}>C — Primary + Ghost Pair</span>
+        </div>
+      </div>
+    </div>
+  );
+}
