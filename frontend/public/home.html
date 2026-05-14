@@ -218,6 +218,18 @@
     .about-copy p { font-size: 16px; color: rgba(245,242,234,0.75); line-height: 1.8; margin-bottom: 20px; }
     .about-copy p:last-child { margin-bottom: 0; }
 
+    /* ── CUSTOM SERVICES ── */
+    .custom-services-section { background: #F5F2EA; padding: 80px 48px; text-align: center; }
+    .custom-services-inner { max-width: 860px; margin: 0 auto; }
+    .custom-services-eyebrow { color: #7D2A03; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+    .custom-services-heading { font-family: 'Fraunces', serif; font-size: 48px; font-weight: 500; color: #1F3D2C; margin: 0 0 48px; line-height: 1.15; }
+    .custom-services-tags { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 40px; }
+    .custom-services-tag { display: inline-block; padding: 10px 22px; border-radius: 999px; border: 1.5px solid #EBC99B; font-size: 15px; font-weight: 500; color: #1F3D2C; background: transparent; transition: background 0.18s; }
+    .custom-services-tag:hover { background: rgba(235,201,155,0.33); }
+    .custom-services-nudge { font-size: 15px; color: #6B756B; margin-bottom: 28px; line-height: 1.6; }
+    .btn-custom-request { display: inline-flex; align-items: center; gap: 10px; background: #7D2A03; color: #fff; text-decoration: none; padding: 17px 42px; border-radius: 999px; font-size: 16px; font-weight: 500; transition: opacity 0.2s, transform 0.15s; }
+    .btn-custom-request:hover { opacity: 0.88; transform: scale(1.03); }
+
     /* ── PRICING ── */
     .pricing-section { padding: 80px 48px; }
     .pricing-inner { max-width: 1100px; margin: 0 auto; }
@@ -617,6 +629,24 @@
       <div style="text-align:center; margin-top:32px;">
         <a href="/signup" class="btn-custom-options">See Custom Options</a>
       </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM SERVICES -->
+  <section class="custom-services-section">
+    <div class="custom-services-inner">
+      <p class="custom-services-eyebrow">Beyond the Packages</p>
+      <h2 class="custom-services-heading">Custom Services</h2>
+      <div class="custom-services-tags">
+        <span class="custom-services-tag">Website Refresh or Update</span>
+        <span class="custom-services-tag">Build a Website</span>
+        <span class="custom-services-tag">Landing Page or Lead Capture</span>
+        <span class="custom-services-tag">Add Platforms or Posts to Package</span>
+        <span class="custom-services-tag">Customize Email Campaigns</span>
+        <span class="custom-services-tag">A La Carte Services</span>
+      </div>
+      <p class="custom-services-nudge">Not sure what you need? Tell us your goals and we'll build the right plan.</p>
+      <a href="/signup" class="btn-custom-request">Request Custom Services &#8594;</a>
     </div>
   </section>
 
