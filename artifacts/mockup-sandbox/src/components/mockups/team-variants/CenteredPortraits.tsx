@@ -3,7 +3,7 @@ const team = [
     name: "Teri Slack",
     role: "Founder & Lead Strategist",
     bio: "A natural big-picture thinker, Teri specializes in building brand presence and long-term growth strategies that let business owners focus on what they do best.",
-    img: "/__mockup/images/team/teri-slack-nobg.png",
+    img: "/__mockup/images/team/teri-slack-nobg.png?v=2",
     initials: "TS",
   },
   {
