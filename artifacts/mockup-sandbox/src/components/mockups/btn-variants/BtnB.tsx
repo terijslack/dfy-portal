@@ -19,7 +19,7 @@ export default function BtnB() {
             textDecoration: "none",
             letterSpacing: "0.01em",
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = "#2D6B4F")}
+          onMouseEnter={e => (e.currentTarget.style.background = "#7D2A03")}
           onMouseLeave={e => (e.currentTarget.style.background = "#1F3D2C")}
         >
           Get Started
