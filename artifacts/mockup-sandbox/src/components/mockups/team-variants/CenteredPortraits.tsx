@@ -1,4 +1,4 @@
-const team: { name: string; role: string; bio: string; img: string; initials: string; scale?: number; translateY?: string }[] = [
+const team: { name: string; role: string; roleOverride?: string; bio: string; img: string; initials: string; scale?: number; translateY?: string }[] = [
   {
     name: "Teri Slack",
     role: "Founder & Lead Strategist",
@@ -26,6 +26,7 @@ const team: { name: string; role: string; bio: string; img: string; initials: st
     bio: "A creative with a background in content, social media, and the arts, Ivory blends analytical thinking and storytelling to help our clients' brands truly come to life.",
     img: "/__mockup/images/team/ivory-townsend-nobg.png",
     initials: "IT",
+    roleOverride: "Creative\nConsultant",
     scale: 1.18,
     translateY: "12%",
   },
@@ -62,7 +63,7 @@ export function CenteredPortraits() {
                 />
               </div>
               <div style={{ fontSize: 15, fontWeight: 600, color: "#F5F2EA", marginBottom: 4 }}>{member.name}</div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>{member.role}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, whiteSpace: "pre-line", lineHeight: 1.5 }}>{member.roleOverride ?? member.role}</div>
               <p style={{ fontSize: 13, color: "rgba(245,242,234,0.7)", lineHeight: 1.65, margin: 0 }}>{member.bio}</p>
             </div>
           ))}
