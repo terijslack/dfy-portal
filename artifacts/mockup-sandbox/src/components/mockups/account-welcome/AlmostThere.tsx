@@ -46,12 +46,13 @@ export default function AlmostThere() {
           ← Change plan
         </a>
       </div>
-
       {/* Welcome block — two-tone heading */}
       <div style={{ maxWidth: 460, margin: "40px auto 0", padding: "0 24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
-          <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your selected plan</span>
+          <span
+            style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }}
+            className="mt-[1px] mb-[1px]" />
           <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
           <span style={{ fontSize: 13, color: "#6B756B" }}>$1,500/mo</span>
         </div>
@@ -140,7 +141,6 @@ export default function AlmostThere() {
           </div>
         </div>
       </div>
-
       {/* Form preview */}
       <div style={{ maxWidth: 460, margin: "0 auto", padding: "0 24px" }}>
         {["Business name", "Full name", "Business email", "Password"].map(
@@ -208,7 +208,6 @@ export default function AlmostThere() {
           <span style={{ color: "#2D6B4F", fontWeight: 500 }}>Sign in</span>
         </p>
       </div>
-
       <div
         style={{
           marginTop: 40,
