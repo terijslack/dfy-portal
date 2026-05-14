@@ -109,7 +109,7 @@ export default function BtnBContext() {
           onMouseEnter={e => (e.currentTarget.style.background = "#7D2A03")}
           onMouseLeave={e => (e.currentTarget.style.background = "#1F3D2C")}
         >
-          Get Started
+          Choose Your Plan →
         </a>
       </div>
     </div>
