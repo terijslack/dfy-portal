@@ -2,6 +2,7 @@ const team: { name: string; role: string; roleOverride?: string; bio: string; im
   {
     name: "Teri Slack",
     role: "Founder & Lead Strategist",
+    roleOverride: "Founder & Lead\nStrategist",
     bio: "A natural big-picture thinker, Teri specializes in building brand presence and long-term growth strategies that let business owners focus on what they do best.",
     img: "/__mockup/images/team/teri-slack-nobg.png?v=2",
     initials: "TS",
@@ -9,6 +10,7 @@ const team: { name: string; role: string; roleOverride?: string; bio: string; im
   {
     name: "Frankie Lanoue",
     role: "Client Operations Manager",
+    roleOverride: "Client Operations\nManager",
     bio: "With a background in customer service and an eye for detail, Frankie makes sure every client feels heard, every deadline is met, and nothing slips through the cracks.",
     img: "/__mockup/images/team/frankie-lanoue-nobg.png",
     initials: "FL",
