@@ -224,7 +224,8 @@
     .pricing-header { text-align: center; margin-bottom: 52px; }
     .pricing-header .section-heading { margin-bottom: 12px; }
     .pricing-subhead { font-size: 15px; color: #9AA199; max-width: 400px; margin: 0 auto; }
-    .pricing-addons-note { display: flex; align-items: flex-start; justify-content: center; text-align: center; margin-top: 32px; font-size: 14px; color: #9AA199; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .btn-custom-options { display: inline-block; background: transparent; border: 1.5px solid #2D6B4F; color: #2D6B4F; padding: 12px 28px; border-radius: 6px; font-size: 15px; font-weight: 500; text-decoration: none; transition: background 0.15s, color 0.15s; }
+    .btn-custom-options:hover { background: #2D6B4F; color: #F5F2EA; }
     .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .plan-card {
       background: #fff;
@@ -613,10 +614,9 @@
 
       </div>
 
-      <p class="pricing-addons-note">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Every package can be customized — when you choose a plan you'll be able to add services like blog posts, email campaigns, paid ads management, and more.
-      </p>
+      <div style="text-align:center; margin-top:32px;">
+        <a href="/signup" class="btn-custom-options">See Custom Options</a>
+      </div>
     </div>
   </section>
 
