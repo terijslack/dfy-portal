@@ -20,6 +20,17 @@
   </header>
 
   <main class="main">
+
+    <!-- Onboarding banner (shown only for new clients who haven't filled intake) -->
+    <div id="onboardingBanner" style="display:none; background:#fff8f0; border:1.5px solid rgba(125,42,3,0.2); border-radius:12px; padding:24px 28px; margin-bottom:28px; display:none; align-items:center; gap:20px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:200px;">
+        <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7D2A03; margin-bottom:6px;">Action needed</div>
+        <div style="font-family:'Fraunces',serif; font-size:1.3rem; font-weight:400; color:#1F3D2C; margin-bottom:4px;">Complete your business intake form</div>
+        <div style="font-size:0.875rem; color:#6B756B; line-height:1.5;">This helps us create content that sounds like you. Takes about 5 minutes.</div>
+      </div>
+      <a href="/onboarding" style="background:#7D2A03; color:#F5F2EA; text-decoration:none; border-radius:8px; padding:12px 24px; font-size:0.9rem; font-weight:600; white-space:nowrap; flex-shrink:0;">Complete intake form →</a>
+    </div>
+
     <div class="home-hero">
       <h1 class="home-greeting" id="homeGreeting">Welcome back!</h1>
       <p class="home-subtitle">Your marketing is in good hands. Here's everything in one place.</p>
@@ -102,6 +113,16 @@
       const firstName = data.user.name.split(' ')[0];
       document.getElementById('welcomeName').textContent = data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
+
+      // Show onboarding banner if intake form not yet completed
+      try {
+        const ob = await fetch('/api/onboarding');
+        const obData = await ob.json();
+        if (!obData.onboarding) {
+          const banner = document.getElementById('onboardingBanner');
+          banner.style.display = 'flex';
+        }
+      } catch (e) { /* non-fatal */ }
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
