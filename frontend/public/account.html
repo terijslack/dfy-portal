@@ -97,6 +97,10 @@
         <button class="btn-secondary" id="cancelModal">Cancel</button>
         <button class="btn-primary" id="confirmPlanBtn" disabled>Request Change</button>
       </div>
+
+      <div id="modalSuccessActions" style="display:none; margin-top:20px; text-align:center;">
+        <a href="/dashboard" class="btn-primary" style="text-decoration:none; display:inline-block;">← Back to Portal</a>
+      </div>
     </div>
   </div>
 
@@ -199,6 +203,7 @@
         document.getElementById('modalSuccess').textContent = data.message;
         document.getElementById('modalSuccess').style.display = 'block';
         document.getElementById('modalActions').style.display = 'none';
+        document.getElementById('modalSuccessActions').style.display = 'block';
         document.getElementById('planGrid').style.opacity = '0.4';
         document.getElementById('planGrid').style.pointerEvents = 'none';
 
