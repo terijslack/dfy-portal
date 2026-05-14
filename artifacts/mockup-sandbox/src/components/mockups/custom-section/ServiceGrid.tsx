@@ -119,10 +119,7 @@ export default function ServiceGrid() {
 
         <div style={{ textAlign: 'center', marginBottom: 72 }}>
           <p style={{ color: COLORS.rust, fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Beyond the Packages</p>
-          <h2 className="sg-heading" style={{ fontSize: 52, fontWeight: 500, color: COLORS.forest, margin: '0 0 20px' }}>Custom Services</h2>
-          <p style={{ fontSize: 18, color: COLORS.slate, maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
-            Need something built just for your brand? We offer bespoke solutions alongside our core plans.
-          </p>
+          <h2 className="sg-heading" style={{ fontSize: 52, fontWeight: 500, color: COLORS.forest, margin: 0 }}>Custom Services</h2>
         </div>
 
         <div style={{ borderTop: `1.5px solid ${COLORS.tan}` }}>
