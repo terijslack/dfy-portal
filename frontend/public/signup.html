@@ -3,354 +3,465 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Started — Done For You Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <title>Choose Your Plan — Done For You Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <style>
     .signup-page {
       min-height: 100vh;
-      background: var(--bg);
-      background-image: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(45,107,79,0.08) 0%, transparent 70%);
+      background: #F5F2EA;
+      padding-bottom: 120px;
     }
 
     .signup-header {
       text-align: center;
-      padding: 48px 24px 32px;
+      padding: 40px 24px 36px;
     }
 
     .signup-header h1 {
-      font-family: var(--font-serif);
-      font-size: 2.4rem;
-      font-weight: 400;
-      margin-bottom: 10px;
+      font-family: 'Fraunces', serif;
+      font-size: 2.25rem;
+      font-weight: 500;
+      color: #1F3D2C;
+      margin: 24px 0 10px;
     }
 
     .signup-header p {
-      color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 500px;
-      margin: 0 auto;
+      font-size: 0.95rem;
+      color: #6B756B;
+      margin: 0;
     }
 
-    /* Plan selector */
+    /* Plan cards */
     .plans-section {
-      max-width: 1000px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 0 24px 40px;
+      padding: 0 24px;
     }
 
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 40px;
+      gap: 18px;
     }
 
     .plan-card {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px 24px;
+      background: #fff;
+      border: 1.5px solid rgba(31,61,44,0.12);
+      border-radius: 14px;
+      padding: 28px 22px;
       cursor: pointer;
-      transition: border-color 0.2s, transform 0.1s;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
     }
 
     .plan-card:hover {
-      border-color: var(--accent-dim);
+      border-color: rgba(45,107,79,0.35);
     }
 
     .plan-card.selected {
-      border-color: var(--accent);
-      background: rgba(45, 107, 79, 0.07);
+      border: 2px solid #2D6B4F;
+      background: #EEF5F1;
+      box-shadow: 0 4px 24px rgba(45,107,79,0.13);
     }
 
-    .plan-card.popular {
-      border-color: var(--accent-dim);
+    .plan-check {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2D6B4F;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plan-card.selected .plan-check {
+      display: flex;
     }
 
     .popular-badge {
       position: absolute;
-      top: -12px;
+      top: -13px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--accent);
-      color: var(--color-cream);
-      font-size: 0.72rem;
+      background: #2D6B4F;
+      color: #F5F2EA;
+      font-size: 10px;
       font-weight: 700;
-      padding: 3px 14px;
-      border-radius: 20px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      padding: 4px 14px;
+      border-radius: 999px;
       white-space: nowrap;
     }
 
     .plan-name {
-      font-size: 1.1rem;
+      font-size: 13px;
       font-weight: 600;
+      color: #6B756B;
       margin-bottom: 6px;
+      transition: color 0.18s;
+    }
+
+    .plan-card.selected .plan-name {
+      color: #2D6B4F;
     }
 
     .plan-price {
-      font-family: var(--font-serif);
-      font-size: 2rem;
-      font-weight: 400;
-      color: var(--accent);
+      font-size: 30px;
+      font-weight: 700;
+      color: #1F3D2C;
       margin-bottom: 4px;
     }
 
     .plan-price span {
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 400;
+      color: #6B756B;
     }
 
-    .plan-onboarding {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+    .plan-meta {
+      font-size: 12px;
+      color: #9AA199;
       margin-bottom: 16px;
     }
 
     .plan-features {
       list-style: none;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.8;
-    }
-
-    .plan-features li::before {
-      content: '✓ ';
-      color: var(--green);
-      font-weight: 600;
-    }
-
-    .plan-select-indicator {
-      margin-top: 16px;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--accent);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .plan-card.selected .plan-select-indicator {
-      opacity: 1;
-    }
-
-    /* Custom & À La Carte section */
-    .custom-alacarte-section {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 48px 24px 56px;
-    }
-    .sc-eyebrow { color: #7D2A03; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
-    .sc-heading-italic { font-family: var(--font-serif); font-size: 36px; font-weight: 300; color: #1F3D2C; font-style: italic; line-height: 1.1; margin: 0; }
-    .sc-heading-regular { font-family: var(--font-serif); font-size: 36px; font-weight: 400; color: #1F3D2C; line-height: 1.1; margin: 4px 0 40px; }
-    .sc-service-list { border-top: 1px solid rgba(107,117,107,0.2); margin-bottom: 44px; }
-    .sc-service-row { display: flex; align-items: baseline; justify-content: space-between; padding: 22px 0; border-bottom: 1px solid rgba(107,117,107,0.2); gap: 16px; }
-    .sc-service-title { font-family: var(--font-serif); font-size: 22px; font-weight: 300; color: #1F3D2C; letter-spacing: -0.01em; }
-    .sc-service-tag { font-size: 11px; color: #6B756B; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
-    .sc-cta-area { text-align: center; }
-    .sc-cta-text { font-size: 15px; color: #6B756B; margin-bottom: 20px; line-height: 1.65; }
-    .sc-open-btn { background: transparent; border: 1.5px solid #1F3D2C; color: #1F3D2C; padding: 13px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s; }
-    .sc-open-btn:hover { background: #1F3D2C; color: #F5F2EA; }
-    .sc-form-section { display: none; }
-    .sc-form-section.visible { display: block; }
-    .sc-form-bar { width: 40px; height: 2px; background: #7D2A03; margin-bottom: 28px; }
-    .sc-form-heading { font-family: var(--font-serif); font-size: 24px; font-weight: 400; color: #1F3D2C; margin-bottom: 32px; }
-    .sc-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-    .sc-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
-    .sc-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B756B; }
-    .sc-input-line { width: 100%; border: none; border-bottom: 1.5px solid #d9d3c7; padding: 10px 0; font-size: 15px; font-family: inherit; outline: none; background: transparent; color: #1F3D2C; transition: border-color 0.2s; box-sizing: border-box; }
-    .sc-input-line:focus { border-color: #2D6B4F; }
-    .sc-input-line::placeholder { color: #9AA199; }
-    .sc-submit-btn { background: #1F3D2C; color: #F5F2EA; border: none; padding: 14px 36px; border-radius: 999px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
-    .sc-submit-btn:hover { background: #2D6B4F; }
-    .sc-success { border-top: 1px solid rgba(107,117,107,0.2); padding-top: 40px; display: none; }
-    .sc-success.visible { display: block; }
-    .sc-success-eyebrow { color: #7D2A03; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 10px; }
-    .sc-success-heading { font-family: var(--font-serif); font-size: 28px; font-weight: 400; color: #1F3D2C; margin-bottom: 10px; }
-
-    /* (legacy placeholder — keep gap: 12px for any remaining flex rows) */
-    .addon-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 0;
-      gap: 12px;
-    }
-
-    .addon-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
+      border-top: 1px solid rgba(31,61,44,0.08);
+      padding-top: 16px;
       flex: 1;
-      font-size: 0.875rem;
+    }
+
+    .plan-features li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #6B756B;
       line-height: 1.4;
     }
 
-    .addon-label input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      min-width: 18px;
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      background: var(--bg);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      position: relative;
-    }
-
-    .addon-label input[type="checkbox"]:checked {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .addon-label input[type="checkbox"]:checked::after {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 1px;
-      width: 5px;
-      height: 9px;
-      border: 2px solid #ffffff;
-      border-top: none;
-      border-left: none;
-      transform: rotate(45deg);
-    }
-
-    .addon-label:hover input[type="checkbox"] {
-      border-color: var(--accent-dim);
-    }
-
-    .addon-price {
-      font-size: 0.85rem;
-      color: var(--accent);
-      font-weight: 600;
-      white-space: nowrap;
+    .plan-features li::before {
+      content: '✓';
+      color: #2D6B4F;
+      font-size: 12px;
+      margin-top: 1px;
       flex-shrink: 0;
     }
 
-    /* Order summary */
-    .order-summary {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
+    /* Scroll nudge */
+    .scroll-nudge {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.35s ease;
     }
 
-    .summary-heading {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 14px;
+    .scroll-nudge.visible {
+      max-height: 80px;
+      opacity: 1;
     }
 
-    .summary-row {
+    .scroll-nudge-inner {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 0.9rem;
-      padding: 6px 0;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      cursor: pointer;
     }
 
-    .summary-row .summary-label {
-      color: var(--text-muted);
-    }
-
-    .summary-row .summary-value {
-      color: var(--text);
+    .scroll-nudge-inner span {
+      font-size: 14px;
+      color: #2D6B4F;
       font-weight: 500;
     }
 
-    .summary-divider {
+    /* Divider */
+    .section-divider {
+      max-width: 960px;
+      margin: 48px auto 0;
+      padding: 0 24px;
       border: none;
-      border-top: 1px solid var(--border);
-      margin: 10px 0;
+      border-top: 1px solid rgba(107,117,107,0.15);
     }
 
-    .summary-row.total {
-      padding-top: 4px;
-    }
-
-    .summary-row.total .summary-label {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .summary-row.total .summary-value {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .summary-note {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 10px;
-    }
-
-    /* Signup form */
-    .signup-form-section {
-      max-width: 480px;
+    /* Custom & À La Carte */
+    .custom-alacarte-section {
+      max-width: 820px;
       margin: 0 auto;
-      padding: 0 24px 80px;
+      padding: 48px 24px 0;
     }
 
-    .signup-form-section h2 {
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
+    .sc-eyebrow {
+      color: #7D2A03;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .sc-heading-italic {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: #1F3D2C;
+      font-style: italic;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .sc-heading-regular {
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
       font-weight: 400;
-      margin-bottom: 6px;
+      color: #1F3D2C;
+      line-height: 1.1;
+      margin: 4px 0 40px;
     }
 
-    .signup-form-section .subtitle {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 28px;
+    .sc-service-list {
+      border-top: 1px solid rgba(107,117,107,0.2);
+      margin-bottom: 44px;
     }
 
-    .selected-plan-summary {
-      background: rgba(45, 107, 79, 0.08);
-      border: 1px solid rgba(45, 107, 79, 0.25);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      margin-bottom: 24px;
-      font-size: 0.9rem;
+    .sc-service-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(107,117,107,0.2);
+      gap: 16px;
+    }
+
+    .sc-service-title {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: #1F3D2C;
+      letter-spacing: -0.01em;
+    }
+
+    .sc-service-tag {
+      font-size: 11px;
+      color: #6B756B;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sc-cta-area {
+      text-align: center;
+    }
+
+    .sc-cta-text {
+      font-size: 15px;
+      color: #6B756B;
+      margin-bottom: 20px;
+      line-height: 1.65;
+    }
+
+    .sc-open-btn {
+      background: transparent;
+      border: 1.5px solid #1F3D2C;
+      color: #1F3D2C;
+      padding: 13px 32px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+
+    .sc-open-btn:hover {
+      background: #1F3D2C;
+      color: #F5F2EA;
+    }
+
+    .sc-form-section {
       display: none;
     }
 
-    .selected-plan-summary.visible {
+    .sc-form-section.visible {
       display: block;
     }
 
-    .selected-plan-summary strong {
-      color: var(--accent);
+    .sc-form-bar {
+      width: 40px;
+      height: 2px;
+      background: #7D2A03;
+      margin-bottom: 28px;
     }
 
-    .divider {
+    .sc-form-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #1F3D2C;
+      margin-bottom: 32px;
+    }
+
+    .sc-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .sc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .sc-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6B756B;
+    }
+
+    .sc-input-line {
+      width: 100%;
       border: none;
-      border-top: 1px solid var(--border);
-      margin: 32px 0;
+      border-bottom: 1.5px solid #d9d3c7;
+      padding: 10px 0;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+      color: #1F3D2C;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
     }
 
-    .login-link {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-top: 20px;
+    .sc-input-line:focus {
+      border-color: #2D6B4F;
     }
 
-    .login-link a {
-      color: var(--accent);
+    .sc-submit-btn {
+      background: #1F3D2C;
+      color: #F5F2EA;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+      font-family: inherit;
+    }
+
+    .sc-submit-btn:hover {
+      background: #2D6B4F;
+    }
+
+    .sc-success {
+      border-top: 1px solid rgba(107,117,107,0.2);
+      padding-top: 40px;
+      display: none;
+    }
+
+    .sc-success.visible {
+      display: block;
+    }
+
+    .sc-success-eyebrow {
+      color: #7D2A03;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .sc-success-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1F3D2C;
+      margin-bottom: 10px;
+    }
+
+    /* Bottom CTA bar */
+    .bottom-cta {
+      max-width: 820px;
+      margin: 64px auto 0;
+      padding: 0 24px;
+    }
+
+    .bottom-cta-inner {
+      border-top: 1px solid rgba(107,117,107,0.15);
+      padding-top: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .bottom-cta-label {
+      font-size: 12px;
+      color: #9AA199;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bottom-cta-plan-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1F3D2C;
+    }
+
+    .bottom-cta-empty {
+      font-size: 15px;
+      color: #9AA199;
+    }
+
+    .bottom-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 36px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: not-allowed;
+      background: #d9d3c7;
+      color: #9AA199;
+      transition: background 0.25s, color 0.25s;
+      white-space: nowrap;
+      font-family: inherit;
       text-decoration: none;
+    }
+
+    .bottom-cta-btn.active {
+      background: #7D2A03;
+      color: #F5F2EA;
+      cursor: pointer;
+    }
+
+    .bottom-cta-btn.active:hover {
+      background: #6a2303;
     }
 
     @media (max-width: 768px) {
@@ -358,12 +469,22 @@
         grid-template-columns: 1fr;
       }
 
-      .addons-grid {
+      .sc-form-grid {
         grid-template-columns: 1fr;
       }
 
       .signup-header h1 {
-        font-size: 1.8rem;
+        font-size: 1.75rem;
+      }
+
+      .bottom-cta-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .bottom-cta-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -372,18 +493,26 @@
 
   <div class="signup-header">
     <a href="/"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
-    <h1 style="margin-top: 32px;">Choose your plan</h1>
-    <p>Pick the package that fits your business. You'll enter payment details on the next screen.</p>
+    <h1>Choose your plan</h1>
+    <p>Click a plan to select it, then scroll down to continue.</p>
   </div>
 
-  <!-- Plans -->
+  <!-- Plan cards -->
   <div class="plans-section">
     <div class="plans-grid">
 
-      <!-- Starter Presence -->
-      <div class="plan-card" data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr" data-name="Online Presence" data-price="$800/mo" data-price-num="800" onclick="selectPlan(this)">
+      <div class="plan-card"
+        data-price-id="price_1TTK4hJaMlIvd3H414Ffw3Hr"
+        data-name="Online Presence"
+        data-price="$800/mo"
+        data-price-num="800"
+        onclick="selectPlan(this)">
+        <div class="plan-check">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
         <div class="plan-name">Online Presence</div>
         <div class="plan-price">$800<span>/mo</span></div>
+        <div class="plan-meta">Up to 16 posts · Up to 2 platforms</div>
         <ul class="plan-features">
           <li>Up to 2 social media platforms</li>
           <li>Up to 16 posts (total)</li>
@@ -391,46 +520,70 @@
           <li>Google Business Profile setup or review</li>
           <li>Monthly performance summary email</li>
         </ul>
-        <div class="plan-select-indicator">✓ Selected</div>
       </div>
 
-      <!-- Growth Engine -->
-      <div class="plan-card popular" data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7" data-name="Growth Engine" data-price="$1,500/mo" data-price-num="1500" onclick="selectPlan(this)">
+      <div class="plan-card"
+        data-price-id="price_1TTK5DJaMlIvd3H4V0LeAYL7"
+        data-name="Growth Engine"
+        data-price="$1,500/mo"
+        data-price-num="1500"
+        onclick="selectPlan(this)">
         <div class="popular-badge">Most Popular</div>
+        <div class="plan-check">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
         <div class="plan-name">Growth Engine</div>
         <div class="plan-price">$1,500<span>/mo</span></div>
+        <div class="plan-meta">Up to 32 posts · Up to 4 platforms</div>
         <ul class="plan-features">
           <li>Up to 4 social media platforms</li>
           <li>Up to 32 posts (total)</li>
           <li>Caption writing</li>
-          <li>2 promotional emails to clients/month</li>
+          <li>2 promotional emails/month</li>
           <li>Automated Google Review requests</li>
           <li>Google Business Profile management</li>
           <li>Full client dashboard with analytics</li>
         </ul>
-        <div class="plan-select-indicator">✓ Selected</div>
       </div>
 
-      <!-- Marketing Partner -->
-      <div class="plan-card" data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl" data-name="Done For You Partner" data-price="$2,800/mo" data-price-num="2800" onclick="selectPlan(this)">
+      <div class="plan-card"
+        data-price-id="price_1TTK5jJaMlIvd3H4NFHH6hPl"
+        data-name="Done For You Partner"
+        data-price="$2,800/mo"
+        data-price-num="2800"
+        onclick="selectPlan(this)">
+        <div class="plan-check">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
         <div class="plan-name">Done For You Partner</div>
         <div class="plan-price">$2,800<span>/mo</span></div>
+        <div class="plan-meta">Complete done-for-you management</div>
         <ul class="plan-features">
           <li>1 hour strategic onboarding call</li>
           <li>Monthly strategy check-ins</li>
           <li>Complete social media management</li>
-          <li>Complete Google Business Profile management</li>
+          <li>Google Business Profile management</li>
           <li>Appointment calendar setup</li>
-          <li>Automated appointment reminders</li>
           <li>Email campaigns &amp; newsletters</li>
-          <li>Management &amp; reporting of paid ads</li>
-          <li>1 landing page or promo</li>
+          <li>Paid ads management &amp; reporting</li>
         </ul>
-        <div class="plan-select-indicator">✓ Selected</div>
       </div>
 
     </div>
   </div>
+
+  <!-- Scroll nudge -->
+  <div class="scroll-nudge" id="scrollNudge">
+    <div class="scroll-nudge-inner" onclick="scrollToCta()">
+      <span id="nudgeText"></span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Section divider -->
+  <hr class="section-divider" />
 
   <!-- Custom & À La Carte -->
   <div class="custom-alacarte-section">
@@ -462,7 +615,7 @@
     </div>
 
     <div class="sc-cta-area" id="scCtaArea">
-      <p class="sc-cta-text">Every project is different. Let&#39;s talk about yours.</p>
+      <p class="sc-cta-text">Every project is different. Let's talk about yours.</p>
       <button class="sc-open-btn" onclick="openCustomForm()">Request a Custom Quote</button>
     </div>
 
@@ -477,7 +630,7 @@
           </div>
           <div class="sc-field">
             <label class="sc-label">Business</label>
-            <input class="sc-input-line" type="text" placeholder="Jane&#39;s Studio">
+            <input class="sc-input-line" type="text" placeholder="Jane's Studio">
           </div>
         </div>
         <div class="sc-field">
@@ -494,108 +647,67 @@
 
     <div class="sc-success" id="scSuccess">
       <p class="sc-success-eyebrow">Received</p>
-      <h3 class="sc-success-heading">We&#39;ll be in touch soon.</h3>
-      <p style="font-size:15px;color:#6B756B;line-height:1.65">Expect a reply within 24 hours. We&#39;ll review your project and reach out to talk through the details.</p>
-    </div>
-
-    <!-- Order summary -->
-    <div class="order-summary" style="margin-top:40px">
-      <div class="summary-heading">Order Summary</div>
-      <div class="summary-row">
-        <span class="summary-label">Base plan</span>
-        <span class="summary-value" id="summaryBasePlan">Select a plan above</span>
-      </div>
-      <hr class="summary-divider" id="summaryDivider" style="display:none">
-      <div class="summary-row total" id="summaryTotalRow" style="display:none">
-        <span class="summary-label">Monthly total</span>
-        <span class="summary-value" id="summaryTotal"></span>
-      </div>
-      <div class="summary-row total" id="summaryDueTodayRow" style="display:none">
-        <span class="summary-label">Due today (first month)</span>
-        <span class="summary-value" id="summaryDueToday"></span>
-      </div>
-      <p class="summary-note" id="summaryNote" style="display:none">
-        Monthly billing renews on the same date each month.
-      </p>
+      <h3 class="sc-success-heading">We'll be in touch soon.</h3>
+      <p style="font-size:15px;color:#6B756B;line-height:1.65">Expect a reply within 24 hours.</p>
     </div>
   </div>
 
-  <hr class="divider" style="max-width: 480px; margin: 0 auto 40px;" />
-
-  <!-- Account form -->
-  <div class="signup-form-section">
-    <h2>Create your account</h2>
-    <p class="subtitle">You'll be taken to a secure checkout page to enter payment details.</p>
-
-    <div class="selected-plan-summary" id="planSummary">
-      Selected: <strong id="planSummaryName">—</strong> at <strong id="planSummaryPrice">—</strong>
+  <!-- Bottom CTA -->
+  <div class="bottom-cta" id="bottomCta">
+    <div class="bottom-cta-inner">
+      <div id="ctaLeft">
+        <p class="bottom-cta-empty">No plan selected yet — click a plan above.</p>
+      </div>
+      <button class="bottom-cta-btn" id="ctaBtn" disabled onclick="handleContinue()">
+        Select a Plan to Continue
+      </button>
     </div>
-
-    <div class="field">
-      <label>Business name</label>
-      <input type="text" id="business_name" placeholder="Bloom Wellness" />
-    </div>
-
-    <div class="field">
-      <label>Full name</label>
-      <input type="text" id="name" placeholder="Jane Smith" />
-    </div>
-
-    <div class="field">
-      <label>Business email</label>
-      <input type="email" id="email" placeholder="jane@yourbusiness.com" />
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="password" placeholder="At least 8 characters" />
-    </div>
-
-    <div class="error-msg" id="errorMsg"></div>
-
-    <button class="btn-primary" id="submitBtn" onclick="handleSignup()">
-      Continue to Payment →
-    </button>
-
-    <p class="login-link">Already have an account? <a href="/login">Sign in</a></p>
-    <p class="login-link" style="margin-top: 8px;"><a href="/" style="color: var(--text-muted);">← Back to home</a></p>
   </div>
 
   <script>
     let selectedPriceId = null;
-    let selectedPriceNum = 0;
+    let selectedPlanName = null;
+    let selectedPlanPrice = null;
 
     function selectPlan(card) {
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
+
       selectedPriceId = card.dataset.priceId;
-      selectedPriceNum = parseInt(card.dataset.priceNum);
+      selectedPlanName = card.dataset.name;
+      selectedPlanPrice = card.dataset.price;
 
-      document.getElementById('planSummaryName').textContent = card.dataset.name;
-      document.getElementById('planSummaryPrice').textContent = card.dataset.price;
-      document.getElementById('planSummary').classList.add('visible');
-      document.getElementById('summaryBasePlan').textContent = card.dataset.price;
+      // Show scroll nudge
+      const nudge = document.getElementById('scrollNudge');
+      document.getElementById('nudgeText').textContent = selectedPlanName + ' selected — scroll down to continue';
+      nudge.classList.add('visible');
 
-      updateTotal();
+      // Update bottom CTA
+      const ctaLeft = document.getElementById('ctaLeft');
+      ctaLeft.innerHTML = `
+        <p class="bottom-cta-label">Selected plan</p>
+        <p class="bottom-cta-plan-name">${selectedPlanName}</p>
+      `;
+
+      const btn = document.getElementById('ctaBtn');
+      btn.textContent = 'Continue to Account Setup';
+      btn.disabled = false;
+      btn.classList.add('active');
+
+      // Add arrow icon
+      btn.innerHTML = 'Continue to Account Setup <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
     }
 
-    function updateTotal() {
-      const hasPlan = selectedPriceId !== null;
-      const fmt = n => '$' + n.toLocaleString();
-
-      document.getElementById('summaryDivider').style.display = hasPlan ? '' : 'none';
-      document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
-      document.getElementById('summaryDueTodayRow').style.display = hasPlan ? '' : 'none';
-      document.getElementById('summaryNote').style.display = hasPlan ? '' : 'none';
-
-      if (hasPlan) {
-        document.getElementById('summaryTotal').textContent = fmt(selectedPriceNum) + '/mo';
-        document.getElementById('summaryDueToday').textContent = fmt(selectedPriceNum);
-      }
+    function scrollToCta() {
+      document.getElementById('bottomCta').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    function getSelectedAddons() {
-      return [];
+    function handleContinue() {
+      if (!selectedPriceId) return;
+      sessionStorage.setItem('dfy_price_id', selectedPriceId);
+      sessionStorage.setItem('dfy_plan_name', selectedPlanName);
+      sessionStorage.setItem('dfy_plan_price', selectedPlanPrice);
+      window.location.href = '/create-account';
     }
 
     function openCustomForm() {
@@ -607,66 +719,6 @@
       e.preventDefault();
       document.getElementById('scFormSection').classList.remove('visible');
       document.getElementById('scSuccess').classList.add('visible');
-    }
-
-    async function handleSignup() {
-      const business_name = document.getElementById('business_name').value.trim();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const errorMsg = document.getElementById('errorMsg');
-      const btn = document.getElementById('submitBtn');
-
-      errorMsg.textContent = '';
-
-      if (!selectedPriceId) {
-        errorMsg.textContent = 'Please select a plan first.';
-        return;
-      }
-
-      if (!business_name || !name || !email || !password) {
-        errorMsg.textContent = 'Please fill in all fields.';
-        return;
-      }
-
-      if (password.length < 8) {
-        errorMsg.textContent = 'Password must be at least 8 characters.';
-        return;
-      }
-
-      btn.textContent = 'Loading…';
-      btn.disabled = true;
-
-      try {
-        const res = await fetch('/api/stripe/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            business_name,
-            name,
-            email,
-            password,
-            priceId: selectedPriceId,
-            addons: getSelectedAddons()
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          errorMsg.textContent = data.error || 'Something went wrong.';
-          btn.textContent = 'Continue to Payment →';
-          btn.disabled = false;
-          return;
-        }
-
-        window.location.href = data.url;
-
-      } catch (err) {
-        errorMsg.textContent = 'Network error. Please try again.';
-        btn.textContent = 'Continue to Payment →';
-        btn.disabled = false;
-      }
     }
   </script>
 </body>

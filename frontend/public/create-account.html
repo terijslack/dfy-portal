@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — Done For You Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .create-account-page {
+      min-height: 100vh;
+      background: #F5F2EA;
+      padding-bottom: 80px;
+    }
+
+    .ca-header {
+      text-align: center;
+      padding: 40px 24px 0;
+    }
+
+    .ca-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #6B756B;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: color 0.15s;
+    }
+
+    .ca-back:hover {
+      color: #1F3D2C;
+    }
+
+    .ca-body {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 40px 24px 0;
+    }
+
+    .ca-plan-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EEF5F1;
+      border: 1px solid rgba(45,107,79,0.25);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #2D6B4F;
+      margin-bottom: 28px;
+    }
+
+    .ca-plan-pill svg {
+      flex-shrink: 0;
+    }
+
+    .ca-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      color: #1F3D2C;
+      margin: 0 0 8px;
+    }
+
+    .ca-subheading {
+      font-size: 0.9rem;
+      color: #6B756B;
+      margin: 0 0 32px;
+    }
+
+    .ca-no-plan {
+      background: #fff8f5;
+      border: 1px solid rgba(125,42,3,0.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #7D2A03;
+      margin-bottom: 28px;
+      display: none;
+    }
+
+    .ca-no-plan a {
+      color: #7D2A03;
+      font-weight: 600;
+    }
+
+    .error-msg {
+      color: #c0392b;
+      font-size: 0.875rem;
+      margin-bottom: 12px;
+      min-height: 20px;
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #6B756B;
+      margin-top: 20px;
+    }
+
+    .login-link a {
+      color: #2D6B4F;
+      text-decoration: none;
+    }
+
+    @media (max-width: 520px) {
+      .ca-heading {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body class="create-account-page">
+
+  <div class="ca-header">
+    <a href="/"><img src="logo.png" alt="DFY Marketing" class="brand-logo"></a>
+    <br>
+    <a href="/signup" class="ca-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Change plan
+    </a>
+  </div>
+
+  <div class="ca-body">
+
+    <div class="ca-no-plan" id="noPlanWarning">
+      No plan selected. <a href="/signup">Go back and choose a plan →</a>
+    </div>
+
+    <div id="planPill" class="ca-plan-pill" style="display:none;">
+      <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="#2D6B4F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+      <span id="planPillText"></span>
+    </div>
+
+    <h1 class="ca-heading">Create your account</h1>
+    <p class="ca-subheading">You'll be taken to a secure checkout page to enter payment details.</p>
+
+    <div class="field">
+      <label>Business name</label>
+      <input type="text" id="business_name" placeholder="Bloom Wellness" />
+    </div>
+
+    <div class="field">
+      <label>Full name</label>
+      <input type="text" id="name" placeholder="Jane Smith" />
+    </div>
+
+    <div class="field">
+      <label>Business email</label>
+      <input type="email" id="email" placeholder="jane@yourbusiness.com" />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="At least 8 characters" />
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="btn-primary" id="submitBtn" onclick="handleSignup()">
+      Continue to Payment →
+    </button>
+
+    <p class="login-link">Already have an account? <a href="/login">Sign in</a></p>
+  </div>
+
+  <script>
+    const priceId = sessionStorage.getItem('dfy_price_id');
+    const planName = sessionStorage.getItem('dfy_plan_name');
+    const planPrice = sessionStorage.getItem('dfy_plan_price');
+
+    if (!priceId) {
+      document.getElementById('noPlanWarning').style.display = 'block';
+      document.getElementById('submitBtn').disabled = true;
+    } else {
+      const pill = document.getElementById('planPill');
+      pill.style.display = 'inline-flex';
+      document.getElementById('planPillText').textContent = planName + ' — ' + planPrice;
+    }
+
+    async function handleSignup() {
+      const business_name = document.getElementById('business_name').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const btn = document.getElementById('submitBtn');
+
+      errorMsg.textContent = '';
+
+      if (!priceId) {
+        errorMsg.textContent = 'No plan selected. Please go back and choose a plan.';
+        return;
+      }
+
+      if (!business_name || !name || !email || !password) {
+        errorMsg.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      if (password.length < 8) {
+        errorMsg.textContent = 'Password must be at least 8 characters.';
+        return;
+      }
+
+      btn.textContent = 'Loading…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/stripe/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_name,
+            name,
+            email,
+            password,
+            priceId,
+            addons: []
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Something went wrong.';
+          btn.textContent = 'Continue to Payment →';
+          btn.disabled = false;
+          return;
+        }
+
+        sessionStorage.removeItem('dfy_price_id');
+        sessionStorage.removeItem('dfy_plan_name');
+        sessionStorage.removeItem('dfy_plan_price');
+        window.location.href = data.url;
+
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Please try again.';
+        btn.textContent = 'Continue to Payment →';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

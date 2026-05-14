@@ -56,6 +56,10 @@ app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/signup.html'));
 });
 
+app.get('/create-account', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/create-account.html'));
+});
+
 app.get('/signup-success', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/signup-success.html'));
 });
