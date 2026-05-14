@@ -22,9 +22,26 @@ export default function BrandForward() {
             Welcome! Please create an account to continue.
           </h1>
           <div style={{ width: 36, height: 2, background: "#7D2A03", margin: "0 auto 14px" }} />
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 500, color: "#EBC99B" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 500, color: "#EBC99B" }}>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
             Growth Engine — $1,500/mo
+          </div>
+
+          {/* Plan features */}
+          <div style={{ marginTop: 18, textAlign: "left", borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
+            {[
+              "Up to 4 social media platforms",
+              "Up to 32 posts (total)",
+              "Caption writing",
+              "2 promotional emails/month",
+              "Automated Google Review requests",
+              "Google Business Profile management",
+            ].map(f => (
+              <div key={f} style={{ display: "flex", gap: 7, alignItems: "flex-start" }}>
+                <span style={{ color: "#EBC99B", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: 12, color: "rgba(245,242,234,0.75)", lineHeight: 1.4 }}>{f}</span>
+              </div>
+            ))}
           </div>
         </div>
 
