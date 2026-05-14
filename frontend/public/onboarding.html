@@ -198,7 +198,7 @@
       background: rgba(45,107,79,0.06);
     }
     .goal-card input { display: none; }
-    .goal-icon { font-size: 20px; }
+    .goal-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .goal-text { font-size: 14px; font-weight: 500; color: var(--text); }
 
     /* ── Nav buttons ── */
@@ -459,23 +459,23 @@
         <label style="margin-bottom: 12px; display: block;">Primary goal</label>
         <div class="goal-list">
           <div class="goal-card" onclick="selectGoal('Build brand awareness', this)">
-            <span class="goal-icon">📣</span>
+            <span class="goal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8s-4 4-10 4S2 8 2 8"/><path d="M2 8c0-2.2 4.5-4 10-4s10 1.8 10 4v8c0 2.2-4.5 4-10 4S2 18.2 2 16V8z"/></svg></span>
             <span class="goal-text">Build brand awareness — more people knowing who we are</span>
           </div>
           <div class="goal-card" onclick="selectGoal('Grow followers & engagement', this)">
-            <span class="goal-icon">📈</span>
+            <span class="goal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
             <span class="goal-text">Grow followers & engagement on social media</span>
           </div>
           <div class="goal-card" onclick="selectGoal('Generate leads & sales', this)">
-            <span class="goal-icon">💰</span>
+            <span class="goal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
             <span class="goal-text">Generate leads and drive more sales</span>
           </div>
           <div class="goal-card" onclick="selectGoal('Build community & loyalty', this)">
-            <span class="goal-icon">🤝</span>
+            <span class="goal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
             <span class="goal-text">Build a loyal community around my brand</span>
           </div>
           <div class="goal-card" onclick="selectGoal('Establish thought leadership', this)">
-            <span class="goal-icon">🧠</span>
+            <span class="goal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
             <span class="goal-text">Establish myself as an expert in my field</span>
           </div>
         </div>
