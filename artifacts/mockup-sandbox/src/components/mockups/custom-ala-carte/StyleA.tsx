@@ -15,7 +15,7 @@ const SERVICES = [
   { title: 'Build a Website', desc: 'A fully custom, responsive site built around your brand and goals.' },
   { title: 'Refresh Your Website', desc: 'Modernize your existing site with updated design, copy, and structure.' },
   { title: 'A La Carte Services', desc: 'One-off tasks — graphics, copy, campaigns — priced by scope.' },
-  { title: 'Create a Custom Package', desc: 'Mix and match exactly what you need. We'll price it out together.' },
+  { title: 'Create a Custom Package', desc: "Mix and match exactly what you need. We'll price it out together." },
 ];
 
 export default function StyleA() {
