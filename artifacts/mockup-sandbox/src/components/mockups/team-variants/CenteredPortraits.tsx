@@ -18,7 +18,7 @@ const team: { name: string; role: string; roleOverride?: string; bio: string; im
   {
     name: "Zane Starkewolfe",
     role: "Business Development Consultant",
-    bio: "With 15+ years in corporate development, Zane brings a sharp strategic mind and a proven track record of closing deals, building partnerships, and driving real growth.",
+    bio: "With expertise in business and corporate development, Zane brings a sharp strategic mind and a proven track record of building partnerships and driving real growth.",
     img: "/__mockup/images/team/zane-starkewolfe-nobg.png",
     initials: "ZS",
   },
