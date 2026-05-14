@@ -31,8 +31,18 @@ const plans = [
   },
 ];
 
+const services = [
+  { name: "Film & Video Content Capture", tag: "One-time or recurring" },
+  { name: "Build a Website", tag: "One-time project" },
+  { name: "Refresh Your Website", tag: "One-time project" },
+  { name: "A La Carte Services", tag: "By scope" },
+  { name: "Create a Custom Package", tag: "Ongoing retainer" },
+];
+
 export default function LayoutC() {
   const [selected, setSelected] = useState<string | null>("growth");
+  const [quoteOpen, setQuoteOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const selectedPlan = plans.find(p => p.id === selected);
 
   return (
@@ -68,7 +78,6 @@ export default function LayoutC() {
                 {p.badge}
               </div>
             )}
-
             <div style={{ fontSize: 13, fontWeight: 600, color: p.featured ? "#EBC99B" : "#6B756B", marginBottom: 6 }}>{p.name}</div>
             <div style={{ fontSize: 30, fontWeight: 700, color: p.featured ? "#F5F2EA" : "#1F3D2C", marginBottom: 4 }}>
               {p.price}<span style={{ fontSize: 15, fontWeight: 400 }}>{p.period}</span>
@@ -86,7 +95,7 @@ export default function LayoutC() {
         ))}
       </div>
 
-      {/* Confirmation panel — appears below cards once a plan is chosen */}
+      {/* Inline confirmation panel */}
       <div style={{
         maxWidth: 920, margin: "28px auto 0", padding: "0 24px",
         opacity: selected ? 1 : 0,
@@ -109,7 +118,6 @@ export default function LayoutC() {
             </div>
             <div style={{ fontSize: 13, color: "#9AA199", marginTop: 2 }}>First month billed today · Cancel anytime</div>
           </div>
-
           <a href="/create-account" style={{
             display: "inline-flex", alignItems: "center", gap: 10,
             background: "#7D2A03", color: "#F5F2EA",
@@ -118,7 +126,7 @@ export default function LayoutC() {
             whiteSpace: "nowrap",
             boxShadow: "0 2px 14px rgba(125,42,3,0.22)",
           }}>
-            Select & Continue
+            Select &amp; Continue
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -126,8 +134,74 @@ export default function LayoutC() {
         </div>
       </div>
 
-      <div style={{ textAlign: "center", marginTop: 28 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "#9AA199", textTransform: "uppercase" }}>C — Inline Confirmation Panel</span>
+      {/* Divider */}
+      <div style={{ maxWidth: 920, margin: "56px auto 0", padding: "0 24px" }}>
+        <hr style={{ border: "none", borderTop: "1px solid rgba(107,117,107,0.15)" }} />
+      </div>
+
+      {/* Custom & À La Carte */}
+      <div style={{ maxWidth: 820, margin: "0 auto", padding: "48px 24px 56px" }}>
+        <p style={{ color: "#7D2A03", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>
+          Custom &amp; À La Carte
+        </p>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 300, color: "#1F3D2C", fontStyle: "italic", lineHeight: 1.1, margin: 0 }}>Beyond the plan.</h2>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.1, margin: "4px 0 40px" }}>Built for you.</h2>
+
+        <div style={{ borderTop: "1px solid rgba(107,117,107,0.2)", marginBottom: 44 }}>
+          {services.map(s => (
+            <div key={s.name} style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", padding: "22px 0", borderBottom: "1px solid rgba(107,117,107,0.2)", gap: 16 }}>
+              <span style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 300, color: "#1F3D2C", letterSpacing: "-0.01em" }}>{s.name}</span>
+              <span style={{ fontSize: 11, color: "#6B756B", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>{s.tag}</span>
+            </div>
+          ))}
+        </div>
+
+        {!quoteOpen && !submitted && (
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: 15, color: "#6B756B", marginBottom: 20, lineHeight: 1.65 }}>Every project is different. Let's talk about yours.</p>
+            <button
+              onClick={() => setQuoteOpen(true)}
+              style={{ background: "transparent", border: "1.5px solid #1F3D2C", color: "#1F3D2C", padding: "13px 32px", borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: "pointer" }}
+            >
+              Request a Custom Quote
+            </button>
+          </div>
+        )}
+
+        {quoteOpen && !submitted && (
+          <div>
+            <div style={{ width: 40, height: 2, background: "#7D2A03", marginBottom: 28 }} />
+            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 400, color: "#1F3D2C", marginBottom: 32 }}>Tell us about your project.</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+              {["Name", "Business"].map(label => (
+                <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B756B" }}>{label}</label>
+                  <input style={{ border: "none", borderBottom: "1.5px solid #d9d3c7", padding: "10px 0", fontSize: 15, fontFamily: "inherit", outline: "none", background: "transparent", color: "#1F3D2C" }} />
+                </div>
+              ))}
+            </div>
+            {["Email", "What do you need?"].map(label => (
+              <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 24 }}>
+                <label style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B756B" }}>{label}</label>
+                <input style={{ border: "none", borderBottom: "1.5px solid #d9d3c7", padding: "10px 0", fontSize: 15, fontFamily: "inherit", outline: "none", background: "transparent", color: "#1F3D2C" }} />
+              </div>
+            ))}
+            <button
+              onClick={() => { setSubmitted(true); setQuoteOpen(false); }}
+              style={{ background: "#1F3D2C", color: "#F5F2EA", border: "none", padding: "14px 36px", borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: "pointer", marginTop: 4 }}
+            >
+              Submit Request
+            </button>
+          </div>
+        )}
+
+        {submitted && (
+          <div style={{ borderTop: "1px solid rgba(107,117,107,0.2)", paddingTop: 40 }}>
+            <p style={{ color: "#7D2A03", fontSize: 11, fontWeight: 600, letterSpacing: "0.13em", textTransform: "uppercase", marginBottom: 10 }}>Received</p>
+            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 400, color: "#1F3D2C", marginBottom: 10 }}>We'll be in touch soon.</h3>
+            <p style={{ fontSize: 15, color: "#6B756B", lineHeight: 1.65 }}>Expect a reply within 24 hours.</p>
+          </div>
+        )}
       </div>
     </div>
   );
