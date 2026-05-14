@@ -118,11 +118,11 @@ export default function LayoutC() {
             </div>
             <div style={{ fontSize: 13, color: "#9AA199", marginTop: 2 }}>First month billed today · Cancel anytime</div>
           </div>
-          <a href="/create-account" style={{
+          <button onClick={(e) => e.preventDefault()} style={{
             display: "inline-flex", alignItems: "center", gap: 10,
             background: "#7D2A03", color: "#F5F2EA",
             padding: "15px 40px", borderRadius: 999,
-            fontSize: 16, fontWeight: 600, textDecoration: "none",
+            fontSize: 16, fontWeight: 600, border: "none", cursor: "pointer",
             whiteSpace: "nowrap",
             boxShadow: "0 2px 14px rgba(125,42,3,0.22)",
           }}>
@@ -130,7 +130,7 @@ export default function LayoutC() {
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
-          </a>
+          </button>
         </div>
       </div>
 

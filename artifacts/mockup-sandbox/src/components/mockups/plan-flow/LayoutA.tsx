@@ -185,15 +185,15 @@ export default function LayoutA() {
             <div style={{ fontSize: 11, color: "rgba(245,242,234,0.55)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>Selected</div>
             <div style={{ fontSize: 16, color: "#F5F2EA", fontWeight: 600 }}>{selectedPlan?.name} · {selectedPlan?.price}/mo</div>
           </div>
-          <a href="/create-account" style={{
+          <button onClick={(e) => e.preventDefault()} style={{
             display: "inline-flex", alignItems: "center", gap: 10,
             background: "#7D2A03", color: "#F5F2EA",
             padding: "13px 36px", borderRadius: 999,
-            fontSize: 15, fontWeight: 600, textDecoration: "none",
+            fontSize: 15, fontWeight: 600, border: "none", cursor: "pointer",
           }}>
             Select &amp; Continue
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+          </button>
           <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", color: "rgba(245,242,234,0.45)", fontSize: 12, cursor: "pointer" }}>Change</button>
         </div>
       )}

@@ -89,28 +89,29 @@ export default function LayoutB() {
             </div>
 
             {/* Per-card CTA — all say "Select & Continue" */}
-            <a
-              href="/create-account"
+            <button
               onMouseEnter={() => setHovered(p.id)}
               onMouseLeave={() => setHovered(null)}
+              onClick={(e) => e.preventDefault()}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 marginTop: 24,
                 padding: "13px 16px",
                 borderRadius: 10,
                 fontSize: 14, fontWeight: 600,
-                textDecoration: "none",
+                cursor: "pointer",
                 background: hovered === p.id ? "#6a2303" : "#7D2A03",
                 color: "#F5F2EA",
                 border: "none",
                 transition: "background 0.15s",
+                width: "100%",
               }}
             >
               Select &amp; Continue
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
-            </a>
+            </button>
           </div>
         ))}
       </div>
