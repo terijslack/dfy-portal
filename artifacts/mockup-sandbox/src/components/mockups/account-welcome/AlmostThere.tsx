@@ -79,6 +79,7 @@ export default function AlmostThere() {
               "2 promotional emails/month",
               "Automated Google Review requests",
               "Google Business Profile management",
+              "Full client dashboard with analytics",
             ].map((f) => (
               <div
                 key={f}
