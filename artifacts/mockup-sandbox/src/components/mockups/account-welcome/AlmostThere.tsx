@@ -55,42 +55,6 @@ export default function AlmostThere() {
           }}
         >Welcome to Done For You Marketing! Fill in your details below and let's get started!</p>
 
-        {/* Plan features */}
-        <div
-          style={{
-            background: "#F5F2EA",
-            border: "1px solid rgba(31,61,44,0.1)",
-            borderRadius: 12,
-            padding: "16px 20px",
-            marginBottom: 8,
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "7px 16px",
-            }}
-          >
-            {[
-              "Up to 4 social media platforms",
-              "Up to 32 posts (total)",
-              "Caption writing",
-              "2 promotional emails/month",
-              "Automated Google Review requests",
-              "Google Business Profile management",
-              "Full client dashboard with analytics",
-            ].map((f) => (
-              <div
-                key={f}
-                style={{ display: "flex", gap: 7, alignItems: "flex-start" }}
-              >
-                <span style={{ color: "#2D6B4F", fontSize: 11, marginTop: 2, flexShrink: 0 }}>✓</span>
-                <span style={{ fontSize: 12, color: "#6B756B", lineHeight: 1.4 }}>{f}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Form preview */}
