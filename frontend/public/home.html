@@ -289,12 +289,15 @@
       font-size: 36px; font-weight: 400; color: #F5F2EA; margin-bottom: 14px; line-height: 1.2;
     }
     .cta-band p { font-size: 15px; color: rgba(245,242,234,0.70); margin-bottom: 32px; }
-    .btn-cta-band {
-      background: #7D2A03; border-radius: 8px;
-      padding: 14px 32px; font-size: 15px;
-      color: #F5F2EA; font-weight: 500; display: inline-block;
+    .cta-band-link {
+      font-size: 15px; font-weight: 500;
+      color: #F5F2EA; text-decoration: none;
+      border-bottom: 1px solid rgba(245,242,234,0.4);
+      padding-bottom: 2px;
+      transition: border-color 0.15s, color 0.15s;
+      display: inline-block;
     }
-    .btn-cta-band:hover { background: #6a2303; }
+    .cta-band-link:hover { color: #EBC99B; border-color: #EBC99B; }
 
     /* ── FOOTER ── */
     /* ── FAQ ── */
@@ -655,7 +658,7 @@
     <div class="cta-band-inner">
       <h2>Ready to have your marketing handled?</h2>
       <p>Pick a plan, complete a short intake form, and we'll get started on your content right away.</p>
-      <a href="/signup" class="btn-cta-band">Choose Your Package</a>
+      <a href="/signup" class="cta-band-link">Click here to get started &rarr;</a>
     </div>
   </section>
 

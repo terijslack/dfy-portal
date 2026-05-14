@@ -4,20 +4,13 @@ export default function BrandForward() {
 
       {/* Top nav strip */}
       <div style={{ textAlign: "center", padding: "32px 24px 0" }}>
-        <div style={{ display: "inline-block", width: 44, height: 44, borderRadius: "50%", background: "#2D6B4F", marginBottom: 16 }}>
-          <svg viewBox="0 0 44 44" width="44" height="44" fill="none">
-            <text x="50%" y="65%" textAnchor="middle" fontSize="20" fill="#F5F2EA" fontFamily="serif">D</text>
-          </svg>
-        </div>
+        <img src="/__mockup/images/logo.png" alt="Done For You Marketing" style={{ height: 56, width: "auto", marginBottom: 12 }} />
         <a href="#" style={{ display: "block", fontSize: 13, color: "#6B756B", textDecoration: "none", marginTop: 4 }}>← Change plan</a>
       </div>
 
       {/* Welcome block — brand-forward banner */}
       <div style={{ maxWidth: 460, margin: "36px auto 0", padding: "0 24px" }}>
         <div style={{ marginBottom: 28, textAlign: "center" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#2D6B4F", marginBottom: 10 }}>
-            Done For You Marketing
-          </p>
           <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "1.75rem", fontWeight: 400, color: "#1F3D2C", margin: "0 0 10px", lineHeight: 1.2 }}>
             Welcome! Please create an account to continue.
           </h1>
