@@ -9,36 +9,85 @@ const COLORS = {
   slate: '#6B756B',
 };
 
+const IconRefresh = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+    <path d="M21 3v5h-5" />
+    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+    <path d="M3 21v-5h5" />
+  </svg>
+);
+
+const IconBuildSite = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="3" />
+    <path d="M3 9h18" />
+    <path d="M9 21V9" />
+  </svg>
+);
+
+const IconLanding = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5" />
+    <path d="M2 12l10 5 10-5" />
+  </svg>
+);
+
+const IconAddPlatform = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <path d="M8.59 13.51l6.83 3.98" />
+    <path d="M15.41 6.51l-6.82 3.98" />
+  </svg>
+);
+
+const IconEmail = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
+);
+
+const IconAlaCarte = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </svg>
+);
+
 const SERVICES = [
   {
     title: 'Website Refresh or Update',
     description: 'Breathe new life into your existing site with modernized design, improved flow, and updated content.',
-    icon: '↺',
+    Icon: IconRefresh,
   },
   {
     title: 'Build a Website',
     description: 'Start fresh with a fully custom, responsive website tailored to your brand and business goals.',
-    icon: '⬡',
+    Icon: IconBuildSite,
   },
   {
     title: 'Landing Page or Lead Capture',
     description: 'High-converting, focused single pages designed specifically to capture leads or drive sales.',
-    icon: '◎',
+    Icon: IconLanding,
   },
   {
     title: 'Add Platforms or Posts to Package',
     description: 'Expand your reach by adding new social channels or increasing your posting frequency.',
-    icon: '+',
+    Icon: IconAddPlatform,
   },
   {
     title: 'Customize Email Campaigns',
     description: 'Engaging, beautifully designed email sequences that nurture your audience and drive conversions.',
-    icon: '✉',
+    Icon: IconEmail,
   },
   {
     title: 'A La Carte Services',
     description: 'Need something specific? We offer flexible, one-off design and marketing tasks on demand.',
-    icon: '✦',
+    Icon: IconAlaCarte,
   },
 ];
 
@@ -62,7 +111,7 @@ export default function ServiceGrid() {
         .sg-card:hover { transform: translateY(-5px); box-shadow: 0 16px 32px -12px rgba(31,61,44,0.18); }
         .sg-btn-rust { transition: opacity 0.2s, transform 0.15s; }
         .sg-btn-rust:hover { opacity: 0.88; transform: scale(1.03); }
-        .sg-input { border: 1px solid #d4cfc5; border-radius: 8px; padding: 12px 16px; width: 100%; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .sg-input { border: 1px solid #d4cfc5; border-radius: 8px; padding: 12px 16px; width: 100%; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
         .sg-input:focus { border-color: #2D6B4F; }
       ` }} />
 
@@ -78,8 +127,8 @@ export default function ServiceGrid() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 72 }}>
           {SERVICES.map((s, i) => (
             <div key={i} className="sg-card" style={{ background: '#fff', borderRadius: 16, padding: 32, border: '1px solid rgba(235,201,155,0.4)' }}>
-              <div style={{ width: 52, height: 52, borderRadius: 12, backgroundColor: COLORS.tan + '33', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, fontSize: 22, color: COLORS.green }}>
-                {s.icon}
+              <div style={{ width: 52, height: 52, borderRadius: 12, backgroundColor: COLORS.tan + '33', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, color: COLORS.green }}>
+                <s.Icon />
               </div>
               <h3 className="sg-heading" style={{ fontSize: 18, fontWeight: 600, color: COLORS.forest, marginBottom: 10 }}>{s.title}</h3>
               <p style={{ fontSize: 14, color: COLORS.slate, lineHeight: 1.65 }}>{s.description}</p>
