@@ -47,7 +47,7 @@ export function CenteredPortraits() {
                 width: 140, height: 140, borderRadius: "50%",
                 overflow: "hidden", border: "3px solid rgba(235,201,155,0.40)",
                 marginBottom: 20, flexShrink: 0,
-                background: "#E8E0D0",
+                background: "#7D2A03",
                 display: "flex", alignItems: "flex-end", justifyContent: "center"
               }}>
                 <img
