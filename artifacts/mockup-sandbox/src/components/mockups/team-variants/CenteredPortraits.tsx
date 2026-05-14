@@ -3,7 +3,7 @@ const team = [
     name: "Teri Slack",
     role: "Founder & Lead Strategist",
     bio: "A natural big-picture thinker, Teri specializes in building brand presence and long-term growth strategies that let business owners focus on what they do best.",
-    img: "/__mockup/images/team/teri-slack.jpg",
+    img: "/__mockup/images/team/teri-slack-nobg.png",
     initials: "TS",
   },
   {
@@ -17,14 +17,14 @@ const team = [
     name: "Zane Starkewolfe",
     role: "Corporate Development Consultant",
     bio: "With 15+ years in corporate development, Zane brings a sharp strategic mind and a proven track record of closing deals, building partnerships, and driving real growth.",
-    img: "/__mockup/images/team/zane-starkewolfe.jpg",
+    img: "/__mockup/images/team/zane-starkewolfe-nobg.png",
     initials: "ZS",
   },
   {
     name: "Ivory Townsend",
     role: "Creative Consultant",
     bio: "A creative with a background in content, social media, and the arts, Ivory blends analytical thinking and storytelling to help our clients' brands truly come to life.",
-    img: "/__mockup/images/team/ivory-townsend.jpg",
+    img: "/__mockup/images/team/ivory-townsend-nobg.png",
     initials: "IT",
   },
 ];
@@ -45,15 +45,15 @@ export function CenteredPortraits() {
             <div key={member.name} style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 220, textAlign: "center" }}>
               <div style={{
                 width: 140, height: 140, borderRadius: "50%",
-                overflow: "hidden", border: "3px solid rgba(235,201,155,0.35)",
+                overflow: "hidden", border: "3px solid rgba(235,201,155,0.40)",
                 marginBottom: 20, flexShrink: 0,
-                background: "rgba(235,201,155,0.12)",
-                display: "flex", alignItems: "center", justifyContent: "center"
+                background: "#E8E0D0",
+                display: "flex", alignItems: "flex-end", justifyContent: "center"
               }}>
                 <img
                   src={member.img}
                   alt={member.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={{ width: "92%", height: "92%", objectFit: "contain", objectPosition: "bottom" }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
                   }}
