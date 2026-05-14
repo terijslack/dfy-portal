@@ -11,22 +11,20 @@ export default function AlmostThere() {
       {/* Logo */}
       <div style={{ textAlign: "center", padding: "32px 24px 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <img src="/__mockup/images/logo.png" alt="Done For You Marketing" style={{ height: 80, width: "auto", marginBottom: 8 }} />
+        <a href="#" style={{ fontSize: 13, color: "#9AA199", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 5, marginTop: 4 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Change plan
+        </a>
       </div>
 
       {/* Welcome block */}
       <div style={{ maxWidth: 460, margin: "24px auto 0", padding: "0 24px" }}>
 
-        {/* Plan row — Change plan on left, plan name on right */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-          <a href="#" style={{ fontSize: 13, color: "#9AA199", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 5, transition: "color 0.15s" }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Change plan
-          </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
-            <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
-            <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
-          </div>
+        {/* Plan row */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
+          <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
         </div>
 
         <h1
