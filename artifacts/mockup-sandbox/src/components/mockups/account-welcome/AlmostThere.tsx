@@ -13,8 +13,11 @@ export default function AlmostThere() {
         <img src="/__mockup/images/logo.png" alt="Done For You Marketing" style={{ height: 80, width: "auto", marginBottom: 8 }} />
         <a href="#" style={{ fontSize: 13, color: "#9AA199", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 5, marginTop: 4 }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Your selected plan
+          Change plan
         </a>
+        <p style={{ fontSize: 13, color: "#6B756B", marginTop: 6 }}>
+          Your selected plan: <strong style={{ color: "#1F3D2C" }}>Growth Engine</strong>
+        </p>
       </div>
 
       {/* Welcome block */}
