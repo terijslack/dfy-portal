@@ -29,7 +29,6 @@ export default function BrandForward() {
               "Up to 32 posts (total)",
               "Caption writing",
               "2 promotional emails/month",
-              "Automated Google Review requests",
               "Google Business Profile management",
             ].map(f => (
               <div key={f} style={{ display: "flex", gap: 7, alignItems: "flex-start" }}>
