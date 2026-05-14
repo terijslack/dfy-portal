@@ -118,7 +118,7 @@ export default function BtnCContext() {
             e.currentTarget.style.borderColor = "#EBC99B";
           }}
         >
-          Get Started →
+          Choose Your Plan →
         </a>
       </div>
     </div>
