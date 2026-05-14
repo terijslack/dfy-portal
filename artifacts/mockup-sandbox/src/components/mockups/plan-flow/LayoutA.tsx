@@ -31,9 +31,18 @@ const plans = [
   },
 ];
 
+const services = [
+  { name: "Film & Video Content Capture", tag: "One-time or recurring" },
+  { name: "Build a Website", tag: "One-time project" },
+  { name: "Refresh Your Website", tag: "One-time project" },
+  { name: "A La Carte Services", tag: "By scope" },
+  { name: "Create a Custom Package", tag: "Ongoing retainer" },
+];
+
 export default function LayoutA() {
   const [selected, setSelected] = useState<string | null>("growth");
-
+  const [quoteOpen, setQuoteOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const selectedPlan = plans.find(p => p.id === selected);
 
   return (
@@ -45,7 +54,7 @@ export default function LayoutA() {
         <p style={{ fontSize: 15, color: "#6B756B", margin: 0 }}>Pick the package that fits your business. Click a plan to select it, then continue.</p>
       </div>
 
-      {/* Cards */}
+      {/* Plan Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18, maxWidth: 920, margin: "0 auto", padding: "0 24px" }}>
         {plans.map(p => (
           <div
@@ -61,7 +70,8 @@ export default function LayoutA() {
                 ? `2.5px solid ${p.featured ? "#EBC99B" : "#7D2A03"}`
                 : p.featured ? "2.5px solid transparent" : "1.5px solid rgba(31,61,44,0.12)",
               boxShadow: selected === p.id ? "0 4px 24px rgba(0,0,0,0.10)" : "none",
-              transition: "border 0.15s, box-shadow 0.15s",
+              transform: selected === p.id ? "translateY(-2px)" : "none",
+              transition: "all 0.15s",
             }}
           >
             {p.badge && (
@@ -69,16 +79,11 @@ export default function LayoutA() {
                 {p.badge}
               </div>
             )}
-
-            {/* Selected indicator */}
             {selected === p.id && (
               <div style={{ position: "absolute", top: 14, right: 14, width: 22, height: 22, borderRadius: "50%", background: p.featured ? "#EBC99B" : "#7D2A03", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={p.featured ? "#1F3D2C" : "#fff"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6L9 17l-5-5"/>
-                </svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={p.featured ? "#1F3D2C" : "#fff"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
               </div>
             )}
-
             <div style={{ fontSize: 13, fontWeight: 600, color: p.featured ? "#EBC99B" : "#6B756B", marginBottom: 6 }}>{p.name}</div>
             <div style={{ fontSize: 30, fontWeight: 700, color: p.featured ? "#F5F2EA" : "#1F3D2C", marginBottom: 4 }}>
               {p.price}<span style={{ fontSize: 15, fontWeight: 400 }}>{p.period}</span>
@@ -94,6 +99,76 @@ export default function LayoutA() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Divider */}
+      <div style={{ maxWidth: 920, margin: "56px auto 0", padding: "0 24px" }}>
+        <hr style={{ border: "none", borderTop: "1px solid rgba(107,117,107,0.15)" }} />
+      </div>
+
+      {/* Custom & À La Carte section */}
+      <div style={{ maxWidth: 820, margin: "0 auto", padding: "48px 24px 56px" }}>
+        <p style={{ color: "#7D2A03", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>
+          Custom &amp; À La Carte
+        </p>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 300, color: "#1F3D2C", fontStyle: "italic", lineHeight: 1.1, margin: 0 }}>Beyond the plan.</h2>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 400, color: "#1F3D2C", lineHeight: 1.1, margin: "4px 0 40px" }}>Built for you.</h2>
+
+        <div style={{ borderTop: "1px solid rgba(107,117,107,0.2)", marginBottom: 44 }}>
+          {services.map(s => (
+            <div key={s.name} style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", padding: "22px 0", borderBottom: "1px solid rgba(107,117,107,0.2)", gap: 16 }}>
+              <span style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 300, color: "#1F3D2C", letterSpacing: "-0.01em" }}>{s.name}</span>
+              <span style={{ fontSize: 11, color: "#6B756B", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>{s.tag}</span>
+            </div>
+          ))}
+        </div>
+
+        {!quoteOpen && !submitted && (
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: 15, color: "#6B756B", marginBottom: 20, lineHeight: 1.65 }}>Every project is different. Let's talk about yours.</p>
+            <button
+              onClick={() => setQuoteOpen(true)}
+              style={{ background: "transparent", border: "1.5px solid #1F3D2C", color: "#1F3D2C", padding: "13px 32px", borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: "pointer" }}
+            >
+              Request a Custom Quote
+            </button>
+          </div>
+        )}
+
+        {quoteOpen && !submitted && (
+          <div>
+            <div style={{ width: 40, height: 2, background: "#7D2A03", marginBottom: 28 }} />
+            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 400, color: "#1F3D2C", marginBottom: 32 }}>Tell us about your project.</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+              {["Name", "Business"].map(label => (
+                <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B756B" }}>{label}</label>
+                  <input style={{ border: "none", borderBottom: "1.5px solid #d9d3c7", padding: "10px 0", fontSize: 15, fontFamily: "inherit", outline: "none", background: "transparent", color: "#1F3D2C" }} />
+                </div>
+              ))}
+            </div>
+            {["Email", "What do you need?"].map(label => (
+              <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 24 }}>
+                <label style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B756B" }}>{label}</label>
+                <input style={{ border: "none", borderBottom: "1.5px solid #d9d3c7", padding: "10px 0", fontSize: 15, fontFamily: "inherit", outline: "none", background: "transparent", color: "#1F3D2C" }} />
+              </div>
+            ))}
+            <button
+              onClick={() => { setSubmitted(true); setQuoteOpen(false); }}
+              style={{ background: "#1F3D2C", color: "#F5F2EA", border: "none", padding: "14px 36px", borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: "pointer", marginTop: 4 }}
+            >
+              Submit Request
+            </button>
+          </div>
+        )}
+
+        {submitted && (
+          <div style={{ borderTop: "1px solid rgba(107,117,107,0.2)", paddingTop: 40 }}>
+            <p style={{ color: "#7D2A03", fontSize: 11, fontWeight: 600, letterSpacing: "0.13em", textTransform: "uppercase", marginBottom: 10 }}>Received</p>
+            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 400, color: "#1F3D2C", marginBottom: 10 }}>We'll be in touch soon.</h3>
+            <p style={{ fontSize: 15, color: "#6B756B", lineHeight: 1.65 }}>Expect a reply within 24 hours.</p>
+          </div>
+        )}
       </div>
 
       {/* Sticky bottom bar */}
@@ -116,18 +191,12 @@ export default function LayoutA() {
             padding: "13px 36px", borderRadius: 999,
             fontSize: 15, fontWeight: 600, textDecoration: "none",
           }}>
-            Select & Continue
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+            Select &amp; Continue
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", color: "rgba(245,242,234,0.45)", fontSize: 12, cursor: "pointer" }}>Change</button>
         </div>
       )}
-
-      <div style={{ textAlign: "center", marginTop: 36, paddingBottom: 20 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "#9AA199", textTransform: "uppercase" }}>A — Sticky Confirmation Bar</span>
-      </div>
     </div>
   );
 }
