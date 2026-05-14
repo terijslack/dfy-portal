@@ -23,13 +23,6 @@ export default function AlmostThere() {
       {/* Welcome block */}
       <div style={{ maxWidth: 460, margin: "24px auto 0", padding: "0 24px" }}>
 
-        {/* Plan row */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
-          <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
-        </div>
-
         <h1
           style={{
             fontFamily: "'Fraunces', serif",
