@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const { createGHLContact } = require('../services/ghl');
@@ -44,6 +44,16 @@ router.post('/create-checkout', async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // If Stripe is not configured, create account as active and redirect to login
+    if (!process.env.STRIPE_SECRET_KEY) {
+      await pool.query(`
+        INSERT INTO clients (name, email, password, business_name, is_admin, status, stripe_price_id)
+        VALUES ($1, $2, $3, $4, false, 'active', $5)
+        ON CONFLICT (email) DO NOTHING
+      `, [name, email.toLowerCase().trim(), hashedPassword, business_name || null, priceId]);
+      return res.json({ url: '/login' });
+    }
+
     // Store pending signup in DB (status = 'pending' until payment succeeds)
     await pool.query(`
       INSERT INTO clients (name, email, password, business_name, is_admin, status, stripe_price_id)
@@ -56,7 +66,7 @@ router.post('/create-checkout', async (req, res) => {
     const addonNames = addonList.map(a => a.name).join(', ');
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
       customer_email: email,
@@ -84,7 +94,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = getStripe().webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error('Webhook signature error:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
