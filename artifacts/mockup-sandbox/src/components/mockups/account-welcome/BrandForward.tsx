@@ -3,9 +3,9 @@ export default function BrandForward() {
     <div style={{ background: "#F5F2EA", fontFamily: "'Inter', sans-serif", minHeight: "100vh", padding: "0 0 60px" }}>
 
       {/* Top nav strip */}
-      <div style={{ textAlign: "center", padding: "32px 24px 0" }}>
-        <img src="/__mockup/images/logo.png" alt="Done For You Marketing" style={{ height: 56, width: "auto", marginBottom: 12 }} />
-        <a href="#" style={{ display: "block", fontSize: 13, color: "#6B756B", textDecoration: "none", marginTop: 4 }}>← Change plan</a>
+      <div style={{ textAlign: "center", padding: "32px 24px 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <img src="/__mockup/images/logo.png" alt="Done For You Marketing" style={{ height: 80, width: "auto", marginBottom: 12 }} />
+        <a href="#" style={{ fontSize: 13, color: "#6B756B", textDecoration: "none", marginTop: 4 }}>← Change plan</a>
       </div>
 
       {/* Welcome block — brand-forward banner */}
