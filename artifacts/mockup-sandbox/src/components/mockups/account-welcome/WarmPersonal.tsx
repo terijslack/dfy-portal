@@ -24,10 +24,11 @@ export default function WarmPersonal() {
           Create your account to get started with Done For You Marketing. Your first month is billed today — no hidden fees.
         </p>
 
-        {/* Plan pill */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#EEF5F1", border: "1px solid rgba(45,107,79,0.25)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 500, color: "#2D6B4F", marginBottom: 20 }}>
-          <svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="#2D6B4F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
-          Growth Engine — $1,500/mo
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9AA199" }}>Your plan</span>
+          <span style={{ width: 1, height: 12, background: "rgba(107,117,107,0.3)", display: "inline-block" }} />
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#1F3D2C" }}>Growth Engine</span>
+          <span style={{ fontSize: 13, color: "#6B756B" }}>$1,500/mo</span>
         </div>
 
         {/* Plan features */}

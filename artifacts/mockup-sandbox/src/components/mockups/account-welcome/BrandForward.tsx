@@ -22,9 +22,11 @@ export default function BrandForward() {
             Welcome! Please create an account to continue.
           </h1>
           <div style={{ width: 36, height: 2, background: "#7D2A03", margin: "0 auto 14px" }} />
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 500, color: "#EBC99B" }}>
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
-            Growth Engine — $1,500/mo
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(235,201,155,0.7)" }}>Your plan</span>
+            <span style={{ width: 1, height: 12, background: "rgba(255,255,255,0.2)", display: "inline-block" }} />
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#F5F2EA" }}>Growth Engine</span>
+            <span style={{ fontSize: 13, color: "rgba(235,201,155,0.85)" }}>$1,500/mo</span>
           </div>
 
           {/* Plan features */}
