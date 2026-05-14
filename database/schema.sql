@@ -4,10 +4,14 @@
 -- CLIENTS table: stores each of your marketing clients
 CREATE TABLE IF NOT EXISTS clients (
   id SERIAL PRIMARY KEY,              -- auto-incrementing ID
-  name VARCHAR(255) NOT NULL,         -- e.g. "Bloom Wellness"
+  name VARCHAR(255) NOT NULL,         -- e.g. "Jane Smith"
   email VARCHAR(255) UNIQUE NOT NULL, -- their login email
   password VARCHAR(255) NOT NULL,     -- hashed password (never stored plain)
+  business_name VARCHAR(255),         -- e.g. "Bloom Wellness"
   is_admin BOOLEAN DEFAULT FALSE,     -- true = you (admin), false = client
+  status VARCHAR(50) DEFAULT 'active',           -- 'pending' until payment, then 'active'
+  stripe_price_id VARCHAR(255),       -- the Stripe price ID for their plan
+  stripe_customer_id VARCHAR(255),    -- Stripe customer ID (set after payment)
   created_at TIMESTAMP DEFAULT NOW()
 );
 
