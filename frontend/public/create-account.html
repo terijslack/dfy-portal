@@ -177,7 +177,7 @@
     <div class="error-msg" id="errorMsg"></div>
 
     <button class="btn-primary" id="submitBtn" onclick="handleSignup()">
-      Continue to Payment →
+      Create your account →
     </button>
 
     <p class="login-link">Already have an account? <a href="/login">Sign in</a></p>
@@ -236,7 +236,7 @@
 
         if (!res.ok) {
           errorMsg.textContent = data.error || 'Something went wrong.';
-          btn.textContent = 'Continue to Payment →';
+          btn.textContent = 'Create your account →';
           btn.disabled = false;
           return;
         }
@@ -248,7 +248,7 @@
 
       } catch (err) {
         errorMsg.textContent = 'Network error. Please try again.';
-        btn.textContent = 'Continue to Payment →';
+        btn.textContent = 'Create your account →';
         btn.disabled = false;
       }
     }
