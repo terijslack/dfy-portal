@@ -1,17 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { 
-  RefreshCw, 
-  Monitor, 
-  LayoutTemplate, 
-  Share2, 
-  Mail, 
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
 
 const COLORS = {
   cream: '#F5F2EA',
-  primaryGreen: '#2D6B4F',
+  green: '#2D6B4F',
   forest: '#1F3D2C',
   rust: '#7D2A03',
   tan: '#EBC99B',
@@ -22,32 +13,32 @@ const SERVICES = [
   {
     title: 'Website Refresh or Update',
     description: 'Breathe new life into your existing site with modernized design, improved flow, and updated content.',
-    icon: RefreshCw,
+    icon: '↺',
   },
   {
     title: 'Build a Website',
     description: 'Start fresh with a fully custom, responsive website tailored to your brand and business goals.',
-    icon: Monitor,
+    icon: '⬡',
   },
   {
     title: 'Landing Page or Lead Capture',
-    description: 'High-converting, focused single pages designed specifically to capture leads or sell a single product.',
-    icon: LayoutTemplate,
+    description: 'High-converting, focused single pages designed specifically to capture leads or drive sales.',
+    icon: '◎',
   },
   {
     title: 'Add Platforms or Posts to Package',
     description: 'Expand your reach by adding new social channels or increasing your posting frequency.',
-    icon: Share2,
+    icon: '+',
   },
   {
     title: 'Customize Email Campaigns',
-    description: 'Engaging, beautifully designed email sequences that nurture your audience and drive sales.',
-    icon: Mail,
+    description: 'Engaging, beautifully designed email sequences that nurture your audience and drive conversions.',
+    icon: '✉',
   },
   {
-    title: 'À La Carte Services',
+    title: 'A La Carte Services',
     description: 'Need something specific? We offer flexible, one-off design and marketing tasks on demand.',
-    icon: Sparkles,
+    icon: '✦',
   },
 ];
 
@@ -59,171 +50,99 @@ export default function ServiceGrid() {
     setIsFormVisible(true);
     setTimeout(() => {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    }, 150);
   };
 
   return (
-    <div className="w-full relative" style={{ backgroundColor: COLORS.cream, fontFamily: '"Inter", sans-serif' }}>
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap');
-          
-          .heading-font {
-            font-family: 'Fraunces', serif;
-          }
-          
-          .service-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-          }
-          
-          .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px -10px rgba(31, 61, 44, 0.15);
-          }
-        `}
-      </style>
+    <div style={{ backgroundColor: COLORS.cream, fontFamily: '"Inter", sans-serif' }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap');
+        .sg-heading { font-family: 'Fraunces', serif; }
+        .sg-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .sg-card:hover { transform: translateY(-5px); box-shadow: 0 16px 32px -12px rgba(31,61,44,0.18); }
+        .sg-btn-rust { transition: opacity 0.2s, transform 0.15s; }
+        .sg-btn-rust:hover { opacity: 0.88; transform: scale(1.03); }
+        .sg-input { border: 1px solid #d4cfc5; border-radius: 8px; padding: 12px 16px; width: 100%; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .sg-input:focus { border-color: #2D6B4F; }
+      ` }} />
 
-      {/* Main Content Section */}
-      <div className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="heading-font text-4xl md:text-5xl font-semibold mb-4" style={{ color: COLORS.forest }}>
-            Custom Services
-          </h2>
-          <p className="text-lg md:text-xl" style={{ color: COLORS.slate }}>
-            Beyond our standard packages, we offer bespoke solutions to elevate your brand. What do you need built?
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '80px 24px 64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <p style={{ color: COLORS.rust, fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Beyond the Packages</p>
+          <h2 className="sg-heading" style={{ fontSize: 48, fontWeight: 500, color: COLORS.forest, margin: '0 0 16px' }}>Custom Services</h2>
+          <p style={{ fontSize: 18, color: COLORS.slate, maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
+            Need something built just for your brand? We offer bespoke solutions alongside our core plans.
           </p>
         </div>
 
-        {/* 2x3 Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {SERVICES.map((service, idx) => {
-            const Icon = service.icon;
-            return (
-              <div 
-                key={idx} 
-                className="service-card bg-white rounded-2xl p-8 border border-opacity-20 flex flex-col items-start"
-                style={{ borderColor: COLORS.tan }}
-              >
-                <div 
-                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-6"
-                  style={{ backgroundColor: COLORS.tan + '40', color: COLORS.primaryGreen }}
-                >
-                  <Icon size={28} strokeWidth={1.5} />
-                </div>
-                <h3 className="heading-font text-xl font-semibold mb-3" style={{ color: COLORS.forest }}>
-                  {service.title}
-                </h3>
-                <p className="text-base leading-relaxed" style={{ color: COLORS.slate }}>
-                  {service.description}
-                </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 72 }}>
+          {SERVICES.map((s, i) => (
+            <div key={i} className="sg-card" style={{ background: '#fff', borderRadius: 16, padding: 32, border: '1px solid rgba(235,201,155,0.4)' }}>
+              <div style={{ width: 52, height: 52, borderRadius: 12, backgroundColor: COLORS.tan + '33', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, fontSize: 22, color: COLORS.green }}>
+                {s.icon}
               </div>
-            );
-          })}
+              <h3 className="sg-heading" style={{ fontSize: 18, fontWeight: 600, color: COLORS.forest, marginBottom: 10 }}>{s.title}</h3>
+              <p style={{ fontSize: 14, color: COLORS.slate, lineHeight: 1.65 }}>{s.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Full-width CTA Block */}
-      <div className="w-full py-20 px-6 relative overflow-hidden" style={{ backgroundColor: COLORS.forest }}>
-        {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style={{ backgroundColor: COLORS.tan }} />
-        <div className="absolute bottom-0 left-0 w-80 h-80 opacity-10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" style={{ backgroundColor: COLORS.rust }} />
-        
-        <div className="max-w-4xl mx-auto relative z-10 text-center">
-          <h2 className="heading-font text-3xl md:text-4xl font-semibold text-white mb-6">
+      <div style={{ backgroundColor: COLORS.forest, padding: '80px 24px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -80, right: -80, width: 300, height: 300, borderRadius: '50%', backgroundColor: COLORS.tan, opacity: 0.07 }} />
+        <div style={{ position: 'absolute', bottom: -60, left: -60, width: 240, height: 240, borderRadius: '50%', backgroundColor: COLORS.rust, opacity: 0.07 }} />
+        <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative' }}>
+          <h2 className="sg-heading" style={{ fontSize: 36, fontWeight: 500, color: '#fff', marginBottom: 16 }}>
             Ready to start a custom project?
           </h2>
-          <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
-            Tell us about your goals and we'll put together a tailored proposal specifically for your brand.
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 17, marginBottom: 40, lineHeight: 1.6 }}>
+            Tell us about your goals and we'll put together a tailored proposal for your brand.
           </p>
-          
           {!isFormVisible && (
-            <button
-              onClick={handleShowForm}
-              className="px-8 py-4 rounded-full text-white font-medium text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2 mx-auto"
-              style={{ backgroundColor: COLORS.rust }}
-            >
-              Request Custom Services
-              <ArrowRight size={20} />
+            <button onClick={handleShowForm} className="sg-btn-rust" style={{ backgroundColor: COLORS.rust, color: '#fff', border: 'none', padding: '16px 36px', borderRadius: 999, fontSize: 16, fontWeight: 500, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              Request Custom Services <span style={{ fontSize: 18 }}>→</span>
             </button>
           )}
+        </div>
+      </div>
 
-          {/* Expandable Form */}
-          <div 
-            ref={formRef}
-            className={\`mt-12 text-left bg-white rounded-3xl p-8 md:p-12 shadow-2xl transition-all duration-700 ease-in-out origin-top \${isFormVisible ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0 h-0 overflow-hidden py-0 mt-0'}\`}
-          >
-            <div className="mb-8 border-b pb-6" style={{ borderColor: COLORS.tan + '40' }}>
-              <h3 className="heading-font text-2xl font-semibold" style={{ color: COLORS.forest }}>
-                Project Request
-              </h3>
-              <p className="mt-2" style={{ color: COLORS.slate }}>
-                Fill out the details below and our team will get back to you within 24 hours.
-              </p>
-            </div>
-
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {isFormVisible && (
+        <div ref={formRef} style={{ backgroundColor: COLORS.cream, padding: '72px 24px' }}>
+          <div style={{ maxWidth: 640, margin: '0 auto', background: '#fff', borderRadius: 24, padding: '48px 40px', boxShadow: '0 24px 48px -12px rgba(31,61,44,0.14)' }}>
+            <h3 className="sg-heading" style={{ fontSize: 28, color: COLORS.forest, marginBottom: 8 }}>Project Request</h3>
+            <p style={{ color: COLORS.slate, marginBottom: 36, fontSize: 15 }}>Fill out the details below and we'll get back to you within 24 hours.</p>
+            <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: COLORS.forest }}>Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="Jane Doe"
-                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-shadow"
-                    style={{ borderColor: COLORS.slate + '40', outlineColor: COLORS.primaryGreen }}
-                  />
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Name</label>
+                  <input className="sg-input" type="text" placeholder="Jane Doe" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: COLORS.forest }}>Business Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="Jane's Bakery"
-                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-shadow"
-                    style={{ borderColor: COLORS.slate + '40', outlineColor: COLORS.primaryGreen }}
-                  />
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Business Name</label>
+                  <input className="sg-input" type="text" placeholder="Jane's Bakery" />
                 </div>
               </div>
-              
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: COLORS.forest }}>Email</label>
-                <input 
-                  type="email" 
-                  placeholder="jane@example.com"
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-shadow"
-                  style={{ borderColor: COLORS.slate + '40', outlineColor: COLORS.primaryGreen }}
-                />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Email</label>
+                <input className="sg-input" type="email" placeholder="jane@example.com" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: COLORS.forest }}>Tell us what you need</label>
-                <textarea 
-                  rows={4}
-                  placeholder="I'm looking to build a new landing page for an upcoming product launch..."
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-shadow resize-none"
-                  style={{ borderColor: COLORS.slate + '40', outlineColor: COLORS.primaryGreen }}
-                ></textarea>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Tell us what you need</label>
+                <textarea className="sg-input" rows={4} placeholder="I'd love to build a landing page for an upcoming product launch..." style={{ resize: 'none' }} />
               </div>
-
-              <div className="pt-4 flex flex-col md:flex-row items-center gap-4">
-                <button
-                  type="submit"
-                  className="w-full md:w-auto px-8 py-4 rounded-full text-white font-medium text-lg transition-transform hover:scale-105 active:scale-95 shadow-md"
-                  style={{ backgroundColor: COLORS.primaryGreen }}
-                >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingTop: 8 }}>
+                <button type="submit" style={{ backgroundColor: COLORS.green, color: '#fff', border: 'none', padding: '14px 32px', borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: 'pointer' }}>
                   Send Request
                 </button>
-                <span className="text-sm font-medium" style={{ color: COLORS.slate }}>or</span>
-                <button
-                  type="button"
-                  className="w-full md:w-auto px-6 py-4 rounded-full font-medium text-lg hover:underline decoration-2 underline-offset-4 flex items-center justify-center gap-2"
-                  style={{ color: COLORS.rust }}
-                >
-                  Book a Call <ArrowRight size={18} />
+                <span style={{ color: COLORS.slate, fontSize: 14 }}>or</span>
+                <button type="button" style={{ background: 'none', border: 'none', color: COLORS.rust, fontSize: 15, fontWeight: 500, cursor: 'pointer', textDecoration: 'underline' }}>
+                  Book a Call →
                 </button>
               </div>
             </form>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
