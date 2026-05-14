@@ -138,64 +138,46 @@
       opacity: 1;
     }
 
-    /* Add-ons section */
-    .addons-section {
-      max-width: 1000px;
+    /* Custom & À La Carte section */
+    .custom-alacarte-section {
+      max-width: 820px;
       margin: 0 auto;
-      padding: 0 24px 40px;
+      padding: 48px 24px 56px;
     }
+    .sc-eyebrow { color: #7D2A03; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
+    .sc-heading-italic { font-family: var(--font-serif); font-size: 36px; font-weight: 300; color: #1F3D2C; font-style: italic; line-height: 1.1; margin: 0; }
+    .sc-heading-regular { font-family: var(--font-serif); font-size: 36px; font-weight: 400; color: #1F3D2C; line-height: 1.1; margin: 4px 0 40px; }
+    .sc-service-list { border-top: 1px solid rgba(107,117,107,0.2); margin-bottom: 44px; }
+    .sc-service-row { display: flex; align-items: baseline; justify-content: space-between; padding: 22px 0; border-bottom: 1px solid rgba(107,117,107,0.2); gap: 16px; }
+    .sc-service-title { font-family: var(--font-serif); font-size: 22px; font-weight: 300; color: #1F3D2C; letter-spacing: -0.01em; }
+    .sc-service-tag { font-size: 11px; color: #6B756B; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+    .sc-cta-area { text-align: center; }
+    .sc-cta-text { font-size: 15px; color: #6B756B; margin-bottom: 20px; line-height: 1.65; }
+    .sc-open-btn { background: transparent; border: 1.5px solid #1F3D2C; color: #1F3D2C; padding: 13px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .sc-open-btn:hover { background: #1F3D2C; color: #F5F2EA; }
+    .sc-form-section { display: none; }
+    .sc-form-section.visible { display: block; }
+    .sc-form-bar { width: 40px; height: 2px; background: #7D2A03; margin-bottom: 28px; }
+    .sc-form-heading { font-family: var(--font-serif); font-size: 24px; font-weight: 400; color: #1F3D2C; margin-bottom: 32px; }
+    .sc-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .sc-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .sc-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B756B; }
+    .sc-input-line { width: 100%; border: none; border-bottom: 1.5px solid #d9d3c7; padding: 10px 0; font-size: 15px; font-family: inherit; outline: none; background: transparent; color: #1F3D2C; transition: border-color 0.2s; box-sizing: border-box; }
+    .sc-input-line:focus { border-color: #2D6B4F; }
+    .sc-input-line::placeholder { color: #9AA199; }
+    .sc-submit-btn { background: #1F3D2C; color: #F5F2EA; border: none; padding: 14px 36px; border-radius: 999px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+    .sc-submit-btn:hover { background: #2D6B4F; }
+    .sc-success { border-top: 1px solid rgba(107,117,107,0.2); padding-top: 40px; display: none; }
+    .sc-success.visible { display: block; }
+    .sc-success-eyebrow { color: #7D2A03; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 10px; }
+    .sc-success-heading { font-family: var(--font-serif); font-size: 28px; font-weight: 400; color: #1F3D2C; margin-bottom: 10px; }
 
-    .addons-section > .section-heading {
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
-      font-weight: 400;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .addons-section > .section-heading span {
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    .addons-section > .section-sub {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 28px;
-    }
-
-    .addons-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .addon-group {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 20px 4px;
-    }
-
-    .addon-group-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
+    /* (legacy placeholder — keep gap: 12px for any remaining flex rows) */
     .addon-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 9px 0;
-      border-top: 1px solid var(--border);
       gap: 12px;
     }
 
@@ -450,140 +432,90 @@
     </div>
   </div>
 
-  <!-- Add-ons -->
-  <div class="addons-section">
-    <h2 class="section-heading">Customize with add-ons <span>(optional)</span></h2>
-    <p class="section-sub">Enhance your package with additional services.</p>
+  <!-- Custom & À La Carte -->
+  <div class="custom-alacarte-section">
+    <p class="sc-eyebrow">Custom &amp; &#192; La Carte</p>
+    <h2 class="sc-heading-italic">Beyond the plan.</h2>
+    <h2 class="sc-heading-regular">Built for you.</h2>
 
-    <div class="addons-grid">
-
-      <!-- One-time -->
-      <div class="addon-group">
-        <div class="addon-group-label">Done For You Set Ups (one time payment)</div>
-
-
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Social media account setup (per platform)" data-price="250" data-type="one-time" onchange="updateTotal()">
-            Social media account setup (per platform)
-          </label>
-          <span class="addon-price">$250</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Website refresh" data-price="500" data-type="one-time" onchange="updateTotal()">
-            Website refresh
-          </label>
-          <span class="addon-price">$500</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Landing page or lead capture form" data-price="300" data-type="one-time" onchange="updateTotal()">
-            Landing page or lead capture form
-          </label>
-          <span class="addon-price">$300</span>
-        </div>
+    <div class="sc-service-list">
+      <div class="sc-service-row">
+        <span class="sc-service-title">Film &amp; Video Content Capture</span>
+        <span class="sc-service-tag">One-time or recurring</span>
       </div>
-
-      <!-- Recurring -->
-      <div class="addon-group">
-        <div class="addon-group-label">Recurring Monthly Add-Ons</div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Additional social platform" data-price="200" data-type="recurring" onchange="updateTotal()">
-            Additional social platform
-          </label>
-          <span class="addon-price">+$200/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Additional 4 posts/month" data-price="150" data-type="recurring" onchange="updateTotal()">
-            Additional 4 posts/month
-          </label>
-          <span class="addon-price">+$150/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Social media inbox management (per platform)" data-price="150" data-type="recurring" onchange="updateTotal()">
-            Social media inbox management (per platform)
-          </label>
-          <span class="addon-price">+$150/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="2 blog posts/month" data-price="300" data-type="recurring" onchange="updateTotal()">
-            2 blog posts/month
-          </label>
-          <span class="addon-price">+$300/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Additional email campaign" data-price="100" data-type="recurring" onchange="updateTotal()">
-            Additional email campaign
-          </label>
-          <span class="addon-price">+$100/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Paid ads management" data-price="500" data-type="recurring" onchange="updateTotal()">
-            Paid ads management
-          </label>
-          <span class="addon-price">+$500/mo</span>
-        </div>
-
-        <div class="addon-item">
-          <label class="addon-label">
-            <input type="checkbox" class="addon-check" data-name="Content capture planning" data-price="100" data-type="recurring" onchange="updateTotal()">
-            Content capture planning
-          </label>
-          <span class="addon-price">+$100/mo</span>
-        </div>
+      <div class="sc-service-row">
+        <span class="sc-service-title">Build a Website</span>
+        <span class="sc-service-tag">One-time project</span>
       </div>
-
+      <div class="sc-service-row">
+        <span class="sc-service-title">Refresh Your Website</span>
+        <span class="sc-service-tag">One-time project</span>
+      </div>
+      <div class="sc-service-row">
+        <span class="sc-service-title">A La Carte Services</span>
+        <span class="sc-service-tag">By scope</span>
+      </div>
+      <div class="sc-service-row">
+        <span class="sc-service-title">Create a Custom Package</span>
+        <span class="sc-service-tag">Ongoing retainer</span>
+      </div>
     </div>
 
-    <!-- Running total -->
-    <div class="order-summary">
-      <div class="summary-heading">Order Summary</div>
+    <div class="sc-cta-area" id="scCtaArea">
+      <p class="sc-cta-text">Every project is different. Let&#39;s talk about yours.</p>
+      <button class="sc-open-btn" onclick="openCustomForm()">Request a Custom Quote</button>
+    </div>
 
+    <div class="sc-form-section" id="scFormSection">
+      <div class="sc-form-bar"></div>
+      <h3 class="sc-form-heading">Tell us about your project.</h3>
+      <form id="scQuoteForm" onsubmit="submitCustomQuote(event)">
+        <div class="sc-form-grid">
+          <div class="sc-field">
+            <label class="sc-label">Name</label>
+            <input class="sc-input-line" type="text" placeholder="Jane Smith" required>
+          </div>
+          <div class="sc-field">
+            <label class="sc-label">Business</label>
+            <input class="sc-input-line" type="text" placeholder="Jane&#39;s Studio">
+          </div>
+        </div>
+        <div class="sc-field">
+          <label class="sc-label">Email</label>
+          <input class="sc-input-line" type="email" placeholder="jane@example.com" required>
+        </div>
+        <div class="sc-field">
+          <label class="sc-label">What do you need?</label>
+          <input class="sc-input-line" type="text" placeholder="e.g. Video shoot + website refresh">
+        </div>
+        <button type="submit" class="sc-submit-btn">Submit Request</button>
+      </form>
+    </div>
+
+    <div class="sc-success" id="scSuccess">
+      <p class="sc-success-eyebrow">Received</p>
+      <h3 class="sc-success-heading">We&#39;ll be in touch soon.</h3>
+      <p style="font-size:15px;color:#6B756B;line-height:1.65">Expect a reply within 24 hours. We&#39;ll review your project and reach out to talk through the details.</p>
+    </div>
+
+    <!-- Order summary -->
+    <div class="order-summary" style="margin-top:40px">
+      <div class="summary-heading">Order Summary</div>
       <div class="summary-row">
         <span class="summary-label">Base plan</span>
         <span class="summary-value" id="summaryBasePlan">Select a plan above</span>
       </div>
-
-      <div class="summary-row" id="summaryMonthlyRow" style="display:none">
-        <span class="summary-label">Monthly add-ons</span>
-        <span class="summary-value" id="summaryMonthlyAddons"></span>
-      </div>
-
-      <div class="summary-row" id="summaryOneTimeRow" style="display:none">
-        <span class="summary-label">One time add-ons</span>
-        <span class="summary-value" id="summaryOneTime"></span>
-      </div>
-
       <hr class="summary-divider" id="summaryDivider" style="display:none">
-
       <div class="summary-row total" id="summaryTotalRow" style="display:none">
         <span class="summary-label">Monthly total</span>
         <span class="summary-value" id="summaryTotal"></span>
       </div>
-
       <div class="summary-row total" id="summaryDueTodayRow" style="display:none">
-        <span class="summary-label">Due today</span>
+        <span class="summary-label">Due today (first month)</span>
         <span class="summary-value" id="summaryDueToday"></span>
       </div>
-
       <p class="summary-note" id="summaryNote" style="display:none">
-        Due today includes your first month + any one-time fees. Monthly billing renews on the same date each month.
+        Monthly billing renews on the same date each month.
       </p>
     </div>
   </div>
@@ -648,69 +580,33 @@
     }
 
     function updateTotal() {
-      let recurringTotal = 0;
-      let addonOneTimeTotal = 0;
-
-      document.querySelectorAll('.addon-check:checked').forEach(cb => {
-        const price = parseInt(cb.dataset.price);
-        if (cb.dataset.type === 'recurring') {
-          recurringTotal += price;
-        } else {
-          addonOneTimeTotal += price;
-        }
-      });
-
-      const fmt = n => '$' + n.toLocaleString();
-      const totalOneTime = addonOneTimeTotal;
-
-      // Monthly add-ons row
-      const monthlyRow = document.getElementById('summaryMonthlyRow');
-      if (recurringTotal > 0) {
-        document.getElementById('summaryMonthlyAddons').textContent = '+' + fmt(recurringTotal) + '/mo';
-        monthlyRow.style.display = '';
-      } else {
-        monthlyRow.style.display = 'none';
-      }
-
-      // Add-on one-time fees row (separate from onboarding)
-      const oneTimeRow = document.getElementById('summaryOneTimeRow');
-      if (addonOneTimeTotal > 0) {
-        document.getElementById('summaryOneTime').textContent = fmt(addonOneTimeTotal) + ' one-time';
-        oneTimeRow.style.display = '';
-      } else {
-        oneTimeRow.style.display = 'none';
-      }
-
-      // Total rows + divider (only when plan is selected)
       const hasPlan = selectedPriceId !== null;
+      const fmt = n => '$' + n.toLocaleString();
 
       document.getElementById('summaryDivider').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryTotalRow').style.display = hasPlan ? '' : 'none';
+      document.getElementById('summaryDueTodayRow').style.display = hasPlan ? '' : 'none';
       document.getElementById('summaryNote').style.display = hasPlan ? '' : 'none';
 
-      // Due today row — first month + any one-time add-ons
-      const dueTodayRow = document.getElementById('summaryDueTodayRow');
       if (hasPlan) {
-        const monthlyTotal = selectedPriceNum + recurringTotal;
-        const dueToday = monthlyTotal + addonOneTimeTotal;
-        document.getElementById('summaryDueToday').textContent = fmt(dueToday);
-        dueTodayRow.style.display = '';
-      } else {
-        dueTodayRow.style.display = 'none';
-      }
-
-      if (hasPlan) {
-        const monthlyTotal = selectedPriceNum + recurringTotal;
-        document.getElementById('summaryTotal').textContent = fmt(monthlyTotal) + '/mo';
+        document.getElementById('summaryTotal').textContent = fmt(selectedPriceNum) + '/mo';
+        document.getElementById('summaryDueToday').textContent = fmt(selectedPriceNum);
       }
     }
 
     function getSelectedAddons() {
-      return Array.from(document.querySelectorAll('.addon-check:checked')).map(cb => ({
-        name: cb.dataset.name,
-        price: parseInt(cb.dataset.price),
-        type: cb.dataset.type
-      }));
+      return [];
+    }
+
+    function openCustomForm() {
+      document.getElementById('scCtaArea').style.display = 'none';
+      document.getElementById('scFormSection').classList.add('visible');
+    }
+
+    function submitCustomQuote(e) {
+      e.preventDefault();
+      document.getElementById('scFormSection').classList.remove('visible');
+      document.getElementById('scSuccess').classList.add('visible');
     }
 
     async function handleSignup() {
