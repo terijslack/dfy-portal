@@ -26,7 +26,7 @@ const team: { name: string; role: string; bio: string; img: string; initials: st
     bio: "A creative with a background in content, social media, and the arts, Ivory blends analytical thinking and storytelling to help our clients' brands truly come to life.",
     img: "/__mockup/images/team/ivory-townsend-nobg.png",
     initials: "IT",
-    scale: 1.35,
+    scale: 1.18,
     translateY: "12%",
   },
 ];
