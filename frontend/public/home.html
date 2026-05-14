@@ -194,7 +194,13 @@
       width: 100%; aspect-ratio: 1; border-radius: 12px;
       background: rgba(31,61,44,0.6); border: 1px solid rgba(245,242,234,0.12);
       display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
     }
+    .team-avatar img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+      display: block; border-radius: 12px;
+    }
+    .team-avatar img.hidden { display: none; }
     .team-avatar-initials { font-family: 'Fraunces', Georgia, serif; font-size: 36px; font-weight: 300; color: #EBC99B; }
     .team-name { font-size: 15px; font-weight: 600; color: #F5F2EA; margin-bottom: 2px; }
     .team-role { font-size: 12px; font-weight: 500; color: #EBC99B; letter-spacing: 0.06em; margin-bottom: 10px; }
@@ -477,7 +483,10 @@
       <div class="team-grid">
 
         <div class="team-card">
-          <div class="team-avatar"><span class="team-avatar-initials">TS</span></div>
+          <div class="team-avatar">
+            <img src="team/teri-slack.jpg" alt="Teri Slack" onerror="this.classList.add('hidden');this.nextElementSibling.style.display='flex'">
+            <span class="team-avatar-initials" style="display:none">TS</span>
+          </div>
           <div>
             <div class="team-name">Teri Slack</div>
             <div class="team-role">Founder & Lead Strategist</div>
@@ -486,7 +495,10 @@
         </div>
 
         <div class="team-card">
-          <div class="team-avatar"><span class="team-avatar-initials">FL</span></div>
+          <div class="team-avatar">
+            <img src="team/frankie-lanoue.jpg" alt="Frankie Lanoue" onerror="this.classList.add('hidden');this.nextElementSibling.style.display='flex'">
+            <span class="team-avatar-initials" style="display:none">FL</span>
+          </div>
           <div>
             <div class="team-name">Frankie Lanoue</div>
             <div class="team-role">Client Operations Manager</div>
@@ -495,7 +507,10 @@
         </div>
 
         <div class="team-card">
-          <div class="team-avatar"><span class="team-avatar-initials">ZS</span></div>
+          <div class="team-avatar">
+            <img src="team/zane-starkewolfe.jpg" alt="Zane Starkewolfe" onerror="this.classList.add('hidden');this.nextElementSibling.style.display='flex'">
+            <span class="team-avatar-initials" style="display:none">ZS</span>
+          </div>
           <div>
             <div class="team-name">Zane Starkewolfe</div>
             <div class="team-role">Corporate Development Consultant</div>
@@ -504,7 +519,10 @@
         </div>
 
         <div class="team-card">
-          <div class="team-avatar"><span class="team-avatar-initials">IT</span></div>
+          <div class="team-avatar">
+            <img src="team/ivory-townsend.jpg" alt="Ivory Townsend" onerror="this.classList.add('hidden');this.nextElementSibling.style.display='flex'">
+            <span class="team-avatar-initials" style="display:none">IT</span>
+          </div>
           <div>
             <div class="team-name">Ivory Townsend</div>
             <div class="team-role">Content Analytics Director</div>
