@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 const COLORS = {
   cream: '#F5F2EA',
@@ -92,23 +92,12 @@ const SERVICES = [
 ];
 
 export default function ServiceGrid() {
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const formRef = useRef<HTMLDivElement>(null);
-
-  const handleShowForm = () => {
-    setIsFormVisible(true);
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 150);
-  };
-
   return (
     <div style={{ backgroundColor: COLORS.cream, fontFamily: '"Inter", sans-serif' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap');
         .sg-heading { font-family: 'Fraunces', serif; }
-        .sg-row { transition: color 0.2s; cursor: default; }
-        .sg-row:hover .sg-title { color: ${COLORS.green}; }
+        .sg-tag:hover { background: ${COLORS.tan}55; }
         .sg-btn-rust { transition: opacity 0.2s, transform 0.15s; }
         .sg-btn-rust:hover { opacity: 0.88; transform: scale(1.03); }
         .sg-input { border: 1px solid #d4cfc5; border-radius: 8px; padding: 12px 16px; width: 100%; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
@@ -122,83 +111,42 @@ export default function ServiceGrid() {
           <h2 className="sg-heading" style={{ fontSize: 52, fontWeight: 500, color: COLORS.forest, margin: 0 }}>Custom Services</h2>
         </div>
 
-        <div style={{ borderTop: `1.5px solid ${COLORS.tan}` }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 56 }}>
           {SERVICES.map((s, i) => (
-            <div
+            <span
               key={i}
-              className="sg-row"
+              className="sg-tag"
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 2fr',
-                alignItems: 'start',
-                gap: '0 48px',
-                padding: '32px 0',
-                borderBottom: `1.5px solid ${COLORS.tan}`,
+                display: 'inline-block',
+                padding: '10px 20px',
+                borderRadius: 999,
+                border: `1.5px solid ${COLORS.tan}`,
+                fontSize: 15,
+                fontWeight: 500,
+                color: COLORS.forest,
+                transition: 'background 0.18s',
+                cursor: 'default',
               }}
             >
-              <h3
-                className="sg-heading sg-title"
-                style={{ fontSize: 22, fontWeight: 600, color: COLORS.forest, margin: 0, lineHeight: 1.3, transition: 'color 0.2s' }}
-              >
-                {s.title}
-              </h3>
-              <p style={{ fontSize: 15, color: COLORS.slate, margin: 0, lineHeight: 1.7 }}>
-                {s.description}
-              </p>
-            </div>
+              {s.title}
+            </span>
           ))}
         </div>
 
-        <div style={{ marginTop: 64, textAlign: 'center' }}>
-          {!isFormVisible && (
-            <button
-              onClick={handleShowForm}
-              className="sg-btn-rust"
-              style={{ backgroundColor: COLORS.rust, color: '#fff', border: 'none', padding: '16px 40px', borderRadius: 999, fontSize: 16, fontWeight: 500, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}
-            >
-              Request Custom Services <span style={{ fontSize: 18 }}>→</span>
-            </button>
-          )}
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: 16, color: COLORS.slate, marginBottom: 28, lineHeight: 1.6 }}>
+            Not sure what you need? Tell us your goals and we'll build the right plan.
+          </p>
+          <a
+            href="/signup"
+            className="sg-btn-rust"
+            style={{ backgroundColor: COLORS.rust, color: '#fff', textDecoration: 'none', padding: '18px 44px', borderRadius: 999, fontSize: 17, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 10 }}
+          >
+            Request Custom Services <span style={{ fontSize: 19 }}>→</span>
+          </a>
         </div>
       </div>
 
-      {isFormVisible && (
-        <div ref={formRef} style={{ backgroundColor: COLORS.forest, padding: '80px 24px' }}>
-          <div style={{ maxWidth: 640, margin: '0 auto', background: '#fff', borderRadius: 24, padding: '48px 40px', boxShadow: '0 24px 48px -12px rgba(31,61,44,0.28)' }}>
-            <h3 className="sg-heading" style={{ fontSize: 28, color: COLORS.forest, marginBottom: 8 }}>Project Request</h3>
-            <p style={{ color: COLORS.slate, marginBottom: 36, fontSize: 15 }}>Fill out the details below and we'll get back to you within 24 hours.</p>
-            <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Name</label>
-                  <input className="sg-input" type="text" placeholder="Jane Doe" />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Business Name</label>
-                  <input className="sg-input" type="text" placeholder="Jane's Bakery" />
-                </div>
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Email</label>
-                <input className="sg-input" type="email" placeholder="jane@example.com" />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: COLORS.forest, marginBottom: 6 }}>Tell us what you need</label>
-                <textarea className="sg-input" rows={4} placeholder="I'd love to build a landing page for an upcoming product launch..." style={{ resize: 'none' }} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingTop: 8 }}>
-                <button type="submit" style={{ backgroundColor: COLORS.green, color: '#fff', border: 'none', padding: '14px 32px', borderRadius: 999, fontSize: 15, fontWeight: 500, cursor: 'pointer' }}>
-                  Send Request
-                </button>
-                <span style={{ color: COLORS.slate, fontSize: 14 }}>or</span>
-                <button type="button" style={{ background: 'none', border: 'none', color: COLORS.rust, fontSize: 15, fontWeight: 500, cursor: 'pointer', textDecoration: 'underline' }}>
-                  Book a Call →
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
