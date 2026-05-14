@@ -132,16 +132,13 @@ export default function ServiceGrid() {
               className="sg-row"
               style={{
                 display: 'grid',
-                gridTemplateColumns: '44px 1fr 2fr',
+                gridTemplateColumns: '1fr 2fr',
                 alignItems: 'start',
-                gap: '0 32px',
+                gap: '0 48px',
                 padding: '32px 0',
                 borderBottom: `1.5px solid ${COLORS.tan}`,
               }}
             >
-              <div style={{ color: COLORS.green, paddingTop: 4 }}>
-                <s.Icon />
-              </div>
               <h3
                 className="sg-heading sg-title"
                 style={{ fontSize: 22, fontWeight: 600, color: COLORS.forest, margin: 0, lineHeight: 1.3, transition: 'color 0.2s' }}
