@@ -10,7 +10,7 @@ const team = [
     name: "Frankie Lanoue",
     role: "Client Operations Manager",
     bio: "With a background in customer service and an eye for detail, Frankie makes sure every client feels heard, every deadline is met, and nothing slips through the cracks.",
-    img: "/__mockup/images/team/frankie-lanoue.jpg",
+    img: "/__mockup/images/team/frankie-lanoue-nobg.png",
     initials: "FL",
   },
   {
