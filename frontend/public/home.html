@@ -379,6 +379,144 @@
     .footer-login-link { color: #EBC99B !important; font-weight: 500; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; }
     .footer-copy { font-size: 12px; color: rgba(245,242,234,0.30); }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 20;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #1F3D2C;
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav drawer */
+    .nav-mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      z-index: 9;
+      padding: 28px 24px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+    }
+    .nav-mobile-drawer.open { display: flex; }
+    .nav-mobile-drawer a {
+      display: block;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(31,61,44,0.08);
+      font-size: 17px;
+      color: #1F3D2C;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .nav-mobile-drawer a:hover { color: #2D6B4F; }
+    .nav-mobile-drawer .btn-nav-login {
+      margin-top: 20px;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1.5px solid rgba(31,61,44,0.25);
+    }
+    .nav-mobile-drawer .btn-nav-cta {
+      margin-top: 12px;
+      display: block;
+      text-align: center;
+      background: #7D2A03;
+      color: #F5F2EA;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* ── MOBILE MEDIA QUERY ── */
+    @media (max-width: 768px) {
+
+      /* Nav */
+      .site-nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Hero */
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 48px 20px 40px;
+        gap: 36px;
+      }
+      .hero h1 { font-size: 36px; }
+      .hero-subhead { font-size: 15px; max-width: 100%; }
+      .hero-body { font-size: 15px; max-width: 100%; }
+      .hero-stats { gap: 20px; flex-wrap: wrap; }
+
+      /* Services */
+      .services-section { padding: 56px 20px; }
+      .services-grid { grid-template-columns: 1fr; gap: 16px; }
+      .section-heading { font-size: 28px; }
+
+      /* Team */
+      .team-section { padding: 56px 20px; }
+      .team-heading { font-size: 30px; margin-bottom: 40px; }
+      .team-grid { gap: 32px; }
+      .team-card { width: 160px; }
+      .team-avatar { width: 120px; height: 120px; }
+
+      /* About */
+      .about-section { padding: 56px 20px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      .about-blockquote { font-size: 26px; }
+
+      /* Custom services */
+      .custom-services-section { padding: 56px 20px; }
+      .custom-services-heading { font-size: 32px; }
+      .custom-services-tags { gap: 10px; }
+      .custom-services-tag { font-size: 13px; padding: 8px 16px; }
+
+      /* Pricing */
+      .pricing-section { padding: 56px 20px; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 20px; }
+      .btn-custom-options { padding: 14px 28px; font-size: 15px; width: 100%; text-align: center; box-sizing: border-box; }
+
+      /* CTA band */
+      .cta-band { padding: 48px 20px; }
+      .cta-band h2 { font-size: 26px; }
+      .cta-band-link { padding: 15px 28px; font-size: 15px; }
+
+      /* FAQ */
+      .faq-section { padding: 56px 20px; }
+      .faq-question { font-size: 15px; }
+      .faq-answer { padding-right: 0; }
+
+      /* Contact */
+      .contact-section { padding: 56px 20px; }
+      .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+      .contact-info h2 { font-size: 28px; }
+      .contact-form-card { padding: 24px 20px; }
+
+      /* Footer */
+      .site-footer { padding: 40px 20px 28px; }
+      .footer-top { flex-direction: column; gap: 32px; }
+      .footer-cols { flex-wrap: wrap; gap: 28px; }
+    }
   </style>
 </head>
 <body>
@@ -397,7 +535,20 @@
       <a href="/login" class="btn-nav-login">Client Login</a>
       <a href="/signup" class="btn-nav-cta">Get Started</a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div class="nav-mobile-drawer" id="navDrawer">
+    <a href="#about" class="nav-drawer-link">About</a>
+    <a href="#services" class="nav-drawer-link">Services</a>
+    <a href="#faq" class="nav-drawer-link">FAQ</a>
+    <a href="#contact" class="nav-drawer-link">Contact</a>
+    <a href="/login" class="btn-nav-login">Client Login</a>
+    <a href="/signup" class="btn-nav-cta">Get Started</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -837,6 +988,22 @@ Consultant</div>
   </footer>
 
 <script>
+  // Hamburger menu
+  const hamburger = document.getElementById('navHamburger');
+  const drawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    drawer.classList.toggle('open');
+    document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.nav-drawer-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      drawer.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
     const isOpen = item.classList.contains('open');

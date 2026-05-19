@@ -466,6 +466,8 @@ body {
 
 @media (max-width: 640px) {
   .home-grid { grid-template-columns: 1fr; }
+  .brand-logo { height: 100px; }
+  .login-form { padding: 24px 20px; }
 }
 
 /* ── PLACEHOLDER SECTIONS ────────────────────────────── */
