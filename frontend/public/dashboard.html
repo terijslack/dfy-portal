@@ -9,6 +9,55 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <style>
+    .dash-menu-wrap { position: relative; }
+
+    .dash-menu-trigger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #2D6B4F;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .dash-menu-trigger:hover { background: rgba(45,107,79,0.08); }
+
+    .dash-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: #fff;
+      border: 1px solid rgba(31,61,44,0.12);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+      min-width: 220px;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .dash-menu.open { display: block; }
+
+    .dash-menu a {
+      display: block;
+      padding: 13px 18px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #1F3D2C;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(31,61,44,0.07);
+      transition: background 0.12s;
+    }
+    .dash-menu a:last-child { border-bottom: none; }
+    .dash-menu a:hover { background: #F5F2EA; color: #2D6B4F; }
+    .dash-menu a .dm-icon { display: inline-block; width: 22px; margin-right: 6px; text-align: center; }
+  </style>
 </head>
 <body class="dashboard-page">
 
@@ -16,6 +65,19 @@
     <div class="header-inner">
       <a href="/dashboard" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
       <div class="header-right">
+        <div class="dash-menu-wrap">
+          <button class="dash-menu-trigger" id="dashMenuTrigger" onclick="toggleDashMenu()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="dash-menu" id="dashMenu">
+            <a href="/calendar"><span class="dm-icon">G</span>Your Business Profile</a>
+            <a href="#"><span class="dm-icon">📋</span>Your Marketing Plan</a>
+            <a href="#"><span class="dm-icon">📁</span>Document Center</a>
+            <a href="/contact"><span class="dm-icon">💬</span>Contact Us</a>
+          </div>
+        </div>
         <span class="welcome-name" id="welcomeName">Loading…</span>
         <button class="btn-logout" id="logoutBtn">Sign out</button>
       </div>
@@ -93,6 +155,16 @@
   </main>
 
   <script>
+    function toggleDashMenu() {
+      document.getElementById('dashMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      const trigger = document.getElementById('dashMenuTrigger');
+      if (trigger && !trigger.contains(e.target)) {
+        document.getElementById('dashMenu').classList.remove('open');
+      }
+    });
+
     async function init() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
