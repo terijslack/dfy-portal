@@ -37,11 +37,38 @@ export default function VariantC() {
           transition: "width 0.22s ease, min-width 0.22s ease",
           position: "relative",
         }}>
-          <div style={{ width: 220, paddingTop: 28 }}>
-            <div style={{ padding: "0 20px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 12 }}>
-              <p style={{ color: "#EBC99B", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Welcome back</p>
-              <p style={{ color: "#F5F2EA", fontSize: 15, fontWeight: 500, margin: 0, fontFamily: "'Fraunces', Georgia, serif" }}>Jane Smith</p>
+          <div style={{ width: 220, paddingTop: 20 }}>
+            {/* Welcome section with inline toggle */}
+            <div style={{ padding: "0 16px 18px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 12, display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+              <div>
+                <p style={{ color: "#EBC99B", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Welcome back</p>
+                <p style={{ color: "#F5F2EA", fontSize: 15, fontWeight: 500, margin: 0, fontFamily: "'Fraunces', Georgia, serif" }}>Jane Smith</p>
+              </div>
+              {/* Arrow toggle button */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                title="Collapse sidebar"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 6,
+                  width: 28,
+                  height: 28,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  marginTop: 2,
+                  padding: 0,
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="8,2 4,6 8,10" />
+                </svg>
+              </button>
             </div>
+
             {navItems.map((item) => (
               <a key={item.label} href="#" style={{
                 display: "flex", alignItems: "center", gap: 12,
@@ -57,44 +84,34 @@ export default function VariantC() {
           </div>
         </aside>
 
-        {/* Toggle tab — sits on the right edge of the sidebar */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-          style={{
-            position: "absolute",
-            left: sidebarOpen ? 220 : 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            transition: "left 0.22s ease",
-            zIndex: 10,
-            background: "#2D6B4F",
-            border: "none",
-            borderRadius: "0 8px 8px 0",
-            width: 22,
-            height: 52,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "2px 0 8px rgba(0,0,0,0.15)",
-            padding: 0,
-          }}
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="#F5F2EA"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ transition: "transform 0.22s ease", transform: sidebarOpen ? "rotate(0deg)" : "rotate(180deg)" }}
+        {/* Re-open tab — only visible when sidebar is closed */}
+        {!sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            title="Expand sidebar"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 20,
+              zIndex: 10,
+              background: "#2D6B4F",
+              border: "none",
+              borderRadius: "0 8px 8px 0",
+              width: 22,
+              height: 40,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "2px 0 8px rgba(0,0,0,0.15)",
+              padding: 0,
+            }}
           >
-            <polyline points="8,2 4,6 8,10" />
-          </svg>
-        </button>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="4,2 8,6 4,10" />
+            </svg>
+          </button>
+        )}
 
         {/* Main content area */}
         <main style={{ flex: 1, padding: "36px 40px", overflowY: "auto" }}>
