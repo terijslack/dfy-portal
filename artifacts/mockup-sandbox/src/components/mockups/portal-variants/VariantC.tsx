@@ -2,6 +2,8 @@ import { useState } from "react";
 
 export default function VariantC() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [socialMenuOpen, setSocialMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("Post Approval");
 
   const navItems = [
     { icon: "◎", label: "Your Social Media", active: true },
@@ -12,8 +14,13 @@ export default function VariantC() {
     { icon: "☰", label: "Business Intake Form", active: false },
   ];
 
+  const socialSections = ["Post Approval", "Content Calendar", "Your Socials"];
+
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", background: "#F5F2EA", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{ fontFamily: "'Inter', sans-serif", background: "#F5F2EA", minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      onClick={() => setSocialMenuOpen(false)}
+    >
       {/* Top header */}
       <header style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.1)", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
@@ -35,7 +42,6 @@ export default function VariantC() {
           flexShrink: 0,
           overflow: "hidden",
           transition: "width 0.22s ease, min-width 0.22s ease",
-          position: "relative",
         }}>
           <div style={{ width: 220, paddingTop: 20 }}>
             {/* Welcome section with inline toggle */}
@@ -44,24 +50,10 @@ export default function VariantC() {
                 <p style={{ color: "#EBC99B", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Welcome back</p>
                 <p style={{ color: "#F5F2EA", fontSize: 15, fontWeight: 500, margin: 0, fontFamily: "'Fraunces', Georgia, serif" }}>Jane Smith</p>
               </div>
-              {/* Arrow toggle button */}
               <button
                 onClick={() => setSidebarOpen(false)}
                 title="Collapse sidebar"
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: 6,
-                  width: 28,
-                  height: 28,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  marginTop: 2,
-                  padding: 0,
-                }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2, padding: 0 }}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="8,2 4,6 8,10" />
@@ -84,28 +76,12 @@ export default function VariantC() {
           </div>
         </aside>
 
-        {/* Re-open tab — only visible when sidebar is closed */}
+        {/* Re-open tab */}
         {!sidebarOpen && (
           <button
             onClick={() => setSidebarOpen(true)}
             title="Expand sidebar"
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 20,
-              zIndex: 10,
-              background: "#2D6B4F",
-              border: "none",
-              borderRadius: "0 8px 8px 0",
-              width: 22,
-              height: 40,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "2px 0 8px rgba(0,0,0,0.15)",
-              padding: 0,
-            }}
+            style={{ position: "absolute", left: 0, top: 20, zIndex: 10, background: "#2D6B4F", border: "none", borderRadius: "0 8px 8px 0", width: 22, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "2px 0 8px rgba(0,0,0,0.15)", padding: 0 }}
           >
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="4,2 8,6 4,10" />
@@ -113,31 +89,80 @@ export default function VariantC() {
           </button>
         )}
 
-        {/* Main content area */}
-        <main style={{ flex: 1, padding: "36px 40px", overflowY: "auto" }}>
-          <div style={{ marginBottom: 28 }}>
-            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#1F3D2C", fontSize: 26, fontWeight: 400, margin: "0 0 4px", fontStyle: "italic" }}>Good morning, Jane!</h1>
-            <p style={{ color: "#6B756B", fontSize: 13, margin: 0 }}>Your marketing is running. Here's your overview.</p>
+        {/* Main content */}
+        <main style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
+
+          {/* Sub-nav bar */}
+          <div style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.1)", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 48, flexShrink: 0 }}>
+            {/* Active section label */}
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#1F3D2C" }}>{activeSection}</span>
+
+            {/* Three-bar dropdown */}
+            <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
+              <button
+                onClick={() => setSocialMenuOpen(!socialMenuOpen)}
+                style={{ background: "none", border: "1px solid rgba(31,61,44,0.15)", borderRadius: 7, padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: 7, color: "#1F3D2C" }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+                <span style={{ fontSize: 12, fontWeight: 500 }}>Your Social Media</span>
+              </button>
+
+              {/* Dropdown menu */}
+              {socialMenuOpen && (
+                <div style={{ position: "absolute", right: 0, top: "calc(100% + 6px)", background: "#fff", border: "1px solid rgba(31,61,44,0.12)", borderRadius: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.1)", minWidth: 190, zIndex: 50, overflow: "hidden" }}>
+                  {socialSections.map((section, i) => (
+                    <button
+                      key={section}
+                      onClick={() => { setActiveSection(section); setSocialMenuOpen(false); }}
+                      style={{
+                        display: "block", width: "100%", textAlign: "left",
+                        padding: "11px 16px",
+                        background: activeSection === section ? "rgba(45,107,79,0.07)" : "none",
+                        border: "none",
+                        borderBottom: i < socialSections.length - 1 ? "1px solid rgba(31,61,44,0.07)" : "none",
+                        fontSize: 13,
+                        fontWeight: activeSection === section ? 600 : 400,
+                        color: activeSection === section ? "#2D6B4F" : "#1F3D2C",
+                        cursor: "pointer",
+                        fontFamily: "'Inter', sans-serif",
+                      }}
+                    >
+                      {section}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 28 }}>
-            {[["5", "Total Posts"], ["3", "Awaiting Review"], ["1", "Approved"]].map(([n, l]) => (
-              <div key={l} style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "20px 20px" }}>
-                <p style={{ fontSize: 28, fontWeight: 600, color: "#1F3D2C", margin: "0 0 4px" }}>{n}</p>
-                <p style={{ fontSize: 12, color: "#9AA199", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>{l}</p>
-              </div>
-            ))}
-          </div>
+          {/* Page content */}
+          <div style={{ padding: "32px 32px" }}>
+            <div style={{ marginBottom: 24 }}>
+              <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#1F3D2C", fontSize: 24, fontWeight: 400, margin: "0 0 4px", fontStyle: "italic" }}>Good morning, Jane!</h1>
+              <p style={{ color: "#6B756B", fontSize: 13, margin: 0 }}>Your marketing is running. Here's your overview.</p>
+            </div>
 
-          <div style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "20px 24px" }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "#9AA199", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 16px" }}>Recent Posts</p>
-            {[["Instagram", "Spring is here! 🌸 We're helping local businesses bloom…", "Needs Review"], ["Facebook", "Did you know 80% of customers research businesses online…", "Approved"]].map(([platform, text, status]) => (
-              <div key={platform} style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 0", borderBottom: "1px solid rgba(31,61,44,0.06)" }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "#2D6B4F", background: "rgba(45,107,79,0.08)", padding: "3px 8px", borderRadius: 4 }}>{platform}</span>
-                <span style={{ fontSize: 13, color: "#1F3D2C", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{text}</span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: status === "Approved" ? "#2D6B4F" : "#7D2A03", flexShrink: 0 }}>{status}</span>
-              </div>
-            ))}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 24 }}>
+              {[["5", "Total Posts"], ["3", "Awaiting Review"], ["1", "Approved"]].map(([n, l]) => (
+                <div key={l} style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "18px 20px" }}>
+                  <p style={{ fontSize: 26, fontWeight: 600, color: "#1F3D2C", margin: "0 0 4px" }}>{n}</p>
+                  <p style={{ fontSize: 11, color: "#9AA199", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>{l}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "18px 22px" }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#9AA199", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>Recent Posts</p>
+              {[["Instagram", "Spring is here! 🌸 We're helping local businesses bloom…", "Needs Review"], ["Facebook", "Did you know 80% of customers research businesses online…", "Approved"]].map(([platform, text, status]) => (
+                <div key={platform} style={{ display: "flex", alignItems: "center", gap: 14, padding: "11px 0", borderBottom: "1px solid rgba(31,61,44,0.06)" }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "#2D6B4F", background: "rgba(45,107,79,0.08)", padding: "3px 8px", borderRadius: 4 }}>{platform}</span>
+                  <span style={{ fontSize: 13, color: "#1F3D2C", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{text}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: status === "Approved" ? "#2D6B4F" : "#7D2A03", flexShrink: 0 }}>{status}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
