@@ -148,21 +148,27 @@
 }
 .nav-post-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 .nav-platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 11px;
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 5px;
 }
+.nav-platform svg { flex-shrink: 0; }
 .nav-plat-instagram { background: rgba(193,53,132,0.08); color: #C13584; }
 .nav-plat-facebook { background: rgba(24,119,242,0.08); color: #1877F2; }
 .nav-plat-linkedin { background: rgba(10,102,194,0.08); color: #0A66C2; }
-.nav-post-date { font-size: 11px; color: #9AA199; }
+.nav-post-date { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #9AA199; }
+.nav-post-date svg { flex-shrink: 0; }
 .nav-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
 .nav-badge-pending { background: rgba(125,42,3,0.08); color: #7D2A03; }
 .nav-badge-approved { background: rgba(45,107,79,0.08); color: #2D6B4F; }
 .nav-post-caption { font-size: 13px; color: #3D5043; line-height: 1.55; margin: 0 0 14px; }
 .nav-post-actions { display: flex; gap: 10px; }
 .nav-btn-approve {
+  display: inline-flex; align-items: center; gap: 6px;
   background: #2D6B4F;
   color: #fff;
   border: none;
@@ -173,6 +179,7 @@
   cursor: pointer;
 }
 .nav-btn-changes {
+  display: inline-flex; align-items: center; gap: 6px;
   background: none;
   color: #7D2A03;
   border: 1px solid rgba(125,42,3,0.25);
@@ -182,6 +189,15 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Sub-item icon (SVG version) */
+.nav-subitem-line-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.nav-subitem-active .nav-subitem-line-icon { opacity: 1; }
 
 /* ── V1: Right rail ── */
 .nav-right-rail {
