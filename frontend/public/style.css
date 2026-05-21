@@ -922,8 +922,10 @@ a.contact-detail-value:hover { color: var(--accent); }
   background: none;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  width: 36px;
+  min-width: 36px;
   height: 36px;
+  padding: 0 10px;
+  gap: 5px;
   font-size: 1rem;
   cursor: pointer;
   color: var(--text-muted);
@@ -933,6 +935,15 @@ a.contact-detail-value:hover { color: var(--accent); }
   justify-content: center;
 }
 .cal-nav-btn:hover { background: var(--surface); color: var(--text); }
+
+.cal-nav-month {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  line-height: 1;
+}
 
 .cal-legend {
   display: flex;

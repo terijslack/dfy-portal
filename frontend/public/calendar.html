@@ -96,9 +96,13 @@
             </div>
 
             <div class="cal-nav">
-              <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
+              <button class="cal-nav-btn" id="prevMonth">
+                &#8592;<span class="cal-nav-month" id="prevMonthLabel"></span>
+              </button>
               <h2 class="cal-month-label" id="calMonthLabel"></h2>
-              <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
+              <button class="cal-nav-btn" id="nextMonth">
+                <span class="cal-nav-month" id="nextMonthLabel"></span>&#8594;
+              </button>
             </div>
 
             <div class="cal-legend">
@@ -234,6 +238,11 @@
 
     function renderCalendar() {
       document.getElementById('calMonthLabel').textContent = new Date(currentYear, currentMonth, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const fmt = m => new Date(currentYear, m, 1).toLocaleDateString('en-US', { month: 'short' });
+      const pm = currentMonth === 0 ? 11 : currentMonth - 1;
+      const nm = currentMonth === 11 ? 0 : currentMonth + 1;
+      document.getElementById('prevMonthLabel').textContent = fmt(pm);
+      document.getElementById('nextMonthLabel').textContent = fmt(nm);
       const grid = document.getElementById('calGrid');
       const firstDay = new Date(currentYear, currentMonth, 1).getDay();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
