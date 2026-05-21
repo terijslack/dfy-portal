@@ -1642,6 +1642,28 @@ h2 em {
   padding: 11px 20px;
   white-space: nowrap;
   font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-nav-parent-active .sidebar-nav-chevron {
+  transition: transform 0.2s ease;
+}
+
+.sidebar-nav-parent-active.group-collapsed .sidebar-nav-chevron {
+  transform: rotate(-90deg);
+}
+
+.sidebar-subitems {
+  overflow: hidden;
+  max-height: 160px;
+  opacity: 1;
+  transition: max-height 0.22s ease, opacity 0.15s;
+}
+
+.sidebar-subitems.hidden {
+  max-height: 0;
+  opacity: 0;
 }
 
 .sidebar-nav-chevron {
