@@ -4,60 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Portal — DFY Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <style>
-    .dash-menu-wrap { position: relative; }
-
-    .dash-menu-trigger {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      color: #2D6B4F;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
-    .dash-menu-trigger:hover { background: rgba(45,107,79,0.08); }
-
-    .dash-menu {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: calc(100% + 8px);
-      background: #fff;
-      border: 1px solid rgba(31,61,44,0.12);
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.09);
-      min-width: 220px;
-      z-index: 200;
-      overflow: hidden;
-    }
-    .dash-menu.open { display: block; }
-
-    .dash-menu a {
-      display: block;
-      padding: 13px 18px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #1F3D2C;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(31,61,44,0.07);
-      transition: background 0.12s;
-    }
-    .dash-menu a:last-child { border-bottom: none; }
-    .dash-menu a:hover { background: #F5F2EA; color: #2D6B4F; }
-    .dash-menu a .dm-icon { display: inline-block; width: 22px; margin-right: 6px; text-align: center; }
-  </style>
 </head>
 <body class="dashboard-page">
 
@@ -65,133 +16,174 @@
     <div class="header-inner">
       <a href="/dashboard" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
       <div class="header-right">
-        <div class="dash-menu-wrap">
-          <button class="dash-menu-trigger" id="dashMenuTrigger" onclick="toggleDashMenu()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <div class="dash-menu" id="dashMenu">
-            <a href="/calendar"><span class="dm-icon">G</span>Your Business Profile</a>
-            <a href="#"><span class="dm-icon">📋</span>Your Marketing Plan</a>
-            <a href="#"><span class="dm-icon">📁</span>Document Center</a>
-            <a href="/contact"><span class="dm-icon">💬</span>Contact Us</a>
-          </div>
-        </div>
         <span class="welcome-name" id="welcomeName">Loading…</span>
         <button class="btn-logout" id="logoutBtn">Sign out</button>
       </div>
     </div>
   </header>
 
-  <main class="main">
+  <div class="portal-layout">
 
-    <!-- Onboarding banner (shown only for new clients who haven't filled intake) -->
-    <div id="onboardingBanner" style="display:none; background:#fff8f0; border:1.5px solid rgba(125,42,3,0.2); border-radius:12px; padding:24px 28px; margin-bottom:28px; display:none; align-items:center; gap:20px; flex-wrap:wrap;">
-      <div style="flex:1; min-width:200px;">
-        <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7D2A03; margin-bottom:6px;">Action needed</div>
-        <div style="font-family:'Fraunces',serif; font-size:1.3rem; font-weight:400; color:#1F3D2C; margin-bottom:4px;">Complete your business intake form</div>
-        <div style="font-size:0.875rem; color:#6B756B; line-height:1.5;">This helps us create content that sounds like you. Takes about 5 minutes.</div>
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
+          </div>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,2 4,6 8,10"/></svg>
+          </button>
+        </div>
+        <nav>
+          <a href="/posts" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+          </a>
+          <a href="/calendar" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+          <a href="/onboarding" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
+            Business Intake Form
+          </a>
+        </nav>
       </div>
-      <a href="/onboarding" style="background:#7D2A03; color:#F5F2EA; text-decoration:none; border-radius:8px; padding:12px 24px; font-size:0.9rem; font-weight:600; white-space:nowrap; flex-shrink:0;">Complete intake form →</a>
-    </div>
+    </aside>
 
-    <div class="home-hero">
-      <h1 class="home-greeting" id="homeGreeting">Welcome back!</h1>
-      <p class="home-subtitle">Your marketing is in good hands. Here's everything in one place.</p>
-    </div>
+    <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Expand sidebar">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,2 8,6 4,10"/></svg>
+    </button>
 
-    <div class="home-grid">
+    <main class="portal-main">
 
-      <a href="/posts" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
-        <div class="home-card-body">
-          <h2>Your Social Media</h2>
+      <div class="portal-main-content">
+
+        <!-- Onboarding banner -->
+        <div id="onboardingBanner" style="display:none; background:#fff8f0; border:1.5px solid rgba(125,42,3,0.2); border-radius:12px; padding:24px 28px; margin-bottom:28px; align-items:center; gap:20px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7D2A03; margin-bottom:6px;">Action needed</div>
+            <div style="font-family:'Fraunces',serif; font-size:1.3rem; font-weight:400; color:#1F3D2C; margin-bottom:4px;">Complete your business intake form</div>
+            <div style="font-size:0.875rem; color:#6B756B; line-height:1.5;">This helps us create content that sounds like you. Takes about 5 minutes.</div>
+          </div>
+          <a href="/onboarding" style="background:#7D2A03; color:#F5F2EA; text-decoration:none; border-radius:8px; padding:12px 24px; font-size:0.9rem; font-weight:600; white-space:nowrap; flex-shrink:0;">Complete intake form →</a>
         </div>
-        <div class="home-card-arrow">→</div>
-      </a>
 
-      <a href="/calendar" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text x="1" y="20" font-family="Inter, sans-serif" font-size="23" font-weight="300" fill="#1F3D2C">G</text></svg></div>
-        <div class="home-card-body">
-          <h2>Your Google Business Profile</h2>
+        <!-- Greeting -->
+        <div style="margin-bottom:28px;">
+          <h1 class="home-greeting" id="homeGreeting">Welcome back!</h1>
+          <p class="home-subtitle">Your marketing is in good hands. Here's everything in one place.</p>
         </div>
-        <div class="home-card-arrow">→</div>
-      </a>
 
-      <a href="/analytics" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-        <div class="home-card-body">
-          <h2>Performance Analytics</h2>
+        <!-- Stats -->
+        <div class="portal-stat-grid">
+          <div class="portal-stat-card">
+            <div class="portal-stat-number" id="statTotal">—</div>
+            <div class="portal-stat-label">Total Posts</div>
+          </div>
+          <div class="portal-stat-card">
+            <div class="portal-stat-number" id="statPending" style="color:#7D2A03;">—</div>
+            <div class="portal-stat-label">Awaiting Review</div>
+          </div>
+          <div class="portal-stat-card">
+            <div class="portal-stat-number" id="statApproved" style="color:#2D6B4F;">—</div>
+            <div class="portal-stat-label">Approved</div>
+          </div>
         </div>
-        <div class="home-card-arrow">→</div>
-      </a>
 
-      <a href="/account" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <div class="home-card-body">
-          <h2>Your Account</h2>
+        <!-- Recent posts -->
+        <div class="portal-recent-card">
+          <p class="portal-recent-title">Recent Posts</p>
+          <div id="recentPostsList"><div class="loading">Loading…</div></div>
+          <a href="/posts" style="display:inline-block; margin-top:16px; font-size:13px; font-weight:600; color:#2D6B4F; text-decoration:none;">View all posts →</a>
         </div>
-        <div class="home-card-arrow">→</div>
-      </a>
 
-      <a href="/contact" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-        <div class="home-card-body">
-          <h2>Contact Us</h2>
-        </div>
-        <div class="home-card-arrow">→</div>
-      </a>
-
-      <a href="/onboarding" class="home-card">
-        <div class="home-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
-        <div class="home-card-body">
-          <h2>Business Intake Form</h2>
-        </div>
-        <div class="home-card-arrow">→</div>
-      </a>
-
-    </div>
-  </main>
+      </div>
+    </main>
+  </div>
 
   <script>
-    function toggleDashMenu() {
-      document.getElementById('dashMenu').classList.toggle('open');
+    function toggleSidebar() {
+      const sidebar = document.getElementById('portalSidebar');
+      const reopen = document.getElementById('sidebarReopen');
+      const isOpen = !sidebar.classList.contains('collapsed');
+      sidebar.classList.toggle('collapsed', isOpen);
+      reopen.classList.toggle('visible', isOpen);
+      localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
     }
-    document.addEventListener('click', function(e) {
-      const trigger = document.getElementById('dashMenuTrigger');
-      if (trigger && !trigger.contains(e.target)) {
-        document.getElementById('dashMenu').classList.remove('open');
+
+    function initSidebar(name) {
+      document.getElementById('sidebarName').textContent = name;
+      if (localStorage.getItem('sidebarOpen') === '0') {
+        document.getElementById('portalSidebar').classList.add('collapsed');
+        document.getElementById('sidebarReopen').classList.add('visible');
       }
-    });
+    }
+
+    function platformIcon(p) {
+      return { instagram: '📸', facebook: '👥', twitter: '🐦', linkedin: '💼', tiktok: '🎵' }[p] || '📱';
+    }
+    function statusLabel(s) {
+      return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[s] || s;
+    }
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
 
     async function init() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
 
-      if (!data.user) {
-        window.location.href = '/';
-        return;
-      }
-
-      if (data.user.is_admin) {
-        window.location.href = '/admin';
-        return;
-      }
+      if (!data.user) { window.location.href = '/'; return; }
+      if (data.user.is_admin) { window.location.href = '/admin'; return; }
 
       const firstName = data.user.name.split(' ')[0];
       document.getElementById('welcomeName').textContent = data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
+      initSidebar(data.user.name);
 
-      // Show onboarding banner if intake form not yet completed
       try {
         const ob = await fetch('/api/onboarding');
         const obData = await ob.json();
-        if (!obData.onboarding) {
-          const banner = document.getElementById('onboardingBanner');
-          banner.style.display = 'flex';
+        if (!obData.onboarding) document.getElementById('onboardingBanner').style.display = 'flex';
+      } catch (e) {}
+
+      try {
+        const pr = await fetch('/api/posts');
+        const pd = await pr.json();
+        const posts = pd.posts || [];
+        document.getElementById('statTotal').textContent = posts.length;
+        document.getElementById('statPending').textContent = posts.filter(p => p.status === 'pending').length;
+        document.getElementById('statApproved').textContent = posts.filter(p => p.status === 'approved' || p.status === 'queued').length;
+
+        const recent = posts.slice(0, 4);
+        if (recent.length === 0) {
+          document.getElementById('recentPostsList').innerHTML = '<p style="color:#9AA199;font-size:13px;">No posts yet. Check back soon!</p>';
+        } else {
+          document.getElementById('recentPostsList').innerHTML = recent.map(p => `
+            <div class="portal-recent-row">
+              <span style="font-size:11px;font-weight:600;color:#2D6B4F;background:rgba(45,107,79,0.08);padding:3px 8px;border-radius:4px;flex-shrink:0;">${platformIcon(p.platform)} ${p.platform.charAt(0).toUpperCase()+p.platform.slice(1)}</span>
+              <span style="font-size:13px;color:#1F3D2C;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(p.caption)}</span>
+              <span style="font-size:11px;font-weight:600;color:${p.status==='approved'||p.status==='queued'?'#2D6B4F':'#7D2A03'};flex-shrink:0;">${statusLabel(p.status)}</span>
+            </div>
+          `).join('');
         }
-      } catch (e) { /* non-fatal */ }
+      } catch (e) {
+        document.getElementById('recentPostsList').innerHTML = '<p style="color:#9AA199;font-size:13px;">Could not load posts.</p>';
+      }
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {

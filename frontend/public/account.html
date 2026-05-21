@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Account — DFY Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -22,85 +22,124 @@
     </div>
   </header>
 
-  <main class="main">
-    <div class="page-header">
-      <a href="/dashboard" class="back-link">← Back to portal</a>
-      <h1>Your Account</h1>
-      <p class="page-subtitle">Your profile and subscription details.</p>
-    </div>
+  <div class="portal-layout">
 
-    <div class="account-sections">
-
-      <div class="account-card">
-        <div class="account-section">
-          <h2>Profile</h2>
-          <div class="account-row">
-            <span class="account-label">Business</span>
-            <span class="account-value" id="accountBusiness">—</span>
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
           </div>
-          <div class="account-row">
-            <span class="account-label">Name</span>
-            <span class="account-value" id="accountName">—</span>
-          </div>
-          <div class="account-row">
-            <span class="account-label">Email</span>
-            <span class="account-value" id="accountEmail">—</span>
-          </div>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,2 4,6 8,10"/></svg>
+          </button>
         </div>
+        <nav>
+          <a href="/posts" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+          </a>
+          <a href="/calendar" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item active">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+          <a href="/onboarding" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
+            Business Intake Form
+          </a>
+        </nav>
       </div>
+    </aside>
 
-      <div class="account-card" id="subscriptionCard">
-        <div class="account-section">
-          <h2>Subscription</h2>
-          <div id="subscriptionLoading" class="sub-loading">Loading…</div>
+    <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Expand sidebar">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,2 8,6 4,10"/></svg>
+    </button>
 
-          <div id="subscriptionContent" style="display:none">
-            <div class="plan-banner" id="planBanner">
-              <div class="plan-banner-left">
-                <div class="plan-name" id="planName">—</div>
-                <div class="plan-price" id="planPrice">—</div>
+    <main class="portal-main">
+      <div class="portal-main-content">
+        <div class="page-header">
+          <h1>Your Account</h1>
+          <p class="page-subtitle">Your profile and subscription details.</p>
+        </div>
+
+        <div class="account-sections">
+          <div class="account-card">
+            <div class="account-section">
+              <h2>Profile</h2>
+              <div class="account-row">
+                <span class="account-label">Business</span>
+                <span class="account-value" id="accountBusiness">—</span>
               </div>
-              <div class="plan-badge" id="planBadge">Current Plan</div>
+              <div class="account-row">
+                <span class="account-label">Name</span>
+                <span class="account-value" id="accountName">—</span>
+              </div>
+              <div class="account-row">
+                <span class="account-label">Email</span>
+                <span class="account-value" id="accountEmail">—</span>
+              </div>
             </div>
+          </div>
 
-            <div class="account-row">
-              <span class="account-label">Platforms managed</span>
-              <span class="account-value" id="planPlatforms">—</span>
-            </div>
-            <div class="account-row">
-              <span class="account-label">Posts per month</span>
-              <span class="account-value" id="planPosts">—</span>
-            </div>
-            <div class="account-row">
-              <span class="account-label">Next billing date</span>
-              <span class="account-value" id="billingDate">—</span>
-            </div>
-
-            <div class="plan-change-section">
-              <button class="btn-plan-change" id="changePlanBtn" onclick="openChangePlanModal()">Change Plan</button>
+          <div class="account-card" id="subscriptionCard">
+            <div class="account-section">
+              <h2>Subscription</h2>
+              <div id="subscriptionLoading" class="sub-loading">Loading…</div>
+              <div id="subscriptionContent" style="display:none">
+                <div class="plan-banner" id="planBanner">
+                  <div class="plan-banner-left">
+                    <div class="plan-name" id="planName">—</div>
+                    <div class="plan-price" id="planPrice">—</div>
+                  </div>
+                  <div class="plan-badge" id="planBadge">Current Plan</div>
+                </div>
+                <div class="account-row">
+                  <span class="account-label">Platforms managed</span>
+                  <span class="account-value" id="planPlatforms">—</span>
+                </div>
+                <div class="account-row">
+                  <span class="account-label">Posts per month</span>
+                  <span class="account-value" id="planPosts">—</span>
+                </div>
+                <div class="account-row">
+                  <span class="account-label">Next billing date</span>
+                  <span class="account-value" id="billingDate">—</span>
+                </div>
+                <div class="plan-change-section">
+                  <button class="btn-plan-change" id="changePlanBtn" onclick="openChangePlanModal()">Change Plan</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-    </div>
-  </main>
+    </main>
+  </div>
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal modal-wide">
       <h2>Change Your Plan</h2>
       <p class="modal-subtitle">Select a plan below and we'll reach out to confirm the change.</p>
-
       <div class="plan-grid" id="planGrid"></div>
-
       <div class="success-msg" id="modalSuccess" style="display:none"></div>
       <div class="error-msg" id="modalError"></div>
-
       <div class="modal-actions" id="modalActions">
         <button class="btn-secondary" id="cancelModal">Cancel</button>
         <button class="btn-primary" id="confirmPlanBtn" disabled>Request Change</button>
       </div>
-
       <div id="modalSuccessActions" style="display:none; margin-top:20px; text-align:center;">
         <a href="/dashboard" class="btn-primary" style="text-decoration:none; display:inline-block;">← Back to Portal</a>
       </div>
@@ -108,6 +147,23 @@
   </div>
 
   <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('portalSidebar');
+      const reopen = document.getElementById('sidebarReopen');
+      const isOpen = !sidebar.classList.contains('collapsed');
+      sidebar.classList.toggle('collapsed', isOpen);
+      reopen.classList.toggle('visible', isOpen);
+      localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
+    }
+
+    function initSidebar(name) {
+      document.getElementById('sidebarName').textContent = name;
+      if (localStorage.getItem('sidebarOpen') === '0') {
+        document.getElementById('portalSidebar').classList.add('collapsed');
+        document.getElementById('sidebarReopen').classList.add('visible');
+      }
+    }
+
     let selectedPlan = null;
     let currentPlan = null;
     let availablePlans = [];
@@ -117,12 +173,11 @@
       const meData = await meRes.json();
       if (!meData.user) { window.location.href = '/'; return; }
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
-
       document.getElementById('welcomeName').textContent = meData.user.name;
       document.getElementById('accountBusiness').textContent = meData.user.business_name || '—';
       document.getElementById('accountName').textContent = meData.user.name;
       document.getElementById('accountEmail').textContent = meData.user.email;
-
+      initSidebar(meData.user.name);
       loadSubscription();
     }
 
@@ -130,21 +185,16 @@
       try {
         const res = await fetch('/api/account/subscription');
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.error);
-
         currentPlan = data.plan;
         availablePlans = data.available_plans;
-
         document.getElementById('planName').textContent = data.plan;
         document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
         document.getElementById('planPlatforms').textContent = data.platforms;
         document.getElementById('planPosts').textContent = data.posts_per_month + ' posts';
         document.getElementById('billingDate').textContent = formatDate(data.billing_date);
-
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
-
       } catch (err) {
         document.getElementById('subscriptionLoading').textContent = 'Could not load subscription info.';
       }
@@ -156,19 +206,15 @@
       document.getElementById('modalSuccess').style.display = 'none';
       document.getElementById('modalActions').style.display = 'flex';
       document.getElementById('confirmPlanBtn').disabled = true;
-
       const grid = document.getElementById('planGrid');
       grid.innerHTML = availablePlans.map(plan => `
-        <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" 
-             onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" 
-             id="plan-${plan.key.replace(/\s+/g, '-')}">
+        <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" id="plan-${plan.key.replace(/\s+/g, '-')}">
           <div class="plan-option-name">${plan.label}</div>
           <div class="plan-option-price">$${plan.price.toLocaleString()}<span>/mo</span></div>
           <div class="plan-option-posts">${plan.posts} posts · ${plan.platforms}</div>
           ${plan.current ? '<div class="plan-option-tag">Current</div>' : ''}
         </div>
       `).join('');
-
       document.getElementById('modalOverlay').classList.add('active');
     }
 
@@ -182,53 +228,26 @@
 
     document.getElementById('confirmPlanBtn').addEventListener('click', async () => {
       if (!selectedPlan) return;
-
       const btn = document.getElementById('confirmPlanBtn');
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
+      btn.textContent = 'Sending…'; btn.disabled = true;
       document.getElementById('modalError').textContent = '';
-
       try {
-        const res = await fetch('/api/account/change-plan', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ new_plan: selectedPlan })
-        });
+        const res = await fetch('/api/account/change-plan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_plan: selectedPlan }) });
         const data = await res.json();
-
-        if (!res.ok) {
-          document.getElementById('modalError').textContent = data.error || 'Could not submit. Try again.';
-          btn.textContent = 'Request Change';
-          btn.disabled = false;
-          return;
-        }
-
+        if (!res.ok) { document.getElementById('modalError').textContent = data.error || 'Could not submit. Try again.'; btn.textContent = 'Request Change'; btn.disabled = false; return; }
         document.getElementById('modalSuccess').textContent = data.message;
         document.getElementById('modalSuccess').style.display = 'block';
         document.getElementById('modalActions').style.display = 'none';
         document.getElementById('modalSuccessActions').style.display = 'block';
         document.getElementById('planGrid').style.opacity = '0.4';
         document.getElementById('planGrid').style.pointerEvents = 'none';
-
-      } catch (err) {
-        document.getElementById('modalError').textContent = 'Network error. Try again.';
-        btn.textContent = 'Request Change';
-        btn.disabled = false;
-      }
+      } catch (err) { document.getElementById('modalError').textContent = 'Network error. Try again.'; btn.textContent = 'Request Change'; btn.disabled = false; }
     });
 
-    document.getElementById('cancelModal').addEventListener('click', () => {
-      document.getElementById('modalOverlay').classList.remove('active');
-    });
+    document.getElementById('cancelModal').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
+    document.getElementById('logoutBtn').addEventListener('click', async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/'; });
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = '/';
-    });
-
-    function formatDate(dateStr) {
-      return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    }
+    function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); }
 
     init();
   </script>

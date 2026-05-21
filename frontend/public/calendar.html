@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Post Calendar — DFY Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -22,198 +22,178 @@
     </div>
   </header>
 
-  <main class="main">
-    <div class="page-header">
-      <a href="/dashboard" class="back-link">← Back to portal</a>
-      <h1>Post Calendar</h1>
-      <p class="page-subtitle">A monthly view of all your approved posts.</p>
-    </div>
+  <div class="portal-layout">
 
-    <div class="cal-nav">
-      <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
-      <h2 class="cal-month-label" id="calMonthLabel"></h2>
-      <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
-    </div>
-
-    <div class="cal-legend">
-      <span class="cal-legend-item"><span class="cal-dot platform-instagram"></span> Instagram</span>
-      <span class="cal-legend-item"><span class="cal-dot platform-facebook"></span> Facebook</span>
-      <span class="cal-legend-item"><span class="cal-dot platform-linkedin"></span> LinkedIn</span>
-      <span class="cal-legend-item"><span class="cal-dot platform-twitter"></span> Twitter</span>
-      <span class="cal-legend-item"><span class="cal-dot platform-tiktok"></span> TikTok</span>
-    </div>
-
-    <div class="cal-grid-wrap">
-      <div class="cal-weekdays">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
+          </div>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,2 4,6 8,10"/></svg>
+          </button>
+        </div>
+        <nav>
+          <a href="/posts" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+          </a>
+          <a href="/calendar" class="sidebar-nav-item active">
+            <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+          <a href="/onboarding" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
+            Business Intake Form
+          </a>
+        </nav>
       </div>
-      <div class="cal-grid" id="calGrid">
-        <div class="loading">Loading calendar…</div>
-      </div>
-    </div>
+    </aside>
 
-    <div class="cal-detail-panel" id="detailPanel" style="display:none">
-      <div class="cal-detail-header">
-        <span id="detailDate"></span>
-        <button class="cal-detail-close" id="detailClose">✕</button>
+    <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Expand sidebar">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,2 8,6 4,10"/></svg>
+    </button>
+
+    <main class="portal-main">
+      <div class="portal-main-content">
+        <div class="page-header">
+          <h1>Post Calendar</h1>
+          <p class="page-subtitle">A monthly view of all your approved posts.</p>
+        </div>
+
+        <div class="cal-nav">
+          <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
+          <h2 class="cal-month-label" id="calMonthLabel"></h2>
+          <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
+        </div>
+
+        <div class="cal-legend">
+          <span class="cal-legend-item"><span class="cal-dot platform-instagram"></span> Instagram</span>
+          <span class="cal-legend-item"><span class="cal-dot platform-facebook"></span> Facebook</span>
+          <span class="cal-legend-item"><span class="cal-dot platform-linkedin"></span> LinkedIn</span>
+          <span class="cal-legend-item"><span class="cal-dot platform-twitter"></span> Twitter</span>
+          <span class="cal-legend-item"><span class="cal-dot platform-tiktok"></span> TikTok</span>
+        </div>
+
+        <div class="cal-grid-wrap">
+          <div class="cal-weekdays">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div class="cal-grid" id="calGrid">
+            <div class="loading">Loading calendar…</div>
+          </div>
+        </div>
+
+        <div class="cal-detail-panel" id="detailPanel" style="display:none">
+          <div class="cal-detail-header">
+            <span id="detailDate"></span>
+            <button class="cal-detail-close" id="detailClose">✕</button>
+          </div>
+          <div id="detailPosts"></div>
+        </div>
       </div>
-      <div id="detailPosts"></div>
-    </div>
-  </main>
+    </main>
+  </div>
 
   <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('portalSidebar');
+      const reopen = document.getElementById('sidebarReopen');
+      const isOpen = !sidebar.classList.contains('collapsed');
+      sidebar.classList.toggle('collapsed', isOpen);
+      reopen.classList.toggle('visible', isOpen);
+      localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
+    }
+
+    function initSidebar(name) {
+      document.getElementById('sidebarName').textContent = name;
+      if (localStorage.getItem('sidebarOpen') === '0') {
+        document.getElementById('portalSidebar').classList.add('collapsed');
+        document.getElementById('sidebarReopen').classList.add('visible');
+      }
+    }
+
     let allPosts = [];
     let currentYear, currentMonth;
 
-    const platformColors = {
-      instagram: '#C13584',
-      facebook: '#1877F2',
-      twitter: '#1DA1F2',
-      linkedin: '#0A66C2',
-      tiktok: '#010101'
-    };
-
-    const platformIcons = {
-      instagram: '📸',
-      facebook: '👥',
-      twitter: '🐦',
-      linkedin: '💼',
-      tiktok: '🎵'
-    };
+    const platformColors = { instagram: '#C13584', facebook: '#1877F2', twitter: '#1DA1F2', linkedin: '#0A66C2', tiktok: '#010101' };
+    const platformIcons = { instagram: '📸', facebook: '👥', twitter: '🐦', linkedin: '💼', tiktok: '🎵' };
 
     async function init() {
       const meRes = await fetch('/api/auth/me');
       const meData = await meRes.json();
-
       if (!meData.user) { window.location.href = '/'; return; }
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
-
       document.getElementById('welcomeName').textContent = meData.user.name;
-
+      initSidebar(meData.user.name);
       const now = new Date();
       currentYear = now.getFullYear();
       currentMonth = now.getMonth();
-
       await loadPosts();
       renderCalendar();
     }
 
     async function loadPosts() {
-      try {
-        const res = await fetch('/api/posts');
-        const data = await res.json();
-        allPosts = data.posts || [];
-      } catch (err) {
-        allPosts = [];
-      }
+      try { const res = await fetch('/api/posts'); const data = await res.json(); allPosts = data.posts || []; }
+      catch (err) { allPosts = []; }
     }
 
     function renderCalendar() {
-      const label = document.getElementById('calMonthLabel');
-      label.textContent = new Date(currentYear, currentMonth, 1)
-        .toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-
+      document.getElementById('calMonthLabel').textContent = new Date(currentYear, currentMonth, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
       const grid = document.getElementById('calGrid');
       const firstDay = new Date(currentYear, currentMonth, 1).getDay();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       const today = new Date();
-
-      // Group posts by date string YYYY-MM-DD
       const postsByDate = {};
-      allPosts.forEach(p => {
-        const d = p.scheduled_date ? p.scheduled_date.slice(0, 10) : null;
-        if (!d) return;
-        if (!postsByDate[d]) postsByDate[d] = [];
-        postsByDate[d].push(p);
-      });
-
+      allPosts.forEach(p => { const d = p.scheduled_date ? p.scheduled_date.slice(0, 10) : null; if (!d) return; if (!postsByDate[d]) postsByDate[d] = []; postsByDate[d].push(p); });
       let cells = '';
-
-      // Empty leading cells
-      for (let i = 0; i < firstDay; i++) {
-        cells += `<div class="cal-cell cal-cell-empty"></div>`;
-      }
-
+      for (let i = 0; i < firstDay; i++) cells += `<div class="cal-cell cal-cell-empty"></div>`;
       for (let day = 1; day <= daysInMonth; day++) {
         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const posts = postsByDate[dateStr] || [];
         const isToday = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === day;
-
-        const dots = posts.slice(0, 4).map(p => {
-          const statusClass = p.status === 'approved' || p.status === 'queued' ? 'dot-approved' : p.status === 'changes_requested' ? 'dot-changes' : 'dot-pending';
-          return `<span class="cal-dot platform-${p.platform} ${statusClass}" title="${capitalize(p.platform)}"></span>`;
-        }).join('');
-
+        const dots = posts.slice(0, 4).map(p => `<span class="cal-dot platform-${p.platform} ${p.status === 'approved' || p.status === 'queued' ? 'dot-approved' : p.status === 'changes_requested' ? 'dot-changes' : 'dot-pending'}" title="${capitalize(p.platform)}"></span>`).join('');
         const overflow = posts.length > 4 ? `<span class="cal-overflow">+${posts.length - 4}</span>` : '';
-
-        cells += `
-          <div class="cal-cell ${isToday ? 'cal-cell-today' : ''} ${posts.length ? 'cal-cell-has-posts' : ''}" 
-               data-date="${dateStr}" onclick="showDetail('${dateStr}')">
-            <span class="cal-day-num">${day}</span>
-            ${posts.length ? `<div class="cal-dots">${dots}${overflow}</div>` : ''}
-          </div>`;
+        cells += `<div class="cal-cell ${isToday ? 'cal-cell-today' : ''} ${posts.length ? 'cal-cell-has-posts' : ''}" data-date="${dateStr}" onclick="showDetail('${dateStr}')"><span class="cal-day-num">${day}</span>${posts.length ? `<div class="cal-dots">${dots}${overflow}</div>` : ''}</div>`;
       }
-
       grid.innerHTML = cells;
     }
 
     function showDetail(dateStr) {
       const posts = allPosts.filter(p => p.scheduled_date && p.scheduled_date.slice(0, 10) === dateStr);
       if (!posts.length) return;
-
       const panel = document.getElementById('detailPanel');
       const date = new Date(dateStr + 'T00:00:00');
       document.getElementById('detailDate').textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-
-      document.getElementById('detailPosts').innerHTML = posts.map(p => `
-        <div class="cal-detail-post">
-          <div class="cal-detail-meta">
-            <span class="post-platform platform-${p.platform}">${platformIcons[p.platform] || '📱'} ${capitalize(p.platform)}</span>
-            <span class="post-status-badge status-badge-${p.status}">${statusLabel(p.status)}</span>
-          </div>
-          <div class="cal-detail-caption">${escapeHtml(p.caption)}</div>
-          ${p.change_notes ? `<div class="change-notes-display">💬 ${escapeHtml(p.change_notes)}</div>` : ''}
-        </div>
-      `).join('');
-
+      document.getElementById('detailPosts').innerHTML = posts.map(p => `<div class="cal-detail-post"><div class="cal-detail-meta"><span class="post-platform platform-${p.platform}">${platformIcons[p.platform] || '📱'} ${capitalize(p.platform)}</span><span class="post-status-badge status-badge-${p.status}">${statusLabel(p.status)}</span></div><div class="cal-detail-caption">${escapeHtml(p.caption)}</div>${p.change_notes ? `<div class="change-notes-display">💬 ${escapeHtml(p.change_notes)}</div>` : ''}</div>`).join('');
       panel.style.display = '';
-
-      // Highlight selected cell
       document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-cell-selected'));
       const cell = document.querySelector(`[data-date="${dateStr}"]`);
       if (cell) cell.classList.add('cal-cell-selected');
     }
 
-    document.getElementById('detailClose').addEventListener('click', () => {
-      document.getElementById('detailPanel').style.display = 'none';
-      document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-cell-selected'));
-    });
-
-    document.getElementById('prevMonth').addEventListener('click', () => {
-      currentMonth--;
-      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-      document.getElementById('detailPanel').style.display = 'none';
-      renderCalendar();
-    });
-
-    document.getElementById('nextMonth').addEventListener('click', () => {
-      currentMonth++;
-      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-      document.getElementById('detailPanel').style.display = 'none';
-      renderCalendar();
-    });
-
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = '/';
-    });
+    document.getElementById('detailClose').addEventListener('click', () => { document.getElementById('detailPanel').style.display = 'none'; document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('cal-cell-selected')); });
+    document.getElementById('prevMonth').addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } document.getElementById('detailPanel').style.display = 'none'; renderCalendar(); });
+    document.getElementById('nextMonth').addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } document.getElementById('detailPanel').style.display = 'none'; renderCalendar(); });
+    document.getElementById('logoutBtn').addEventListener('click', async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/'; });
 
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
     function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function statusLabel(status) {
-      const labels = { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' };
-      return labels[status] || status;
-    }
+    function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[status] || status; }
 
     init();
   </script>

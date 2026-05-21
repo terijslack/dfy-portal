@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Performance Analytics — DFY Marketing</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -22,28 +22,93 @@
     </div>
   </header>
 
-  <main class="main">
-    <div class="page-header">
-      <a href="/dashboard" class="back-link">← Back to portal</a>
-      <h1>Performance Analytics</h1>
-      <p class="page-subtitle">Track how your content is performing across all platforms.</p>
-    </div>
+  <div class="portal-layout">
 
-    <div class="placeholder-section">
-      <div class="placeholder-icon">📊</div>
-      <h2>Analytics Coming Soon</h2>
-      <p>We're building a beautiful dashboard to show your engagement, reach, and growth across platforms. Check back soon!</p>
-      <p class="placeholder-note">In the meantime, your account manager will share monthly performance reports directly with you.</p>
-    </div>
-  </main>
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
+          </div>
+          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EBC99B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,2 4,6 8,10"/></svg>
+          </button>
+        </div>
+        <nav>
+          <a href="/posts" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+          </a>
+          <a href="/calendar" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item active">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+          <a href="/onboarding" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
+            Business Intake Form
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Expand sidebar">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#F5F2EA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,2 8,6 4,10"/></svg>
+    </button>
+
+    <main class="portal-main">
+      <div class="portal-main-content">
+        <div class="page-header">
+          <h1>Performance Analytics</h1>
+          <p class="page-subtitle">Track how your content is performing across all platforms.</p>
+        </div>
+        <div class="placeholder-section">
+          <div class="placeholder-icon">📊</div>
+          <h2>Analytics Coming Soon</h2>
+          <p>We're building a beautiful dashboard to show your engagement, reach, and growth across platforms. Check back soon!</p>
+          <p class="placeholder-note">In the meantime, your account manager will share monthly performance reports directly with you.</p>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('portalSidebar');
+      const reopen = document.getElementById('sidebarReopen');
+      const isOpen = !sidebar.classList.contains('collapsed');
+      sidebar.classList.toggle('collapsed', isOpen);
+      reopen.classList.toggle('visible', isOpen);
+      localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
+    }
+
+    function initSidebar(name) {
+      document.getElementById('sidebarName').textContent = name;
+      if (localStorage.getItem('sidebarOpen') === '0') {
+        document.getElementById('portalSidebar').classList.add('collapsed');
+        document.getElementById('sidebarReopen').classList.add('visible');
+      }
+    }
+
     async function init() {
       const res = await fetch('/api/auth/me');
       const data = await res.json();
       if (!data.user) { window.location.href = '/'; return; }
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
       document.getElementById('welcomeName').textContent = data.user.name;
+      initSidebar(data.user.name);
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
