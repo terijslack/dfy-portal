@@ -1630,3 +1630,198 @@ h2 em {
   .portal-main-content { padding: 24px 20px 60px; }
   .portal-stat-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── SIDEBAR SUB-ITEMS ───────────────────────────────── */
+.sidebar-nav-parent-active {
+  background: rgba(235,201,155,0.08);
+  border-left: 3px solid #EBC99B;
+  color: #F5F2EA;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.sidebar-nav-chevron {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.sidebar-subitem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px 8px 42px;
+  color: rgba(245,242,234,0.45);
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.sidebar-subitem:hover {
+  background: rgba(255,255,255,0.04);
+  color: rgba(245,242,234,0.75);
+}
+
+.sidebar-subitem.active {
+  color: #EBC99B;
+  font-weight: 600;
+  background: rgba(235,201,155,0.07);
+  border-left-color: rgba(235,201,155,0.35);
+}
+
+.sidebar-subitem-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.sidebar-subitem.active .sidebar-subitem-icon { opacity: 1; }
+
+.sidebar-subitem-badge {
+  margin-left: auto;
+  background: #7D2A03;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ── POSTS PAGE TWO-COLUMN LAYOUT ────────────────────── */
+.portal-posts-layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.portal-posts-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── RIGHT RAIL ──────────────────────────────────────── */
+.portal-right-rail {
+  width: 204px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.portal-rail-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9AA199;
+  margin: 0 0 10px;
+}
+
+.portal-rail-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.portal-rail-card {
+  background: #fff;
+  border: 1px solid rgba(31,61,44,0.1);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.portal-rail-card:hover {
+  border-color: rgba(45,107,79,0.3);
+  box-shadow: 0 2px 8px rgba(31,61,44,0.07);
+}
+
+.portal-rail-card-active {
+  border-color: #EBC99B;
+  background: rgba(235,201,155,0.06);
+  box-shadow: 0 2px 10px rgba(235,201,155,0.18);
+}
+
+.portal-rail-card-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #2D6B4F;
+  padding-top: 1px;
+}
+
+.portal-rail-card-active .portal-rail-card-icon { color: #EBC99B; }
+
+.portal-rail-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1F3D2C;
+  margin-bottom: 3px;
+}
+
+.portal-rail-card-sub {
+  font-size: 11px;
+  color: #9AA199;
+  line-height: 1.4;
+}
+
+/* Platform badge SVG alignment */
+.post-platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.post-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-approve {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-changes {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.approved-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.change-notes-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+@media (max-width: 900px) {
+  .portal-posts-layout { flex-direction: column; }
+  .portal-right-rail { width: 100%; }
+  .portal-rail-cards { flex-direction: row; flex-wrap: wrap; }
+  .portal-rail-card { flex: 1; min-width: 140px; }
+}

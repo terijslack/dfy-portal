@@ -36,11 +36,27 @@
           </button>
         </div>
         <nav>
-          <a href="/posts" class="sidebar-nav-item active">
+          <!-- Social Media — expanded parent with sub-items -->
+          <div class="sidebar-nav-item sidebar-nav-parent-active">
             <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
             Your Social Media
+            <span class="sidebar-nav-chevron"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,4 6,8 10,4"/></svg></span>
+          </div>
+          <a href="/posts" class="sidebar-subitem active">
+            <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+            Post Approval
+            <span class="sidebar-subitem-badge" id="pendingBadge" style="display:none"></span>
           </a>
-          <a href="/calendar" class="sidebar-nav-item">
+          <a href="/calendar" class="sidebar-subitem">
+            <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+            Content Calendar
+          </a>
+          <a href="#" class="sidebar-subitem">
+            <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+            Your Socials
+          </a>
+
+          <a href="/calendar" class="sidebar-nav-item" style="margin-top:4px;">
             <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
             Google Business Profile
           </a>
@@ -69,60 +85,86 @@
     </button>
 
     <main class="portal-main">
-
-      <!-- Sub-nav bar -->
-      <div class="portal-subnav" id="subnavBar">
-        <span class="portal-subnav-label">Post Approval</span>
-        <div class="portal-subnav-wrap">
-          <button class="portal-subnav-trigger" id="subnavTrigger" onclick="toggleSubnav()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            Your Social Media
-          </button>
-          <div class="portal-subnav-menu" id="subnavMenu">
-            <a href="/posts" class="subnav-current">Post Approval</a>
-            <a href="/calendar">Content Calendar</a>
-            <a href="#">Your Socials</a>
-          </div>
-        </div>
-      </div>
-
       <div class="portal-main-content">
-        <div class="page-header">
-          <h1>Your Scheduled Posts</h1>
-          <p class="page-subtitle">Review each post below. Click <strong>Approve</strong> to queue it, or <strong>Request Changes</strong> to send notes.</p>
-        </div>
 
-        <div class="summary-bar" id="summaryBar">
-          <div class="summary-item">
-            <span class="summary-number" id="totalCount">—</span>
-            <span class="summary-label">Total Posts</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-number pending" id="pendingCount">—</span>
-            <span class="summary-label">Awaiting Review</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-number approved" id="approvedCount">—</span>
-            <span class="summary-label">Approved</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-number changes" id="changesCount">—</span>
-            <span class="summary-label">Changes Requested</span>
-          </div>
-        </div>
+        <!-- Two-column layout: posts left, right rail -->
+        <div class="portal-posts-layout">
 
-        <div class="posts-section" id="pendingSection">
-          <div class="posts-grid" id="postsGrid">
-            <div class="loading">Loading your posts…</div>
-          </div>
-        </div>
+          <!-- Left: post list -->
+          <div class="portal-posts-col">
+            <div class="page-header">
+              <h1>Post Approval</h1>
+              <p class="page-subtitle">Review each post below. Click <strong>Approve</strong> to queue it, or <strong>Request Changes</strong> to send notes.</p>
+            </div>
 
-        <div class="approved-history" id="approvedHistory" style="display:none">
-          <button class="approved-history-toggle" id="approvedToggle" onclick="toggleApproved()">
-            <span id="approvedToggleLabel">Show Previously Approved Posts</span>
-            <span class="toggle-arrow" id="toggleArrow">▼</span>
-          </button>
-          <div class="posts-grid approved-grid" id="approvedGrid" style="display:none"></div>
+            <div class="summary-bar" id="summaryBar">
+              <div class="summary-item">
+                <span class="summary-number" id="totalCount">—</span>
+                <span class="summary-label">Total Posts</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number pending" id="pendingCount">—</span>
+                <span class="summary-label">Awaiting Review</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number approved" id="approvedCount">—</span>
+                <span class="summary-label">Approved</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number changes" id="changesCount">—</span>
+                <span class="summary-label">Changes Requested</span>
+              </div>
+            </div>
+
+            <div class="posts-section" id="pendingSection">
+              <div class="posts-grid" id="postsGrid">
+                <div class="loading">Loading your posts…</div>
+              </div>
+            </div>
+
+            <div class="approved-history" id="approvedHistory" style="display:none">
+              <button class="approved-history-toggle" id="approvedToggle" onclick="toggleApproved()">
+                <span id="approvedToggleLabel">Show Previously Approved Posts</span>
+                <span class="toggle-arrow" id="toggleArrow">▼</span>
+              </button>
+              <div class="posts-grid approved-grid" id="approvedGrid" style="display:none"></div>
+            </div>
+          </div>
+
+          <!-- Right rail: section nav cards -->
+          <aside class="portal-right-rail">
+            <p class="portal-rail-label">Social Media</p>
+            <div class="portal-rail-cards">
+              <a href="/posts" class="portal-rail-card portal-rail-card-active">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Post Approval</div>
+                  <div class="portal-rail-card-sub" id="railPendingSub">Loading…</div>
+                </div>
+              </a>
+              <a href="/calendar" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Content Calendar</div>
+                  <div class="portal-rail-card-sub">See upcoming posts</div>
+                </div>
+              </a>
+              <a href="#" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Your Socials</div>
+                  <div class="portal-rail-card-sub">Connected accounts</div>
+                </div>
+              </a>
+            </div>
+          </aside>
+
         </div>
       </div>
     </main>
@@ -158,14 +200,6 @@
       }
     }
 
-    function toggleSubnav() {
-      document.getElementById('subnavMenu').classList.toggle('open');
-    }
-    document.addEventListener('click', function(e) {
-      const t = document.getElementById('subnavTrigger');
-      if (t && !t.contains(e.target)) document.getElementById('subnavMenu').classList.remove('open');
-    });
-
     let currentPostId = null;
     let allPosts = [];
 
@@ -186,6 +220,7 @@
         allPosts = data.posts || [];
         renderPosts(allPosts);
         updateSummary(allPosts);
+        updateRail(allPosts);
       } catch (err) {
         document.getElementById('postsGrid').innerHTML = '<div class="error">Could not load posts. Try refreshing.</div>';
       }
@@ -196,6 +231,17 @@
       document.getElementById('pendingCount').textContent = posts.filter(p => p.status === 'pending').length;
       document.getElementById('approvedCount').textContent = posts.filter(p => p.status === 'approved').length;
       document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
+    }
+
+    function updateRail(posts) {
+      const pending = posts.filter(p => p.status === 'pending').length;
+      const sub = document.getElementById('railPendingSub');
+      if (sub) sub.textContent = pending > 0 ? `${pending} awaiting review` : 'All caught up';
+      const badge = document.getElementById('pendingBadge');
+      if (badge) {
+        if (pending > 0) { badge.textContent = pending; badge.style.display = ''; }
+        else { badge.style.display = 'none'; }
+      }
     }
 
     let approvedOpen = false;
@@ -232,23 +278,40 @@
       }
     }
 
+    function platformSvg(platform) {
+      const icons = {
+        instagram: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+        facebook: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+        twitter:  `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>`,
+        linkedin: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+        tiktok:   `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+      };
+      return icons[platform] || `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`;
+    }
+
+    const calSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+    const checkSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const editSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+    const noteSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+    const approvedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+
     function postCardHtml(post, showActions) {
       return `
         <div class="post-card status-${post.status}" data-id="${post.id}">
           <div class="post-meta">
-            <span class="post-platform platform-${post.platform}">${platformIcon(post.platform)} ${capitalize(post.platform)}</span>
-            <span class="post-date">📅 ${formatDate(post.scheduled_date)}</span>
+            <span class="post-platform platform-${post.platform}">${platformSvg(post.platform)} ${capitalize(post.platform)}</span>
+            <span class="post-date">${calSvg} ${formatDate(post.scheduled_date)}</span>
             <span class="post-status-badge status-badge-${post.status}">${statusLabel(post.status)}</span>
           </div>
           <div class="post-caption">${escapeHtml(post.caption)}</div>
-          ${post.change_notes ? `<div class="change-notes-display">💬 Your notes: ${escapeHtml(post.change_notes)}</div>` : ''}
+          ${post.change_notes ? `<div class="change-notes-display">${noteSvg} Your notes: ${escapeHtml(post.change_notes)}</div>` : ''}
           ${showActions && (post.status === 'pending' || post.status === 'changes_requested') ? `
             <div class="post-actions">
-              <button class="btn-approve" onclick="approvePost(${post.id})">✓ Approve</button>
-              <button class="btn-changes" onclick="openChangesModal(${post.id})">✏️ Request Changes</button>
+              <button class="btn-approve" onclick="approvePost(${post.id})">${checkSvg} Approve</button>
+              <button class="btn-changes" onclick="openChangesModal(${post.id})">${editSvg} Request Changes</button>
             </div>
           ` : ''}
-          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">✅ Approved — queued in Buffer</div>` : ''}
+          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">${approvedSvg} Approved — queued in Buffer</div>` : ''}
         </div>
       `;
     }
@@ -296,7 +359,6 @@
 
     function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); }
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
-    function platformIcon(platform) { return { instagram: '📸', facebook: '👥', twitter: '🐦', linkedin: '💼', tiktok: '🎵' }[platform] || '📱'; }
     function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[status] || status; }
     function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
