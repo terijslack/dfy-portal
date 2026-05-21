@@ -17,6 +17,16 @@ app.use(express.json()); // lets us read JSON request bodies
 app.use(express.urlencoded({ extended: true })); // lets us read form data
 app.use(cookieParser()); // lets us read cookies (used for the auth token)
 
+// Prevent browsers from caching HTML pages so updates show immediately
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html') || !req.path.includes('.')) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+  next();
+});
+
 // Serve everything in frontend/public as static files
 // This is what your clients actually see in their browser
 app.use(express.static(path.join(__dirname, 'frontend/public')));
