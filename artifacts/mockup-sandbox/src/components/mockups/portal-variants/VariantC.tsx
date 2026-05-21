@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export default function VariantC() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const navItems = [
     { icon: "◎", label: "Your Social Media", active: true },
     { icon: "G", label: "Google Business Profile", active: false },
@@ -11,10 +15,39 @@ export default function VariantC() {
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#F5F2EA", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* Top header */}
-      <header style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.1)", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#1F3D2C", fontSize: 18, fontWeight: 400 }}>Done For You</span>
-          <span style={{ color: "#9AA199", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>Marketing</span>
+      <header style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.1)", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          {/* Sidebar toggle button */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              color: "#2D6B4F", padding: "6px 8px", borderRadius: 6,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(45,107,79,0.08)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "none")}
+          >
+            {sidebarOpen ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <line x1="9" y1="3" x2="9" y2="21"/>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <line x1="9" y1="3" x2="9" y2="21"/>
+                <polyline points="13,9 17,12 13,15"/>
+              </svg>
+            )}
+          </button>
+
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#1F3D2C", fontSize: 18, fontWeight: 400 }}>Done For You</span>
+            <span style={{ color: "#9AA199", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>Marketing</span>
+          </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <span style={{ color: "#6B756B", fontSize: 13 }}>Jane Smith</span>
@@ -22,35 +55,44 @@ export default function VariantC() {
         </div>
       </header>
 
-      <div style={{ display: "flex", flex: 1 }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {/* Left sidebar */}
-        <aside style={{ width: 220, background: "#1F3D2C", flexShrink: 0, padding: "28px 0" }}>
-          <div style={{ padding: "0 20px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 12 }}>
-            <p style={{ color: "#EBC99B", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Welcome back</p>
-            <p style={{ color: "#F5F2EA", fontSize: 15, fontWeight: 500, margin: 0, fontFamily: "'Fraunces', Georgia, serif" }}>Jane Smith</p>
+        <aside style={{
+          width: sidebarOpen ? 220 : 0,
+          minWidth: sidebarOpen ? 220 : 0,
+          background: "#1F3D2C",
+          flexShrink: 0,
+          padding: sidebarOpen ? "28px 0" : "0",
+          overflow: "hidden",
+          transition: "width 0.22s ease, min-width 0.22s ease, padding 0.22s ease",
+        }}>
+          <div style={{ width: 220 }}>
+            <div style={{ padding: "0 20px 20px", borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 12 }}>
+              <p style={{ color: "#EBC99B", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 2px" }}>Welcome back</p>
+              <p style={{ color: "#F5F2EA", fontSize: 15, fontWeight: 500, margin: 0, fontFamily: "'Fraunces', Georgia, serif" }}>Jane Smith</p>
+            </div>
+            {navItems.map((item) => (
+              <a key={item.label} href="#" style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "11px 20px",
+                background: item.active ? "rgba(235,201,155,0.12)" : "none",
+                borderLeft: item.active ? "3px solid #EBC99B" : "3px solid transparent",
+                textDecoration: "none", cursor: "pointer", whiteSpace: "nowrap",
+              }}>
+                <span style={{ fontSize: 15, color: item.active ? "#EBC99B" : "rgba(245,242,234,0.55)", width: 20, textAlign: "center" }}>{item.icon}</span>
+                <span style={{ fontSize: 13, color: item.active ? "#F5F2EA" : "rgba(245,242,234,0.55)", fontWeight: item.active ? 600 : 400, lineHeight: 1.3 }}>{item.label}</span>
+              </a>
+            ))}
           </div>
-          {navItems.map((item) => (
-            <a key={item.label} href="#" style={{
-              display: "flex", alignItems: "center", gap: 12,
-              padding: "11px 20px",
-              background: item.active ? "rgba(235,201,155,0.12)" : "none",
-              borderLeft: item.active ? "3px solid #EBC99B" : "3px solid transparent",
-              textDecoration: "none", cursor: "pointer",
-            }}>
-              <span style={{ fontSize: 15, color: item.active ? "#EBC99B" : "rgba(245,242,234,0.55)", width: 20, textAlign: "center" }}>{item.icon}</span>
-              <span style={{ fontSize: 13, color: item.active ? "#F5F2EA" : "rgba(245,242,234,0.55)", fontWeight: item.active ? 600 : 400, lineHeight: 1.3 }}>{item.label}</span>
-            </a>
-          ))}
         </aside>
 
         {/* Main content area */}
-        <main style={{ flex: 1, padding: "36px 40px" }}>
+        <main style={{ flex: 1, padding: "36px 40px", overflowY: "auto" }}>
           <div style={{ marginBottom: 28 }}>
             <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", color: "#1F3D2C", fontSize: 26, fontWeight: 400, margin: "0 0 4px", fontStyle: "italic" }}>Good morning, Jane!</h1>
             <p style={{ color: "#6B756B", fontSize: 13, margin: 0 }}>Your marketing is running. Here's your overview.</p>
           </div>
 
-          {/* Quick stat cards */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 28 }}>
             {[["5", "Total Posts"], ["3", "Awaiting Review"], ["1", "Approved"]].map(([n, l]) => (
               <div key={l} style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "20px 20px" }}>
@@ -60,7 +102,6 @@ export default function VariantC() {
             ))}
           </div>
 
-          {/* Recent activity */}
           <div style={{ background: "#fff", border: "1px solid rgba(31,61,44,0.1)", borderRadius: 12, padding: "20px 24px" }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: "#9AA199", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 16px" }}>Recent Posts</p>
             {[["Instagram", "Spring is here! 🌸 We're helping local businesses bloom…", "Needs Review"], ["Facebook", "Did you know 80% of customers research businesses online…", "Approved"]].map(([platform, text, status]) => (
