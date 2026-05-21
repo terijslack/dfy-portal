@@ -84,40 +84,81 @@
 
     <main class="portal-main">
       <div class="portal-main-content">
-        <div class="page-header">
-          <h1>Post Calendar</h1>
-          <p class="page-subtitle">A monthly view of all your approved posts.</p>
-        </div>
+        <div class="portal-posts-layout">
 
-        <div class="cal-nav">
-          <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
-          <h2 class="cal-month-label" id="calMonthLabel"></h2>
-          <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
-        </div>
+          <!-- Left: calendar content -->
+          <div class="portal-posts-col">
+            <div class="page-header">
+              <h1>Post Calendar</h1>
+              <p class="page-subtitle">A monthly view of all your approved posts.</p>
+            </div>
 
-        <div class="cal-legend">
-          <span class="cal-legend-item"><span class="cal-dot platform-instagram"></span> Instagram</span>
-          <span class="cal-legend-item"><span class="cal-dot platform-facebook"></span> Facebook</span>
-          <span class="cal-legend-item"><span class="cal-dot platform-linkedin"></span> LinkedIn</span>
-          <span class="cal-legend-item"><span class="cal-dot platform-twitter"></span> Twitter</span>
-          <span class="cal-legend-item"><span class="cal-dot platform-tiktok"></span> TikTok</span>
-        </div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="prevMonth">&#8592;</button>
+              <h2 class="cal-month-label" id="calMonthLabel"></h2>
+              <button class="cal-nav-btn" id="nextMonth">&#8594;</button>
+            </div>
 
-        <div class="cal-grid-wrap">
-          <div class="cal-weekdays">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            <div class="cal-legend">
+              <span class="cal-legend-item"><span class="cal-dot platform-instagram"></span> Instagram</span>
+              <span class="cal-legend-item"><span class="cal-dot platform-facebook"></span> Facebook</span>
+              <span class="cal-legend-item"><span class="cal-dot platform-linkedin"></span> LinkedIn</span>
+              <span class="cal-legend-item"><span class="cal-dot platform-twitter"></span> Twitter</span>
+              <span class="cal-legend-item"><span class="cal-dot platform-tiktok"></span> TikTok</span>
+            </div>
+
+            <div class="cal-grid-wrap">
+              <div class="cal-weekdays">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+              </div>
+              <div class="cal-grid" id="calGrid">
+                <div class="loading">Loading calendar…</div>
+              </div>
+            </div>
+
+            <div class="cal-detail-panel" id="detailPanel" style="display:none">
+              <div class="cal-detail-header">
+                <span id="detailDate"></span>
+                <button class="cal-detail-close" id="detailClose">✕</button>
+              </div>
+              <div id="detailPosts"></div>
+            </div>
           </div>
-          <div class="cal-grid" id="calGrid">
-            <div class="loading">Loading calendar…</div>
-          </div>
-        </div>
 
-        <div class="cal-detail-panel" id="detailPanel" style="display:none">
-          <div class="cal-detail-header">
-            <span id="detailDate"></span>
-            <button class="cal-detail-close" id="detailClose">✕</button>
-          </div>
-          <div id="detailPosts"></div>
+          <!-- Right rail: section nav cards -->
+          <aside class="portal-right-rail">
+            <p class="portal-rail-label">Social Media</p>
+            <div class="portal-rail-cards">
+              <a href="/posts" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Post Approval</div>
+                  <div class="portal-rail-card-sub" id="railPendingSub">Loading…</div>
+                </div>
+              </a>
+              <a href="/calendar" class="portal-rail-card portal-rail-card-active">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Content Calendar</div>
+                  <div class="portal-rail-card-sub" id="railCalSub">Monthly view</div>
+                </div>
+              </a>
+              <a href="#" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Your Socials</div>
+                  <div class="portal-rail-card-sub">Connected accounts</div>
+                </div>
+              </a>
+            </div>
+          </aside>
+
         </div>
       </div>
     </main>
@@ -164,6 +205,16 @@
     async function loadPosts() {
       try { const res = await fetch('/api/posts'); const data = await res.json(); allPosts = data.posts || []; }
       catch (err) { allPosts = []; }
+      updateRail(allPosts);
+    }
+
+    function updateRail(posts) {
+      const pending = posts.filter(p => p.status === 'pending').length;
+      const sub = document.getElementById('railPendingSub');
+      if (sub) sub.textContent = pending > 0 ? `${pending} awaiting review` : 'All caught up';
+      const total = posts.length;
+      const calSub = document.getElementById('railCalSub');
+      if (calSub) calSub.textContent = total > 0 ? `${total} post${total !== 1 ? 's' : ''} scheduled` : 'Monthly view';
     }
 
     function renderCalendar() {
