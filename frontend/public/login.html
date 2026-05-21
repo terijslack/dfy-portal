@@ -49,8 +49,7 @@
       .then(r => r.json())
       .then(data => {
         if (data.user) {
-          // Send admin to admin page, clients to dashboard
-          window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+          window.location.href = data.user.is_admin ? '/admin' : '/posts';
         }
       })
       .catch(() => {}); // not logged in = stay on this page
@@ -86,8 +85,7 @@
           return;
         }
 
-        // Redirect based on role
-        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+        window.location.href = data.user.is_admin ? '/admin' : '/posts';
 
       } catch (err) {
         errorMsg.textContent = 'Network error. Check your connection.';
