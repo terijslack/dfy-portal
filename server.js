@@ -41,6 +41,7 @@ app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout +
 app.use('/api/account', require('./backend/routes/account')); // subscription management
 app.use('/api/onboarding', require('./backend/routes/onboarding')); // client intake form
 app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
+app.use('/api/socials', require('./backend/routes/socials'));       // social account connections
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file
@@ -84,6 +85,10 @@ app.get('/calendar', (req, res) => {
 
 app.get('/gbp', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/gbp.html'));
+});
+
+app.get('/socials', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/socials.html'));
 });
 
 app.get('/analytics', (req, res) => {
