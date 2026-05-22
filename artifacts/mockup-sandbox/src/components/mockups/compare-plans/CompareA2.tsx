@@ -96,7 +96,7 @@ export default function CompareA2() {
         </div>
 
         {/* Cards — equal height via stretch + flex column */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, alignItems: "stretch", paddingTop: 18, marginBottom: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, alignItems: "stretch", paddingTop: 28, marginBottom: 18 }}>
           {PLANS.map(p => {
             const isCurrent = p.key === CURRENT;
             const isSelected = selected === p.key;
