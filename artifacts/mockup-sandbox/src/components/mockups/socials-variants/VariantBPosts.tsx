@@ -12,7 +12,6 @@ const BRAND = {
 type Post = { id: number; date: string; likes: number; comments: number; color: string };
 type PlatformMeta = { name: string; color: string; gradient?: string; prefix: string; desc: string; posts: Post[] };
 
-// Only 3 primary fixed tiles now
 const PRIMARY: Record<string, PlatformMeta> = {
   instagram: {
     name: "Instagram", gradient: "linear-gradient(135deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888)", color: "#dc2743", prefix: "@", desc: "Photos & Reels",
@@ -40,7 +39,6 @@ const PRIMARY: Record<string, PlatformMeta> = {
   },
 };
 
-// YouTube moved into "Other"
 const OTHER_PLATFORMS: Record<string, { name: string; color: string; prefix: string }> = {
   youtube:   { name: "YouTube",     color: "#FF0000", prefix: "@" },
   tiktok:    { name: "TikTok",      color: "#010101", prefix: "@" },
@@ -50,9 +48,9 @@ const OTHER_PLATFORMS: Record<string, { name: string; color: string; prefix: str
   threads:   { name: "Threads",     color: "#000",    prefix: "@" },
 };
 
-const SAMPLE_CONNECTED: Record<string, { username: string; hasPassword: boolean }> = {
-  instagram: { username: "wildflower.bakery", hasPassword: true },
-  linkedin:  { username: "wildflower-bakery-co", hasPassword: false },
+const SAMPLE_CONNECTED: Record<string, string> = {
+  instagram: "wildflower.bakery",
+  linkedin:  "wildflower-bakery-co",
 };
 
 const IgIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>;
@@ -60,55 +58,30 @@ const FbIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox
 const LiIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>;
 const ICONS: Record<string, ({ s }: { s?: number }) => JSX.Element> = { instagram: IgIcon, facebook: FbIcon, linkedin: LiIcon };
 
-const LockIcon = ({ size = 11 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  </svg>
-);
-const EyeIcon = ({ crossed = false }: { crossed?: boolean }) => crossed
-  ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-  : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>;
 const HeartIcon = () => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>;
 const MsgIcon  = () => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>;
 const ShareIcon = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>;
 const PlusIcon = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>;
 
-function PwField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 8, overflow: "hidden", background: "#fafaf8", marginTop: 6 }}>
-      <span style={{ padding: "0 8px", color: "#9AA199", flexShrink: 0, display: "flex", alignItems: "center" }}><LockIcon size={12} /></span>
-      <input type={show ? "text" : "password"} value={value} onChange={e => onChange(e.target.value)} placeholder="Account password (optional)"
-        style={{ flex: 1, border: "none", background: "transparent", padding: "9px 4px 9px 0", fontSize: 12, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
-      <button onClick={() => setShow(s => !s)} type="button"
-        style={{ background: "transparent", border: "none", cursor: "pointer", padding: "0 10px", color: BRAND.slate, display: "flex", alignItems: "center" }}>
-        <EyeIcon crossed={show} />
-      </button>
-    </div>
-  );
-}
-
 export function VariantBPosts() {
-  const [connected, setConnected]             = useState<Record<string, { username: string; hasPassword: boolean }>>(SAMPLE_CONNECTED);
-  const [otherPlatform, setOtherPlatform]     = useState<string>("");
-  const [otherHandle, setOtherHandle]         = useState<string>("");
-  const [otherPassword, setOtherPassword]     = useState<string>("");
-  const [otherConnected, setOtherConnected]   = useState<{ platform: string; username: string; hasPassword: boolean } | null>(null);
-  const [adding, setAdding]                   = useState<string | null>(null);
-  const [handle, setHandle]                   = useState("");
-  const [password, setPassword]               = useState("");
-  const [expanded, setExpanded]               = useState<Record<string, boolean>>({ instagram: true });
+  const [connected, setConnected]           = useState<Record<string, string>>(SAMPLE_CONNECTED);
+  const [otherPlatform, setOtherPlatform]   = useState<string>("");
+  const [otherHandle, setOtherHandle]       = useState<string>("");
+  const [otherConnected, setOtherConnected] = useState<{ platform: string; username: string } | null>(null);
+  const [adding, setAdding]                 = useState<string | null>(null);
+  const [handle, setHandle]                 = useState("");
+  const [expanded, setExpanded]             = useState<Record<string, boolean>>({ instagram: true });
 
   const saveMain = (key: string) => {
     if (!handle) return;
-    setConnected(prev => ({ ...prev, [key]: { username: handle.replace(/^@/, ""), hasPassword: !!password } }));
-    setAdding(null); setHandle(""); setPassword("");
+    setConnected(prev => ({ ...prev, [key]: handle.replace(/^@/, "") }));
+    setAdding(null); setHandle("");
   };
 
   const saveOther = () => {
     if (!otherPlatform || !otherHandle) return;
-    setOtherConnected({ platform: otherPlatform, username: otherHandle.replace(/^@/, ""), hasPassword: !!otherPassword });
-    setOtherPlatform(""); setOtherHandle(""); setOtherPassword("");
+    setOtherConnected({ platform: otherPlatform, username: otherHandle.replace(/^@/, "") });
+    setOtherPlatform(""); setOtherHandle("");
   };
 
   const usedOther = otherConnected?.platform;
@@ -127,9 +100,9 @@ export function VariantBPosts() {
             <ShareIcon />
             <span style={{ fontSize: 13, color: "#F5F2EA", fontWeight: 600 }}>Your Social Media</span>
           </div>
-          {[{ label: "Post Approval" }, { label: "Content Calendar" }, { label: "Your Socials" }].map(item => (
-            <div key={item.label} style={{ padding: "8px 20px 8px 36px", borderLeft: item.label === "Your Socials" ? `3px solid ${BRAND.green}` : "3px solid transparent" }}>
-              <span style={{ fontSize: 12, color: item.label === "Your Socials" ? "#F5F2EA" : "rgba(245,242,234,0.45)", fontWeight: item.label === "Your Socials" ? 600 : 400 }}>{item.label}</span>
+          {["Post Approval", "Content Calendar", "Your Socials"].map(label => (
+            <div key={label} style={{ padding: "8px 20px 8px 36px", borderLeft: label === "Your Socials" ? `3px solid ${BRAND.green}` : "3px solid transparent" }}>
+              <span style={{ fontSize: 12, color: label === "Your Socials" ? "#F5F2EA" : "rgba(245,242,234,0.45)", fontWeight: label === "Your Socials" ? 600 : 400 }}>{label}</span>
             </div>
           ))}
           {["Google Business Profile", "Analytics", "Account"].map(l => (
@@ -150,46 +123,39 @@ export function VariantBPosts() {
         <main style={{ flex: 1, padding: 28 }}>
           <div style={{ marginBottom: 24 }}>
             <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 400, color: BRAND.forest, margin: "0 0 4px" }}>Your Socials</h1>
-            <p style={{ fontSize: 13, color: BRAND.slate, margin: 0 }}>Connect your accounts — handles and login credentials are stored securely for your team.</p>
+            <p style={{ fontSize: 13, color: BRAND.slate, margin: 0 }}>Connect your accounts so your team knows which handles they're managing.</p>
           </div>
 
-          {/* 3-column row for primary platforms */}
+          {/* 3-column primary tiles */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, maxWidth: 860, marginBottom: 20 }}>
             {Object.entries(PRIMARY).map(([key, p]) => {
-              const conn     = connected[key];
-              const isConn   = !!conn;
+              const isConn   = !!connected[key];
               const isExp    = !!expanded[key];
               const isAdding = adding === key;
               const Icon     = ICONS[key];
 
               return (
                 <div key={key} style={{ background: "#fff", border: `2px solid ${isConn ? "rgba(45,107,79,0.2)" : "rgba(31,61,44,0.09)"}`, borderRadius: 16, overflow: "hidden" }}>
-                  {/* Header */}
                   <div style={{ padding: "15px 18px", display: "flex", alignItems: "center", gap: 12, cursor: isConn ? "pointer" : "default", borderBottom: isConn && isExp ? "1px solid rgba(31,61,44,0.07)" : "none" }}
                     onClick={() => isConn && setExpanded(prev => ({ ...prev, [key]: !prev[key] }))}>
                     <div style={{ width: 40, height: 40, borderRadius: 10, background: isConn ? (p.gradient || p.color) : "rgba(31,61,44,0.06)", display: "flex", alignItems: "center", justifyContent: "center", color: isConn ? "#fff" : BRAND.slate, flexShrink: 0 }}>
                       <Icon s={20} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: BRAND.forest, display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
-                        {p.name}
-                        {isConn && conn.hasPassword && (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 9, color: BRAND.green, background: "rgba(45,107,79,0.08)", borderRadius: 20, padding: "2px 6px", fontWeight: 600 }}>
-                            <LockIcon size={8} /> Saved
-                          </span>
-                        )}
-                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: BRAND.forest }}>{p.name}</div>
                       <div style={{ fontSize: 11, color: BRAND.slate, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {isConn ? `${p.prefix}${conn.username}` : p.desc}
+                        {isConn ? `${p.prefix}${connected[key]}` : p.desc}
                       </div>
                     </div>
                     {isConn && (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={BRAND.slate} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        style={{ transform: isExp ? "rotate(180deg)" : "none", transition: "transform 0.18s", flexShrink: 0 }}><polyline points="2,4 6,8 10,4"/></svg>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 10, background: "rgba(45,107,79,0.09)", color: BRAND.green, padding: "3px 9px", borderRadius: 20, fontWeight: 600 }}>Active</span>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={BRAND.slate} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                          style={{ transform: isExp ? "rotate(180deg)" : "none", transition: "transform 0.18s", flexShrink: 0 }}><polyline points="2,4 6,8 10,4"/></svg>
+                      </div>
                     )}
                   </div>
 
-                  {/* Expanded posts */}
                   {isConn && isExp && (
                     <div>
                       <div style={{ display: "flex", gap: 6, padding: "12px 14px 10px" }}>
@@ -219,21 +185,19 @@ export function VariantBPosts() {
                     </div>
                   )}
 
-                  {/* Add form */}
                   {!isConn && (
                     <div style={{ padding: "12px 14px" }}>
                       {isAdding ? (
                         <>
-                          <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.18)", borderRadius: 8, overflow: "hidden", background: "#fafaf8" }}>
+                          <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.18)", borderRadius: 8, overflow: "hidden", background: "#fafaf8", marginBottom: 8 }}>
                             <span style={{ padding: "0 8px", fontSize: 13, color: "#9AA199" }}>{p.prefix}</span>
                             <input value={handle} onChange={e => setHandle(e.target.value)} placeholder="your_handle" autoFocus
                               style={{ flex: 1, border: "none", background: "transparent", padding: "8px 8px 8px 0", fontSize: 12, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
                           </div>
-                          <PwField value={password} onChange={setPassword} />
-                          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                          <div style={{ display: "flex", gap: 8 }}>
                             <button onClick={() => saveMain(key)}
                               style={{ flex: 1, background: BRAND.green, color: "#fff", border: "none", borderRadius: 7, padding: "7px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Save</button>
-                            <button onClick={() => { setAdding(null); setHandle(""); setPassword(""); }}
+                            <button onClick={() => { setAdding(null); setHandle(""); }}
                               style={{ background: "transparent", color: BRAND.slate, border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 7, padding: "7px 10px", fontSize: 12, cursor: "pointer" }}>Cancel</button>
                           </div>
                         </>
@@ -258,14 +222,7 @@ export function VariantBPosts() {
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={otherConnected.platform === "snapchat" ? "#000" : "#fff"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: BRAND.forest, display: "flex", alignItems: "center", gap: 6 }}>
-                    {OTHER_PLATFORMS[otherConnected.platform]?.name}
-                    {otherConnected.hasPassword && (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: BRAND.green, background: "rgba(45,107,79,0.08)", borderRadius: 20, padding: "2px 7px", fontWeight: 600 }}>
-                        <LockIcon size={9} /> Password saved
-                      </span>
-                    )}
-                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: BRAND.forest }}>{OTHER_PLATFORMS[otherConnected.platform]?.name}</div>
                   <div style={{ fontSize: 11, color: BRAND.slate }}>{OTHER_PLATFORMS[otherConnected.platform]?.prefix}{otherConnected.username}</div>
                 </div>
                 <span style={{ fontSize: 10, background: "rgba(45,107,79,0.09)", color: BRAND.green, padding: "3px 9px", borderRadius: 20, fontWeight: 600 }}>Active</span>
@@ -283,7 +240,7 @@ export function VariantBPosts() {
                     <div style={{ fontSize: 11, color: BRAND.slate }}>YouTube, TikTok, X, Pinterest, Snapchat, Threads</div>
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <select value={otherPlatform} onChange={e => setOtherPlatform(e.target.value)}
                     style={{ border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 8, padding: "9px 12px", fontSize: 13, fontFamily: "Inter,sans-serif", color: BRAND.forest, background: "#fafaf8", minWidth: 160 }}>
                     <option value="">Choose platform…</option>
@@ -296,12 +253,11 @@ export function VariantBPosts() {
                     <input value={otherHandle} onChange={e => setOtherHandle(e.target.value)} placeholder="your_handle"
                       style={{ flex: 1, border: "none", background: "transparent", padding: "9px 10px 9px 0", fontSize: 13, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
                   </div>
+                  <button onClick={saveOther} disabled={!otherPlatform || !otherHandle}
+                    style={{ background: otherPlatform && otherHandle ? BRAND.green : "rgba(31,61,44,0.12)", color: otherPlatform && otherHandle ? "#fff" : BRAND.slate, border: "none", borderRadius: 8, padding: "9px 18px", fontSize: 13, fontWeight: 600, cursor: otherPlatform && otherHandle ? "pointer" : "not-allowed", transition: "background 0.15s" }}>
+                    Connect
+                  </button>
                 </div>
-                <PwField value={otherPassword} onChange={setOtherPassword} />
-                <button onClick={saveOther} disabled={!otherPlatform || !otherHandle}
-                  style={{ marginTop: 10, width: "100%", background: otherPlatform && otherHandle ? BRAND.green : "rgba(31,61,44,0.12)", color: otherPlatform && otherHandle ? "#fff" : BRAND.slate, border: "none", borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: otherPlatform && otherHandle ? "pointer" : "not-allowed", transition: "background 0.15s" }}>
-                  Connect
-                </button>
               </div>
             )}
           </div>
