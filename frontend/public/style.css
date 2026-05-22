@@ -613,8 +613,10 @@ body {
 
 /* ── PLAN SELECTION GRID ─────────────────────────────── */
 .modal-wide {
-  max-width: 860px;
-  width: 94vw;
+  max-width: 1040px;
+  width: 96vw;
+  max-height: 92vh;
+  overflow-y: auto;
 }
 
 .modal-header-row {
@@ -642,7 +644,7 @@ body {
 .plan-option {
   border: 1.5px solid rgba(31,61,44,0.1);
   border-radius: 14px;
-  padding: 20px 18px;
+  padding: 18px 16px;
   text-align: left;
   cursor: pointer;
   background: #fafaf8;
@@ -698,11 +700,11 @@ body {
 }
 
 .plan-option-price {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   color: #1F3D2C;
   line-height: 1;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   letter-spacing: -0.02em;
 }
 
@@ -734,19 +736,19 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 12px;
   flex: 1;
 }
 
 .plan-features li {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  font-size: 11.5px;
+  gap: 7px;
+  font-size: 11px;
   color: #6B756B;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .plan-option-current .plan-features li {
