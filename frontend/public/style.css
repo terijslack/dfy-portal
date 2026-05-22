@@ -613,14 +613,21 @@ body {
 
 /* ── PLAN SELECTION GRID ─────────────────────────────── */
 .modal-wide {
-  max-width: 660px;
-  width: 92vw;
+  max-width: 860px;
+  width: 94vw;
 }
 
-.modal-subtitle {
+.modal-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.modal-header-note {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
   color: var(--text-muted);
-  font-size: 0.875rem;
-  margin-bottom: 22px;
 }
 
 .plan-grid {
@@ -628,18 +635,21 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 18px;
-  padding-top: 26px;
+  padding-top: 28px;
+  align-items: stretch;
 }
 
 .plan-option {
   border: 1.5px solid rgba(31,61,44,0.1);
-  border-radius: 12px;
-  padding: 15px 14px;
+  border-radius: 14px;
+  padding: 20px 18px;
   text-align: left;
   cursor: pointer;
   background: #fafaf8;
   transition: border-color 0.13s, background 0.13s, box-shadow 0.13s;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .plan-option:not(.plan-option-current):hover {
@@ -649,34 +659,55 @@ body {
 
 .plan-option-selected {
   border-color: #2D6B4F !important;
+  border-left-width: 3.5px !important;
   background: rgba(45,107,79,0.04) !important;
-  box-shadow: 0 0 0 3px rgba(45,107,79,0.10);
+  box-shadow: 0 4px 20px rgba(45,107,79,0.10);
 }
 
 .plan-option-current {
   cursor: default;
-  border-color: rgba(45,107,79,0.28) !important;
-  background: rgba(45,107,79,0.02) !important;
+  background: #1F3D2C !important;
+  border: none !important;
+  border-top: 2.5px solid #EBC99B !important;
+  box-shadow: 0 4px 24px rgba(31,61,44,0.18);
 }
 
 .plan-option-name {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #1F3D2C;
-  letter-spacing: 0.01em;
-  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
 }
 
 .plan-option-current .plan-option-name {
-  color: #2D6B4F;
+  color: #EBC99B;
+}
+
+.plan-option-tagline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: #9AA199;
+  margin-bottom: 10px;
+}
+
+.plan-option-current .plan-option-tagline {
+  color: rgba(235,201,155,0.5);
 }
 
 .plan-option-price {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   color: #1F3D2C;
   line-height: 1;
-  margin-bottom: 7px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.plan-option-current .plan-option-price {
+  color: #F5F2EA;
 }
 
 .plan-option-price span {
@@ -685,14 +716,46 @@ body {
   color: #9AA199;
 }
 
-.plan-option-posts {
-  font-size: 11px;
-  color: #9AA199;
+.plan-option-current .plan-option-price span {
+  color: rgba(245,242,234,0.4);
+}
+
+.plan-option-divider {
+  height: 1px;
+  background: rgba(31,61,44,0.07);
+  margin-bottom: 16px;
+}
+
+.plan-option-current .plan-option-divider {
+  background: rgba(235,201,155,0.15);
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #6B756B;
+  line-height: 1.45;
+}
+
+.plan-option-current .plan-features li {
+  color: #EFEBDF;
 }
 
 .plan-option-tag {
   position: absolute;
-  bottom: calc(100% + 7px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   font-size: 9px;

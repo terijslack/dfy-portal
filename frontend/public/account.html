@@ -109,36 +109,6 @@
     }
     .btn-profile-cancel:hover { background: rgba(31,61,44,0.04); }
 
-    .plan-detail {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(45,107,79,0.04);
-      border: 1.5px solid rgba(45,107,79,0.15);
-      border-radius: 10px;
-      padding: 11px 15px;
-      margin-bottom: 10px;
-      gap: 12px;
-    }
-
-    .plan-detail-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: #2D6B4F;
-    }
-
-    .plan-detail-items {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #6B756B;
-    }
-
-    .plan-detail-dot {
-      color: rgba(107,117,107,0.4);
-    }
-
     .banner-strip {
       display: flex;
       align-items: center;
@@ -345,17 +315,11 @@
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal modal-wide">
-      <h2 id="modalTitle">Manage Your Plan</h2>
-      <div class="plan-grid" id="planGrid"></div>
-
-      <div class="plan-detail" id="planDetail" style="display:none">
-        <div class="plan-detail-name" id="planDetailName"></div>
-        <div class="plan-detail-items">
-          <span id="planDetailPosts"></span>
-          <span class="plan-detail-dot">·</span>
-          <span id="planDetailPlatforms"></span>
-        </div>
+      <div class="modal-header-row">
+        <h2 style="margin:0">Compare Plans</h2>
+        <span class="modal-header-note">No contracts &middot; Cancel anytime</span>
       </div>
+      <div class="plan-grid" id="planGrid"></div>
 
       <div class="banner-strip" id="bannerStrip">
         <span class="banner-strip-label">Need to step back?</span>
@@ -508,6 +472,49 @@
       document.getElementById('btnBannerCancel').classList.remove('active');
     }
 
+    const PLAN_FEATURES = {
+      'Starter Presence': [
+        'Up to 2 social media platforms',
+        'Up to 16 posts (total)',
+        'Caption writing',
+        'Google Business Profile setup or review',
+        'Monthly performance summary email',
+      ],
+      'Growth Engine': [
+        'Access to ongoing strategic support',
+        'Up to 4 social media platforms',
+        'Up to 32 posts (total)',
+        'Caption writing',
+        '2 promotional emails to clients/month',
+        'Automated Google Review requests',
+        'Google Business Profile management',
+        'Full client dashboard with analytics',
+      ],
+      'Marketing Partner': [
+        '1 hour strategic onboarding call',
+        'Monthly strategy check-ins',
+        'Complete social media management',
+        'Complete Google Business Profile management',
+        'Appointment calendar setup',
+        'Automated appointment reminders',
+        'Email campaigns & newsletters',
+        'Management & reporting of paid ads',
+        '1 landing page or promo',
+      ],
+    };
+
+    const PLAN_TAGLINES = {
+      'Starter Presence':  'Essential visibility',
+      'Growth Engine':     'Our most popular plan',
+      'Marketing Partner': 'Full-service management',
+    };
+
+    function checkSvg(dark) {
+      const circle = dark ? 'rgba(235,201,155,0.18)' : 'rgba(45,107,79,0.09)';
+      const stroke = dark ? '#EBC99B' : '#2D6B4F';
+      return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><circle cx="7" cy="7" r="7" fill="${circle}"/><polyline points="4,7 6,9 10,5" stroke="${stroke}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    }
+
     function openChangePlanModal() {
       selectedPlan = null;
       document.getElementById('modalError').textContent = '';
@@ -524,14 +531,24 @@
       document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
 
       const grid = document.getElementById('planGrid');
-      grid.innerHTML = availablePlans.map(plan => `
-        <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" id="plan-${plan.key.replace(/\s+/g, '-')}">
-          <div class="plan-option-name">${plan.label}</div>
-          <div class="plan-option-price">$${plan.price.toLocaleString()}<span>/mo</span></div>
-          ${plan.current ? '<div class="plan-option-tag">Current</div>' : ''}
-        </div>
-      `).join('');
-      document.getElementById('planDetail').style.display = 'none';
+      grid.innerHTML = availablePlans.map(plan => {
+        const features = PLAN_FEATURES[plan.key] || [];
+        const tagline  = PLAN_TAGLINES[plan.key] || '';
+        const dark     = plan.current;
+        return `
+          <div class="plan-option ${dark ? 'plan-option-current' : ''}"
+               onclick="${dark ? '' : `selectPlan('${plan.key}')`}"
+               id="plan-${plan.key.replace(/\s+/g, '-')}">
+            ${dark ? '<div class="plan-option-tag">Current</div>' : ''}
+            <div class="plan-option-name">${plan.label}</div>
+            <div class="plan-option-tagline">${tagline}</div>
+            <div class="plan-option-price">$${plan.price.toLocaleString()}<span>/mo</span></div>
+            <div class="plan-option-divider"></div>
+            <ul class="plan-features">
+              ${features.map(f => `<li>${checkSvg(dark)}${f}</li>`).join('')}
+            </ul>
+          </div>`;
+      }).join('');
       document.getElementById('modalOverlay').classList.add('active');
     }
 
@@ -541,14 +558,6 @@
       const el = document.getElementById('plan-' + key.replace(/\s+/g, '-'));
       if (el) el.classList.add('plan-option-selected');
       resetBanner();
-      const plan = availablePlans.find(p => p.key === key);
-      const detail = document.getElementById('planDetail');
-      if (plan) {
-        document.getElementById('planDetailName').textContent = plan.label;
-        document.getElementById('planDetailPosts').textContent = plan.posts + ' posts/month';
-        document.getElementById('planDetailPlatforms').textContent = plan.platforms;
-        detail.style.display = 'flex';
-      }
       document.getElementById('confirmPlanBtn').disabled = false;
       document.getElementById('confirmPlanBtn').textContent = 'Request Change';
     }
