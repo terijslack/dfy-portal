@@ -613,85 +613,94 @@ body {
 
 /* ── PLAN SELECTION GRID ─────────────────────────────── */
 .modal-wide {
-  max-width: 580px;
-  width: 90vw;
+  max-width: 660px;
+  width: 92vw;
 }
 
 .modal-subtitle {
   color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 20px;
+  font-size: 0.875rem;
+  margin-bottom: 22px;
 }
 
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
 .plan-option {
-  border: 2px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 18px 14px;
-  text-align: center;
+  border: 1.5px solid rgba(31,61,44,0.1);
+  border-radius: 12px;
+  padding: 15px 14px;
+  text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  background: #fafaf8;
+  transition: border-color 0.13s, background 0.13s, box-shadow 0.13s;
   position: relative;
 }
 
 .plan-option:not(.plan-option-current):hover {
-  border-color: var(--accent-dim);
-  background: rgba(45,107,79,0.04);
+  border-color: rgba(45,107,79,0.3);
+  background: rgba(45,107,79,0.03);
 }
 
 .plan-option-selected {
-  border-color: var(--accent) !important;
-  background: rgba(45,107,79,0.07) !important;
+  border-color: #2D6B4F !important;
+  background: rgba(45,107,79,0.04) !important;
+  box-shadow: 0 0 0 3px rgba(45,107,79,0.10);
 }
 
 .plan-option-current {
-  opacity: 0.55;
   cursor: default;
+  border-color: rgba(45,107,79,0.28) !important;
+  background: rgba(45,107,79,0.02) !important;
 }
 
 .plan-option-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1F3D2C;
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+}
+
+.plan-option-current .plan-option-name {
+  color: #2D6B4F;
 }
 
 .plan-option-price {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1F3D2C;
+  line-height: 1;
+  margin-bottom: 7px;
 }
 
 .plan-option-price span {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  color: #9AA199;
 }
 
 .plan-option-posts {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 4px;
+  font-size: 11px;
+  color: #9AA199;
 }
 
 .plan-option-tag {
   position: absolute;
-  top: -1px;
-  right: -1px;
-  background: var(--accent-dim);
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 600;
+  top: 9px;
+  right: 9px;
+  font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+  letter-spacing: 0.09em;
+  color: #2D6B4F;
+  background: rgba(45,107,79,0.10);
+  padding: 2px 7px;
+  border-radius: 20px;
 }
 
 /* ── CONTACT PAGE ────────────────────────────────────── */
@@ -1158,18 +1167,18 @@ a.contact-detail-value:hover { color: var(--accent); }
 .modal {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
+  border-radius: 20px;
+  padding: 36px;
   width: 100%;
   max-width: 500px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 40px rgba(31,61,44,0.10), 0 1px 4px rgba(31,61,44,0.06);
 }
 
 .modal h2 {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 400;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .modal p {
