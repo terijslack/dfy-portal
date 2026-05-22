@@ -612,7 +612,7 @@ body {
 }
 
 /* ── PLAN SELECTION GRID ─────────────────────────────── */
-.modal-wide {
+.modal.modal-wide {
   max-width: 1040px;
   width: 96vw;
   max-height: 92vh;
