@@ -628,6 +628,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 18px;
+  padding-top: 26px;
 }
 
 .plan-option {
@@ -691,16 +692,18 @@ body {
 
 .plan-option-tag {
   position: absolute;
-  top: 9px;
-  right: 9px;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: #2D6B4F;
   background: rgba(45,107,79,0.10);
-  padding: 2px 7px;
+  padding: 2px 10px;
   border-radius: 20px;
+  white-space: nowrap;
 }
 
 /* ── CONTACT PAGE ────────────────────────────────────── */
