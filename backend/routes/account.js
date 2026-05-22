@@ -50,6 +50,40 @@ router.get('/subscription', requireLogin, async (req, res) => {
   }
 });
 
+// PUT /api/account/profile
+router.put('/profile', requireLogin, async (req, res) => {
+  let { name, email } = req.body;
+  name  = (name  || '').trim();
+  email = (email || '').trim().toLowerCase();
+
+  if (!name)  return res.status(400).json({ error: 'Name cannot be empty.' });
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+
+  try {
+    const dupe = await pool.query(
+      'SELECT id FROM clients WHERE email = $1 AND id != $2',
+      [email, req.user.id]
+    );
+    if (dupe.rows.length > 0) {
+      return res.status(409).json({ error: 'That email is already in use.' });
+    }
+
+    await pool.query(
+      'UPDATE clients SET name = $1, email = $2 WHERE id = $3',
+      [name, email, req.user.id]
+    );
+
+    req.session.user = { ...req.session.user, name, email };
+
+    res.json({ success: true, name, email });
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ error: 'Could not save changes. Try again.' });
+  }
+});
+
 // POST /api/account/change-plan
 router.post('/change-plan', requireLogin, async (req, res) => {
   const { new_plan } = req.body;
