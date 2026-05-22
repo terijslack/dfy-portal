@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CURRENT = "Growth Engine";
+const CURRENT = "Starter Presence";
 
 const PLANS = [
   {
