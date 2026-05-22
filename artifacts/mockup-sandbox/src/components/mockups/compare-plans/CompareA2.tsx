@@ -127,7 +127,7 @@ export default function CompareA2() {
               >
                 {isCurrent && (
                   <div style={{
-                    position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)",
+                    position: "absolute", bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
                     fontSize: 9, fontWeight: 700, letterSpacing: "0.08em",
                     color: "#2D6B4F", background: "rgba(45,107,79,0.10)",
                     padding: "2px 10px", borderRadius: 20,
