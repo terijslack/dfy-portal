@@ -117,4 +117,42 @@ router.post('/change-plan', requireLogin, async (req, res) => {
   }
 });
 
+// POST /api/account/pause-plan
+router.post('/pause-plan', requireLogin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT name, email, plan FROM clients WHERE id = $1', [req.user.id]);
+    const client = result.rows[0];
+    if (!client) return res.status(404).json({ error: 'Account not found.' });
+
+    console.log(`⏸️  PAUSE REQUEST from ${client.name} (${client.email}) — current plan: ${client.plan}`);
+
+    res.json({
+      success: true,
+      message: `Your pause request has been received. We'll be in touch within 1 business day to confirm the pause and stop billing.`
+    });
+  } catch (err) {
+    console.error('Pause plan error:', err);
+    res.status(500).json({ error: 'Could not submit request. Try again.' });
+  }
+});
+
+// POST /api/account/cancel-plan
+router.post('/cancel-plan', requireLogin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT name, email, plan FROM clients WHERE id = $1', [req.user.id]);
+    const client = result.rows[0];
+    if (!client) return res.status(404).json({ error: 'Account not found.' });
+
+    console.log(`❌ CANCEL REQUEST from ${client.name} (${client.email}) — current plan: ${client.plan}`);
+
+    res.json({
+      success: true,
+      message: `Your cancellation request has been received. We'll reach out within 1 business day to confirm and walk you through the offboarding process.`
+    });
+  } catch (err) {
+    console.error('Cancel plan error:', err);
+    res.status(500).json({ error: 'Could not submit request. Try again.' });
+  }
+});
+
 module.exports = router;

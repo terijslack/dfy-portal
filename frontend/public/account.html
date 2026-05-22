@@ -108,6 +108,59 @@
       transition: background 0.12s;
     }
     .btn-profile-cancel:hover { background: rgba(31,61,44,0.04); }
+
+    .modal-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 16px;
+      color: #9AA199;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .modal-divider::before,
+    .modal-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(31,61,44,0.1);
+    }
+
+    .plan-grid-actions {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .plan-option-pause {
+      border-color: rgba(180,120,0,0.2) !important;
+      cursor: pointer;
+    }
+    .plan-option-pause:hover {
+      border-color: rgba(180,120,0,0.45) !important;
+      background: rgba(180,120,0,0.03);
+    }
+    .plan-option-pause.plan-option-selected {
+      border-color: #b47800 !important;
+      background: rgba(180,120,0,0.05);
+      box-shadow: 0 0 0 3px rgba(180,120,0,0.12);
+    }
+    .plan-option-pause .plan-option-name { color: #7a5200; }
+
+    .plan-option-cancel {
+      border-color: rgba(125,42,3,0.2) !important;
+      cursor: pointer;
+    }
+    .plan-option-cancel:hover {
+      border-color: rgba(125,42,3,0.4) !important;
+      background: rgba(125,42,3,0.03);
+    }
+    .plan-option-cancel.plan-option-selected {
+      border-color: #7D2A03 !important;
+      background: rgba(125,42,3,0.05);
+      box-shadow: 0 0 0 3px rgba(125,42,3,0.12);
+    }
+    .plan-option-cancel .plan-option-name { color: #7D2A03; }
   </style>
 </head>
 <body class="dashboard-page">
@@ -256,14 +309,29 @@
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal modal-wide">
-      <h2>Change Your Plan</h2>
-      <p class="modal-subtitle">Select a plan below and we'll reach out to confirm the change.</p>
+      <h2 id="modalTitle">Manage Your Plan</h2>
+      <p class="modal-subtitle" id="modalSubtitle">Select a plan below and we'll reach out to confirm the change.</p>
       <div class="plan-grid" id="planGrid"></div>
+
+      <div class="modal-divider">
+        <span>Other options</span>
+      </div>
+      <div class="plan-grid plan-grid-actions" id="planGridActions">
+        <div class="plan-option plan-option-pause" id="plan-pause" onclick="selectAction('pause')">
+          <div class="plan-option-name">Pause Plan</div>
+          <div class="plan-option-posts">Temporarily suspend your account. Billing stops until you resume.</div>
+        </div>
+        <div class="plan-option plan-option-cancel" id="plan-cancel" onclick="selectAction('cancel')">
+          <div class="plan-option-name">Cancel Plan</div>
+          <div class="plan-option-posts">Cancel your subscription. Your team will stop managing your accounts.</div>
+        </div>
+      </div>
+
       <div class="success-msg" id="modalSuccess" style="display:none"></div>
       <div class="error-msg" id="modalError"></div>
       <div class="modal-actions" id="modalActions">
-        <button class="btn-secondary" id="cancelModal">Cancel</button>
-        <button class="btn-primary" id="confirmPlanBtn" disabled>Request Change</button>
+        <button class="btn-secondary" id="cancelModal">Close</button>
+        <button class="btn-primary" id="confirmPlanBtn" disabled>Confirm</button>
       </div>
       <div id="modalSuccessActions" style="display:none; margin-top:20px; text-align:center;">
         <a href="/dashboard" class="btn-primary" style="text-decoration:none; display:inline-block;">← Back to Portal</a>
@@ -401,7 +469,15 @@
       document.getElementById('modalError').textContent = '';
       document.getElementById('modalSuccess').style.display = 'none';
       document.getElementById('modalActions').style.display = 'flex';
+      document.getElementById('modalSuccessActions').style.display = 'none';
       document.getElementById('confirmPlanBtn').disabled = true;
+      document.getElementById('confirmPlanBtn').textContent = 'Confirm';
+      document.getElementById('planGrid').style.opacity = '';
+      document.getElementById('planGrid').style.pointerEvents = '';
+      document.getElementById('planGridActions').style.opacity = '';
+      document.getElementById('planGridActions').style.pointerEvents = '';
+      document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
+
       const grid = document.getElementById('planGrid');
       grid.innerHTML = availablePlans.map(plan => `
         <div class="plan-option ${plan.current ? 'plan-option-current' : ''}" onclick="${plan.current ? '' : `selectPlan('${plan.key}')`}" id="plan-${plan.key.replace(/\s+/g, '-')}">
@@ -417,27 +493,62 @@
     function selectPlan(key) {
       selectedPlan = key;
       document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
-      const el = document.getElementById('plan-' + key);
+      const el = document.getElementById('plan-' + key.replace(/\s+/g, '-'));
       if (el) el.classList.add('plan-option-selected');
       document.getElementById('confirmPlanBtn').disabled = false;
+      document.getElementById('confirmPlanBtn').textContent = 'Request Change';
+    }
+
+    function selectAction(action) {
+      selectedPlan = action;
+      document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
+      const el = document.getElementById('plan-' + action);
+      if (el) el.classList.add('plan-option-selected');
+      document.getElementById('confirmPlanBtn').disabled = false;
+      document.getElementById('confirmPlanBtn').textContent =
+        action === 'pause'  ? 'Request Pause'  :
+        action === 'cancel' ? 'Request Cancellation' : 'Confirm';
     }
 
     document.getElementById('confirmPlanBtn').addEventListener('click', async () => {
       if (!selectedPlan) return;
       const btn = document.getElementById('confirmPlanBtn');
+      const originalText = btn.textContent;
       btn.textContent = 'Sending…'; btn.disabled = true;
       document.getElementById('modalError').textContent = '';
+
+      let endpoint, body;
+      if (selectedPlan === 'pause') {
+        endpoint = '/api/account/pause-plan';
+        body = {};
+      } else if (selectedPlan === 'cancel') {
+        endpoint = '/api/account/cancel-plan';
+        body = {};
+      } else {
+        endpoint = '/api/account/change-plan';
+        body = { new_plan: selectedPlan };
+      }
+
       try {
-        const res = await fetch('/api/account/change-plan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_plan: selectedPlan }) });
+        const res  = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const data = await res.json();
-        if (!res.ok) { document.getElementById('modalError').textContent = data.error || 'Could not submit. Try again.'; btn.textContent = 'Request Change'; btn.disabled = false; return; }
+        if (!res.ok) {
+          document.getElementById('modalError').textContent = data.error || 'Could not submit. Try again.';
+          btn.textContent = originalText; btn.disabled = false;
+          return;
+        }
         document.getElementById('modalSuccess').textContent = data.message;
         document.getElementById('modalSuccess').style.display = 'block';
         document.getElementById('modalActions').style.display = 'none';
         document.getElementById('modalSuccessActions').style.display = 'block';
         document.getElementById('planGrid').style.opacity = '0.4';
         document.getElementById('planGrid').style.pointerEvents = 'none';
-      } catch (err) { document.getElementById('modalError').textContent = 'Network error. Try again.'; btn.textContent = 'Request Change'; btn.disabled = false; }
+        document.getElementById('planGridActions').style.opacity = '0.4';
+        document.getElementById('planGridActions').style.pointerEvents = 'none';
+      } catch {
+        document.getElementById('modalError').textContent = 'Network error. Try again.';
+        btn.textContent = originalText; btn.disabled = false;
+      }
     });
 
     document.getElementById('cancelModal').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
