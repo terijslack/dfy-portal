@@ -10,11 +10,9 @@ const BRAND = {
 };
 
 type Post = { id: number; date: string; likes: number; comments: number; color: string };
+type PlatformMeta = { name: string; color: string; gradient?: string; prefix: string; desc: string; posts: Post[] };
 
-type PlatformMeta = {
-  name: string; color: string; gradient?: string; prefix: string; desc: string; posts: Post[];
-};
-
+// Only 3 primary fixed tiles now
 const PRIMARY: Record<string, PlatformMeta> = {
   instagram: {
     name: "Instagram", gradient: "linear-gradient(135deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888)", color: "#dc2743", prefix: "@", desc: "Photos & Reels",
@@ -40,17 +38,11 @@ const PRIMARY: Record<string, PlatformMeta> = {
       { id: 3, date: "May 5",  likes: 51, comments: 8, color: "#a8c4e4" },
     ],
   },
-  youtube: {
-    name: "YouTube", color: "#FF0000", prefix: "@", desc: "Videos & Shorts",
-    posts: [
-      { id: 1, date: "May 15", likes: 310, comments: 42, color: "#ffe0e0" },
-      { id: 2, date: "May 8",  likes: 188, comments: 27, color: "#ffc8c8" },
-      { id: 3, date: "Apr 30", likes: 254, comments: 31, color: "#ffb0b0" },
-    ],
-  },
 };
 
+// YouTube moved into "Other"
 const OTHER_PLATFORMS: Record<string, { name: string; color: string; prefix: string }> = {
+  youtube:   { name: "YouTube",     color: "#FF0000", prefix: "@" },
   tiktok:    { name: "TikTok",      color: "#010101", prefix: "@" },
   twitter:   { name: "X (Twitter)", color: "#000",    prefix: "@" },
   pinterest: { name: "Pinterest",   color: "#E60023", prefix: "@" },
@@ -66,8 +58,7 @@ const SAMPLE_CONNECTED: Record<string, { username: string; hasPassword: boolean 
 const IgIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>;
 const FbIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>;
 const LiIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>;
-const YtIcon = ({ s = 20 }: { s?: number }) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>;
-const ICONS: Record<string, ({ s }: { s?: number }) => JSX.Element> = { instagram: IgIcon, facebook: FbIcon, linkedin: LiIcon, youtube: YtIcon };
+const ICONS: Record<string, ({ s }: { s?: number }) => JSX.Element> = { instagram: IgIcon, facebook: FbIcon, linkedin: LiIcon };
 
 const LockIcon = ({ size = 11 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -82,19 +73,13 @@ const MsgIcon  = () => <svg width="10" height="10" viewBox="0 0 24 24" fill="non
 const ShareIcon = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>;
 const PlusIcon = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>;
 
-// Reusable password input with show/hide toggle
 function PwField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [show, setShow] = useState(false);
   return (
     <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 8, overflow: "hidden", background: "#fafaf8", marginTop: 6 }}>
       <span style={{ padding: "0 8px", color: "#9AA199", flexShrink: 0, display: "flex", alignItems: "center" }}><LockIcon size={12} /></span>
-      <input
-        type={show ? "text" : "password"}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder="Account password (optional)"
-        style={{ flex: 1, border: "none", background: "transparent", padding: "9px 4px 9px 0", fontSize: 12, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }}
-      />
+      <input type={show ? "text" : "password"} value={value} onChange={e => onChange(e.target.value)} placeholder="Account password (optional)"
+        style={{ flex: 1, border: "none", background: "transparent", padding: "9px 4px 9px 0", fontSize: 12, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
       <button onClick={() => setShow(s => !s)} type="button"
         style={{ background: "transparent", border: "none", cursor: "pointer", padding: "0 10px", color: BRAND.slate, display: "flex", alignItems: "center" }}>
         <EyeIcon crossed={show} />
@@ -104,7 +89,7 @@ function PwField({ value, onChange }: { value: string; onChange: (v: string) => 
 }
 
 export function VariantBPosts() {
-  const [connected, setConnected] = useState<Record<string, { username: string; hasPassword: boolean }>>(SAMPLE_CONNECTED);
+  const [connected, setConnected]             = useState<Record<string, { username: string; hasPassword: boolean }>>(SAMPLE_CONNECTED);
   const [otherPlatform, setOtherPlatform]     = useState<string>("");
   const [otherHandle, setOtherHandle]         = useState<string>("");
   const [otherPassword, setOtherPassword]     = useState<string>("");
@@ -168,14 +153,14 @@ export function VariantBPosts() {
             <p style={{ fontSize: 13, color: BRAND.slate, margin: 0 }}>Connect your accounts — handles and login credentials are stored securely for your team.</p>
           </div>
 
-          {/* 2×2 grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 860, marginBottom: 20 }}>
+          {/* 3-column row for primary platforms */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, maxWidth: 860, marginBottom: 20 }}>
             {Object.entries(PRIMARY).map(([key, p]) => {
-              const conn      = connected[key];
-              const isConn    = !!conn;
-              const isExp     = !!expanded[key];
-              const isAdding  = adding === key;
-              const Icon      = ICONS[key];
+              const conn     = connected[key];
+              const isConn   = !!conn;
+              const isExp    = !!expanded[key];
+              const isAdding = adding === key;
+              const Icon     = ICONS[key];
 
               return (
                 <div key={key} style={{ background: "#fff", border: `2px solid ${isConn ? "rgba(45,107,79,0.2)" : "rgba(31,61,44,0.09)"}`, borderRadius: 16, overflow: "hidden" }}>
@@ -185,37 +170,37 @@ export function VariantBPosts() {
                     <div style={{ width: 40, height: 40, borderRadius: 10, background: isConn ? (p.gradient || p.color) : "rgba(31,61,44,0.06)", display: "flex", alignItems: "center", justifyContent: "center", color: isConn ? "#fff" : BRAND.slate, flexShrink: 0 }}>
                       <Icon s={20} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: BRAND.forest, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: BRAND.forest, display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                         {p.name}
                         {isConn && conn.hasPassword && (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: BRAND.green, background: "rgba(45,107,79,0.08)", borderRadius: 20, padding: "2px 7px", fontWeight: 600 }}>
-                            <LockIcon size={9} /> Password saved
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 9, color: BRAND.green, background: "rgba(45,107,79,0.08)", borderRadius: 20, padding: "2px 6px", fontWeight: 600 }}>
+                            <LockIcon size={8} /> Saved
                           </span>
                         )}
                       </div>
-                      <div style={{ fontSize: 11, color: BRAND.slate }}>{isConn ? `${p.prefix}${conn.username}` : p.desc}</div>
+                      <div style={{ fontSize: 11, color: BRAND.slate, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {isConn ? `${p.prefix}${conn.username}` : p.desc}
+                      </div>
                     </div>
                     {isConn && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                        <span style={{ fontSize: 10, background: "rgba(45,107,79,0.09)", color: BRAND.green, padding: "3px 9px", borderRadius: 20, fontWeight: 600 }}>Active</span>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={BRAND.slate} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isExp ? "rotate(180deg)" : "none", transition: "transform 0.18s" }}><polyline points="2,4 6,8 10,4"/></svg>
-                      </div>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={BRAND.slate} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ transform: isExp ? "rotate(180deg)" : "none", transition: "transform 0.18s", flexShrink: 0 }}><polyline points="2,4 6,8 10,4"/></svg>
                     )}
                   </div>
 
                   {/* Expanded posts */}
                   {isConn && isExp && (
                     <div>
-                      <div style={{ display: "flex", gap: 8, padding: "12px 18px 10px" }}>
+                      <div style={{ display: "flex", gap: 6, padding: "12px 14px 10px" }}>
                         {p.posts.map(post => (
                           <div key={post.id} style={{ flex: 1, borderRadius: 8, overflow: "hidden", border: "1px solid rgba(31,61,44,0.08)" }}>
-                            <div style={{ height: 68, background: post.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(31,61,44,0.18)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                            <div style={{ height: 56, background: post.color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(31,61,44,0.18)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
                             </div>
-                            <div style={{ padding: "6px 7px", background: "#fff" }}>
-                              <div style={{ fontSize: 9, color: BRAND.slate, marginBottom: 3 }}>{post.date}</div>
-                              <div style={{ display: "flex", gap: 7 }}>
+                            <div style={{ padding: "5px 6px", background: "#fff" }}>
+                              <div style={{ fontSize: 9, color: BRAND.slate, marginBottom: 2 }}>{post.date}</div>
+                              <div style={{ display: "flex", gap: 5 }}>
                                 <span style={{ fontSize: 9, color: BRAND.slate, display: "flex", alignItems: "center", gap: 2 }}><HeartIcon /> {post.likes}</span>
                                 <span style={{ fontSize: 9, color: BRAND.slate, display: "flex", alignItems: "center", gap: 2 }}><MsgIcon /> {post.comments}</span>
                               </div>
@@ -223,40 +208,38 @@ export function VariantBPosts() {
                           </div>
                         ))}
                       </div>
-                      <div style={{ padding: "0 18px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: 11, color: BRAND.slate }}>3 recent posts</span>
-                        <button style={{ fontSize: 11, color: BRAND.green, fontWeight: 600, background: "transparent", border: "none", cursor: "pointer", padding: 0 }}>View all →</button>
+                      <div style={{ padding: "0 14px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 10, color: BRAND.slate }}>3 recent posts</span>
+                        <button style={{ fontSize: 10, color: BRAND.green, fontWeight: 600, background: "transparent", border: "none", cursor: "pointer", padding: 0 }}>View all →</button>
                       </div>
-                      <div style={{ padding: "10px 18px 12px", borderTop: "1px solid rgba(31,61,44,0.06)", display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ padding: "8px 14px 10px", borderTop: "1px solid rgba(31,61,44,0.06)", display: "flex", justifyContent: "flex-end" }}>
                         <button onClick={() => { const c = { ...connected }; delete c[key]; setConnected(c); setExpanded(p => ({ ...p, [key]: false })); }}
-                          style={{ fontSize: 11, color: BRAND.rust, background: "transparent", border: `1.5px solid rgba(125,42,3,0.2)`, borderRadius: 6, padding: "5px 12px", cursor: "pointer" }}>Remove</button>
+                          style={{ fontSize: 11, color: BRAND.rust, background: "transparent", border: `1.5px solid rgba(125,42,3,0.2)`, borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}>Remove</button>
                       </div>
                     </div>
                   )}
 
                   {/* Add form */}
                   {!isConn && (
-                    <div style={{ padding: "14px 18px" }}>
+                    <div style={{ padding: "12px 14px" }}>
                       {isAdding ? (
                         <>
-                          {/* Handle row */}
-                          <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.18)", borderRadius: 8, overflow: "hidden", marginBottom: 0, background: "#fafaf8" }}>
+                          <div style={{ display: "flex", alignItems: "center", border: "1.5px solid rgba(31,61,44,0.18)", borderRadius: 8, overflow: "hidden", background: "#fafaf8" }}>
                             <span style={{ padding: "0 8px", fontSize: 13, color: "#9AA199" }}>{p.prefix}</span>
                             <input value={handle} onChange={e => setHandle(e.target.value)} placeholder="your_handle" autoFocus
-                              style={{ flex: 1, border: "none", background: "transparent", padding: "9px 8px 9px 0", fontSize: 13, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
+                              style={{ flex: 1, border: "none", background: "transparent", padding: "8px 8px 8px 0", fontSize: 12, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
                           </div>
-                          {/* Password row */}
                           <PwField value={password} onChange={setPassword} />
                           <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                             <button onClick={() => saveMain(key)}
-                              style={{ flex: 1, background: BRAND.green, color: "#fff", border: "none", borderRadius: 7, padding: "8px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Save</button>
+                              style={{ flex: 1, background: BRAND.green, color: "#fff", border: "none", borderRadius: 7, padding: "7px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Save</button>
                             <button onClick={() => { setAdding(null); setHandle(""); setPassword(""); }}
-                              style={{ background: "transparent", color: BRAND.slate, border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 7, padding: "8px 12px", fontSize: 12, cursor: "pointer" }}>Cancel</button>
+                              style={{ background: "transparent", color: BRAND.slate, border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 7, padding: "7px 10px", fontSize: 12, cursor: "pointer" }}>Cancel</button>
                           </div>
                         </>
                       ) : (
                         <button onClick={() => setAdding(key)}
-                          style={{ width: "100%", background: "rgba(31,61,44,0.03)", color: BRAND.forest, border: "1.5px dashed rgba(31,61,44,0.18)", borderRadius: 10, padding: "12px", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                          style={{ width: "100%", background: "rgba(31,61,44,0.03)", color: BRAND.forest, border: "1.5px dashed rgba(31,61,44,0.18)", borderRadius: 10, padding: "11px", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                           <PlusIcon /> Add {p.name}
                         </button>
                       )}
@@ -297,11 +280,9 @@ export function VariantBPosts() {
                   </div>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: BRAND.forest }}>Other Platform</div>
-                    <div style={{ fontSize: 11, color: BRAND.slate }}>TikTok, X, Pinterest, Snapchat, Threads</div>
+                    <div style={{ fontSize: 11, color: BRAND.slate }}>YouTube, TikTok, X, Pinterest, Snapchat, Threads</div>
                   </div>
                 </div>
-
-                {/* Platform + handle row */}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
                   <select value={otherPlatform} onChange={e => setOtherPlatform(e.target.value)}
                     style={{ border: "1.5px solid rgba(31,61,44,0.15)", borderRadius: 8, padding: "9px 12px", fontSize: 13, fontFamily: "Inter,sans-serif", color: BRAND.forest, background: "#fafaf8", minWidth: 160 }}>
@@ -316,10 +297,7 @@ export function VariantBPosts() {
                       style={{ flex: 1, border: "none", background: "transparent", padding: "9px 10px 9px 0", fontSize: 13, outline: "none", fontFamily: "Inter,sans-serif", color: BRAND.forest }} />
                   </div>
                 </div>
-
-                {/* Password row */}
                 <PwField value={otherPassword} onChange={setOtherPassword} />
-
                 <button onClick={saveOther} disabled={!otherPlatform || !otherHandle}
                   style={{ marginTop: 10, width: "100%", background: otherPlatform && otherHandle ? BRAND.green : "rgba(31,61,44,0.12)", color: otherPlatform && otherHandle ? "#fff" : BRAND.slate, border: "none", borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: otherPlatform && otherHandle ? "pointer" : "not-allowed", transition: "background 0.15s" }}>
                   Connect
