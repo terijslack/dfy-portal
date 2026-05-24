@@ -20,7 +20,11 @@ async function seed() {
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
+        business_name VARCHAR(255),
         is_admin BOOLEAN DEFAULT FALSE,
+        status VARCHAR(50) DEFAULT 'active',
+        stripe_price_id VARCHAR(255),
+        stripe_customer_id VARCHAR(255),
         created_at TIMESTAMP DEFAULT NOW()
       );
 
@@ -36,6 +40,9 @@ async function seed() {
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
       );
+
+      CREATE INDEX IF NOT EXISTS idx_posts_client_id ON posts(client_id);
+      CREATE INDEX IF NOT EXISTS idx_posts_status ON posts(status);
     `);
 
     // Hash the passwords before storing them (NEVER store plain text passwords)
@@ -44,15 +51,15 @@ async function seed() {
 
     // Create admin account (that's you)
     await pool.query(`
-      INSERT INTO clients (name, email, password, is_admin)
-      VALUES ('Admin', 'admin@dfymarketing.com', $1, true)
+      INSERT INTO clients (name, email, password, is_admin, status)
+      VALUES ('Admin', 'admin@dfymarketing.com', $1, true, 'active')
       ON CONFLICT (email) DO NOTHING
     `, [adminPassword]);
 
     // Create a test client
     const clientResult = await pool.query(`
-      INSERT INTO clients (name, email, password, is_admin)
-      VALUES ('Bloom Wellness', 'test@example.com', $1, false)
+      INSERT INTO clients (name, email, password, business_name, is_admin, status)
+      VALUES ('Bloom Wellness', 'test@example.com', $1, 'Bloom Wellness', false, 'active')
       ON CONFLICT (email) DO UPDATE SET name = 'Bloom Wellness'
       RETURNING id
     `, [clientPassword]);
