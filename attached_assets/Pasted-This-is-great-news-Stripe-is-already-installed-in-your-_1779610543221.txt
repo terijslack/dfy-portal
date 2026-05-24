@@ -1,0 +1,78 @@
+This is great news — **Stripe is already installed in your project!** That saves a step. Now I know exactly what to write.
+
+Here's a complete prompt to paste directly into your Replit Agent chat. It will implement the full Stripe subscription flow:
+
+---
+
+Copy everything below and paste it into the Replit Agent chat:
+
+---
+
+```
+Add Stripe subscription payments to the signup flow. Here's exactly what needs to happen:
+
+FLOW:
+1. Client creates account (already works)
+2. After account is created, redirect them to a Stripe Checkout page for their selected plan
+3. Stripe handles payment, then redirects back to /payment-success
+4. A Stripe webhook marks their account as active in the database
+5. They land in the portal dashboard
+
+DATABASE CHANGES — add these columns to the users table:
+- stripe_customer_id VARCHAR(255)
+- stripe_subscription_id VARCHAR(255)  
+- subscription_status VARCHAR(50) DEFAULT 'inactive'
+- plan VARCHAR(100)
+- subscription_start_date TIMESTAMP
+
+NEW ENVIRONMENT VARIABLES NEEDED (add to .env):
+- STRIPE_SECRET_KEY
+- STRIPE_WEBHOOK_SECRET
+- STRIPE_PRICE_ONLINE_PRESENCE
+- STRIPE_PRICE_GROWTH_ENGINE
+- STRIPE_PRICE_DFY_PARTNER
+- BASE_URL
+
+NEW ROUTE — POST /api/create-checkout-session:
+- Receives: { userId, plan } where plan is 'online-presence', 'growth-engine', or 'done-for-you-partner'
+- Creates a Stripe Customer for the user if one doesn't exist, saves stripe_customer_id to DB
+- Creates a Stripe Checkout Session in subscription mode using the matching STRIPE_PRICE_* env var
+- success_url should be BASE_URL + /payment-success?session_id={CHECKOUT_SESSION_ID}
+- cancel_url should be BASE_URL + /signup
+- Pass userId and plan in subscription_data.metadata
+- Returns { url: session.url } and the frontend redirects to it
+
+MODIFY the account creation route:
+- After successfully creating the user account, instead of redirecting to the portal, 
+  return the new userId and selected plan to the frontend
+- Frontend then calls POST /api/create-checkout-session with userId and plan
+- Frontend redirects to the Stripe URL returned
+
+NEW ROUTE — POST /webhook/stripe:
+- This route must use express.raw({type: 'application/json'}) middleware, NOT express.json()
+- Verify the webhook signature using STRIPE_WEBHOOK_SECRET
+- Handle these events:
+  * checkout.session.completed → update user: subscription_status='active', 
+    stripe_subscription_id=session.subscription, subscription_start_date=NOW()
+    Get userId from event.data.object.metadata or subscription_data.metadata
+  * customer.subscription.deleted → update user: subscription_status='cancelled'
+  * invoice.payment_failed → update user: subscription_status='past_due'
+- Return { received: true }
+
+NEW PAGE — /payment-success:
+- Simple branded page matching the site's cream/green design
+- Shows "You're all set!" message with the DFY Marketing logo
+- Says "Your subscription is active. We're setting up your account and will be in touch shortly."
+- Has a button "Go to your dashboard" linking to /dashboard
+- The session_id from the URL query param can be ignored for now
+
+IMPORTANT: Make sure the webhook route is registered BEFORE any global express.json() middleware, 
+or the raw body parsing will break Stripe signature verification.
+```
+
+---
+
+Once the Agent implements that, come back here and I'll give you the exact steps to:
+1. Create your 3 products in the Stripe dashboard and get the price IDs
+2. Add all the environment variables in both Replit and Railway
+3. Set up the webhook endpoint in Stripe
