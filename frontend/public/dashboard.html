@@ -5,16 +5,326 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Portal — DFY Marketing</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <style>
+    /* ── DASHBOARD OVERVIEW STYLES ───────────────────── */
+    .db-header { margin-bottom: 20px; }
+    .db-header h1 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--color-forest);
+      margin-bottom: 2px;
+    }
+    .db-header p { font-size: 13px; color: var(--color-slate-light); }
+
+    /* Hero stat cards */
+    .hero-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hero-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 0.5px solid var(--color-border);
+      padding: 18px 20px;
+    }
+    .hero-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--color-slate-light);
+      margin-bottom: 8px;
+    }
+    .hero-num {
+      font-size: 30px;
+      font-weight: 400;
+      font-family: var(--font-serif);
+      color: var(--color-forest);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .hero-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .hero-change.up   { background: rgba(59,109,17,0.1);  color: #3B6D11; }
+    .hero-change.down { background: rgba(163,45,45,0.08); color: #A32D2D; }
+    .hero-change.neutral { background: rgba(107,117,107,0.1); color: var(--color-slate); }
+    .hero-sub { font-size: 11px; color: var(--color-slate-light); margin-top: 3px; }
+
+    /* Generic card */
+    .db-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 0.5px solid var(--color-border);
+      padding: 20px;
+    }
+    .db-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .db-card-title { font-size: 13px; font-weight: 500; color: var(--color-forest); }
+    .db-card-link {
+      font-size: 12px;
+      color: var(--color-green);
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .db-card-link:hover { color: var(--color-green-dark); }
+
+    /* Two-col layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+    }
+
+    /* Bar chart */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 90px;
+      margin-bottom: 8px;
+    }
+    .bar-group { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+    .bar-pair  { display: flex; align-items: flex-end; gap: 2px; height: 82px; }
+    .bar { border-radius: 3px 3px 0 0; min-height: 4px; width: 14px; }
+    .bar.prev { background: rgba(45,107,79,0.18); }
+    .bar.curr { background: var(--color-green); }
+    .bar-label { font-size: 10px; color: var(--color-slate-light); }
+    .chart-legend { display: flex; gap: 14px; margin-top: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--color-slate); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* Platform rows */
+    .platform-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 0.5px solid rgba(31,61,44,0.08);
+    }
+    .platform-row:first-child { border-top: none; padding-top: 0; }
+    .platform-icon-wrap {
+      width: 26px; height: 26px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .platform-name { font-size: 12px; color: #444441; width: 76px; flex-shrink: 0; }
+    .platform-bar-wrap { flex: 1; height: 5px; background: rgba(31,61,44,0.08); border-radius: 3px; overflow: hidden; }
+    .platform-bar { height: 100%; border-radius: 3px; }
+    .platform-val { font-size: 12px; font-weight: 500; color: var(--color-forest); width: 40px; text-align: right; }
+    .platform-change { font-size: 10px; font-weight: 600; width: 34px; text-align: right; }
+    .platform-change.up   { color: #3B6D11; }
+    .platform-change.down { color: #A32D2D; }
+
+    /* Needs approval */
+    .post-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 0.5px solid rgba(31,61,44,0.08);
+    }
+    .post-item:first-child { border-top: none; padding-top: 0; }
+    .post-icon-sm {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: rgba(45,107,79,0.08);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .post-body { flex: 1; min-width: 0; }
+    .post-caption {
+      font-size: 12px; color: #444441;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+    }
+    .post-meta { display: flex; gap: 6px; align-items: center; }
+    .badge-review {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+      background: rgba(186,117,23,0.12); color: #854F0B;
+    }
+    .badge-approved {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+      background: rgba(59,109,17,0.1); color: #3B6D11;
+    }
+    .post-date { font-size: 10px; color: var(--color-slate-light); }
+    .btn-approve-sm {
+      background: rgba(59,109,17,0.1); color: #3B6D11;
+      border: 1px solid rgba(59,109,17,0.2); border-radius: 5px;
+      font-size: 10px; font-weight: 500; padding: 3px 9px;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; gap: 3px;
+      transition: background 0.2s;
+    }
+    .btn-approve-sm:hover { background: rgba(59,109,17,0.2); }
+    .btn-approve-sm.done { opacity: 0.5; cursor: default; }
+
+    /* GBP mini grid */
+    .gbp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .gbp-mini {
+      background: rgba(45,107,79,0.05); border-radius: 8px; padding: 12px; text-align: center;
+    }
+    .gbp-mini-num {
+      font-size: 19px; font-weight: 400;
+      font-family: var(--font-serif); color: var(--color-forest);
+    }
+    .gbp-mini-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--color-slate-light); margin-top: 2px;
+    }
+    .gbp-mini-change { font-size: 10px; color: #3B6D11; font-weight: 600; }
+
+    /* Locked card */
+    .locked-card {
+      background: #fff; border-radius: 10px;
+      border: 0.5px solid var(--color-border);
+      padding: 20px; position: relative; overflow: hidden;
+    }
+    .locked-overlay {
+      position: absolute; inset: 0;
+      background: rgba(245,242,234,0.92);
+      border-radius: 10px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 5px; z-index: 2;
+    }
+    .lock-label  { font-size: 12px; font-weight: 600; color: var(--color-forest); }
+    .lock-sub    { font-size: 11px; color: var(--color-slate); text-align: center; line-height: 1.4; max-width: 150px; }
+    .lock-badge  {
+      background: var(--color-rust); color: var(--color-cream);
+      font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; margin-top: 4px;
+      text-decoration: none;
+    }
+    .blurred { filter: blur(3px); pointer-events: none; opacity: 0.35; }
+    .email-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-top: 0.5px solid rgba(31,61,44,0.08);
+    }
+    .email-row:first-child { border-top: none; }
+    .email-subject { font-size: 12px; color: #444441; flex: 1; }
+    .email-stat    { font-size: 11px; color: var(--color-slate); width: 50px; text-align: right; }
+
+    /* Upcoming */
+    .upcoming-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-top: 0.5px solid rgba(31,61,44,0.08);
+    }
+    .upcoming-item:first-child { border-top: none; padding-top: 0; }
+    .upcoming-date { font-size: 11px; color: var(--color-slate-light); width: 44px; flex-shrink: 0; }
+    .upcoming-caption {
+      font-size: 12px; color: #444441; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .upcoming-platform {
+      width: 20px; height: 20px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* Section divider */
+    .section-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0 12px; }
+    .divider-line { flex: 1; height: 0.5px; background: rgba(31,61,44,0.1); }
+    .divider-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--color-slate-light); white-space: nowrap;
+    }
+
+    /* Team suggestions */
+    .suggestion {
+      background: rgba(245,242,234,0.6);
+      border: 1px solid rgba(125,42,3,0.15);
+      border-radius: 8px; padding: 13px 14px; margin-bottom: 8px;
+    }
+    .suggestion:last-child { margin-bottom: 0; }
+    .suggestion-top { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+    .suggestion-avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--color-forest);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 600; color: var(--color-cream); flex-shrink: 0;
+    }
+    .suggestion-from { font-size: 11px; font-weight: 600; color: var(--color-forest); flex: 1; }
+    .suggestion-tag {
+      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+      background: rgba(125,42,3,0.1); color: var(--color-rust);
+    }
+    .suggestion-body { font-size: 12px; color: #444441; line-height: 1.55; margin-bottom: 9px; }
+    .suggestion-body strong { color: var(--color-forest); font-weight: 600; }
+    .suggestion-actions { display: flex; gap: 8px; }
+    .btn-yes {
+      background: var(--color-forest); color: var(--color-cream);
+      border: none; border-radius: 6px;
+      font-size: 11px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-yes:hover { background: #14291D; }
+    .btn-no {
+      background: transparent; color: var(--color-slate);
+      border: 1px solid rgba(31,61,44,0.15); border-radius: 6px;
+      font-size: 11px; padding: 6px 14px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-no:hover { background: rgba(31,61,44,0.05); }
+
+    /* Empty states */
+    .empty-state {
+      text-align: center; padding: 20px 0;
+      font-size: 12px; color: var(--color-slate-light);
+    }
+
+    /* Onboarding banner */
+    #onboardingBanner {
+      background: #fff8f0;
+      border: 1.5px solid rgba(125,42,3,0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-row { grid-template-columns: repeat(2,1fr); }
+      .two-col  { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body class="dashboard-page">
 
   <header class="header">
     <div class="header-inner">
-      <a href="/dashboard" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+      <a href="/dashboard" class="brand-wordmark">
+        <span class="brand-wordmark-serif">Done For You</span>
+        <span class="brand-wordmark-sans">Marketing</span>
+      </a>
       <div class="header-right">
         <span class="welcome-name" id="welcomeName">Loading…</span>
         <button class="btn-logout" id="logoutBtn">Sign out</button>
@@ -37,7 +347,9 @@
         </div>
         <nav>
           <a href="/posts" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            <span class="sidebar-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </span>
             Your Social Media
           </a>
           <a href="/gbp" class="sidebar-nav-item">
@@ -45,19 +357,27 @@
             Google Business Profile
           </a>
           <a href="/analytics" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            <span class="sidebar-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </span>
             Performance Analytics
           </a>
           <a href="/account" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span class="sidebar-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
             Your Account
           </a>
           <a href="/contact" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <span class="sidebar-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
             Contact Us
           </a>
           <a href="/onboarding" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
+            <span class="sidebar-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+            </span>
             Business Intake Form
           </a>
         </nav>
@@ -69,46 +389,218 @@
     </button>
 
     <main class="portal-main">
-
       <div class="portal-main-content">
 
         <!-- Onboarding banner -->
-        <div id="onboardingBanner" style="display:none; background:#fff8f0; border:1.5px solid rgba(125,42,3,0.2); border-radius:12px; padding:24px 28px; margin-bottom:28px; align-items:center; gap:20px; flex-wrap:wrap;">
+        <div id="onboardingBanner">
           <div style="flex:1; min-width:200px;">
-            <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7D2A03; margin-bottom:6px;">Action needed</div>
-            <div style="font-family:'Fraunces',serif; font-size:1.3rem; font-weight:400; color:#1F3D2C; margin-bottom:4px;">Complete your business intake form</div>
-            <div style="font-size:0.875rem; color:#6B756B; line-height:1.5;">This helps us create content that sounds like you. Takes about 5 minutes.</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7D2A03;margin-bottom:6px;">Action needed</div>
+            <div style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:400;color:#1F3D2C;margin-bottom:4px;">Complete your business intake form</div>
+            <div style="font-size:0.85rem;color:#6B756B;line-height:1.5;">This helps us create content that sounds like you. Takes about 5 minutes.</div>
           </div>
-          <a href="/onboarding" style="background:#7D2A03; color:#F5F2EA; text-decoration:none; border-radius:8px; padding:12px 24px; font-size:0.9rem; font-weight:600; white-space:nowrap; flex-shrink:0;">Complete intake form →</a>
+          <a href="/onboarding" style="background:#7D2A03;color:#F5F2EA;text-decoration:none;border-radius:8px;padding:11px 22px;font-size:0.875rem;font-weight:600;white-space:nowrap;flex-shrink:0;">Complete intake form →</a>
         </div>
 
         <!-- Greeting -->
-        <div style="margin-bottom:28px;">
-          <h1 class="home-greeting" id="homeGreeting">Welcome back!</h1>
-          <p class="home-subtitle">Your marketing is in good hands. Here's everything in one place.</p>
+        <div class="db-header">
+          <h1 id="homeGreeting">Welcome back!</h1>
+          <p id="dbSubtitle">Your marketing at a glance</p>
         </div>
 
-        <!-- Stats -->
-        <div class="portal-stat-grid">
-          <div class="portal-stat-card">
-            <div class="portal-stat-number" id="statTotal">—</div>
-            <div class="portal-stat-label">Total Posts</div>
+        <!-- Hero stats -->
+        <div class="hero-row">
+          <div class="hero-card">
+            <div class="hero-label">Posts this month</div>
+            <div class="hero-num" id="statPublished">—</div>
+            <span class="hero-change neutral" id="statPublishedSub" style="display:none"></span>
+            <div class="hero-sub" id="statPendingSub">— pending your review</div>
           </div>
-          <div class="portal-stat-card">
-            <div class="portal-stat-number" id="statPending" style="color:#7D2A03;">—</div>
-            <div class="portal-stat-label">Awaiting Review</div>
+          <div class="hero-card">
+            <div class="hero-label">Approved &amp; queued</div>
+            <div class="hero-num" id="statApproved">—</div>
+            <div class="hero-sub">Ready to publish</div>
           </div>
-          <div class="portal-stat-card">
-            <div class="portal-stat-number" id="statApproved" style="color:#2D6B4F;">—</div>
-            <div class="portal-stat-label">Approved</div>
+          <div class="hero-card">
+            <div class="hero-label">GBP views</div>
+            <div class="hero-num">142</div>
+            <span class="hero-change up"><i class="ti ti-trending-up" style="font-size:11px"></i> 9% vs last mo.</span>
+            <div class="hero-sub">23 reviews · 4.8 ★</div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-label">Engagement rate</div>
+            <div class="hero-num">3.4%</div>
+            <span class="hero-change down"><i class="ti ti-trending-down" style="font-size:11px"></i> 0.2% vs last mo.</span>
+            <div class="hero-sub">Likes, comments, shares</div>
           </div>
         </div>
 
-        <!-- Recent posts -->
-        <div class="portal-recent-card">
-          <p class="portal-recent-title">Recent Posts</p>
-          <div id="recentPostsList"><div class="loading">Loading…</div></div>
-          <a href="/posts" style="display:inline-block; margin-top:16px; font-size:13px; font-weight:600; color:#2D6B4F; text-decoration:none;">View all posts →</a>
+        <!-- Main two-col row -->
+        <div class="two-col">
+
+          <!-- Left: reach chart + platform breakdown -->
+          <div class="db-card">
+            <div class="db-card-header">
+              <div class="db-card-title">Monthly reach — all platforms</div>
+              <a href="/analytics" class="db-card-link">Full analytics →</a>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:44px"></div><div class="bar curr" style="height:52px"></div></div><div class="bar-label">Jan</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:50px"></div><div class="bar curr" style="height:60px"></div></div><div class="bar-label">Feb</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:56px"></div><div class="bar curr" style="height:68px"></div></div><div class="bar-label">Mar</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:62px"></div><div class="bar curr" style="height:74px"></div></div><div class="bar-label">Apr</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:74px"></div><div class="bar curr" style="height:90px"></div></div><div class="bar-label">May</div></div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:rgba(45,107,79,0.2)"></div> Previous year</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#2D6B4F"></div> This year</div>
+            </div>
+
+            <div style="margin-top:16px;padding-top:14px;border-top:0.5px solid rgba(31,61,44,0.08);">
+              <div class="db-card-title" style="margin-bottom:12px;">Reach by platform</div>
+              <div class="platform-row">
+                <div class="platform-icon-wrap" style="background:rgba(193,53,132,0.1);">
+                  <i class="ti ti-brand-instagram" style="font-size:14px;color:#C13584;"></i>
+                </div>
+                <div class="platform-name">Instagram</div>
+                <div class="platform-bar-wrap"><div class="platform-bar" style="width:82%;background:#C13584;"></div></div>
+                <div class="platform-val">2,240</div>
+                <div class="platform-change up">↑ 22%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon-wrap" style="background:rgba(24,119,242,0.1);">
+                  <i class="ti ti-brand-facebook" style="font-size:14px;color:#1877F2;"></i>
+                </div>
+                <div class="platform-name">Facebook</div>
+                <div class="platform-bar-wrap"><div class="platform-bar" style="width:55%;background:#1877F2;"></div></div>
+                <div class="platform-val">1,490</div>
+                <div class="platform-change up">↑ 11%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon-wrap" style="background:rgba(186,117,23,0.1);">
+                  <i class="ti ti-brand-google" style="font-size:14px;color:#BA7517;"></i>
+                </div>
+                <div class="platform-name">Google</div>
+                <div class="platform-bar-wrap"><div class="platform-bar" style="width:40%;background:#BA7517;"></div></div>
+                <div class="platform-val">948</div>
+                <div class="platform-change up">↑ 9%</div>
+              </div>
+              <div class="platform-row">
+                <div class="platform-icon-wrap" style="background:rgba(10,102,194,0.1);">
+                  <i class="ti ti-brand-linkedin" style="font-size:14px;color:#0A66C2;"></i>
+                </div>
+                <div class="platform-name">LinkedIn</div>
+                <div class="platform-bar-wrap"><div class="platform-bar" style="width:15%;background:#0A66C2;"></div></div>
+                <div class="platform-val">142</div>
+                <div class="platform-change down">↓ 3%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right col: approval queue + GBP -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="db-card">
+              <div class="db-card-header">
+                <div class="db-card-title">Needs your approval</div>
+                <a href="/posts" class="db-card-link">View all →</a>
+              </div>
+              <div id="approvalList"><div class="empty-state">Loading…</div></div>
+            </div>
+
+            <div class="db-card">
+              <div class="db-card-header">
+                <div class="db-card-title">Google Business Profile</div>
+                <a href="/gbp" class="db-card-link">Details →</a>
+              </div>
+              <div class="gbp-grid">
+                <div class="gbp-mini">
+                  <div class="gbp-mini-num">142</div>
+                  <div class="gbp-mini-label">Views</div>
+                  <div class="gbp-mini-change">↑ 9%</div>
+                </div>
+                <div class="gbp-mini">
+                  <div class="gbp-mini-num">18</div>
+                  <div class="gbp-mini-label">Calls</div>
+                  <div class="gbp-mini-change">↑ 6%</div>
+                </div>
+                <div class="gbp-mini">
+                  <div class="gbp-mini-num">4.8</div>
+                  <div class="gbp-mini-label">Rating</div>
+                  <div class="gbp-mini-change">23 reviews</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bottom row: email locked + coming up -->
+        <div class="three-col">
+
+          <!-- Email locked -->
+          <div class="locked-card">
+            <div class="blurred">
+              <div class="db-card-header"><div class="db-card-title">Email campaigns</div></div>
+              <div class="email-row"><div class="email-subject">May newsletter — Spring deals</div><div class="email-stat">42% open</div></div>
+              <div class="email-row"><div class="email-subject">Welcome sequence — new clients</div><div class="email-stat">61% open</div></div>
+              <div class="email-row"><div class="email-subject">Re-engagement — April</div><div class="email-stat">28% open</div></div>
+            </div>
+            <div class="locked-overlay">
+              <i class="ti ti-lock" style="font-size:22px;color:#1F3D2C;"></i>
+              <div class="lock-label">Email campaigns</div>
+              <div class="lock-sub">Available on the Marketing Partner plan</div>
+              <a href="/account" class="lock-badge">Upgrade to unlock</a>
+            </div>
+          </div>
+
+          <!-- Coming up + suggestions -->
+          <div class="db-card">
+            <div class="db-card-header">
+              <div class="db-card-title">Coming up</div>
+              <a href="/calendar" class="db-card-link">
+                <i class="ti ti-calendar" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>View calendar →
+              </a>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+              <div id="upcomingList">
+                <div class="empty-state">Loading…</div>
+              </div>
+
+              <div>
+                <div class="section-divider" style="margin-top:0;">
+                  <div class="divider-line"></div>
+                  <div class="divider-label">From your team</div>
+                  <div class="divider-line"></div>
+                </div>
+                <div class="suggestion">
+                  <div class="suggestion-top">
+                    <div class="suggestion-avatar">DFY</div>
+                    <div class="suggestion-from">Done For You Marketing</div>
+                    <div class="suggestion-tag">Opportunity</div>
+                  </div>
+                  <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
+                  <div class="suggestion-actions">
+                    <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
+                    <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
+                  </div>
+                </div>
+                <div class="suggestion" style="margin-top:8px;" id="suggestion2">
+                  <div class="suggestion-top">
+                    <div class="suggestion-avatar">DFY</div>
+                    <div class="suggestion-from">Done For You Marketing</div>
+                    <div class="suggestion-tag">Seasonal</div>
+                  </div>
+                  <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
+                  <div class="suggestion-actions">
+                    <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
+                    <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -116,15 +608,15 @@
   </div>
 
   <script>
+    /* ── Sidebar ────────────────────────────────────── */
     function toggleSidebar() {
       const sidebar = document.getElementById('portalSidebar');
-      const reopen = document.getElementById('sidebarReopen');
-      const isOpen = !sidebar.classList.contains('collapsed');
+      const reopen  = document.getElementById('sidebarReopen');
+      const isOpen  = !sidebar.classList.contains('collapsed');
       sidebar.classList.toggle('collapsed', isOpen);
       reopen.classList.toggle('visible', isOpen);
       localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
     }
-
     function initSidebar(name) {
       document.getElementById('sidebarName').textContent = name;
       if (localStorage.getItem('sidebarOpen') === '0') {
@@ -133,56 +625,145 @@
       }
     }
 
+    /* ── Helpers ───────────────────────────────────── */
+    const PLATFORM_ICONS = {
+      instagram: `<i class="ti ti-brand-instagram" style="font-size:14px;color:#C13584;"></i>`,
+      facebook:  `<i class="ti ti-brand-facebook"  style="font-size:14px;color:#1877F2;"></i>`,
+      twitter:   `<i class="ti ti-brand-twitter"   style="font-size:14px;color:#1DA1F2;"></i>`,
+      linkedin:  `<i class="ti ti-brand-linkedin"  style="font-size:14px;color:#0A66C2;"></i>`,
+      tiktok:    `<i class="ti ti-brand-tiktok"    style="font-size:14px;color:#010101;"></i>`,
+      google:    `<i class="ti ti-brand-google"    style="font-size:14px;color:#BA7517;"></i>`,
+    };
     function platformIcon(p) {
-      return { instagram: '📸', facebook: '👥', twitter: '🐦', linkedin: '💼', tiktok: '🎵' }[p] || '📱';
-    }
-    function statusLabel(s) {
-      return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[s] || s;
+      return PLATFORM_ICONS[p] || `<i class="ti ti-device-mobile" style="font-size:14px;color:#6B756B;"></i>`;
     }
     function escapeHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    function currentMonthLabel() {
+      return new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
 
-    async function init() {
-      const res = await fetch('/api/auth/me');
-      const data = await res.json();
+    /* ── Approve inline ────────────────────────────── */
+    async function approvePost(postId, btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ti ti-check" style="font-size:11px"></i> Approving…`;
+      try {
+        const r = await fetch(`/api/posts/${postId}/approve`, { method: 'POST' });
+        const d = await r.json();
+        if (d.success) {
+          btn.classList.add('done');
+          btn.innerHTML = `<i class="ti ti-check" style="font-size:11px"></i> Approved`;
+          const item = btn.closest('.post-item');
+          if (item) {
+            item.querySelector('.badge-review').textContent = 'Approved';
+            item.querySelector('.badge-review').className = 'badge-approved';
+          }
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="ti ti-check" style="font-size:11px"></i> Retry`;
+        }
+      } catch {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="ti ti-check" style="font-size:11px"></i> Retry`;
+      }
+    }
 
+    /* ── Dismiss suggestion ─────────────────────────── */
+    function dismissSuggestion(btn, key) {
+      const card = btn.closest('.suggestion');
+      card.style.opacity = '0';
+      card.style.transition = 'opacity 0.3s';
+      setTimeout(() => card.remove(), 320);
+      sessionStorage.setItem('dismissed_' + key, '1');
+    }
+
+    /* ── Main init ─────────────────────────────────── */
+    async function init() {
+      const res  = await fetch('/api/auth/me');
+      const data = await res.json();
       if (!data.user) { window.location.href = '/'; return; }
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
 
       const firstName = data.user.name.split(' ')[0];
-      document.getElementById('welcomeName').textContent = data.user.name;
+      document.getElementById('welcomeName').textContent  = data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
+      document.getElementById('dbSubtitle').textContent   = `${currentMonthLabel()} · Your marketing at a glance`;
       initSidebar(data.user.name);
 
+      /* Onboarding check */
       try {
         const ob = await fetch('/api/onboarding');
-        const obData = await ob.json();
-        if (!obData.onboarding) document.getElementById('onboardingBanner').style.display = 'flex';
-      } catch (e) {}
+        const od = await ob.json();
+        if (!od.onboarding) document.getElementById('onboardingBanner').style.display = 'flex';
+      } catch {}
 
+      /* Load posts */
       try {
-        const pr = await fetch('/api/posts');
-        const pd = await pr.json();
+        const pr    = await fetch('/api/posts');
+        const pd    = await pr.json();
         const posts = pd.posts || [];
-        document.getElementById('statTotal').textContent = posts.length;
-        document.getElementById('statPending').textContent = posts.filter(p => p.status === 'pending').length;
-        document.getElementById('statApproved').textContent = posts.filter(p => p.status === 'approved' || p.status === 'queued').length;
 
-        const recent = posts.slice(0, 4);
-        if (recent.length === 0) {
-          document.getElementById('recentPostsList').innerHTML = '<p style="color:#9AA199;font-size:13px;">No posts yet. Check back soon!</p>';
+        const now        = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const thisMonth  = posts.filter(p => new Date(p.scheduled_date) >= monthStart);
+        const pending    = posts.filter(p => p.status === 'pending');
+        const approved   = posts.filter(p => p.status === 'approved' || p.status === 'queued');
+
+        /* Hero stats */
+        document.getElementById('statPublished').textContent = thisMonth.length;
+        document.getElementById('statPendingSub').textContent = `${pending.length} pending your review`;
+        document.getElementById('statApproved').textContent  = approved.length;
+
+        /* Approval queue */
+        const approvalEl = document.getElementById('approvalList');
+        if (pending.length === 0) {
+          approvalEl.innerHTML = `<div class="empty-state"><i class="ti ti-circle-check" style="font-size:22px;color:#3B6D11;display:block;margin-bottom:6px;"></i>All caught up! No posts waiting.</div>`;
         } else {
-          document.getElementById('recentPostsList').innerHTML = recent.map(p => `
-            <div class="portal-recent-row">
-              <span style="font-size:11px;font-weight:600;color:#2D6B4F;background:rgba(45,107,79,0.08);padding:3px 8px;border-radius:4px;flex-shrink:0;">${platformIcon(p.platform)} ${p.platform.charAt(0).toUpperCase()+p.platform.slice(1)}</span>
-              <span style="font-size:13px;color:#1F3D2C;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(p.caption)}</span>
-              <span style="font-size:11px;font-weight:600;color:${p.status==='approved'||p.status==='queued'?'#2D6B4F':'#7D2A03'};flex-shrink:0;">${statusLabel(p.status)}</span>
+          approvalEl.innerHTML = pending.slice(0, 4).map(p => `
+            <div class="post-item">
+              <div class="post-icon-sm">${platformIcon(p.platform)}</div>
+              <div class="post-body">
+                <div class="post-caption">${escapeHtml(p.caption)}</div>
+                <div class="post-meta">
+                  <span class="badge-review">Needs review</span>
+                  <span class="post-date">${formatDate(p.scheduled_date)}</span>
+                </div>
+              </div>
+              <button class="btn-approve-sm" onclick="approvePost(${p.id}, this)">
+                <i class="ti ti-check" style="font-size:11px"></i> Approve
+              </button>
             </div>
           `).join('');
         }
+
+        /* Upcoming posts */
+        const upcomingEl = document.getElementById('upcomingList');
+        const upcoming   = posts
+          .filter(p => new Date(p.scheduled_date) >= now)
+          .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date))
+          .slice(0, 5);
+
+        if (upcoming.length === 0) {
+          upcomingEl.innerHTML = `<div class="empty-state">No upcoming posts scheduled.</div>`;
+        } else {
+          upcomingEl.innerHTML = upcoming.map(p => `
+            <div class="upcoming-item">
+              <div class="upcoming-date">${formatDate(p.scheduled_date)}</div>
+              <div class="upcoming-caption">${escapeHtml(p.caption)}</div>
+              <div class="upcoming-platform">${platformIcon(p.platform)}</div>
+            </div>
+          `).join('');
+        }
+
       } catch (e) {
-        document.getElementById('recentPostsList').innerHTML = '<p style="color:#9AA199;font-size:13px;">Could not load posts.</p>';
+        document.getElementById('approvalList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
+        document.getElementById('upcomingList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
       }
     }
 

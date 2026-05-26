@@ -1,0 +1,312 @@
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.db { padding: 24px; background: #F5F2EA; font-family: var(--font-sans); }
+.db-header { margin-bottom: 20px; }
+.db-header h1 { font-size: 22px; font-weight: 500; color: #1F3D2C; margin-bottom: 2px; }
+.db-header p { font-size: 13px; color: #6B756B; }
+.card { background: #fff; border-radius: 10px; border: 0.5px solid rgba(31,61,44,0.1); padding: 20px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.card-title { font-size: 13px; font-weight: 500; color: #1F3D2C; }
+.card-link { font-size: 12px; color: #2D6B4F; font-weight: 500; cursor: pointer; }
+
+.hero-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
+.hero-card { background: #fff; border-radius: 10px; border: 0.5px solid rgba(31,61,44,0.1); padding: 18px 20px; }
+.hero-label { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: #9AA199; margin-bottom: 8px; }
+.hero-num { font-size: 30px; font-weight: 400; font-family: Georgia, serif; color: #1F3D2C; line-height: 1; margin-bottom: 6px; }
+.hero-change { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.hero-change.up { background: rgba(59,109,17,0.1); color: #3B6D11; }
+.hero-change.down { background: rgba(163,45,45,0.08); color: #A32D2D; }
+.hero-sub { font-size: 11px; color: #9AA199; margin-top: 3px; }
+
+.two-col { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-bottom: 8px; }
+.bar-group { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+.bar-pair { display: flex; align-items: flex-end; gap: 2px; height: 82px; }
+.bar { border-radius: 3px 3px 0 0; min-height: 4px; width: 14px; }
+.bar.prev { background: rgba(45,107,79,0.18); }
+.bar.curr { background: #2D6B4F; }
+.bar-label { font-size: 10px; color: #9AA199; }
+.chart-legend { display: flex; gap: 14px; margin-top: 8px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #6B756B; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+.platform-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 0.5px solid rgba(31,61,44,0.08); }
+.platform-row:first-child { border-top: none; padding-top: 0; }
+.platform-icon-wrap { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.platform-name { font-size: 12px; color: #444441; width: 76px; flex-shrink: 0; }
+.platform-bar-wrap { flex: 1; height: 5px; background: rgba(31,61,44,0.08); border-radius: 3px; overflow: hidden; }
+.platform-bar { height: 100%; border-radius: 3px; }
+.platform-val { font-size: 12px; font-weight: 500; color: #1F3D2C; width: 40px; text-align: right; }
+.platform-change { font-size: 10px; font-weight: 600; width: 34px; text-align: right; }
+.platform-change.up { color: #3B6D11; }
+.platform-change.down { color: #A32D2D; }
+
+.post-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-top: 0.5px solid rgba(31,61,44,0.08); }
+.post-item:first-child { border-top: none; padding-top: 0; }
+.post-icon-sm { width: 30px; height: 30px; border-radius: 7px; background: rgba(45,107,79,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #1F3D2C; }
+.post-body { flex: 1; min-width: 0; }
+.post-caption { font-size: 12px; color: #444441; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.post-meta { display: flex; gap: 6px; align-items: center; }
+.badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+.badge.review { background: rgba(186,117,23,0.12); color: #854F0B; }
+.post-date { font-size: 10px; color: #9AA199; }
+.btn-approve-sm { background: rgba(59,109,17,0.1); color: #3B6D11; border: 1px solid rgba(59,109,17,0.2); border-radius: 5px; font-size: 10px; font-weight: 500; padding: 3px 9px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; gap: 3px; }
+
+.gbp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.gbp-mini { background: rgba(45,107,79,0.05); border-radius: 8px; padding: 12px; text-align: center; }
+.gbp-mini-num { font-size: 19px; font-weight: 400; font-family: Georgia, serif; color: #1F3D2C; }
+.gbp-mini-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9AA199; margin-top: 2px; }
+.gbp-mini-change { font-size: 10px; color: #3B6D11; font-weight: 600; }
+
+.locked-card { background: #fff; border-radius: 10px; border: 0.5px solid rgba(31,61,44,0.1); padding: 20px; position: relative; overflow: hidden; }
+.locked-overlay { position: absolute; inset: 0; background: rgba(245,242,234,0.9); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 2; }
+.lock-label { font-size: 12px; font-weight: 600; color: #1F3D2C; }
+.lock-sub { font-size: 11px; color: #6B756B; text-align: center; line-height: 1.4; max-width: 150px; }
+.lock-badge { background: #7D2A03; color: #F5F2EA; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 4px; }
+.blurred { filter: blur(3px); pointer-events: none; opacity: 0.35; }
+.email-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 0.5px solid rgba(31,61,44,0.08); }
+.email-row:first-child { border-top: none; }
+.email-subject { font-size: 12px; color: #444441; flex: 1; }
+.email-stat { font-size: 11px; color: #6B756B; width: 50px; text-align: right; }
+
+.upcoming-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 0.5px solid rgba(31,61,44,0.08); }
+.upcoming-item:first-child { border-top: none; padding-top: 0; }
+.upcoming-date { font-size: 11px; color: #9AA199; width: 44px; flex-shrink: 0; }
+.upcoming-caption { font-size: 12px; color: #444441; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upcoming-platform { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #1F3D2C; }
+.badge-approved { background: rgba(59,109,17,0.1); color: #3B6D11; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; }
+
+.section-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0 12px; }
+.divider-line { flex: 1; height: 0.5px; background: rgba(31,61,44,0.1); }
+.divider-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9AA199; white-space: nowrap; }
+
+.suggestion { background: rgba(245,242,234,0.6); border: 1px solid rgba(125,42,3,0.15); border-radius: 8px; padding: 13px 14px; margin-bottom: 8px; }
+.suggestion:last-child { margin-bottom: 0; }
+.suggestion-top { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.suggestion-avatar { width: 26px; height: 26px; border-radius: 50%; background: #1F3D2C; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #F5F2EA; flex-shrink: 0; }
+.suggestion-from { font-size: 11px; font-weight: 600; color: #1F3D2C; flex: 1; }
+.suggestion-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: rgba(125,42,3,0.1); color: #7D2A03; }
+.suggestion-body { font-size: 12px; color: #444441; line-height: 1.55; margin-bottom: 9px; }
+.suggestion-body strong { color: #1F3D2C; font-weight: 600; }
+.suggestion-actions { display: flex; gap: 8px; }
+.btn-yes { background: #1F3D2C; color: #F5F2EA; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; padding: 6px 14px; cursor: pointer; }
+.btn-no { background: transparent; color: #6B756B; border: 1px solid rgba(31,61,44,0.15); border-radius: 6px; font-size: 11px; padding: 6px 14px; cursor: pointer; }
+
+.connected-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 0.5px solid rgba(31,61,44,0.08); }
+.connected-row:first-child { border-top: none; padding-top: 0; }
+.connected-name { font-size: 13px; color: #444441; flex: 1; }
+.connected-status { font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+</style>
+
+<div class="db">
+  <div class="db-header">
+    <h1>Welcome back, Jane!</h1>
+    <p>May 2026 · Your marketing at a glance</p>
+  </div>
+
+  <div class="hero-row">
+    <div class="hero-card">
+      <div class="hero-label">Total reach this month</div>
+      <div class="hero-num">4,820</div>
+      <span class="hero-change up"><i class="ti ti-trending-up" style="font-size:11px"></i> 18% vs April</span>
+      <div class="hero-sub">Across all platforms</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-label">Posts published</div>
+      <div class="hero-num">12</div>
+      <span class="hero-change up"><i class="ti ti-trending-up" style="font-size:11px"></i> 4 vs April</span>
+      <div class="hero-sub">4 pending your review</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-label">GBP views</div>
+      <div class="hero-num">142</div>
+      <span class="hero-change up"><i class="ti ti-trending-up" style="font-size:11px"></i> 9% vs April</span>
+      <div class="hero-sub">23 reviews · 4.8 rating</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-label">Engagement rate</div>
+      <div class="hero-num">3.4%</div>
+      <span class="hero-change down"><i class="ti ti-trending-down" style="font-size:11px"></i> 0.2% vs April</span>
+      <div class="hero-sub">Likes, comments, shares</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Monthly reach — all platforms</div>
+        <span class="card-link">Full analytics →</span>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:44px"></div><div class="bar curr" style="height:52px"></div></div><div class="bar-label">Jan</div></div>
+        <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:50px"></div><div class="bar curr" style="height:60px"></div></div><div class="bar-label">Feb</div></div>
+        <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:56px"></div><div class="bar curr" style="height:68px"></div></div><div class="bar-label">Mar</div></div>
+        <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:62px"></div><div class="bar curr" style="height:74px"></div></div><div class="bar-label">Apr</div></div>
+        <div class="bar-group"><div class="bar-pair"><div class="bar prev" style="height:74px"></div><div class="bar curr" style="height:90px"></div></div><div class="bar-label">May</div></div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(45,107,79,0.2)"></div> Previous year</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2D6B4F"></div> This year</div>
+      </div>
+
+      <div style="margin-top:16px; padding-top:14px; border-top:0.5px solid rgba(31,61,44,0.08);">
+        <div class="card-title" style="margin-bottom:12px;">Reach by platform</div>
+        <div class="platform-row">
+          <div class="platform-icon-wrap" style="background:rgba(193,53,132,0.1);"><i class="ti ti-brand-instagram" style="font-size:14px;color:#C13584;"></i></div>
+          <div class="platform-name">Instagram</div>
+          <div class="platform-bar-wrap"><div class="platform-bar" style="width:82%;background:#C13584;"></div></div>
+          <div class="platform-val">2,240</div>
+          <div class="platform-change up">↑ 22%</div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-icon-wrap" style="background:rgba(24,119,242,0.1);"><i class="ti ti-brand-facebook" style="font-size:14px;color:#1877F2;"></i></div>
+          <div class="platform-name">Facebook</div>
+          <div class="platform-bar-wrap"><div class="platform-bar" style="width:55%;background:#1877F2;"></div></div>
+          <div class="platform-val">1,490</div>
+          <div class="platform-change up">↑ 11%</div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-icon-wrap" style="background:rgba(186,117,23,0.1);"><i class="ti ti-brand-google" style="font-size:14px;color:#BA7517;"></i></div>
+          <div class="platform-name">Google</div>
+          <div class="platform-bar-wrap"><div class="platform-bar" style="width:40%;background:#BA7517;"></div></div>
+          <div class="platform-val">948</div>
+          <div class="platform-change up">↑ 9%</div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-icon-wrap" style="background:rgba(10,102,194,0.1);"><i class="ti ti-brand-linkedin" style="font-size:14px;color:#0A66C2;"></i></div>
+          <div class="platform-name">LinkedIn</div>
+          <div class="platform-bar-wrap"><div class="platform-bar" style="width:15%;background:#0A66C2;"></div></div>
+          <div class="platform-val">142</div>
+          <div class="platform-change down">↓ 3%</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Needs your approval</div>
+          <span class="card-link">View all →</span>
+        </div>
+        <div class="post-item">
+          <div class="post-icon-sm"><i class="ti ti-brand-instagram" style="font-size:14px;color:#C13584;"></i></div>
+          <div class="post-body">
+            <div class="post-caption">Spring is here! We're helping local businesses bloom…</div>
+            <div class="post-meta"><span class="badge review">Needs review</span><span class="post-date">May 10</span></div>
+          </div>
+          <button class="btn-approve-sm"><i class="ti ti-check" style="font-size:11px"></i> Approve</button>
+        </div>
+        <div class="post-item">
+          <div class="post-icon-sm"><i class="ti ti-brand-facebook" style="font-size:14px;color:#1877F2;"></i></div>
+          <div class="post-body">
+            <div class="post-caption">Did you know 80% of customers research online first?</div>
+            <div class="post-meta"><span class="badge review">Needs review</span><span class="post-date">May 12</span></div>
+          </div>
+          <button class="btn-approve-sm"><i class="ti ti-check" style="font-size:11px"></i> Approve</button>
+        </div>
+        <div class="post-item">
+          <div class="post-icon-sm"><i class="ti ti-brand-instagram" style="font-size:14px;color:#C13584;"></i></div>
+          <div class="post-body">
+            <div class="post-caption">Your brand story deserves to be told. Our team crafts…</div>
+            <div class="post-meta"><span class="badge review">Needs review</span><span class="post-date">May 15</span></div>
+          </div>
+          <button class="btn-approve-sm"><i class="ti ti-check" style="font-size:11px"></i> Approve</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Google Business Profile</div>
+          <span class="card-link">Details →</span>
+        </div>
+        <div class="gbp-grid">
+          <div class="gbp-mini"><div class="gbp-mini-num">142</div><div class="gbp-mini-label">Views</div><div class="gbp-mini-change">↑ 9%</div></div>
+          <div class="gbp-mini"><div class="gbp-mini-num">18</div><div class="gbp-mini-label">Calls</div><div class="gbp-mini-change">↑ 6%</div></div>
+          <div class="gbp-mini"><div class="gbp-mini-num">4.8</div><div class="gbp-mini-label">Rating</div><div class="gbp-mini-change">23 reviews</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <!-- Email locked -->
+    <div class="locked-card">
+      <div class="blurred">
+        <div class="card-header"><div class="card-title">Email campaigns</div></div>
+        <div class="email-row"><div class="email-subject">May newsletter — Spring deals</div><div class="email-stat">42% open</div></div>
+        <div class="email-row"><div class="email-subject">Welcome sequence — new clients</div><div class="email-stat">61% open</div></div>
+        <div class="email-row"><div class="email-subject">Re-engagement — April</div><div class="email-stat">28% open</div></div>
+      </div>
+      <div class="locked-overlay">
+        <i class="ti ti-lock" style="font-size:22px;color:#1F3D2C;" aria-hidden="true"></i>
+        <div class="lock-label">Email campaigns</div>
+        <div class="lock-sub">Available on the Marketing Partner plan</div>
+        <div class="lock-badge">Upgrade to unlock</div>
+      </div>
+    </div>
+
+    <!-- Coming up + suggestions -->
+    <div class="card" style="grid-column: span 2;">
+      <div class="card-header">
+        <div class="card-title">Coming up</div>
+        <span class="card-link"><i class="ti ti-calendar" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>View calendar →</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+        <div>
+          <div class="upcoming-item">
+            <div class="upcoming-date">May 18</div>
+            <div class="upcoming-caption">Memorial Day — honoring those who served</div>
+            <div class="upcoming-platform"><i class="ti ti-brand-instagram" style="font-size:13px;color:#C13584;"></i></div>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date">May 22</div>
+            <div class="upcoming-caption">Behind the scenes — how we build your calendar</div>
+            <div class="upcoming-platform"><i class="ti ti-brand-facebook" style="font-size:13px;color:#1877F2;"></i></div>
+          </div>
+          <div class="upcoming-item">
+            <div class="upcoming-date">Jul 4</div>
+            <div class="upcoming-caption">Happy Fourth of July from the DFY team!</div>
+            <div class="upcoming-platform"><i class="ti ti-brand-instagram" style="font-size:13px;color:#C13584;"></i></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-divider" style="margin-top:0;">
+            <div class="divider-line"></div>
+            <div class="divider-label">From your team</div>
+            <div class="divider-line"></div>
+          </div>
+          <div class="suggestion">
+            <div class="suggestion-top">
+              <div class="suggestion-avatar">DFY</div>
+              <div class="suggestion-from">Done For You Marketing</div>
+              <div class="suggestion-tag">Opportunity</div>
+            </div>
+            <div class="suggestion-body"><strong>Mother's Day is June 1st</strong> — a great time to run a special on pool services. Want us to create a promotion post?</div>
+            <div class="suggestion-actions">
+              <button class="btn-yes">Yes, create it</button>
+              <button class="btn-no">Not this time</button>
+            </div>
+          </div>
+          <div class="suggestion" style="margin-top:8px;">
+            <div class="suggestion-top">
+              <div class="suggestion-avatar">DFY</div>
+              <div class="suggestion-from">Done For You Marketing</div>
+              <div class="suggestion-tag">Seasonal</div>
+            </div>
+            <div class="suggestion-body"><strong>Summer is 5 weeks away.</strong> Peak season — we recommend 2 extra posts in June to capture early searchers.</div>
+            <div class="suggestion-actions">
+              <button class="btn-yes">Add to calendar</button>
+              <button class="btn-no">Skip for now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
