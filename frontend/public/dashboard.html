@@ -400,12 +400,6 @@
             </span>
             Contact Us
           </a>
-          <a href="/onboarding" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-            </span>
-            Business Intake Form
-          </a>
         </nav>
       </div>
     </aside>
@@ -623,6 +617,60 @@
 
         </div>
 
+        <!-- Bottom cards: Business Profile + Media Uploads -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+
+          <!-- Your Business Profile -->
+          <div class="db-card" style="position:relative;">
+            <div class="db-card-header">
+              <div class="db-card-title">Your Business Profile</div>
+              <a href="/gbp" class="db-card-link">View profile →</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(45,107,79,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--color-forest);" id="bpBusinessName">—</div>
+                  <div style="font-size:11px;color:var(--color-slate-light);" id="bpCategory">Loading…</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:0.5px solid rgba(31,61,44,0.08);">
+                <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--color-slate);">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span id="bpAddress">Not set</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-slate);">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 5.27 5.27l1.18-1.12a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <span id="bpPhone">Not set</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-slate);">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <span id="bpWebsite">Not set</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media Uploads -->
+          <div class="db-card">
+            <div class="db-card-header">
+              <div class="db-card-title">Media Uploads</div>
+              <span class="db-card-link" style="cursor:default;color:var(--color-slate-light);font-size:11px;">Your brand assets</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;" id="mediaGrid">
+              <div style="aspect-ratio:1;border-radius:8px;background:rgba(45,107,79,0.06);border:0.5px dashed rgba(31,61,44,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;" onclick="document.getElementById('mediaUploadInput').click()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span style="font-size:10px;color:var(--color-slate-light);">Upload</span>
+              </div>
+            </div>
+            <input type="file" id="mediaUploadInput" accept="image/*,video/*,.pdf" multiple style="display:none" onchange="handleMediaUpload(event)">
+            <p style="font-size:11px;color:var(--color-slate-light);margin-top:10px;">Logos, photos, and brand assets shared with your team.</p>
+          </div>
+
+        </div>
+
       </div>
     </main>
   </div>
@@ -713,11 +761,28 @@
       document.getElementById('dbSubtitle').textContent   = `${currentMonthLabel()} · Your marketing at a glance`;
       initSidebar(data.user.name);
 
-      /* Onboarding check */
+      /* Business profile card */
+      if (data.user.business_name) {
+        document.getElementById('bpBusinessName').textContent = data.user.business_name;
+      }
+
+      /* Onboarding check + populate profile details */
       try {
         const ob = await fetch('/api/onboarding');
         const od = await ob.json();
         if (!od.onboarding) document.getElementById('onboardingBanner').style.display = 'flex';
+        const o = od.onboarding || {};
+        if (o.location) document.getElementById('bpAddress').textContent  = o.location;
+        if (o.phone)    document.getElementById('bpPhone').textContent    = o.phone;
+        if (o.website) {
+          const ws = document.getElementById('bpWebsite');
+          ws.textContent = o.website.replace(/^https?:\/\//, '');
+        }
+        if (o.industry && !data.user.business_name) {
+          document.getElementById('bpBusinessName').textContent = o.industry;
+        }
+        if (o.industry) document.getElementById('bpCategory').textContent = o.industry;
+        else document.getElementById('bpCategory').textContent = 'Business';
       } catch {}
 
       /* Load posts */
@@ -782,6 +847,26 @@
         document.getElementById('approvalList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
         document.getElementById('upcomingList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
       }
+    }
+
+    /* ── Media upload (UI preview only) ───────────────── */
+    function handleMediaUpload(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length) return;
+      const grid = document.getElementById('mediaGrid');
+      files.forEach(file => {
+        const url = URL.createObjectURL(file);
+        const tile = document.createElement('div');
+        tile.style.cssText = 'aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f0ede6;position:relative;';
+        if (file.type.startsWith('image/')) {
+          tile.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;" alt="${file.name}">`;
+        } else {
+          tile.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:8px;box-sizing:border-box;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="font-size:9px;color:#6B756B;text-align:center;word-break:break-all;">${file.name}</span></div>`;
+        }
+        const uploadBtn = grid.querySelector('[onclick]');
+        grid.insertBefore(tile, uploadBtn);
+      });
+      event.target.value = '';
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
