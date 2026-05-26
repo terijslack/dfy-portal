@@ -657,16 +657,24 @@
           <div class="db-card">
             <div class="db-card-header">
               <div class="db-card-title">Media Uploads</div>
-              <span class="db-card-link" style="cursor:default;color:var(--color-slate-light);font-size:11px;">Your brand assets</span>
+              <a href="/contact" class="db-card-link">Send to team →</a>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;" id="mediaGrid">
-              <div style="aspect-ratio:1;border-radius:8px;background:rgba(45,107,79,0.06);border:0.5px dashed rgba(31,61,44,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;" onclick="document.getElementById('mediaUploadInput').click()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                <span style="font-size:10px;color:var(--color-slate-light);">Upload</span>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px;">
+              <div style="display:flex;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(45,107,79,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--color-forest);margin-bottom:3px;">Logos &amp; photos</div>
+                  <div style="font-size:11px;color:var(--color-slate-light);line-height:1.5;">Send your brand assets to your team and we'll use them in your content.</div>
+                </div>
+              </div>
+              <div style="padding-top:12px;border-top:0.5px solid rgba(31,61,44,0.08);">
+                <div style="font-size:11px;color:var(--color-slate);line-height:1.6;">
+                  <strong style="color:var(--color-forest);">How to share:</strong> Email your files to your account manager or use the Contact page to send them directly to the team.
+                </div>
               </div>
             </div>
-            <input type="file" id="mediaUploadInput" accept="image/*,video/*,.pdf" multiple style="display:none" onchange="handleMediaUpload(event)">
-            <p style="font-size:11px;color:var(--color-slate-light);margin-top:10px;">Logos, photos, and brand assets shared with your team.</p>
           </div>
 
         </div>
@@ -847,26 +855,6 @@
         document.getElementById('approvalList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
         document.getElementById('upcomingList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
       }
-    }
-
-    /* ── Media upload (UI preview only) ───────────────── */
-    function handleMediaUpload(event) {
-      const files = Array.from(event.target.files);
-      if (!files.length) return;
-      const grid = document.getElementById('mediaGrid');
-      files.forEach(file => {
-        const url = URL.createObjectURL(file);
-        const tile = document.createElement('div');
-        tile.style.cssText = 'aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f0ede6;position:relative;';
-        if (file.type.startsWith('image/')) {
-          tile.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;" alt="${file.name}">`;
-        } else {
-          tile.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:8px;box-sizing:border-box;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="font-size:9px;color:#6B756B;text-align:center;word-break:break-all;">${file.name}</span></div>`;
-        }
-        const uploadBtn = grid.querySelector('[onclick]');
-        grid.insertBefore(tile, uploadBtn);
-      });
-      event.target.value = '';
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
