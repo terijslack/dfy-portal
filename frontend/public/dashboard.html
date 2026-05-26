@@ -770,7 +770,7 @@
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
 
       const firstName = data.user.name.split(' ')[0];
-      document.getElementById('welcomeName').textContent  = data.user.name;
+      document.getElementById('welcomeName').textContent  = data.user.business_name || data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
       document.getElementById('dbSubtitle').textContent   = `${currentMonthLabel()} · Your marketing at a glance`;
       initSidebar(data.user.name);

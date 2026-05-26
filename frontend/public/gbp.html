@@ -357,7 +357,7 @@
       const data = await res.json();
       if (!data.user) { window.location.href = '/'; return; }
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
-      document.getElementById('welcomeName').textContent = data.user.name;
+      document.getElementById('welcomeName').textContent = data.user.business_name || data.user.name;
       initSidebar(data.user.name);
     }
 
