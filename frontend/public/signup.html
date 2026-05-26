@@ -149,11 +149,14 @@
     }
 
     .plan-features li::before {
-      content: '✓';
-      color: #2D6B4F;
-      font-size: 12px;
-      margin-top: 1px;
+      content: '';
+      display: block;
+      width: 13px;
+      height: 13px;
       flex-shrink: 0;
+      margin-top: 2px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%232D6B4F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 14 4 10'/%3E%3C/svg%3E") no-repeat center;
+      background-size: contain;
     }
 
     /* Scroll nudge */

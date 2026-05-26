@@ -279,7 +279,7 @@
     <a href="/dashboard" style="flex-shrink:0; text-decoration:none;">
       <img src="logo.png" alt="Done For You Marketing" style="height:110px; width:auto;">
     </a>
-    <a href="/dashboard" class="exit-link">✕ Exit without saving</a>
+    <a href="/dashboard" class="exit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Exit without saving</a>
     <div class="progress-steps" id="progressSteps">
       <div class="progress-step">
         <div class="step-circle active" id="circle-1">1</div>
@@ -514,7 +514,7 @@
     <!-- ── SUCCESS ── -->
     <div class="step-panel" id="step-success">
       <div class="success-screen">
-        <div class="success-icon">🎉</div>
+        <div class="success-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
         <h1 class="success-title">We're all set!</h1>
         <p class="success-body">
           Thanks for filling out your intake form. Your team has everything they need to start creating content for you.<br><br>
@@ -563,7 +563,7 @@
 
         if (i < currentStep) {
           circle.classList.add('done');
-          circle.textContent = '✓';
+          circle.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 14 4 10"/></svg>';
         } else if (i === currentStep) {
           circle.classList.add('active');
           circle.textContent = i;
