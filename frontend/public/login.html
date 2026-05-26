@@ -49,7 +49,7 @@
       .then(r => r.json())
       .then(data => {
         if (data.user) {
-          window.location.href = data.user.is_admin ? '/admin' : '/posts';
+          window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
         }
       })
       .catch(() => {}); // not logged in = stay on this page
@@ -85,7 +85,7 @@
           return;
         }
 
-        window.location.href = data.user.is_admin ? '/admin' : '/posts';
+        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
 
       } catch (err) {
         errorMsg.textContent = 'Network error. Check your connection.';

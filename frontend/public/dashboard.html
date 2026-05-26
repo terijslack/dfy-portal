@@ -687,7 +687,7 @@
     async function init() {
       const res  = await fetch('/api/auth/me');
       const data = await res.json();
-      if (!data.user) { window.location.href = '/'; return; }
+      if (!data.user) { window.location.href = '/login'; return; }
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
 
       const firstName = data.user.name.split(' ')[0];
