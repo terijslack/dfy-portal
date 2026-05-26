@@ -112,6 +112,30 @@ body {
   justify-content: space-between;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 6px;
+  color: var(--color-forest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+
+.header-sidebar-toggle:hover {
+  background: rgba(31,61,44,0.07);
+}
+
 .header-right {
   display: flex;
   align-items: center;
@@ -1479,9 +1503,6 @@ h2 em {
   padding: 0 16px 18px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   margin-bottom: 12px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
 }
 
 .sidebar-welcome-label {
@@ -1500,23 +1521,6 @@ h2 em {
   font-weight: 500;
 }
 
-.sidebar-collapse-btn {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-  padding: 0;
-  transition: background 0.15s;
-}
-
-.sidebar-collapse-btn:hover { background: rgba(255,255,255,0.14); }
 
 .sidebar-nav-item {
   display: flex;
@@ -1555,26 +1559,6 @@ h2 em {
 
 .sidebar-nav-item.active .sidebar-nav-icon { color: #EBC99B; }
 
-.sidebar-reopen {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 99;
-  background: #2D6B4F;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  width: 22px;
-  height: 40px;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-  padding: 0;
-}
-
-.sidebar-reopen.visible { display: flex; }
 
 .portal-main {
   flex: 1;
