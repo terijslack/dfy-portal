@@ -12,6 +12,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <style>
     /* ── DASHBOARD OVERVIEW STYLES ───────────────────── */
+
+    /* Constrain the dashboard to a readable width */
+    .portal-main-content {
+      max-width: 1080px;
+      padding: 28px 32px 80px;
+    }
+
     .db-header { margin-bottom: 20px; }
     .db-header h1 {
       font-family: var(--font-serif);
@@ -316,12 +323,21 @@
       flex-wrap: wrap;
     }
 
-    @media (max-width: 900px) {
-      .hero-row { grid-template-columns: repeat(2,1fr); }
-      .two-col  { grid-template-columns: 1fr; }
-      .three-col { grid-template-columns: 1fr; }
+    /* Coming-up inner two-col */
+    .coming-up-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 24px;
     }
-    @media (max-width: 600px) {
+
+    @media (max-width: 960px) {
+      .portal-main-content { padding: 20px 20px 60px; }
+      .hero-row   { grid-template-columns: repeat(2, 1fr); }
+      .two-col    { grid-template-columns: 1fr; }
+      .three-col  { grid-template-columns: 1fr; }
+      .coming-up-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
       .hero-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -568,7 +584,7 @@
               </a>
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+            <div class="coming-up-inner">
               <div id="upcomingList">
                 <div class="empty-state">Loading…</div>
               </div>
