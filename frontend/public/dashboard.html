@@ -671,62 +671,6 @@
           </div>
         </div>
 
-        <!-- Main two-col row -->
-        <div class="two-col">
-
-          <!-- Left: This Month feed -->
-          <div class="db-card">
-            <div class="db-card-header">
-              <div class="db-card-title">Coming up this month</div>
-              <a href="/calendar" class="db-card-link">View calendar →</a>
-            </div>
-            <div id="monthFeed"><div class="empty-state">Loading…</div></div>
-          </div>
-
-          <!-- Right: Approval + suggestions -->
-          <div style="display:flex;flex-direction:column;gap:16px;">
-
-            <div class="db-card">
-              <div class="db-card-header">
-                <div class="db-card-title">Needs your approval</div>
-                <a href="/posts" class="db-card-link">View all →</a>
-              </div>
-              <div id="approvalList"><div class="empty-state">Loading…</div></div>
-            </div>
-
-            <div class="db-card">
-              <div class="db-card-header">
-                <div class="db-card-title">From your team</div>
-              </div>
-              <div class="suggestion">
-                <div class="suggestion-top">
-                  <div class="suggestion-avatar">DFY</div>
-                  <div class="suggestion-from">Done For You Marketing</div>
-                  <div class="suggestion-tag">Opportunity</div>
-                </div>
-                <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
-                <div class="suggestion-actions">
-                  <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
-                  <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
-                </div>
-              </div>
-              <div class="suggestion" style="margin-top:8px;" id="suggestion2">
-                <div class="suggestion-top">
-                  <div class="suggestion-avatar">DFY</div>
-                  <div class="suggestion-from">Done For You Marketing</div>
-                  <div class="suggestion-tag">Seasonal</div>
-                </div>
-                <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
-                <div class="suggestion-actions">
-                  <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
-                  <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
         <!-- Social Performance -->
         <div class="db-card hero-card--locked" id="socialPerfCard" style="margin-top:16px;position:relative;overflow:hidden;">
           <div class="db-card-header">
@@ -789,6 +733,63 @@
             </a>
           </div>
         </div>
+
+        <!-- Main two-col row -->
+        <div class="two-col">
+
+          <!-- Left: This Month feed -->
+          <div class="db-card">
+            <div class="db-card-header">
+              <div class="db-card-title">Coming up this month</div>
+              <a href="/calendar" class="db-card-link">View calendar →</a>
+            </div>
+            <div id="monthFeed"><div class="empty-state">Loading…</div></div>
+          </div>
+
+          <!-- Right: Approval + suggestions -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="db-card">
+              <div class="db-card-header">
+                <div class="db-card-title">Needs your approval</div>
+                <a href="/posts" class="db-card-link">View all →</a>
+              </div>
+              <div id="approvalList"><div class="empty-state">Loading…</div></div>
+            </div>
+
+            <div class="db-card">
+              <div class="db-card-header">
+                <div class="db-card-title">From your marketing team</div>
+              </div>
+              <div class="suggestion">
+                <div class="suggestion-top">
+                  <div class="suggestion-avatar">DFY</div>
+                  <div class="suggestion-from">Done For You Marketing</div>
+                  <div class="suggestion-tag">Opportunity</div>
+                </div>
+                <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
+                <div class="suggestion-actions">
+                  <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
+                  <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
+                </div>
+              </div>
+              <div class="suggestion" style="margin-top:8px;" id="suggestion2">
+                <div class="suggestion-top">
+                  <div class="suggestion-avatar">DFY</div>
+                  <div class="suggestion-from">Done For You Marketing</div>
+                  <div class="suggestion-tag">Seasonal</div>
+                </div>
+                <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
+                <div class="suggestion-actions">
+                  <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
+                  <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
 
       </div>
     </main>
