@@ -818,7 +818,7 @@
       try {
         const ob = await fetch('/api/onboarding');
         const od = await ob.json();
-        if (!od.onboarding) document.getElementById('onboardingBanner').style.display = 'flex';
+
         const o = od.onboarding || {};
         if (o.location) document.getElementById('bpAddress').textContent  = o.location;
         if (o.phone)    document.getElementById('bpPhone').textContent    = o.phone;
