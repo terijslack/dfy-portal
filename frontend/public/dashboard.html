@@ -946,28 +946,12 @@
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
       initSidebar(data.user.name);
 
-      /* Business profile card */
-      if (data.user.business_name) {
-        document.getElementById('bpBusinessName').textContent = data.user.business_name;
-      }
-
       /* Onboarding check + populate profile details */
       try {
         const ob = await fetch('/api/onboarding');
         const od = await ob.json();
 
         const o = od.onboarding || {};
-        if (o.location) document.getElementById('bpAddress').textContent  = o.location;
-        if (o.phone)    document.getElementById('bpPhone').textContent    = o.phone;
-        if (o.website) {
-          const ws = document.getElementById('bpWebsite');
-          ws.textContent = o.website.replace(/^https?:\/\//, '');
-        }
-        if (o.industry && !data.user.business_name) {
-          document.getElementById('bpBusinessName').textContent = o.industry;
-        }
-        if (o.industry) document.getElementById('bpCategory').textContent = o.industry;
-        else document.getElementById('bpCategory').textContent = 'Business';
 
         /* Profile completion banner */
         const fields = [
