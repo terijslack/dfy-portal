@@ -107,6 +107,47 @@
     }
 
 
+    /* Profile completion banner */
+    .profile-banner {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: #fff;
+      border: 0.5px solid rgba(31,61,44,0.12);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+    }
+    .profile-banner-ring { flex-shrink: 0; position: relative; width: 48px; height: 48px; }
+    .profile-banner-ring span {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 11px; font-weight: 800; color: #1F3D2C;
+    }
+    .profile-banner-text { flex: 1; min-width: 0; }
+    .profile-banner-text strong { font-size: 13px; color: #1F3D2C; display: block; margin-bottom: 2px; }
+    .profile-banner-text span  { font-size: 12px; color: #6B756B; }
+    .profile-banner-bar-wrap { width: 130px; flex-shrink: 0; }
+    .profile-banner-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: #6B756B; margin-bottom: 5px;
+    }
+    .profile-banner-bar-label b { color: #1F3D2C; }
+    .profile-banner-bar { height: 5px; border-radius: 99px; background: rgba(31,61,44,0.08); overflow: hidden; }
+    .profile-banner-bar div { height: 100%; border-radius: 99px; background: #2D6B4F; }
+    .profile-banner-cta {
+      flex-shrink: 0;
+      background: #1F3D2C; color: #fff;
+      text-decoration: none; border-radius: 8px;
+      padding: 9px 18px; font-size: 12px; font-weight: 600;
+      white-space: nowrap;
+    }
+    .profile-banner-dismiss {
+      flex-shrink: 0; background: transparent; border: none;
+      color: #9aaa9a; cursor: pointer; font-size: 18px;
+      line-height: 1; padding: 4px; margin-left: -6px;
+    }
+
     /* Platform rows */
     .platform-row {
       display: flex;
@@ -410,6 +451,32 @@
         <!-- Greeting -->
         <div class="db-header">
           <h1 id="homeGreeting">Welcome back!</h1>
+        </div>
+
+        <!-- Profile completion banner (shown by JS when profile is incomplete) -->
+        <div class="profile-banner" id="profileBanner" style="display:none;">
+          <div class="profile-banner-ring">
+            <svg width="48" height="48" viewBox="0 0 48 48" id="profileRingSvg">
+              <circle cx="24" cy="24" r="19" fill="none" stroke="rgba(31,61,44,0.08)" stroke-width="4"/>
+              <circle cx="24" cy="24" r="19" fill="none" stroke="#2D6B4F" stroke-width="4"
+                stroke-linecap="round" transform="rotate(-90 24 24)"
+                id="profileRingArc"/>
+            </svg>
+            <span id="profileRingPct">0%</span>
+          </div>
+          <div class="profile-banner-text">
+            <strong>Complete your business profile!</strong>
+            <span>Your team needs these details to create on-brand content for you.</span>
+          </div>
+          <div class="profile-banner-bar-wrap">
+            <div class="profile-banner-bar-label">
+              <span>Profile complete</span>
+              <b id="profileBarPct">0%</b>
+            </div>
+            <div class="profile-banner-bar"><div id="profileBarFill" style="width:0%"></div></div>
+          </div>
+          <a href="/account" class="profile-banner-cta">Complete profile →</a>
+          <button class="profile-banner-dismiss" onclick="dismissProfileBanner()" title="Dismiss">×</button>
         </div>
 
         <!-- Hero stats -->
@@ -724,6 +791,14 @@
     }
 
     /* ── Dismiss suggestion ─────────────────────────── */
+    function dismissProfileBanner() {
+      const el = document.getElementById('profileBanner');
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.3s';
+      setTimeout(() => el.style.display = 'none', 320);
+      sessionStorage.setItem('profileBannerDismissed', '1');
+    }
+
     function dismissSuggestion(btn, key) {
       const card = btn.closest('.suggestion');
       card.style.opacity = '0';
@@ -766,6 +841,26 @@
         }
         if (o.industry) document.getElementById('bpCategory').textContent = o.industry;
         else document.getElementById('bpCategory').textContent = 'Business';
+
+        /* Profile completion banner */
+        const fields = [
+          !!data.user.business_name,
+          !!o.industry,
+          !!o.location,
+          !!o.phone,
+          !!o.website,
+        ];
+        const filled = fields.filter(Boolean).length;
+        const pct    = Math.round(filled / fields.length * 100);
+        if (pct < 100 && !sessionStorage.getItem('profileBannerDismissed')) {
+          const r = 19, circ = 2 * Math.PI * r;
+          document.getElementById('profileRingArc').setAttribute('stroke-dasharray',
+            `${circ * pct / 100} ${circ * (1 - pct / 100)}`);
+          document.getElementById('profileRingPct').textContent  = pct + '%';
+          document.getElementById('profileBarPct').textContent   = pct + '%';
+          document.getElementById('profileBarFill').style.width  = pct + '%';
+          document.getElementById('profileBanner').style.display = 'flex';
+        }
       } catch {}
 
       /* Load posts */
