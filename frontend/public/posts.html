@@ -36,7 +36,7 @@
         </div>
         <div class="sidebar-header">
           <div>
-            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-welcome-label">Marketing, handled.</p>
             <p class="sidebar-name" id="sidebarName">…</p>
           </div>
         </div>
@@ -223,7 +223,7 @@
       if (!meData.user) { window.location.href = '/'; return; }
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
       document.getElementById('welcomeName').textContent = meData.user.business_name || meData.user.name;
-      initSidebar(meData.user.name);
+      initSidebar(meData.user.business_name || meData.user.name);
       loadPosts();
     }
 

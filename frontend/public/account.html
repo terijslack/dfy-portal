@@ -195,7 +195,7 @@
         </div>
         <div class="sidebar-header">
           <div>
-            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-welcome-label">Marketing, handled.</p>
             <p class="sidebar-name" id="sidebarName">…</p>
           </div>
         </div>
@@ -442,7 +442,7 @@
       document.getElementById('accountBusiness').textContent = meData.user.business_name || '—';
       document.getElementById('accountName').textContent = meData.user.name;
       document.getElementById('accountEmail').textContent = meData.user.email;
-      initSidebar(meData.user.name);
+      initSidebar(meData.user.business_name || meData.user.name);
       loadSubscription();
     }
 

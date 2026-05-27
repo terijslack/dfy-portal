@@ -235,7 +235,7 @@
         </div>
         <div class="sidebar-header">
           <div>
-            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-welcome-label">Marketing, handled.</p>
             <p class="sidebar-name" id="sidebarName">…</p>
           </div>
         </div>
@@ -368,7 +368,7 @@
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
       document.getElementById('welcomeName').textContent = data.user.business_name || data.user.name;
       document.getElementById('gbpFirstName').textContent = data.user.name.split(' ')[0];
-      initSidebar(data.user.name);
+      initSidebar(data.user.business_name || data.user.name);
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {

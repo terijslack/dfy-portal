@@ -36,7 +36,7 @@
         </div>
         <div class="sidebar-header">
           <div>
-            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-welcome-label">Marketing, handled.</p>
             <p class="sidebar-name" id="sidebarName">…</p>
           </div>
         </div>
@@ -151,7 +151,7 @@
       document.getElementById('welcomeName').textContent = data.user.business_name || data.user.name;
       userName = data.user.name;
       userEmail = data.user.email;
-      initSidebar(data.user.name);
+      initSidebar(data.user.business_name || data.user.name);
     }
 
     function sendMessage() {
