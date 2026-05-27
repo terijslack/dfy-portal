@@ -1497,6 +1497,20 @@ h2 em {
   padding-top: 20px;
 }
 
+.sidebar-logo {
+  padding: 20px 20px 14px;
+  display: flex;
+  align-items: center;
+}
+.sidebar-logo img {
+  height: 46px;
+  width: auto;
+  display: block;
+}
+.portal-sidebar.collapsed .sidebar-logo {
+  display: none;
+}
+
 .sidebar-header {
   padding: 0 16px 18px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
