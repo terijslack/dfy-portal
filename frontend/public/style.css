@@ -1504,7 +1504,7 @@ h2 em {
   justify-content: center;
 }
 .sidebar-logo img {
-  height: 42px;
+  height: 64px;
   width: auto;
   display: block;
   filter: brightness(0) invert(1) sepia(0.08);
