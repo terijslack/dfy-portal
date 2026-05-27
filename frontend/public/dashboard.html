@@ -410,7 +410,6 @@
         <!-- Greeting -->
         <div class="db-header">
           <h1 id="homeGreeting">Welcome back!</h1>
-          <p id="dbSubtitle">Your marketing at a glance</p>
         </div>
 
         <!-- Hero stats -->
@@ -743,7 +742,6 @@
       const firstName = data.user.name.split(' ')[0];
       document.getElementById('welcomeName').textContent  = data.user.business_name || data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
-      document.getElementById('dbSubtitle').textContent   = `${currentMonthLabel()} · Your marketing at a glance`;
       initSidebar(data.user.name);
 
       /* Business profile card */
