@@ -1506,6 +1506,7 @@ h2 em {
   height: 46px;
   width: auto;
   display: block;
+  filter: brightness(0) invert(1);
 }
 .portal-sidebar.collapsed .sidebar-logo {
   display: none;
