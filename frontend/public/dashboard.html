@@ -38,7 +38,72 @@
       border-radius: 10px;
       border: 0.5px solid var(--color-border);
       padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
     }
+    .hero-card.hero-card--alert {
+      border-color: rgba(125,42,3,0.3);
+      background: #fffaf8;
+    }
+    .hero-card--locked {
+      background: #f7f6f3;
+      border-color: rgba(31,61,44,0.07);
+    }
+    .hero-card--locked .hero-num,
+    .hero-card--locked .hero-label,
+    .hero-card--locked .hero-sub {
+      opacity: 0.3;
+      filter: blur(2.5px);
+      user-select: none;
+    }
+    .hero-lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: rgba(247,246,243,0.78);
+      text-align: center;
+      padding: 12px;
+    }
+    .hero-lock-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #1F3D2C;
+      line-height: 1.4;
+    }
+    .hero-lock-link {
+      font-size: 11px;
+      color: #2D6B4F;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .hero-alert-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #7D2A03;
+      margin-right: 5px;
+      vertical-align: middle;
+      animation: pulse-dot 1.8s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+    .hero-card-cta {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7D2A03;
+      text-decoration: none;
+    }
+    .hero-card-cta:hover { text-decoration: underline; }
+    .hero-stars { color: #EBC99B; font-size: 15px; letter-spacing: 1px; margin-bottom: 4px; }
     .hero-label {
       font-size: 10px;
       font-weight: 600;
@@ -474,28 +539,44 @@
 
         <!-- Hero stats -->
         <div class="hero-row">
-          <div class="hero-card">
-            <div class="hero-label">Posts this month</div>
-            <div class="hero-num" id="statPublished">—</div>
-            <span class="hero-change neutral" id="statPublishedSub" style="display:none"></span>
-            <div class="hero-sub" id="statPendingSub">— pending your review</div>
+          <!-- Card 1: Needs Approval -->
+          <div class="hero-card" id="cardApproval">
+            <div class="hero-label">Needs your approval</div>
+            <div class="hero-num" id="statPending">—</div>
+            <div class="hero-sub" id="statPendingSub">items waiting on you</div>
+            <a href="/posts" class="hero-card-cta" id="statPendingCta" style="display:none;">Review now →</a>
           </div>
+
+          <!-- Card 2: Scheduled This Month -->
           <div class="hero-card">
-            <div class="hero-label">Approved &amp; queued</div>
-            <div class="hero-num" id="statApproved">—</div>
-            <div class="hero-sub">Ready to publish</div>
+            <div class="hero-label">Scheduled this month</div>
+            <div class="hero-num" id="statScheduled">—</div>
+            <div class="hero-sub" id="statScheduledSub">pieces of content going out</div>
           </div>
-          <div class="hero-card">
-            <div class="hero-label">GBP views</div>
-            <div class="hero-num">142</div>
-            <span class="hero-change up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> 9% vs last mo.</span>
-            <div class="hero-sub">23 reviews · 4.8 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+
+          <!-- Card 3: Google Reviews This Month (locked for base tier) -->
+          <div class="hero-card hero-card--locked" id="cardReviews">
+            <div class="hero-label">Google reviews this month</div>
+            <div class="hero-num" id="statReviews">—</div>
+            <div class="hero-sub">New reviews received</div>
+            <div class="hero-lock-overlay" id="reviewsLock">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <div class="hero-lock-label">Available on higher plans</div>
+              <a href="/profile" class="hero-lock-link">Upgrade or complete profile →</a>
+            </div>
           </div>
-          <div class="hero-card">
-            <div class="hero-label">Engagement rate</div>
-            <div class="hero-num">3.4%</div>
-            <span class="hero-change down"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg> 0.2% vs last mo.</span>
-            <div class="hero-sub">Likes, comments, shares</div>
+
+          <!-- Card 4: GBP Rating (locked for base tier) -->
+          <div class="hero-card hero-card--locked" id="cardRating">
+            <div class="hero-label">Google Business rating</div>
+            <div class="hero-stars" id="statStars">★★★★★</div>
+            <div class="hero-num" id="statRating">—</div>
+            <div class="hero-sub">Average star rating</div>
+            <div class="hero-lock-overlay" id="ratingLock">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <div class="hero-lock-label">Available on higher plans</div>
+              <a href="/profile" class="hero-lock-link">Upgrade or complete profile →</a>
+            </div>
           </div>
         </div>
 
@@ -950,9 +1031,33 @@
         const approved   = posts.filter(p => p.status === 'approved' || p.status === 'queued');
 
         /* Hero stats */
-        document.getElementById('statPublished').textContent = thisMonth.length;
-        document.getElementById('statPendingSub').textContent = `${pending.length} pending your review`;
-        document.getElementById('statApproved').textContent  = approved.length;
+        const pendingCount   = pending.length;
+        const scheduledCount = thisMonth.filter(p => p.status === 'approved' || p.status === 'queued' || p.status === 'scheduled').length;
+
+        /* Card 1: Needs Approval */
+        document.getElementById('statPending').textContent = pendingCount;
+        if (pendingCount > 0) {
+          document.getElementById('cardApproval').classList.add('hero-card--alert');
+          document.getElementById('statPendingSub').innerHTML = `<span class="hero-alert-dot"></span>${pendingCount === 1 ? 'item' : 'items'} waiting on you`;
+          document.getElementById('statPendingCta').style.display = 'inline-block';
+        } else {
+          document.getElementById('statPendingSub').textContent = 'You\'re all caught up ✓';
+          document.getElementById('statPendingSub').style.color = '#2D6B4F';
+        }
+
+        /* Card 2: Scheduled This Month */
+        document.getElementById('statScheduled').textContent = scheduledCount;
+        document.getElementById('statScheduledSub').textContent = scheduledCount === 1 ? 'piece of content going out' : 'pieces of content going out';
+
+        /* Cards 3 & 4: unlock if plan includes GBP management */
+        const gbpPlans = ['growth-engine', 'done-for-you-partner'];
+        const hasGBP   = gbpPlans.includes(data.user.plan);
+        if (hasGBP) {
+          document.getElementById('cardReviews').classList.remove('hero-card--locked');
+          document.getElementById('reviewsLock').style.display  = 'none';
+          document.getElementById('cardRating').classList.remove('hero-card--locked');
+          document.getElementById('ratingLock').style.display   = 'none';
+        }
 
         /* Approval queue */
         const approvalEl = document.getElementById('approvalList');
