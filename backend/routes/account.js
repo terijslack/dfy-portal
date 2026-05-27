@@ -52,9 +52,10 @@ router.get('/subscription', requireLogin, async (req, res) => {
 
 // PUT /api/account/profile
 router.put('/profile', requireLogin, async (req, res) => {
-  let { name, email } = req.body;
-  name  = (name  || '').trim();
-  email = (email || '').trim().toLowerCase();
+  let { name, email, business_name } = req.body;
+  name          = (name          || '').trim();
+  email         = (email         || '').trim().toLowerCase();
+  business_name = (business_name || '').trim();
 
   if (!name)  return res.status(400).json({ error: 'Name cannot be empty.' });
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -71,13 +72,11 @@ router.put('/profile', requireLogin, async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE clients SET name = $1, email = $2 WHERE id = $3',
-      [name, email, req.user.id]
+      'UPDATE clients SET name = $1, email = $2, business_name = $3 WHERE id = $4',
+      [name, email, business_name || null, req.user.id]
     );
 
-    req.session.user = { ...req.session.user, name, email };
-
-    res.json({ success: true, name, email });
+    res.json({ success: true, name, email, business_name });
   } catch (err) {
     console.error('Profile update error:', err);
     res.status(500).json({ error: 'Could not save changes. Try again.' });

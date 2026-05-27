@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Business Profile — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── Page layout ── */
+    .profile-page { max-width: 800px; margin: 0 auto; padding: 0 0 60px; }
+    .profile-page-header { margin-bottom: 28px; }
+    .profile-page-header h1 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 400; color: var(--forest); margin: 0 0 6px; }
+    .profile-page-header p  { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+    /* Completion bar at top */
+    .completion-bar-wrap {
+      background: #fff;
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .completion-ring { position: relative; width: 44px; height: 44px; flex-shrink: 0; }
+    .completion-ring span { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 10px; font-weight: 800; color: var(--forest); }
+    .completion-bar-text { flex: 1; }
+    .completion-bar-text strong { font-size: 13px; color: var(--forest); display: block; margin-bottom: 2px; }
+    .completion-bar-text span   { font-size: 12px; color: var(--text-muted); }
+    .completion-track { flex: 1; max-width: 180px; }
+    .completion-track-bar { height: 5px; border-radius: 99px; background: rgba(31,61,44,0.08); overflow: hidden; }
+    .completion-track-fill { height: 100%; border-radius: 99px; background: var(--green); transition: width 0.4s; }
+
+    /* Sections */
+    .profile-section {
+      background: #fff;
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 24px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .profile-section-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: rgba(45,107,79,0.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .profile-section-title { font-size: 14px; font-weight: 700; color: var(--forest); }
+    .profile-section-desc  { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .profile-section-body  { padding: 24px; }
+
+    /* Fields */
+    .field-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field-full  { grid-column: 1 / -1; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--forest); margin-bottom: 6px; }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--green);
+    }
+    .field textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
+
+    /* Platform grid */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .platform-card {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 14px 10px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .platform-card input { display: none; }
+    .platform-card.selected { border-color: var(--green); background: rgba(45,107,79,0.06); }
+    .platform-card .platform-name { font-size: 12px; font-weight: 500; color: var(--forest); }
+    .handle-fields { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .handle-field { animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Voice cards */
+    .voice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 0; }
+    .voice-card {
+      padding: 14px 16px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .voice-card.selected { border-color: var(--green); background: rgba(45,107,79,0.06); }
+    .voice-card-title { font-size: 12px; font-weight: 600; color: var(--forest); margin-bottom: 3px; }
+    .voice-card-desc  { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Goal list */
+    .goal-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 0; }
+    .goal-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 10px;
+      border: 1.5px solid var(--border);
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .goal-card.selected { border-color: var(--green); background: rgba(45,107,79,0.06); }
+    .goal-card-text { font-size: 13px; color: var(--forest); }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 1.5px dashed rgba(45,107,79,0.3);
+      border-radius: 10px;
+      padding: 32px 24px;
+      text-align: center;
+      background: rgba(45,107,79,0.02);
+      margin-bottom: 12px;
+    }
+    .upload-zone svg { color: var(--green); margin-bottom: 10px; }
+    .upload-zone p   { font-size: 13px; color: var(--text-muted); margin: 0 0 12px; line-height: 1.5; }
+    .upload-zone a   { color: var(--green); font-weight: 600; text-decoration: none; }
+    .upload-note     { font-size: 11px; color: var(--text-muted); background: rgba(31,61,44,0.04); border-radius: 6px; padding: 8px 12px; }
+
+    /* Save bar */
+    .save-bar {
+      position: sticky; bottom: 0;
+      background: #fff;
+      border-top: 0.5px solid var(--border);
+      padding: 14px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+      z-index: 10;
+    }
+    .save-bar-msg { font-size: 12px; color: var(--text-muted); }
+    .save-bar-msg.success { color: var(--green); font-weight: 600; }
+    .save-bar-msg.error   { color: #7D2A03; font-weight: 600; }
+    .btn-save {
+      background: var(--forest); color: #fff;
+      border: none; border-radius: 9px;
+      padding: 11px 28px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn-save:disabled { opacity: 0.5; cursor: default; }
+    .btn-save:hover:not(:disabled) { opacity: 0.88; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <button class="header-sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <a href="/dashboard" class="brand-wordmark">
+          <span class="brand-wordmark-serif">Done For You</span>
+          <span class="brand-wordmark-sans">Marketing</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <span class="welcome-name" id="welcomeName">Loading…</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="portal-layout">
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Welcome back</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
+          </div>
+        </div>
+        <nav>
+          <a href="/dashboard" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+            Dashboard
+          </a>
+          <a href="/posts" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+          </a>
+          <a href="/gbp" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="portal-main-content">
+      <div class="profile-page">
+
+        <div class="profile-page-header">
+          <h1>Your Business Profile</h1>
+          <p>This information helps your team create content that's accurate, on-brand, and specific to your business.</p>
+        </div>
+
+        <!-- Completion indicator -->
+        <div class="completion-bar-wrap">
+          <div class="completion-ring">
+            <svg width="44" height="44" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="17" fill="none" stroke="rgba(31,61,44,0.08)" stroke-width="4"/>
+              <circle cx="22" cy="22" r="17" fill="none" stroke="#2D6B4F" stroke-width="4"
+                stroke-linecap="round" transform="rotate(-90 22 22)" id="completionArc"
+                stroke-dasharray="0 107"/>
+            </svg>
+            <span id="completionPct">0%</span>
+          </div>
+          <div class="completion-bar-text">
+            <strong id="completionLabel">Complete your profile</strong>
+            <span id="completionSub">Fill in the fields below so your team has everything they need.</span>
+          </div>
+          <div class="completion-track">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:5px;">
+              <span>Complete</span><b id="completionPct2" style="color:var(--forest)">0%</b>
+            </div>
+            <div class="completion-track-bar"><div class="completion-track-fill" id="completionFill" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- SECTION 1: Business Details -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Business Details</div>
+              <div class="profile-section-desc">Your core business information</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+            <div class="field-grid">
+              <div class="field">
+                <label>Business name</label>
+                <input type="text" id="business_name" placeholder="Bloom Wellness"/>
+              </div>
+              <div class="field">
+                <label>Industry / Niche</label>
+                <input type="text" id="industry" placeholder="Health & wellness, Real estate…"/>
+              </div>
+              <div class="field">
+                <label>Business phone</label>
+                <input type="tel" id="phone" placeholder="(916) 555-0100"/>
+              </div>
+              <div class="field">
+                <label>Business website</label>
+                <input type="url" id="website" placeholder="https://yourbusiness.com"/>
+              </div>
+              <div class="field field-full">
+                <label>City &amp; State</label>
+                <input type="text" id="location" placeholder="Sacramento, CA"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Social Media -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Social Media Accounts</div>
+              <div class="profile-section-desc">Select every platform you're currently on</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+            <div class="platform-grid">
+              <label class="platform-card" id="card-instagram" onclick="togglePlatform('instagram',this)">
+                <input type="checkbox" id="plat-instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <span class="platform-name">Instagram</span>
+              </label>
+              <label class="platform-card" id="card-facebook" onclick="togglePlatform('facebook',this)">
+                <input type="checkbox" id="plat-facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                <span class="platform-name">Facebook</span>
+              </label>
+              <label class="platform-card" id="card-linkedin" onclick="togglePlatform('linkedin',this)">
+                <input type="checkbox" id="plat-linkedin">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                <span class="platform-name">LinkedIn</span>
+              </label>
+              <label class="platform-card" id="card-tiktok" onclick="togglePlatform('tiktok',this)">
+                <input type="checkbox" id="plat-tiktok">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                <span class="platform-name">TikTok</span>
+              </label>
+              <label class="platform-card" id="card-google" onclick="togglePlatform('google',this)">
+                <input type="checkbox" id="plat-google">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="platform-name">Google Business</span>
+              </label>
+              <label class="platform-card" id="card-x" onclick="togglePlatform('x',this)">
+                <input type="checkbox" id="plat-x">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span class="platform-name">X / Twitter</span>
+              </label>
+            </div>
+            <div class="handle-fields" id="handleFields"></div>
+            <div class="field" style="margin-top:16px;">
+              <label>Anything else we should know about your accounts?</label>
+              <textarea id="social_notes" rows="2" placeholder="e.g. I have login access, account was previously inactive…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Brand & Voice -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Brand &amp; Voice</div>
+              <div class="profile-section-desc">How your content should sound and who it speaks to</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+            <div class="field" style="margin-bottom:20px;">
+              <label style="margin-bottom:10px;display:block;">Choose your brand voice</label>
+              <div class="voice-grid">
+                <div class="voice-card" onclick="selectVoice('Professional & trustworthy',this)">
+                  <div class="voice-card-title">Professional &amp; Trustworthy</div>
+                  <div class="voice-card-desc">Authoritative and polished. Builds credibility.</div>
+                </div>
+                <div class="voice-card" onclick="selectVoice('Friendly & conversational',this)">
+                  <div class="voice-card-title">Friendly &amp; Conversational</div>
+                  <div class="voice-card-desc">Warm and approachable. Like a knowledgeable friend.</div>
+                </div>
+                <div class="voice-card" onclick="selectVoice('Fun & witty',this)">
+                  <div class="voice-card-title">Fun &amp; Witty</div>
+                  <div class="voice-card-desc">Light-hearted with personality. Great for lifestyle brands.</div>
+                </div>
+                <div class="voice-card" onclick="selectVoice('Inspirational & motivational',this)">
+                  <div class="voice-card-title">Inspirational &amp; Motivational</div>
+                  <div class="voice-card-desc">Uplifting and empowering. Moves people to act.</div>
+                </div>
+                <div class="voice-card" onclick="selectVoice('Educational & informative',this)">
+                  <div class="voice-card-title">Educational &amp; Informative</div>
+                  <div class="voice-card-desc">Tips, how-tos, and insights. Positions you as an expert.</div>
+                </div>
+                <div class="voice-card" onclick="selectVoice('Luxe & aspirational',this)">
+                  <div class="voice-card-title">Luxe &amp; Aspirational</div>
+                  <div class="voice-card-desc">Elevated and exclusive. Perfect for premium brands.</div>
+                </div>
+              </div>
+              <input type="hidden" id="brand_voice"/>
+            </div>
+            <div class="field-grid">
+              <div class="field field-full">
+                <label>Who is your target audience?</label>
+                <textarea id="target_audience" rows="2" placeholder="e.g. Women 30–50 in Sacramento interested in holistic health, local small business owners…"></textarea>
+              </div>
+              <div class="field field-full">
+                <label>Topics and themes to post about</label>
+                <textarea id="content_themes" rows="3" placeholder="e.g. Behind-the-scenes, tips & education, client success stories, seasonal promotions…"></textarea>
+              </div>
+              <div class="field field-full">
+                <label>Things we should <em>never</em> post about</label>
+                <textarea id="avoid_content" rows="2" placeholder="e.g. Politics, competitor mentions, pricing details, personal photos…"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Goals -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Marketing Goals</div>
+              <div class="profile-section-desc">What you're hoping to achieve</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+            <div class="field" style="margin-bottom:20px;">
+              <label style="margin-bottom:10px;display:block;">Primary goal</label>
+              <div class="goal-list">
+                <div class="goal-card" onclick="selectGoal('Build brand awareness',this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8s-4 4-10 4S2 8 2 8"/><path d="M2 8c0-2.2 4.5-4 10-4s10 1.8 10 4v8c0 2.2-4.5 4-10 4S2 18.2 2 16V8z"/></svg>
+                  <span class="goal-card-text">Build brand awareness — more people knowing who we are</span>
+                </div>
+                <div class="goal-card" onclick="selectGoal('Grow followers & engagement',this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  <span class="goal-card-text">Grow followers &amp; engagement on social media</span>
+                </div>
+                <div class="goal-card" onclick="selectGoal('Generate leads & sales',this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  <span class="goal-card-text">Generate leads and drive more sales</span>
+                </div>
+                <div class="goal-card" onclick="selectGoal('Build community & loyalty',this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span class="goal-card-text">Build a loyal community around my brand</span>
+                </div>
+                <div class="goal-card" onclick="selectGoal('Establish thought leadership',this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span class="goal-card-text">Establish myself as an expert in my field</span>
+                </div>
+              </div>
+              <input type="hidden" id="primary_goal"/>
+            </div>
+            <div class="field">
+              <label>Anything else we should know before we get started?</label>
+              <textarea id="additional_notes" rows="3" placeholder="Previous agency experience, upcoming events, seasonal campaigns, specific requests…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Brand Assets -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Brand Assets</div>
+              <div class="profile-section-desc">Logos, photos, and visual content for your team</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+            <div class="upload-zone">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+              <p>Send your logos, brand photos, and any visual assets to your team<br>and they'll use them across all your content.</p>
+              <a href="/contact">Send files via the Contact page →</a>
+            </div>
+            <p class="upload-note">
+              📎 <strong>How to share:</strong> Email your files to your account manager, or use the Contact page to send them directly to your team. Direct file upload is coming soon.
+            </p>
+          </div>
+        </div>
+
+        <!-- Save bar -->
+        <div class="save-bar">
+          <span class="save-bar-msg" id="saveMsg"></span>
+          <button class="btn-save" id="saveBtn" onclick="saveProfile()">Save changes</button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    /* ── State ── */
+    const selectedPlatforms = {};
+    let selectedVoice = null;
+    let selectedGoal  = null;
+    let userData      = {};
+
+    /* ── Auth + load ── */
+    async function init() {
+      const [meRes, obRes] = await Promise.all([
+        fetch('/api/auth/me'),
+        fetch('/api/onboarding')
+      ]);
+      const meData = await meRes.json();
+      const obData = await obRes.json();
+
+      if (!meData.user) { window.location.href = '/login'; return; }
+      userData = meData.user;
+
+      /* Header / sidebar */
+      document.getElementById('welcomeName').textContent = meData.user.business_name || meData.user.name;
+      document.getElementById('sidebarName').textContent = meData.user.name;
+      if (localStorage.getItem('sidebarOpen') === '0') {
+        document.getElementById('portalSidebar').classList.add('collapsed');
+      }
+
+      /* Populate fields */
+      const u = meData.user;
+      const o = obData.onboarding || {};
+
+      setValue('business_name', u.business_name || '');
+      setValue('industry',      o.industry      || '');
+      setValue('phone',         o.phone         || '');
+      setValue('website',       o.website       || '');
+      setValue('location',      o.location      || '');
+      setValue('social_notes',  o.social_notes  || '');
+      setValue('target_audience', o.target_audience || '');
+      setValue('content_themes',  o.content_themes  || '');
+      setValue('avoid_content',   o.avoid_content   || '');
+      setValue('additional_notes',o.additional_notes|| '');
+
+      /* Platforms */
+      if (Array.isArray(o.platforms)) {
+        o.platforms.forEach(p => {
+          const card = document.getElementById('card-' + p.name);
+          if (card) {
+            card.classList.add('selected');
+            card.querySelector('input').checked = true;
+            selectedPlatforms[p.name] = p.handle || '';
+            addHandleField(p.name, card.querySelector('.platform-name').textContent, p.handle || '');
+          }
+        });
+      }
+
+      /* Voice */
+      if (o.brand_voice) {
+        document.querySelectorAll('.voice-card').forEach(c => {
+          if (c.querySelector('.voice-card-title').textContent.replace(/&amp;/g,'&').trim() === o.brand_voice.trim()) {
+            c.classList.add('selected');
+          }
+        });
+        selectedVoice = o.brand_voice;
+        document.getElementById('brand_voice').value = o.brand_voice;
+      }
+
+      /* Goal */
+      if (o.primary_goal) {
+        document.querySelectorAll('.goal-card').forEach(c => {
+          if (c.querySelector('.goal-card-text').textContent.trim() === o.primary_goal.trim()) {
+            c.classList.add('selected');
+          }
+        });
+        selectedGoal = o.primary_goal;
+        document.getElementById('primary_goal').value = o.primary_goal;
+      }
+
+      updateCompletion();
+    }
+
+    function setValue(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
+
+    /* ── Completion meter ── */
+    function updateCompletion() {
+      const fields = [
+        !!document.getElementById('business_name').value.trim(),
+        !!document.getElementById('industry').value.trim(),
+        !!document.getElementById('location').value.trim(),
+        !!document.getElementById('phone').value.trim(),
+        !!document.getElementById('website').value.trim(),
+        Object.keys(selectedPlatforms).length > 0,
+        !!selectedVoice,
+        !!document.getElementById('target_audience').value.trim(),
+        !!selectedGoal,
+      ];
+      const done = fields.filter(Boolean).length;
+      const pct  = Math.round(done / fields.length * 100);
+      const r = 17, circ = 2 * Math.PI * r;
+
+      document.getElementById('completionArc').setAttribute('stroke-dasharray', `${circ * pct / 100} ${circ * (1 - pct / 100)}`);
+      document.getElementById('completionPct').textContent  = pct + '%';
+      document.getElementById('completionPct2').textContent = pct + '%';
+      document.getElementById('completionFill').style.width = pct + '%';
+
+      if (pct === 100) {
+        document.getElementById('completionLabel').textContent = 'Profile complete!';
+        document.getElementById('completionSub').textContent   = 'Your team has everything they need. ✓';
+      } else {
+        document.getElementById('completionLabel').textContent = 'Complete your profile';
+        document.getElementById('completionSub').textContent   = `${fields.length - done} field${fields.length - done !== 1 ? 's' : ''} still needed`;
+      }
+    }
+
+    /* ── Platform toggle ── */
+    function togglePlatform(name, card) {
+      const cb = card.querySelector('input');
+      cb.checked = !cb.checked;
+      card.classList.toggle('selected', cb.checked);
+      if (cb.checked) {
+        selectedPlatforms[name] = '';
+        addHandleField(name, card.querySelector('.platform-name').textContent, '');
+      } else {
+        delete selectedPlatforms[name];
+        const f = document.getElementById('handle-field-' + name);
+        if (f) f.remove();
+      }
+      updateCompletion();
+    }
+
+    function addHandleField(name, label, value) {
+      const container = document.getElementById('handleFields');
+      const div = document.createElement('div');
+      div.className = 'field handle-field';
+      div.id = 'handle-field-' + name;
+      div.innerHTML = `<label>${label} username / handle</label>
+        <input type="text" id="handle-${name}" value="${value}" placeholder="@yourusername"
+          oninput="selectedPlatforms['${name}'] = this.value"/>`;
+      container.appendChild(div);
+    }
+
+    /* ── Voice selection ── */
+    function selectVoice(name, card) {
+      document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedVoice = name;
+      document.getElementById('brand_voice').value = name;
+      updateCompletion();
+    }
+
+    /* ── Goal selection ── */
+    function selectGoal(name, card) {
+      document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedGoal = name;
+      document.getElementById('primary_goal').value = name;
+      updateCompletion();
+    }
+
+    /* ── Save ── */
+    async function saveProfile() {
+      const btn = document.getElementById('saveBtn');
+      const msg = document.getElementById('saveMsg');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      msg.textContent = '';
+      msg.className = 'save-bar-msg';
+
+      const platforms = Object.entries(selectedPlatforms).map(([name, handle]) => ({
+        name,
+        handle: document.getElementById('handle-' + name)?.value || handle
+      }));
+
+      try {
+        /* Save business basics to clients table */
+        const accountRes = await fetch('/api/account/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name:          userData.name,
+            email:         userData.email,
+            business_name: document.getElementById('business_name').value.trim()
+          })
+        });
+        if (!accountRes.ok) {
+          const d = await accountRes.json();
+          throw new Error(d.error || 'Could not save account info.');
+        }
+
+        /* Save all onboarding data */
+        const obRes = await fetch('/api/onboarding', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            industry:         document.getElementById('industry').value.trim(),
+            website:          document.getElementById('website').value.trim(),
+            phone:            document.getElementById('phone').value.trim(),
+            location:         document.getElementById('location').value.trim(),
+            platforms,
+            social_notes:     document.getElementById('social_notes').value.trim(),
+            brand_voice:      selectedVoice,
+            target_audience:  document.getElementById('target_audience').value.trim(),
+            content_themes:   document.getElementById('content_themes').value.trim(),
+            avoid_content:    document.getElementById('avoid_content').value.trim(),
+            primary_goal:     selectedGoal,
+            additional_notes: document.getElementById('additional_notes').value.trim(),
+          })
+        });
+        if (!obRes.ok) {
+          const d = await obRes.json();
+          throw new Error(d.error || 'Could not save profile data.');
+        }
+
+        updateCompletion();
+        msg.textContent = '✓ Profile saved successfully!';
+        msg.className = 'save-bar-msg success';
+        setTimeout(() => { msg.textContent = ''; msg.className = 'save-bar-msg'; }, 4000);
+
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'save-bar-msg error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save changes';
+      }
+    }
+
+    /* ── Sidebar ── */
+    function toggleSidebar() {
+      const s = document.getElementById('portalSidebar');
+      const isOpen = !s.classList.contains('collapsed');
+      s.classList.toggle('collapsed', isOpen);
+      localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
+    }
+
+    /* ── Logout ── */
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login';
+    });
+
+    /* Live completion update on any input */
+    document.querySelectorAll('input:not([type=checkbox]):not([type=hidden]), textarea').forEach(el => {
+      el.addEventListener('input', updateCompletion);
+    });
+
+    init();
+  </script>
+</body>
+</html>

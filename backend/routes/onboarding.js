@@ -19,6 +19,7 @@ pool.query(`
     phone VARCHAR(50),
     location VARCHAR(255),
     platforms JSONB DEFAULT '[]',
+    social_notes TEXT,
     brand_voice VARCHAR(100),
     target_audience TEXT,
     content_themes TEXT,
@@ -30,6 +31,9 @@ pool.query(`
     updated_at TIMESTAMP DEFAULT NOW()
   )
 `).catch(err => console.error('Onboarding table init error:', err));
+
+pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS social_notes TEXT`)
+  .catch(() => {});
 
 // Middleware: require valid JWT cookie
 function requireAuth(req, res, next) {
@@ -48,7 +52,7 @@ router.post('/', requireAuth, async (req, res) => {
   const clientId = req.user.id;
   const {
     industry, website, phone, location,
-    platforms, brand_voice, target_audience,
+    platforms, social_notes, brand_voice, target_audience,
     content_themes, avoid_content,
     primary_goal, additional_notes, referral_source
   } = req.body;
@@ -56,16 +60,17 @@ router.post('/', requireAuth, async (req, res) => {
   try {
     await pool.query(`
       INSERT INTO client_onboarding
-        (client_id, industry, website, phone, location, platforms, brand_voice,
-         target_audience, content_themes, avoid_content, primary_goal,
+        (client_id, industry, website, phone, location, platforms, social_notes,
+         brand_voice, target_audience, content_themes, avoid_content, primary_goal,
          additional_notes, referral_source, completed_at, updated_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, NOW(), NOW())
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14, NOW(), NOW())
       ON CONFLICT (client_id) DO UPDATE SET
         industry = EXCLUDED.industry,
         website = EXCLUDED.website,
         phone = EXCLUDED.phone,
         location = EXCLUDED.location,
         platforms = EXCLUDED.platforms,
+        social_notes = EXCLUDED.social_notes,
         brand_voice = EXCLUDED.brand_voice,
         target_audience = EXCLUDED.target_audience,
         content_themes = EXCLUDED.content_themes,
@@ -76,8 +81,8 @@ router.post('/', requireAuth, async (req, res) => {
         updated_at = NOW()
     `, [
       clientId, industry, website, phone, location,
-      JSON.stringify(platforms || []), brand_voice,
-      target_audience, content_themes, avoid_content,
+      JSON.stringify(platforms || []), social_notes || null,
+      brand_voice, target_audience, content_themes, avoid_content,
       primary_goal, additional_notes, referral_source
     ]);
 
