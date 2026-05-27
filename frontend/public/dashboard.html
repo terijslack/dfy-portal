@@ -158,15 +158,63 @@
     /* Two-col layout */
     .two-col {
       display: grid;
-      grid-template-columns: 2.4fr 1fr;
+      grid-template-columns: 2fr 1fr;
       gap: 16px;
       margin-bottom: 16px;
     }
-    .three-col {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 16px;
+
+    /* Month feed */
+    .feed-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 0.5px solid rgba(31,61,44,0.08);
     }
+    .feed-item:first-child { border-top: none; padding-top: 0; }
+    .feed-date {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-slate-light);
+      width: 46px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .feed-platform {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: rgba(45,107,79,0.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .feed-body { flex: 1; min-width: 0; }
+    .feed-caption {
+      font-size: 12px; color: #444441;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .badge-pending {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+      background: rgba(125,42,3,0.1); color: #7D2A03;
+    }
+    .badge-scheduled {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+      background: rgba(59,109,17,0.1); color: #3B6D11;
+    }
+    .badge-published {
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+      background: rgba(107,117,107,0.12); color: var(--color-slate);
+    }
+    .feed-more {
+      text-align: center;
+      padding-top: 12px;
+      border-top: 0.5px solid rgba(31,61,44,0.08);
+      margin-top: 4px;
+    }
+    .feed-more a {
+      font-size: 12px; color: var(--color-green); font-weight: 500; text-decoration: none;
+    }
+    .feed-more a:hover { text-decoration: underline; }
 
 
     /* Profile completion banner */
@@ -582,54 +630,16 @@
         <!-- Main two-col row -->
         <div class="two-col">
 
-          <!-- Left: reach chart + platform breakdown -->
+          <!-- Left: This Month feed -->
           <div class="db-card">
             <div class="db-card-header">
-              <div class="db-card-title">Monthly reach — all platforms</div>
-              <a href="/analytics" class="db-card-link">Full analytics →</a>
+              <div class="db-card-title">Coming up this month</div>
+              <a href="/calendar" class="db-card-link">View calendar →</a>
             </div>
-            <div style="margin-top:4px;">
-              <div class="db-card-title" style="margin-bottom:12px;">Reach by platform</div>
-              <div class="platform-row">
-                <div class="platform-icon-wrap" style="background:rgba(45,107,79,0.08);">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                </div>
-                <div class="platform-name">Instagram</div>
-                <div class="platform-bar-wrap"><div class="platform-bar" style="width:82%;background:#C13584;"></div></div>
-                <div class="platform-val">2,240</div>
-                <div class="platform-change up"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 22%</div>
-              </div>
-              <div class="platform-row">
-                <div class="platform-icon-wrap" style="background:rgba(45,107,79,0.08);">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                </div>
-                <div class="platform-name">Facebook</div>
-                <div class="platform-bar-wrap"><div class="platform-bar" style="width:55%;background:#1877F2;"></div></div>
-                <div class="platform-val">1,490</div>
-                <div class="platform-change up"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 11%</div>
-              </div>
-              <div class="platform-row">
-                <div class="platform-icon-wrap" style="background:rgba(45,107,79,0.08);">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                </div>
-                <div class="platform-name">Google</div>
-                <div class="platform-bar-wrap"><div class="platform-bar" style="width:40%;background:#BA7517;"></div></div>
-                <div class="platform-val">948</div>
-                <div class="platform-change up"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 9%</div>
-              </div>
-              <div class="platform-row">
-                <div class="platform-icon-wrap" style="background:rgba(45,107,79,0.08);">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                </div>
-                <div class="platform-name">LinkedIn</div>
-                <div class="platform-bar-wrap"><div class="platform-bar" style="width:15%;background:#0A66C2;"></div></div>
-                <div class="platform-val">142</div>
-                <div class="platform-change down"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> 3%</div>
-              </div>
-            </div>
+            <div id="monthFeed"><div class="empty-state">Loading…</div></div>
           </div>
 
-          <!-- Right col: approval queue + GBP -->
+          <!-- Right: Approval + suggestions -->
           <div style="display:flex;flex-direction:column;gap:16px;">
 
             <div class="db-card">
@@ -642,24 +652,30 @@
 
             <div class="db-card">
               <div class="db-card-header">
-                <div class="db-card-title">Google Business Profile</div>
-                <a href="/gbp" class="db-card-link">Details →</a>
+                <div class="db-card-title">From your team</div>
               </div>
-              <div class="gbp-grid">
-                <div class="gbp-mini">
-                  <div class="gbp-mini-num">142</div>
-                  <div class="gbp-mini-label">Views</div>
-                  <div class="gbp-mini-change"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 9%</div>
+              <div class="suggestion">
+                <div class="suggestion-top">
+                  <div class="suggestion-avatar">DFY</div>
+                  <div class="suggestion-from">Done For You Marketing</div>
+                  <div class="suggestion-tag">Opportunity</div>
                 </div>
-                <div class="gbp-mini">
-                  <div class="gbp-mini-num">18</div>
-                  <div class="gbp-mini-label">Calls</div>
-                  <div class="gbp-mini-change"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg> 6%</div>
+                <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
+                <div class="suggestion-actions">
+                  <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
+                  <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
                 </div>
-                <div class="gbp-mini">
-                  <div class="gbp-mini-num">4.8</div>
-                  <div class="gbp-mini-label">Rating</div>
-                  <div class="gbp-mini-change">23 reviews</div>
+              </div>
+              <div class="suggestion" style="margin-top:8px;" id="suggestion2">
+                <div class="suggestion-top">
+                  <div class="suggestion-avatar">DFY</div>
+                  <div class="suggestion-from">Done For You Marketing</div>
+                  <div class="suggestion-tag">Seasonal</div>
+                </div>
+                <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
+                <div class="suggestion-actions">
+                  <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
+                  <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
                 </div>
               </div>
             </div>
@@ -667,71 +683,6 @@
           </div>
         </div>
 
-        <!-- Bottom row: email locked + coming up -->
-        <div class="three-col">
-
-          <!-- Email locked -->
-          <div class="locked-card">
-            <div class="db-card-header"><div class="db-card-title">Email campaigns</div></div>
-            <div class="email-row"><div class="email-subject">May newsletter — Spring deals</div><div class="email-stat">42% open</div></div>
-            <div class="email-row"><div class="email-subject">Welcome sequence — new clients</div><div class="email-stat">61% open</div></div>
-            <div class="email-row"><div class="email-subject">Re-engagement — April</div><div class="email-stat">28% open</div></div>
-            <div class="locked-wash"></div>
-            <a href="/account" class="lock-corner">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span>Upgrade to view</span>
-            </a>
-          </div>
-
-          <!-- Coming up + suggestions -->
-          <div class="db-card">
-            <div class="db-card-header">
-              <div class="db-card-title">Coming up</div>
-              <a href="/calendar" class="db-card-link">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>View calendar →
-              </a>
-            </div>
-
-            <div class="coming-up-inner">
-              <div id="upcomingList">
-                <div class="empty-state">Loading…</div>
-              </div>
-
-              <div>
-                <div class="section-divider" style="margin-top:0;">
-                  <div class="divider-line"></div>
-                  <div class="divider-label">From your team</div>
-                  <div class="divider-line"></div>
-                </div>
-                <div class="suggestion">
-                  <div class="suggestion-top">
-                    <div class="suggestion-avatar">DFY</div>
-                    <div class="suggestion-from">Done For You Marketing</div>
-                    <div class="suggestion-tag">Opportunity</div>
-                  </div>
-                  <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
-                  <div class="suggestion-actions">
-                    <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
-                    <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
-                  </div>
-                </div>
-                <div class="suggestion" style="margin-top:8px;" id="suggestion2">
-                  <div class="suggestion-top">
-                    <div class="suggestion-avatar">DFY</div>
-                    <div class="suggestion-from">Done For You Marketing</div>
-                    <div class="suggestion-tag">Seasonal</div>
-                  </div>
-                  <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
-                  <div class="suggestion-actions">
-                    <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
-                    <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
 
         <!-- Bottom cards: Business Profile + Media Uploads -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
@@ -1080,28 +1031,44 @@
           `).join('');
         }
 
-        /* Upcoming posts */
-        const upcomingEl = document.getElementById('upcomingList');
-        const upcoming   = posts
-          .filter(p => new Date(p.scheduled_date) >= now)
-          .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date))
-          .slice(0, 5);
+        /* Month feed */
+        const feedEl     = document.getElementById('monthFeed');
+        const monthPosts = posts
+          .filter(p => {
+            const d = new Date(p.scheduled_date);
+            return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+          })
+          .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
 
-        if (upcoming.length === 0) {
-          upcomingEl.innerHTML = `<div class="empty-state">No upcoming posts scheduled.</div>`;
+        if (monthPosts.length === 0) {
+          feedEl.innerHTML = `<div class="empty-state">No content scheduled this month yet.<br><a href="/posts" style="color:#2D6B4F;font-weight:500;text-decoration:none;">View all posts →</a></div>`;
         } else {
-          upcomingEl.innerHTML = upcoming.map(p => `
-            <div class="upcoming-item">
-              <div class="upcoming-date">${formatDate(p.scheduled_date)}</div>
-              <div class="upcoming-caption">${escapeHtml(p.caption)}</div>
-              <div class="upcoming-platform">${platformIcon(p.platform)}</div>
-            </div>
-          `).join('');
+          const show = monthPosts.slice(0, 10);
+          feedEl.innerHTML = show.map(p => {
+            const d      = new Date(p.scheduled_date);
+            const dayStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            let badge = '';
+            if (p.status === 'pending')        badge = `<span class="badge-pending">Needs approval</span>`;
+            else if (p.status === 'published') badge = `<span class="badge-published">Published</span>`;
+            else                               badge = `<span class="badge-scheduled">Scheduled</span>`;
+            return `
+              <div class="feed-item">
+                <div class="feed-date">${dayStr}</div>
+                <div class="feed-platform">${platformIcon(p.platform)}</div>
+                <div class="feed-body">
+                  <div class="feed-caption">${escapeHtml(p.caption)}</div>
+                  <div>${badge}</div>
+                </div>
+              </div>`;
+          }).join('');
+          if (monthPosts.length > 10) {
+            feedEl.innerHTML += `<div class="feed-more"><a href="/calendar">+ ${monthPosts.length - 10} more this month →</a></div>`;
+          }
         }
 
       } catch (e) {
         document.getElementById('approvalList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
-        document.getElementById('upcomingList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
+        document.getElementById('monthFeed').innerHTML   = `<div class="empty-state">Could not load posts.</div>`;
       }
     }
 
