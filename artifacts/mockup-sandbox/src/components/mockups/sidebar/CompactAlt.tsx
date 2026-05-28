@@ -16,7 +16,7 @@ export default function CompactAlt() {
             <p style={{ color: "#7D2A03", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
               Marketing, handled.
             </p>
-            <p style={{ color: "#1F3D2C", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 500, margin: 0 }}>
+            <p style={{ color: "#1F3D2C", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700, margin: 0 }}>
               Bloom Wellness
             </p>
           </div>
