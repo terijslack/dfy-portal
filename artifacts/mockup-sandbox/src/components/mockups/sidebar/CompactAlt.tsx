@@ -9,11 +9,11 @@ export default function CompactAlt() {
         </div>
         <div style={{ padding: "0 14px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
           <div style={{
-            background: "rgba(245,242,234,0.18)",
+            background: "rgba(125,42,3,0.35)",
             borderRadius: 8,
             padding: "8px 14px 10px",
           }}>
-            <p style={{ color: "#7D2A03", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
+            <p style={{ color: "#F5F2EA", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
               Marketing, handled.
             </p>
             <p style={{ color: "#F5F2EA", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 500, margin: 0 }}>
