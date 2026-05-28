@@ -679,79 +679,79 @@
           </div>
         </div>
 
-        <!-- Social Performance -->
-        <div class="db-card hero-card--locked" id="socialPerfCard" style="margin-top:16px;position:relative;overflow:hidden;">
+        <!-- Coming up this month (full width) -->
+        <div class="db-card" style="margin-top:16px;">
           <div class="db-card-header">
-            <div class="db-card-title">Social Performance</div>
-            <a href="/profile" class="db-card-link">Connect socials →</a>
+            <div class="db-card-title">Coming up this month</div>
+            <a href="/calendar" class="db-card-link">View calendar →</a>
           </div>
-          <!-- Teaser rows (blurred) -->
-          <div>
-            <div class="social-perf-row">
-              <div class="social-perf-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-              </div>
-              <div class="social-perf-name">Instagram</div>
-              <div class="social-perf-followers">
-                <div class="social-perf-followers-num">4,820</div>
-                <div class="social-perf-followers-label">followers</div>
-              </div>
-              <span class="social-perf-gain">+47 this month ↑</span>
-              <div class="social-perf-likes">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                312 likes
-              </div>
-            </div>
-            <div class="social-perf-row">
-              <div class="social-perf-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              </div>
-              <div class="social-perf-name">Facebook</div>
-              <div class="social-perf-followers">
-                <div class="social-perf-followers-num">1,240</div>
-                <div class="social-perf-followers-label">followers</div>
-              </div>
-              <span class="social-perf-gain">+12 this month ↑</span>
-              <div class="social-perf-likes">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                87 likes
-              </div>
-            </div>
-            <div class="social-perf-row">
-              <div class="social-perf-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              </div>
-              <div class="social-perf-name">LinkedIn</div>
-              <div class="social-perf-followers">
-                <div class="social-perf-followers-num">380</div>
-                <div class="social-perf-followers-label">followers</div>
-              </div>
-              <span class="social-perf-gain">+5 this month ↑</span>
-              <div class="social-perf-likes">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                24 likes
-              </div>
-            </div>
-          </div>
-          <!-- Lock overlay -->
-          <div class="hero-lock-overlay" style="justify-content:flex-end;align-items:flex-start;padding:14px 16px;">
-            <a href="/profile" class="hero-lock-link">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Connect your socials to unlock
-            </a>
-          </div>
+          <div id="monthFeed"><div class="empty-state">Loading…</div></div>
         </div>
 
         <!-- Main two-col row -->
         <div class="two-col" style="margin-top:16px;">
 
-          <!-- Left: This Month feed -->
-          <div class="db-card">
+          <!-- Left: Social Performance -->
+          <div class="db-card hero-card--locked" id="socialPerfCard" style="position:relative;overflow:hidden;">
             <div class="db-card-header">
-              <div class="db-card-title">Coming up this month</div>
-              <a href="/calendar" class="db-card-link">View calendar →</a>
+              <div class="db-card-title">Social Performance</div>
+              <a href="/profile" class="db-card-link">Connect socials →</a>
             </div>
-            <div id="monthFeed"><div class="empty-state">Loading…</div></div>
+            <!-- Teaser rows (blurred) -->
+            <div>
+              <div class="social-perf-row">
+                <div class="social-perf-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </div>
+                <div class="social-perf-name">Instagram</div>
+                <div class="social-perf-followers">
+                  <div class="social-perf-followers-num">4,820</div>
+                  <div class="social-perf-followers-label">followers</div>
+                </div>
+                <span class="social-perf-gain">+47 this month ↑</span>
+                <div class="social-perf-likes">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  312 likes
+                </div>
+              </div>
+              <div class="social-perf-row">
+                <div class="social-perf-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </div>
+                <div class="social-perf-name">Facebook</div>
+                <div class="social-perf-followers">
+                  <div class="social-perf-followers-num">1,240</div>
+                  <div class="social-perf-followers-label">followers</div>
+                </div>
+                <span class="social-perf-gain">+12 this month ↑</span>
+                <div class="social-perf-likes">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  87 likes
+                </div>
+              </div>
+              <div class="social-perf-row">
+                <div class="social-perf-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+                <div class="social-perf-name">LinkedIn</div>
+                <div class="social-perf-followers">
+                  <div class="social-perf-followers-num">380</div>
+                  <div class="social-perf-followers-label">followers</div>
+                </div>
+                <span class="social-perf-gain">+5 this month ↑</span>
+                <div class="social-perf-likes">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  24 likes
+                </div>
+              </div>
+            </div>
+            <!-- Lock overlay -->
+            <div class="hero-lock-overlay" style="justify-content:flex-end;align-items:flex-start;padding:14px 16px;">
+              <a href="/profile" class="hero-lock-link">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Connect your socials to unlock
+              </a>
+            </div>
           </div>
 
           <!-- Right: From your marketing team -->
