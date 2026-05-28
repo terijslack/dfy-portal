@@ -9,7 +9,7 @@ export default function CompactAlt() {
         </div>
         <div style={{ padding: "0 14px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
           <div style={{
-            background: "rgba(125,42,3,0.35)",
+            background: "rgba(125,42,3,0.80)",
             borderRadius: 8,
             padding: "8px 14px 10px",
           }}>
