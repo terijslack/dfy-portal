@@ -13,7 +13,7 @@ export default function CompactAlt() {
             borderRadius: 8,
             padding: "8px 14px 10px",
           }}>
-            <p style={{ color: "#7D2A03", fontSize: 10, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
+            <p style={{ color: "#7D2A03", fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
               Marketing, handled.
             </p>
             <p style={{ color: "#1F3D2C", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 700, margin: 0 }}>
