@@ -1507,7 +1507,6 @@ h2 em {
   height: 64px;
   width: auto;
   display: block;
-  filter: brightness(0) invert(1) sepia(0.08);
 }
 .portal-sidebar.collapsed .sidebar-logo {
   display: none;
