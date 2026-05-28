@@ -189,7 +189,7 @@
       flex-shrink: 0;
     }
     .feed-body { flex: 1; min-width: 0; }
-    #monthFeed { max-height: 440px; overflow-y: auto; }
+    #monthFeed { max-height: 300px; overflow-y: auto; }
     .feed-caption {
       font-size: 12px; color: #444441;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -223,10 +223,13 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 11px 0;
+      padding: 7px 0;
       border-top: 0.5px solid rgba(31,61,44,0.08);
     }
     .social-perf-row:first-child { border-top: none; padding-top: 0; }
+    .hero-card--locked .social-perf-row {
+      opacity: 0.45; filter: blur(1.5px); user-select: none; pointer-events: none;
+    }
     .social-perf-icon {
       width: 32px; height: 32px; border-radius: 8px;
       background: rgba(45,107,79,0.07);
@@ -751,16 +754,8 @@
             <div id="monthFeed"><div class="empty-state">Loading…</div></div>
           </div>
 
-          <!-- Right: Approval + suggestions -->
+          <!-- Right: From your marketing team -->
           <div style="display:flex;flex-direction:column;gap:16px;">
-
-            <div class="db-card">
-              <div class="db-card-header">
-                <div class="db-card-title">Needs your approval</div>
-                <a href="/posts" class="db-card-link">View all →</a>
-              </div>
-              <div id="approvalList"><div class="empty-state">Loading…</div></div>
-            </div>
 
             <div class="db-card">
               <div class="db-card-header">
