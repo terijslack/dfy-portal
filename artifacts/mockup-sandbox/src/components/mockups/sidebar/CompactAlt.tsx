@@ -7,13 +7,19 @@ export default function CompactAlt() {
         <div style={{ padding: "20px 20px 10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <img src={LOGO} style={{ height: 120, width: "auto", display: "block" }} alt="DFY Marketing" />
         </div>
-        <div style={{ padding: "0 16px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
-          <p style={{ color: "#7D2A03", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 2px", fontFamily: "Inter, sans-serif" }}>
-            Marketing, handled.
-          </p>
-          <p style={{ color: "#F5F2EA", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 500, margin: 0 }}>
-            Bloom Wellness
-          </p>
+        <div style={{ padding: "0 14px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
+          <div style={{
+            background: "rgba(0,0,0,0.22)",
+            borderRadius: 8,
+            padding: "8px 14px 10px",
+          }}>
+            <p style={{ color: "#7D2A03", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 3px", fontFamily: "Inter, sans-serif" }}>
+              Marketing, handled.
+            </p>
+            <p style={{ color: "#F5F2EA", fontFamily: "Georgia, serif", fontSize: 15, fontWeight: 500, margin: 0 }}>
+              Bloom Wellness
+            </p>
+          </div>
         </div>
         <div style={{ padding: "12px 12px 0", display: "flex", flexDirection: "column", gap: 2 }}>
           {["Dashboard", "Your Social Media", "Google Business Profile", "Performance Analytics", "Content Calendar"].map((item, i) => (
