@@ -5,7 +5,7 @@ export default function CompactAlt() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#e8e4dc" }}>
       <div style={{ width: 220, background: "#1F3D2C", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: "20px 20px 10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <img src={LOGO} style={{ height: 100, width: "auto", display: "block" }} alt="DFY Marketing" />
+          <img src={LOGO} style={{ height: 110, width: "auto", display: "block" }} alt="DFY Marketing" />
         </div>
         <div style={{ padding: "0 14px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
           <div style={{
