@@ -3,7 +3,7 @@ const LOGO = "https://393babb9-af72-4b63-a2c0-2f83507bfb64-00-3vouu36brmwwk.rike
 export default function BiggerLogoRust() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#e8e4dc" }}>
-      <div style={{ width: 220, background: "#1F3D2C", borderRadius: 12, overflow: "hidden" }}>
+      <div style={{ width: 220, background: "#2D6B4F", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: "20px 20px 14px", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <img src={LOGO} style={{ height: 95, width: "auto", display: "block" }} alt="DFY Marketing" />
         </div>
