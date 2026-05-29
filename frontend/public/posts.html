@@ -97,7 +97,7 @@
           <div class="portal-posts-col">
             <div class="page-header">
               <h1>Post Approval</h1>
-              <p class="page-subtitle">Review each post below. Click <strong>Approve</strong> to queue it, or <strong>Request Changes</strong> to send notes.</p>
+              <p class="page-subtitle" id="monthLabel"></p>
             </div>
 
             <div class="summary-bar" id="summaryBar">
@@ -238,6 +238,7 @@
       const now = new Date();
       const thisMonth = now.getMonth();
       const thisYear = now.getFullYear();
+      document.getElementById('monthLabel').textContent = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
       document.getElementById('pendingCount').textContent = posts.filter(p => p.status === 'pending').length;
       document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
       document.getElementById('scheduledCount').textContent = posts.filter(p => {
