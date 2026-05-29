@@ -415,8 +415,7 @@
         currentEmail = data.email;
         document.getElementById('accountName').textContent  = data.name;
         document.getElementById('accountEmail').textContent = data.email;
-        document.getElementById('welcomeName').textContent  = data.business_name || data.name;
-        document.getElementById('sidebarName').textContent  = data.name;
+        document.getElementById('sidebarName').textContent  = data.business_name || data.name;
 
         okEl.textContent = 'Changes saved.';
         btn.disabled = false;
@@ -437,7 +436,6 @@
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
       currentName  = meData.user.name;
       currentEmail = meData.user.email;
-      document.getElementById('welcomeName').textContent = meData.user.business_name || meData.user.name;
       document.getElementById('accountBusiness').textContent = meData.user.business_name || '—';
       document.getElementById('accountName').textContent = meData.user.name;
       document.getElementById('accountEmail').textContent = meData.user.email;

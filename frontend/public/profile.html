@@ -498,8 +498,7 @@
       userData = meData.user;
 
       /* Header / sidebar */
-      document.getElementById('welcomeName').textContent = meData.user.business_name || meData.user.name;
-      document.getElementById('sidebarName').textContent = meData.user.name;
+      document.getElementById('sidebarName').textContent = meData.user.business_name || meData.user.name;
       if (localStorage.getItem('sidebarOpen') === '0') {
         document.getElementById('portalSidebar').classList.add('collapsed');
       }

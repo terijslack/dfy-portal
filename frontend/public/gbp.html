@@ -365,7 +365,6 @@
       const data = await res.json();
       if (!data.user) { window.location.href = '/'; return; }
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
-      document.getElementById('welcomeName').textContent = data.user.business_name || data.user.name;
       document.getElementById('gbpFirstName').textContent = data.user.name.split(' ')[0];
       initSidebar(data.user.business_name || data.user.name);
     }

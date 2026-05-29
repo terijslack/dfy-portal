@@ -221,7 +221,6 @@
       const meData = await meRes.json();
       if (!meData.user) { window.location.href = '/'; return; }
       if (meData.user.is_admin) { window.location.href = '/admin'; return; }
-      document.getElementById('welcomeName').textContent = meData.user.business_name || meData.user.name;
       initSidebar(meData.user.business_name || meData.user.name);
       loadPosts();
     }

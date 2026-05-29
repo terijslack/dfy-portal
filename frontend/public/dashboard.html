@@ -938,7 +938,6 @@
       if (data.user.is_admin) { window.location.href = '/admin'; return; }
 
       const firstName = data.user.name.split(' ')[0];
-      document.getElementById('welcomeName').textContent  = data.user.business_name || data.user.name;
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
       initSidebar(data.user.business_name || data.user.name);
 
