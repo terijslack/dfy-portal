@@ -449,7 +449,7 @@
         availablePlans = data.available_plans;
         document.getElementById('planName').textContent = data.plan;
         document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
-        document.getElementById('billingAmount').textContent = '$' + data.price.toLocaleString() + '/month';
+        document.getElementById('billingAmount').textContent = '$' + data.price.toLocaleString();
         document.getElementById('billingDate').textContent = formatDate(data.billing_date);
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
