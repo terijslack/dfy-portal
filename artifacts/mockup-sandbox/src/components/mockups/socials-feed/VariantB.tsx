@@ -13,8 +13,8 @@ export function VariantB() {
     { id:2, platform:'facebook',  date:'May 19', status:'scheduled', caption:'Join us this weekend for our free marketing workshop. Learn proven growth strategies.' },
     { id:3, platform:'linkedin',  date:'May 15', status:'published', caption:'Q1 results: we helped 12 businesses increase engagement by an average of 340%.' },
     { id:4, platform:'instagram', date:'Apr 28', status:'published', caption:'Behind the scenes at the Bloom Wellness photo shoot. Great content starts with great visuals.' },
-    { id:5, platform:'facebook',  date:'Apr 20', status:'published', caption:'April is here and so are fresh new ideas for your business. Let's talk strategy.' },
-    { id:6, platform:'linkedin',  date:'Apr 12', status:'published', caption:'Consistency beats virality every time. Here's what 6 months of steady posting does.' },
+    { id:5, platform:'facebook',  date:'Apr 20', status:'published', caption:"April is here and so are fresh new ideas for your business. Let's talk strategy." },
+    { id:6, platform:'linkedin',  date:'Apr 12', status:'published', caption:"Consistency beats virality every time. Here's what 6 months of steady posting does." },
   ];
 
   const months = [

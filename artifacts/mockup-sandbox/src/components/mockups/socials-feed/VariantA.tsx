@@ -10,8 +10,8 @@ export function VariantA() {
     { id:2, platform:'facebook',  date:'May 19, 2026', status:'scheduled', caption:'Join us this weekend for our free marketing workshop. Learn the exact strategies we use to grow local businesses.' },
     { id:3, platform:'linkedin',  date:'May 15, 2026', status:'published', caption:'Excited to share our Q1 results: we helped 12 local businesses increase their social engagement by an average of 340%.' },
     { id:4, platform:'instagram', date:'Apr 28, 2026', status:'published', caption:'Behind the scenes at the Bloom Wellness photo shoot. Great content starts with great visuals.' },
-    { id:5, platform:'facebook',  date:'Apr 20, 2026', status:'published', caption:'April is here and so are fresh new ideas for your business. Let's talk strategy.' },
-    { id:6, platform:'linkedin',  date:'Apr 12, 2026', status:'published', caption:'Marketing insight: consistency beats virality every time. Here's what 6 months of steady posting does for your brand.' },
+    { id:5, platform:'facebook',  date:'Apr 20, 2026', status:'published', caption:"April is here and so are fresh new ideas for your business. Let's talk strategy." },
+    { id:6, platform:'linkedin',  date:'Apr 12, 2026', status:'published', caption:"Marketing insight: consistency beats virality every time. Here's what 6 months of steady posting does for your brand." },
   ];
 
   const months = [
