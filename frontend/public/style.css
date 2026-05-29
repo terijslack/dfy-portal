@@ -1067,7 +1067,6 @@ a.contact-detail-value:hover { color: var(--accent); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  max-width: 700px;
 }
 
 .cal-weekdays {
@@ -1091,7 +1090,7 @@ a.contact-detail-value:hover { color: var(--accent); }
 }
 
 .cal-cell {
-  min-height: 65px;
+  min-height: 80px;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 8px;
