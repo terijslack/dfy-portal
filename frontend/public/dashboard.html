@@ -1096,8 +1096,8 @@
         }
 
       } catch (e) {
-        document.getElementById('approvalList').innerHTML = `<div class="empty-state">Could not load posts.</div>`;
-        document.getElementById('monthFeed').innerHTML   = `<div class="empty-state">Could not load posts.</div>`;
+        const mf = document.getElementById('monthFeed');
+        if (mf) mf.innerHTML = `<div class="empty-state">No content scheduled this month yet.<br><a href="/posts" style="color:#2D6B4F;font-weight:500;text-decoration:none;">View all posts →</a></div>`;
       }
     }
 
