@@ -102,20 +102,16 @@
 
             <div class="summary-bar" id="summaryBar">
               <div class="summary-item">
-                <span class="summary-number" id="totalCount">—</span>
-                <span class="summary-label">Total Posts</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-number pending" id="pendingCount">—</span>
-                <span class="summary-label">Awaiting Review</span>
-              </div>
-              <div class="summary-item">
                 <span class="summary-number approved" id="approvedCount">—</span>
-                <span class="summary-label">Approved</span>
+                <span class="summary-label">Approved by You</span>
               </div>
               <div class="summary-item">
                 <span class="summary-number changes" id="changesCount">—</span>
                 <span class="summary-label">Changes Requested</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-number" id="scheduledCount">—</span>
+                <span class="summary-label">Scheduled This Month</span>
               </div>
             </div>
 
@@ -239,10 +235,16 @@
     }
 
     function updateSummary(posts) {
-      document.getElementById('totalCount').textContent = posts.length;
-      document.getElementById('pendingCount').textContent = posts.filter(p => p.status === 'pending').length;
-      document.getElementById('approvedCount').textContent = posts.filter(p => p.status === 'approved').length;
+      const now = new Date();
+      const thisMonth = now.getMonth();
+      const thisYear = now.getFullYear();
+      document.getElementById('approvedCount').textContent = posts.filter(p => p.status === 'approved' || p.status === 'queued').length;
       document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
+      document.getElementById('scheduledCount').textContent = posts.filter(p => {
+        if (!p.scheduled_date) return false;
+        const d = new Date(p.scheduled_date);
+        return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+      }).length;
     }
 
     function updateRail(posts) {
