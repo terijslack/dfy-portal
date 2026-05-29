@@ -292,18 +292,15 @@
                   <div class="plan-badge" id="planBadge">Current Plan</div>
                 </div>
                 <div class="account-row">
-                  <span class="account-label">Platforms managed</span>
-                  <span class="account-value" id="planPlatforms">—</span>
-                </div>
-                <div class="account-row">
-                  <span class="account-label">Posts per month</span>
-                  <span class="account-value" id="planPosts">—</span>
+                  <span class="account-label">Next billing amount</span>
+                  <span class="account-value" id="billingAmount">—</span>
                 </div>
                 <div class="account-row">
                   <span class="account-label">Next billing date</span>
                   <span class="account-value" id="billingDate">—</span>
                 </div>
                 <div class="plan-change-section">
+                  <a href="/contact" class="db-card-link" style="font-size:13px;">Questions about billing? Contact us →</a>
                   <button class="btn-plan-change" id="changePlanBtn" onclick="openChangePlanModal()">Change Plan</button>
                 </div>
               </div>
@@ -452,8 +449,7 @@
         availablePlans = data.available_plans;
         document.getElementById('planName').textContent = data.plan;
         document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
-        document.getElementById('planPlatforms').textContent = data.platforms;
-        document.getElementById('planPosts').textContent = data.posts_per_month + ' posts';
+        document.getElementById('billingAmount').textContent = '$' + data.price.toLocaleString() + '/month';
         document.getElementById('billingDate').textContent = formatDate(data.billing_date);
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
