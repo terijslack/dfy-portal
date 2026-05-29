@@ -1090,7 +1090,7 @@ a.contact-detail-value:hover { color: var(--accent); }
 }
 
 .cal-cell {
-  min-height: 80px;
+  min-height: 65px;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 8px;
