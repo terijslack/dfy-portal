@@ -115,6 +115,10 @@ app.get('/onboarding', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/onboarding.html'));
 });
 
+app.get('/landing', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/landing.html'));
+});
+
 // Anything else → send to the login page
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/login.html'));
