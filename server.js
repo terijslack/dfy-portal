@@ -123,6 +123,10 @@ app.get('/thank-you', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/thank-you.html'));
 });
 
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/privacy.html'));
+});
+
 // Anything else → send to the login page
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/login.html'));
