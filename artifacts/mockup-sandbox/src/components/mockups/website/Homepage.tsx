@@ -398,7 +398,7 @@ export function Homepage() {
                 <div style={{ fontSize: 11, fontWeight: 600, color: "#EBC99B", letterSpacing: "0.10em", textTransform: "uppercase", marginBottom: 14 }}>Contact</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   <a href="mailto:hello@dfymarketinggroup.com" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>hello@dfymarketinggroup.com</a>
-                  <a href="tel:+19169708443" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>(916) 970-8443</a>
+                  <a href="tel:+19163843455" style={{ color: "rgba(245,242,234,0.60)", fontSize: 13, textDecoration: "none" }}>(916) 384-3455</a>
                 </div>
               </div>
               <div>
