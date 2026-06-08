@@ -101,11 +101,11 @@ export function VariantB() {
 function LogoMark({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 80 80" fill="none">
-      <path d="M40 4L73 22V58L40 76L7 58V22L40 4Z" stroke="#EBC99B" strokeWidth="3.5" fill="rgba(235,201,155,0.10)" />
-      <line x1="40" y1="52" x2="40" y2="30" stroke="#2D6B4F" strokeWidth="2.8" strokeLinecap="round" />
-      <path d="M40 38 C40 38 32 34 30 26 C36 26 40 32 40 38Z" fill="#2D6B4F" />
-      <path d="M40 44 C40 44 48 40 50 32 C44 32 40 38 40 44Z" fill="#2D6B4F" />
-      <ellipse cx="40" cy="53" rx="6" ry="2.5" fill="rgba(45,107,79,0.25)" />
+      <path d="M40 4L73 22V58L40 76L7 58V22L40 4Z" stroke="#1F3D2C" strokeWidth="3.5" fill="rgba(31,61,44,0.15)" />
+      <line x1="40" y1="52" x2="40" y2="30" stroke="#1F3D2C" strokeWidth="2.8" strokeLinecap="round" />
+      <path d="M40 38 C40 38 32 34 30 26 C36 26 40 32 40 38Z" fill="#1F3D2C" />
+      <path d="M40 44 C40 44 48 40 50 32 C44 32 40 38 40 44Z" fill="#1F3D2C" />
+      <ellipse cx="40" cy="53" rx="6" ry="2.5" fill="rgba(31,61,44,0.30)" />
     </svg>
   );
 }
