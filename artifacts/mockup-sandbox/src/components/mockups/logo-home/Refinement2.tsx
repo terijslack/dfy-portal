@@ -46,7 +46,7 @@ export function Refinement2() {
           pointerEvents: "none",
           zIndex: 0,
         }}>
-          <LogoMark size={640} />
+          <LogoMark size={900} />
         </div>
 
         {/* Soft right-edge fade so crop feels deliberate, not accidental */}
