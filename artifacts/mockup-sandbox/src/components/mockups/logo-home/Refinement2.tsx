@@ -37,22 +37,22 @@ export function Refinement2() {
           pointerEvents: "none", zIndex: 0,
         }} />
 
-        {/* Watermark — large, anchored bottom-right, intentionally cropped */}
+        {/* Watermark — large, anchored bottom-left, intentionally cropped */}
         <div style={{
           position: "absolute",
-          right: "-18%",
+          left: "-18%",
           bottom: "-12%",
           opacity: 0.10,
           pointerEvents: "none",
           zIndex: 0,
         }}>
-          <LogoMark size={900} />
+          <LogoMark size={850} />
         </div>
 
-        {/* Soft right-edge fade so crop feels deliberate, not accidental */}
+        {/* Soft left-edge fade so crop feels deliberate, not accidental */}
         <div style={{
-          position: "absolute", top: 0, right: 0, bottom: 0, width: "15%",
-          background: "linear-gradient(to right, transparent, #F5F2EA)",
+          position: "absolute", top: 0, left: 0, bottom: 0, width: "15%",
+          background: "linear-gradient(to left, transparent, #F5F2EA)",
           pointerEvents: "none", zIndex: 2,
         }} />
 
