@@ -23,7 +23,9 @@
       top: 0;
       z-index: 10;
     }
-    .nav-wordmark { display: flex; align-items: baseline; gap: 7px; }
+    .nav-brand { display: flex; align-items: center; gap: 0; }
+    .nav-logo { width: 60px; height: 60px; object-fit: contain; mix-blend-mode: multiply; display: block; }
+    .nav-wordmark { display: flex; align-items: baseline; gap: 7px; margin-left: -5px; }
     .nav-wordmark-serif { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; color: #1F3D2C; }
     .nav-wordmark-sans { font-size: 10px; font-weight: 600; color: #2D6B4F; letter-spacing: 0.16em; text-transform: uppercase; }
     .nav-links { display: flex; align-items: center; gap: 32px; }
@@ -527,9 +529,12 @@
 
   <!-- NAV -->
   <nav class="site-nav">
-    <div class="nav-wordmark">
-      <span class="nav-wordmark-serif">Done For You</span>
-      <span class="nav-wordmark-sans">Marketing</span>
+    <div class="nav-brand">
+      <img src="/logo-green.png" alt="DFY Logo" class="nav-logo" />
+      <div class="nav-wordmark">
+        <span class="nav-wordmark-serif">Done For You</span>
+        <span class="nav-wordmark-sans">Marketing</span>
+      </div>
     </div>
     <div class="nav-links">
       <a href="#about">About</a>
@@ -555,7 +560,14 @@
   </div>
 
   <!-- HERO -->
-  <section class="hero">
+  <div style="position:relative; overflow:hidden;">
+    <!-- Warm radial gradient -->
+    <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 20% 60%, rgba(235,201,155,0.18) 0%, transparent 60%); pointer-events:none; z-index:0;"></div>
+    <!-- Watermark — centered behind left text column -->
+    <div style="position:absolute; left:27%; top:50%; transform:translate(-50%,-50%); opacity:0.10; pointer-events:none; z-index:0;">
+      <img src="/logo-green.png" style="width:1000px; height:1000px; object-fit:contain; mix-blend-mode:multiply;" />
+    </div>
+  <section class="hero" style="position:relative; z-index:1;">
     <div>
       <div class="hero-eyebrow">Done For You</div>
       <h1>Marketing,<br><em>handled.</em></h1>
@@ -611,6 +623,7 @@
       </div>
     </div>
   </section>
+  </div><!-- /hero wrapper -->
 
   <!-- ABOUT -->
   <section id="about" class="about-section">
