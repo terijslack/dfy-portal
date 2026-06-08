@@ -42,24 +42,18 @@ export function Refinement2() {
           pointerEvents: "none", zIndex: 0,
         }} />
 
-        {/* Watermark — large, anchored bottom-left, intentionally cropped */}
+        {/* Watermark — centered behind the left text column */}
         <div style={{
           position: "absolute",
-          left: "-18%",
-          bottom: "-28%",
+          left: "27%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
           opacity: 0.10,
           pointerEvents: "none",
           zIndex: 0,
         }}>
           <img src={logoGreen} style={{ width: 1000, height: 1000, objectFit: "contain", mixBlendMode: "multiply" }} />
         </div>
-
-        {/* Soft left-edge fade so crop feels deliberate, not accidental */}
-        <div style={{
-          position: "absolute", top: 0, left: 0, bottom: 0, width: "15%",
-          background: "linear-gradient(to left, transparent, #F5F2EA)",
-          pointerEvents: "none", zIndex: 2,
-        }} />
 
         <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div>
