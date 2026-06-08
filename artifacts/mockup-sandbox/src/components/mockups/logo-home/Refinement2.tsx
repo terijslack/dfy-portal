@@ -16,9 +16,9 @@ export function Refinement2() {
 
       {/* ── NAV (unchanged) ── */}
       <nav style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.10)", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
           <img src={logoGreen} style={{ width: 60, height: 60, objectFit: "contain", mixBlendMode: "multiply" }} />
-          <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginLeft: -10 }}>
             <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 19, fontWeight: 600, color: "#1F3D2C" }}>Done For You</span>
             <span style={{ fontSize: 10, fontWeight: 600, color: "#2D6B4F", letterSpacing: "0.16em", textTransform: "uppercase" }}>Marketing</span>
           </div>
