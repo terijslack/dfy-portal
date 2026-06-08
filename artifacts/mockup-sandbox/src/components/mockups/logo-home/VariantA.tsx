@@ -21,12 +21,8 @@ export function VariantA() {
       <nav style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.10)", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, position: "relative" }}>
 
-          {/* ★ PLACEMENT 1: Logo left of wordmark in nav */}
           <div className="logo-pulse">
             <LogoMark size={30} />
-          </div>
-          <div style={{ position: "absolute", top: -26, left: -2, background: "#EBC99B", color: "#1F3D2C", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, whiteSpace: "nowrap", letterSpacing: "0.06em" }}>
-            ★ 1
           </div>
 
           <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
@@ -47,13 +43,9 @@ export function VariantA() {
       {/* ── HERO ── */}
       <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
         <div>
-          {/* ★ PLACEMENT 2: Logo only, centered above the headline */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, maxWidth: 440, position: "relative" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, maxWidth: 440 }}>
             <div className="logo-pulse">
               <LogoMark size={60} />
-            </div>
-            <div style={{ position: "absolute", left: -2, top: -26, background: "#EBC99B", color: "#1F3D2C", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, whiteSpace: "nowrap", letterSpacing: "0.06em" }}>
-              ★ 2
             </div>
           </div>
 
