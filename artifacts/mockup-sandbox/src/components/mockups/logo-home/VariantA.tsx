@@ -43,7 +43,7 @@ export function VariantA() {
       {/* ── HERO ── */}
       <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
         <div>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, maxWidth: 440 }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: 20, maxWidth: 440, paddingLeft: 120 }}>
             <div className="logo-pulse">
               <LogoMark size={60} />
             </div>
