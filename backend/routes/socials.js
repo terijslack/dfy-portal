@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
+const { encrypt } = require('../utils/encrypt');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -65,12 +66,14 @@ router.put('/:platform', requireLogin, async (req, res) => {
       return res.status(400).json({ error: 'You can connect up to 4 accounts. Remove one first.' });
     }
 
+    const encryptedPassword = account_password ? encrypt(account_password) : null;
+
     await pool.query(
       `INSERT INTO social_accounts (client_id, platform, username, profile_url, account_password)
        VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (client_id, platform)
        DO UPDATE SET username = $3, profile_url = $4, account_password = $5, connected_at = NOW()`,
-      [req.user.id, platform, username.trim(), profile_url || null, account_password || null]
+      [req.user.id, platform, username.trim(), profile_url || null, encryptedPassword]
     );
 
     res.json({ success: true });
