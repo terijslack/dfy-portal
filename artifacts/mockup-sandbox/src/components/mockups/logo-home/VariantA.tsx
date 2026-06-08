@@ -47,12 +47,11 @@ export function VariantA() {
       {/* ── HERO ── */}
       <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
         <div>
-          {/* ★ PLACEMENT 2: Logo + "Marketing" centered in hero eyebrow */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, position: "relative" }}>
+          {/* ★ PLACEMENT 2: Logo only, centered above the headline */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, maxWidth: 440, position: "relative" }}>
             <div className="logo-pulse">
               <LogoMark size={60} />
             </div>
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase" }}>Marketing</span>
             <div style={{ position: "absolute", left: -2, top: -26, background: "#EBC99B", color: "#1F3D2C", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, whiteSpace: "nowrap", letterSpacing: "0.06em" }}>
               ★ 2
             </div>
