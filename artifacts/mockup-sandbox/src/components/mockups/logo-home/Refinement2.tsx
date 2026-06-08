@@ -52,7 +52,7 @@ export function Refinement2() {
           pointerEvents: "none",
           zIndex: 0,
         }}>
-          <img src={logoGreen} style={{ width: 1000, height: 1000, objectFit: "contain" }} />
+          <img src={logoGreen} style={{ width: 650, height: 650, objectFit: "contain" }} />
         </div>
 
         <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", zIndex: 1 }}>
