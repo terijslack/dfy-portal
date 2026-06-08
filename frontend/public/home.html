@@ -563,9 +563,9 @@
   <div style="position:relative; overflow:hidden;">
     <!-- Warm radial gradient -->
     <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 20% 60%, rgba(235,201,155,0.18) 0%, transparent 60%); pointer-events:none; z-index:0;"></div>
-    <!-- Watermark — centered behind left text column -->
-    <div style="position:absolute; left:27%; top:50%; transform:translate(-50%,-50%); opacity:0.10; pointer-events:none; z-index:0;">
-      <img src="/logo-green-transparent.png" style="width:1000px; height:1000px; object-fit:contain;" />
+    <!-- Watermark — flexbox-centered vertically, positioned in left column -->
+    <div style="position:absolute; inset:0; display:flex; align-items:center; opacity:0.10; pointer-events:none; z-index:0; overflow:hidden;">
+      <img src="/logo-green-transparent.png" style="width:1000px; height:1000px; object-fit:contain; flex-shrink:0; margin-left:calc(27% - 500px);" />
     </div>
   <section class="hero" style="position:relative; z-index:1;">
     <div>
