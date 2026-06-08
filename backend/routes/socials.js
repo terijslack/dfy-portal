@@ -10,7 +10,7 @@ const { requireLogin } = require('../middleware/auth');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-const ALLOWED_PLATFORMS = ['instagram', 'facebook', 'linkedin', 'youtube', 'tiktok', 'twitter', 'pinterest', 'snapchat', 'threads'];
+const ALLOWED_PLATFORMS = ['instagram', 'facebook', 'linkedin', 'google', 'youtube', 'tiktok', 'twitter', 'pinterest', 'snapchat', 'threads'];
 
 // Create table if it doesn't exist yet
 pool.query(`

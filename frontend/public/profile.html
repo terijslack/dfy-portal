@@ -121,6 +121,41 @@
     .goal-card.selected { border-color: var(--green); background: rgba(45,107,79,0.06); }
     .goal-card-text { font-size: 13px; color: var(--forest); }
 
+    /* Handle field wrap (per-platform inline form) */
+    .handle-field-wrap {
+      background: rgba(45,107,79,0.03);
+      border: 1px solid rgba(45,107,79,0.14);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      animation: fadeIn 0.2s ease;
+    }
+    .handle-field-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .handle-field-name { font-size: 13px; font-weight: 600; color: var(--forest); }
+    .handle-field-badge { font-size: 11px; font-weight: 600; }
+    .handle-field-badge.saved { color: var(--green); }
+    .handle-field-badge.error { color: #7D2A03; }
+    .hf-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 36px; }
+    .pw-eye {
+      position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: var(--text-muted); display: flex; align-items: center;
+    }
+    .btn-save-platform {
+      background: var(--green); color: #fff;
+      border: none; border-radius: 7px;
+      padding: 8px 18px; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn-save-platform:hover:not(:disabled) { opacity: 0.85; }
+    .btn-save-platform:disabled { opacity: 0.5; cursor: default; }
+    .field em { font-style: normal; font-weight: 400; opacity: 0.55; }
+
     /* Upload zone */
     .upload-zone {
       border: 1.5px dashed rgba(45,107,79,0.3);
@@ -317,20 +352,10 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
                 <span class="platform-name">LinkedIn</span>
               </label>
-              <label class="platform-card" id="card-tiktok" onclick="togglePlatform('tiktok',this)">
-                <input type="checkbox" id="plat-tiktok">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-                <span class="platform-name">TikTok</span>
-              </label>
               <label class="platform-card" id="card-google" onclick="togglePlatform('google',this)">
                 <input type="checkbox" id="plat-google">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span class="platform-name">Google Business</span>
-              </label>
-              <label class="platform-card" id="card-x" onclick="togglePlatform('x',this)">
-                <input type="checkbox" id="plat-x">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span class="platform-name">X / Twitter</span>
               </label>
             </div>
             <div class="handle-fields" id="handleFields"></div>
@@ -481,9 +506,22 @@
   <script>
     /* ── State ── */
     const selectedPlatforms = {};
+    const savedSocials      = {};   // tracks what is persisted in social_accounts table
     let selectedVoice = null;
     let selectedGoal  = null;
     let userData      = {};
+
+    /* ── Helpers ── */
+    function getPlatformLabel(name) {
+      return { instagram: 'Instagram', facebook: 'Facebook', linkedin: 'LinkedIn', google: 'Google Business' }[name] || name;
+    }
+    function escHtml(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function setValue(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
 
     /* ── Auth + load ── */
     async function init() {
@@ -497,68 +535,66 @@
       if (!meData.user) { window.location.href = '/login'; return; }
       userData = meData.user;
 
-      /* Header / sidebar */
       document.getElementById('sidebarName').textContent = meData.user.business_name || meData.user.name;
       if (localStorage.getItem('sidebarOpen') === '0') {
         document.getElementById('portalSidebar').classList.add('collapsed');
       }
 
-      /* Populate fields */
       const u = meData.user;
       const o = obData.onboarding || {};
 
-      setValue('business_name', u.business_name || '');
-      setValue('industry',      o.industry      || '');
-      setValue('phone',         o.phone         || '');
-      setValue('website',       o.website       || '');
-      setValue('location',      o.location      || '');
-      setValue('social_notes',  o.social_notes  || '');
-      setValue('target_audience', o.target_audience || '');
-      setValue('content_themes',  o.content_themes  || '');
-      setValue('avoid_content',   o.avoid_content   || '');
-      setValue('additional_notes',o.additional_notes|| '');
+      setValue('business_name',  u.business_name     || '');
+      setValue('industry',       o.industry          || '');
+      setValue('phone',          o.phone             || '');
+      setValue('website',        o.website           || '');
+      setValue('location',       o.location          || '');
+      setValue('social_notes',   o.social_notes      || '');
+      setValue('target_audience',o.target_audience   || '');
+      setValue('content_themes', o.content_themes    || '');
+      setValue('avoid_content',  o.avoid_content     || '');
+      setValue('additional_notes',o.additional_notes || '');
 
-      /* Platforms */
-      if (Array.isArray(o.platforms)) {
-        o.platforms.forEach(p => {
-          const card = document.getElementById('card-' + p.name);
-          if (card) {
-            card.classList.add('selected');
-            card.querySelector('input').checked = true;
-            selectedPlatforms[p.name] = p.handle || '';
-            addHandleField(p.name, card.querySelector('.platform-name').textContent, p.handle || '');
-          }
-        });
-      }
-
-      /* Voice */
       if (o.brand_voice) {
         document.querySelectorAll('.voice-card').forEach(c => {
-          if (c.querySelector('.voice-card-title').textContent.replace(/&amp;/g,'&').trim() === o.brand_voice.trim()) {
+          if (c.querySelector('.voice-card-title').textContent.replace(/&amp;/g,'&').trim() === o.brand_voice.trim())
             c.classList.add('selected');
-          }
         });
         selectedVoice = o.brand_voice;
         document.getElementById('brand_voice').value = o.brand_voice;
       }
 
-      /* Goal */
       if (o.primary_goal) {
         document.querySelectorAll('.goal-card').forEach(c => {
-          if (c.querySelector('.goal-card-text').textContent.trim() === o.primary_goal.trim()) {
+          if (c.querySelector('.goal-card-text').textContent.trim() === o.primary_goal.trim())
             c.classList.add('selected');
-          }
         });
         selectedGoal = o.primary_goal;
         document.getElementById('primary_goal').value = o.primary_goal;
       }
 
+      await loadSavedSocials();
       updateCompletion();
     }
 
-    function setValue(id, val) {
-      const el = document.getElementById(id);
-      if (el) el.value = val;
+    /* ── Load saved social accounts from API ── */
+    async function loadSavedSocials() {
+      try {
+        const res = await fetch('/api/socials');
+        if (!res.ok) return;
+        const { accounts } = await res.json();
+        accounts.forEach(acc => {
+          savedSocials[acc.platform] = acc;
+          selectedPlatforms[acc.platform] = acc.username;
+          const card = document.getElementById('card-' + acc.platform);
+          if (card) {
+            card.classList.add('selected');
+            card.querySelector('input').checked = true;
+            addHandleField(acc.platform, acc.username, acc.profile_url || '', true);
+          }
+        });
+      } catch (e) {
+        console.error('Load socials error:', e);
+      }
     }
 
     /* ── Completion meter ── */
@@ -569,7 +605,7 @@
         !!document.getElementById('location').value.trim(),
         !!document.getElementById('phone').value.trim(),
         !!document.getElementById('website').value.trim(),
-        Object.keys(selectedPlatforms).length > 0,
+        Object.keys(savedSocials).length > 0,
         !!selectedVoice,
         !!document.getElementById('target_audience').value.trim(),
         !!selectedGoal,
@@ -595,28 +631,122 @@
     /* ── Platform toggle ── */
     function togglePlatform(name, card) {
       const cb = card.querySelector('input');
-      cb.checked = !cb.checked;
-      card.classList.toggle('selected', cb.checked);
-      if (cb.checked) {
+      const nowChecked = !cb.checked;
+      cb.checked = nowChecked;
+      card.classList.toggle('selected', nowChecked);
+
+      if (nowChecked) {
         selectedPlatforms[name] = '';
-        addHandleField(name, card.querySelector('.platform-name').textContent, '');
+        addHandleField(name, '', '', false);
       } else {
         delete selectedPlatforms[name];
         const f = document.getElementById('handle-field-' + name);
         if (f) f.remove();
+        if (savedSocials[name]) {
+          delete savedSocials[name];
+          fetch('/api/socials/' + name, { method: 'DELETE' }).catch(console.error);
+          updateCompletion();
+        }
       }
       updateCompletion();
     }
 
-    function addHandleField(name, label, value) {
+    function addHandleField(name, username, profileUrl, isSaved) {
+      const label     = getPlatformLabel(name);
       const container = document.getElementById('handleFields');
+      const existing  = document.getElementById('handle-field-' + name);
+      if (existing) existing.remove();
+
       const div = document.createElement('div');
-      div.className = 'field handle-field';
+      div.className = 'handle-field-wrap';
       div.id = 'handle-field-' + name;
-      div.innerHTML = `<label>${label} username / handle</label>
-        <input type="text" id="handle-${name}" value="${value}" placeholder="@yourusername"
-          oninput="selectedPlatforms['${name}'] = this.value"/>`;
+      div.innerHTML = `
+        <div class="handle-field-hdr">
+          <span class="handle-field-name">${label}</span>
+          <span class="handle-field-badge${isSaved ? ' saved' : ''}" id="badge-${name}">${isSaved ? '✓ Connected' : ''}</span>
+        </div>
+        <div class="field-grid hf-grid">
+          <div class="field">
+            <label>Username / Handle</label>
+            <input type="text" id="handle-${name}" value="${escHtml(username)}" placeholder="@yourusername"
+              oninput="selectedPlatforms['${name}']=this.value"/>
+          </div>
+          <div class="field">
+            <label>Profile URL <em>(optional)</em></label>
+            <input type="url" id="url-${name}" value="${escHtml(profileUrl)}" placeholder="https://..."/>
+          </div>
+          <div class="field">
+            <label>Password <em>(optional)</em></label>
+            <div class="pw-wrap">
+              <input type="password" id="pw-${name}" placeholder="Leave blank to skip"/>
+              <button type="button" class="pw-eye" onclick="togglePw('${name}')">
+                <svg id="eye-${name}" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-save-platform" id="platbtn-${name}" onclick="savePlatform('${name}')">Save ${label}</button>`;
       container.appendChild(div);
+    }
+
+    /* ── Save individual platform to API ── */
+    async function savePlatform(name) {
+      const btn      = document.getElementById('platbtn-' + name);
+      const badge    = document.getElementById('badge-' + name);
+      const username = (document.getElementById('handle-' + name)?.value || '').trim();
+      const profileUrl = (document.getElementById('url-' + name)?.value || '').trim();
+      const password = document.getElementById('pw-' + name)?.value || '';
+      const label    = getPlatformLabel(name);
+
+      if (!username) {
+        badge.textContent = '⚠ Username required';
+        badge.className = 'handle-field-badge error';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      badge.textContent = '';
+      badge.className = 'handle-field-badge';
+
+      try {
+        const res = await fetch('/api/socials/' + name, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            profile_url: profileUrl || null,
+            account_password: password || null
+          })
+        });
+        if (!res.ok) {
+          const d = await res.json();
+          throw new Error(d.error || 'Could not save.');
+        }
+        savedSocials[name] = { platform: name, username };
+        badge.textContent = '✓ Connected';
+        badge.className = 'handle-field-badge saved';
+        updateCompletion();
+      } catch (err) {
+        badge.textContent = '⚠ ' + err.message;
+        badge.className = 'handle-field-badge error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save ' + label;
+      }
+    }
+
+    /* ── Password visibility toggle ── */
+    function togglePw(name) {
+      const input = document.getElementById('pw-' + name);
+      const eye   = document.getElementById('eye-' + name);
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
     }
 
     /* ── Voice selection ── */
@@ -637,7 +767,7 @@
       updateCompletion();
     }
 
-    /* ── Save ── */
+    /* ── Save main profile (triggers GHL sync server-side) ── */
     async function saveProfile() {
       const btn = document.getElementById('saveBtn');
       const msg = document.getElementById('saveMsg');
@@ -646,13 +776,7 @@
       msg.textContent = '';
       msg.className = 'save-bar-msg';
 
-      const platforms = Object.entries(selectedPlatforms).map(([name, handle]) => ({
-        name,
-        handle: document.getElementById('handle-' + name)?.value || handle
-      }));
-
       try {
-        /* Save business basics to clients table */
         const accountRes = await fetch('/api/account/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -667,7 +791,6 @@
           throw new Error(d.error || 'Could not save account info.');
         }
 
-        /* Save all onboarding data */
         const obRes = await fetch('/api/onboarding', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -676,14 +799,13 @@
             website:          document.getElementById('website').value.trim(),
             phone:            document.getElementById('phone').value.trim(),
             location:         document.getElementById('location').value.trim(),
-            platforms,
             social_notes:     document.getElementById('social_notes').value.trim(),
             brand_voice:      selectedVoice,
             target_audience:  document.getElementById('target_audience').value.trim(),
             content_themes:   document.getElementById('content_themes').value.trim(),
             avoid_content:    document.getElementById('avoid_content').value.trim(),
             primary_goal:     selectedGoal,
-            additional_notes: document.getElementById('additional_notes').value.trim(),
+            additional_notes: document.getElementById('additional_notes')?.value.trim() || '',
           })
         });
         if (!obRes.ok) {
@@ -713,13 +835,11 @@
       localStorage.setItem('sidebarOpen', isOpen ? '0' : '1');
     }
 
-    /* ── Logout ── */
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await fetch('/api/auth/logout', { method: 'POST' });
       window.location.href = '/login';
     });
 
-    /* Live completion update on any input */
     document.querySelectorAll('input:not([type=checkbox]):not([type=hidden]), textarea').forEach(el => {
       el.addEventListener('input', updateCompletion);
     });
