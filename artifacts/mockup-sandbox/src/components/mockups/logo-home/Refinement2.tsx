@@ -46,7 +46,7 @@ export function Refinement2() {
         <div style={{
           position: "absolute",
           left: "-18%",
-          bottom: "-12%",
+          bottom: "-28%",
           opacity: 0.10,
           pointerEvents: "none",
           zIndex: 0,
