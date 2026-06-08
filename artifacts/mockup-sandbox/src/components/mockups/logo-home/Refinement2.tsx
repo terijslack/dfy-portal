@@ -51,7 +51,7 @@ export function Refinement2() {
           pointerEvents: "none",
           zIndex: 0,
         }}>
-          <img src={logoGreen} style={{ width: 850, height: 850, objectFit: "contain", mixBlendMode: "multiply" }} />
+          <img src={logoGreen} style={{ width: 1000, height: 1000, objectFit: "contain", mixBlendMode: "multiply" }} />
         </div>
 
         {/* Soft left-edge fade so crop feels deliberate, not accidental */}
