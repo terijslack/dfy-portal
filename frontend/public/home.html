@@ -466,6 +466,7 @@
         padding: 48px 20px 40px;
         gap: 36px;
       }
+      .hero-watermark { display: none; }
       .hero h1 { font-size: 36px; }
       .hero-subhead { font-size: 15px; max-width: 100%; }
       .hero-body { font-size: 15px; max-width: 100%; }
@@ -560,14 +561,13 @@
   </div>
 
   <!-- HERO -->
-  <div style="position:relative; overflow:hidden;">
+  <section class="hero" style="position:relative; overflow:hidden;">
     <!-- Warm radial gradient -->
     <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 20% 60%, rgba(235,201,155,0.18) 0%, transparent 60%); pointer-events:none; z-index:0;"></div>
-    <!-- Watermark — flexbox-centered vertically, positioned in left column -->
-    <div style="position:absolute; inset:0; display:flex; align-items:center; opacity:0.10; pointer-events:none; z-index:0; overflow:hidden;">
+    <!-- Watermark — lives inside the hero section so it's bounded by the same box as the text -->
+    <div class="hero-watermark" style="position:absolute; inset:0; display:flex; align-items:center; opacity:0.10; pointer-events:none; z-index:0; overflow:hidden;">
       <img src="/logo-green-transparent.png" style="width:1000px; height:1000px; object-fit:contain; flex-shrink:0; margin-left:calc(27% - 500px);" />
     </div>
-  <section class="hero" style="position:relative; z-index:1;">
     <div>
       <div class="hero-eyebrow">Done For You</div>
       <h1>Marketing,<br><em>handled.</em></h1>
@@ -623,7 +623,6 @@
       </div>
     </div>
   </section>
-  </div><!-- /hero wrapper -->
 
   <!-- ABOUT -->
   <section id="about" class="about-section">
