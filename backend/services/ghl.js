@@ -98,6 +98,8 @@ async function syncContactToGHL(client, profileData, socialAccounts) {
         { key: 'target_audience',   field_value: profileData.target_audience  || '' },
         { key: 'content_themes',    field_value: profileData.content_themes   || '' },
         { key: 'primary_goal',      field_value: profileData.primary_goal     || '' },
+        { key: 'social_notes',      field_value: profileData.social_notes     || '' },
+        { key: 'additional_notes',  field_value: profileData.additional_notes || '' },
         { key: 'instagram_handle',  field_value: handles.instagram  || '' },
         { key: 'facebook_handle',   field_value: handles.facebook   || '' },
         { key: 'linkedin_handle',   field_value: handles.linkedin   || '' },
