@@ -46,7 +46,7 @@ export function Refinement2() {
         <div style={{
           position: "absolute",
           left: "27%",
-          top: "44%",
+          top: "48%",
           transform: "translate(-50%, -50%)",
           opacity: 0.10,
           pointerEvents: "none",
