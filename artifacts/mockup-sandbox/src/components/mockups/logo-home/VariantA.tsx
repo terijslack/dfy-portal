@@ -47,12 +47,11 @@ export function VariantA() {
       {/* ── HERO ── */}
       <section style={{ padding: "96px 48px 80px", maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
         <div>
-          {/* ★ PLACEMENT 2: Logo inline with hero eyebrow */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, position: "relative" }}>
+          {/* ★ PLACEMENT 2: Logo only in hero eyebrow (no text) */}
+          <div style={{ marginBottom: 20, position: "relative", display: "inline-block" }}>
             <div className="logo-pulse">
-              <LogoMark size={24} />
+              <LogoMark size={48} />
             </div>
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#7D2A03", letterSpacing: "0.14em", textTransform: "uppercase" }}>Done For You</span>
             <div style={{ position: "absolute", left: -2, top: -26, background: "#EBC99B", color: "#1F3D2C", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, whiteSpace: "nowrap", letterSpacing: "0.06em" }}>
               ★ 2
             </div>
