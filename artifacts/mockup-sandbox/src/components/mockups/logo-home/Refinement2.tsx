@@ -15,7 +15,7 @@ export function Refinement2() {
       {/* ── NAV (unchanged) ── */}
       <nav style={{ background: "#fff", borderBottom: "1px solid rgba(31,61,44,0.10)", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <LogoMark size={30} />
+          <img src="/logo.png" style={{ width: 30, height: 30, objectFit: "contain" }} />
           <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
             <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 19, fontWeight: 600, color: "#1F3D2C" }}>Done For You</span>
             <span style={{ fontSize: 10, fontWeight: 600, color: "#2D6B4F", letterSpacing: "0.16em", textTransform: "uppercase" }}>Marketing</span>
@@ -49,7 +49,7 @@ export function Refinement2() {
           pointerEvents: "none",
           zIndex: 0,
         }}>
-          <LogoMark size={850} />
+          <img src="/logo.png" style={{ width: 850, height: 850, objectFit: "contain", mixBlendMode: "multiply" }} />
         </div>
 
         {/* Soft left-edge fade so crop feels deliberate, not accidental */}
@@ -108,14 +108,3 @@ export function Refinement2() {
   );
 }
 
-function LogoMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 80 80" fill="none">
-      <path d="M40 4L73 22V58L40 76L7 58V22L40 4Z" stroke="#1F3D2C" strokeWidth="3.5" fill="rgba(31,61,44,0.15)" />
-      <line x1="40" y1="52" x2="40" y2="30" stroke="#1F3D2C" strokeWidth="2.8" strokeLinecap="round" />
-      <path d="M40 38 C40 38 32 34 30 26 C36 26 40 32 40 38Z" fill="#1F3D2C" />
-      <path d="M40 44 C40 44 48 40 50 32 C44 32 40 38 40 44Z" fill="#1F3D2C" />
-      <ellipse cx="40" cy="53" rx="6" ry="2.5" fill="rgba(31,61,44,0.30)" />
-    </svg>
-  );
-}
