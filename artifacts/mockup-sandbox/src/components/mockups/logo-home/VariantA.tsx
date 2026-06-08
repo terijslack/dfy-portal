@@ -45,7 +45,7 @@ export function VariantA() {
         <div>
           <div style={{ display: "flex", justifyContent: "flex-start", marginBottom: 20, maxWidth: 440, paddingLeft: 120 }}>
             <div className="logo-pulse">
-              <LogoMark size={60} />
+              <LogoMark size={80} />
             </div>
           </div>
 
