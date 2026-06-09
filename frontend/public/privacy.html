@@ -132,6 +132,9 @@
     .footer-inner { max-width: 1100px; margin: 0 auto; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .footer-copy { font-size: 12px; color: rgba(245,242,234,0.30); }
+    .footer-brand-wordmark { display: flex; align-items: baseline; gap: 7px; margin-bottom: 12px; }
+    .footer-brand-serif { font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600; color: #F5F2EA; }
+    .footer-brand-sans { font-size: 9px; font-weight: 600; color: #EBC99B; letter-spacing: 0.16em; text-transform: uppercase; }
     .footer-legal-links { display: flex; gap: 20px; }
     .footer-legal-links a { font-size: 12px; color: rgba(245,242,234,0.40); }
     .footer-legal-links a:hover { color: rgba(245,242,234,0.7); text-decoration: none; }
@@ -287,8 +290,18 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-bottom">
+      <div style="padding-bottom:32px;border-bottom:1px solid rgba(245,242,234,0.10);margin-bottom:24px;">
+        <div style="display:inline-flex;flex-direction:column;align-items:center;">
+          <img src="/logo-inverse-transparent.png" alt="" style="width:72px;height:72px;object-fit:contain;display:block;margin-bottom:16px;" />
+          <div class="footer-brand-wordmark">
+            <span class="footer-brand-serif">Done For You</span>
+            <span class="footer-brand-sans">Marketing</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <span class="footer-copy">© 2026 Done For You Marketing Group. All rights reserved.</span>
+        <img src="/logo-inverse-transparent.png" alt="" style="width:38px;height:38px;object-fit:contain;opacity:0.60;" />
         <div class="footer-legal-links">
           <a href="/privacy">Privacy Policy</a>
           <a href="/privacy?tab=tos">Terms of Service</a>
