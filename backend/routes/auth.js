@@ -20,12 +20,12 @@ pool.query(`
 // ─── Nodemailer transporter ────────────────────────────────────────────────
 function makeTransporter() {
   return nodemailer.createTransport({
-    host:   process.env.SMTP_HOST,
+    host:   process.env.SMTP_HOST || 'smtp.leadconnectorhq.com',
     port:   parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_PORT === '465',
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 }
@@ -130,10 +130,10 @@ router.post('/forgot-password', async (req, res) => {
     const appUrl = process.env.APP_URL || 'https://dfymarketinggroup.com';
     const resetLink = `${appUrl}/reset-password.html?token=${token}`;
 
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       const transporter = makeTransporter();
       await transporter.sendMail({
-        from: `"Done For You Marketing" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        from: `"Done For You Marketing" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
         to: client.email,
         subject: 'Reset your password',
         html: `
