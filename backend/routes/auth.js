@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+const { sendPasswordReset } = require('../services/email');
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
 
@@ -16,19 +16,6 @@ pool.query(`
     ADD COLUMN IF NOT EXISTS password_reset_token VARCHAR(255),
     ADD COLUMN IF NOT EXISTS password_reset_expires TIMESTAMP
 `).catch(err => console.error('Migration error (reset cols):', err.message));
-
-// ─── Nodemailer transporter ────────────────────────────────────────────────
-function makeTransporter() {
-  return nodemailer.createTransport({
-    host:   process.env.SMTP_HOST || 'smtp.leadconnectorhq.com',
-    port:   parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_PORT === '465',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-}
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
@@ -130,30 +117,7 @@ router.post('/forgot-password', async (req, res) => {
     const appUrl = process.env.APP_URL || 'https://dfymarketinggroup.com';
     const resetLink = `${appUrl}/reset-password.html?token=${token}`;
 
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      const transporter = makeTransporter();
-      await transporter.sendMail({
-        from: `"Done For You Marketing" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-        to: client.email,
-        subject: 'Reset your password',
-        html: `
-          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;color:#1F3D2C;">
-            <p style="font-size:16px;">Hi ${client.name},</p>
-            <p style="font-size:15px;">We received a request to reset your password for your DFY Marketing client portal.</p>
-            <p style="margin:32px 0;">
-              <a href="${resetLink}"
-                style="background:#2D6B4F;color:#fff;padding:14px 28px;border-radius:6px;text-decoration:none;font-size:15px;font-weight:600;">
-                Reset my password
-              </a>
-            </p>
-            <p style="font-size:13px;color:#6B756B;">This link expires in 1 hour. If you didn't request this, you can safely ignore this email.</p>
-          </div>
-        `,
-      });
-    } else {
-      console.warn('[forgot-password] SMTP not configured — reset link:', resetLink);
-    }
-
+await sendPasswordReset(client.email, resetLink);
     res.json({ success: true });
 
   } catch (err) {
