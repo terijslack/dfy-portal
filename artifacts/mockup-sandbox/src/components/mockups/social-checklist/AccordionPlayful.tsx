@@ -245,7 +245,7 @@ export function AccordionPlayful() {
                       </div>
 
                       <button onClick={e => markDone(p.id, e)}
-                        style={{ width: "100%", padding: "12px", background: "#7D2A03", color: "white", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                        style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                         I've completed these steps
                       </button>
                     </div>
