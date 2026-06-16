@@ -1,0 +1,107 @@
+Here's a full set of client-facing instructions for each platform. Written in plain language — no technical jargon, assumes they're not very tech savvy.
+
+---
+
+# Granting [Agency Name] Access to Your Social Media Accounts
+
+*To get started managing your social media, we'll need admin access to your accounts. Follow the steps below for each platform you use. If you get stuck on any step, don't worry — just reach out and we'll walk you through it.*
+
+---
+
+## Facebook Page
+
+1. Log into Facebook and go to your **Business Page** *(not your personal profile)*
+2. Click **Professional Dashboard** near the top of your page
+3. On the left side menu, click **Page Access**
+4. Under **People with Facebook Access**, click **Add New**
+5. Search for our Facebook account: **[Your Agency Facebook Profile Name or Link]**
+6. Toggle on **Allow this person to have full control** if you'd like us to have full admin access
+7. Click **Give Access** and confirm
+
+✅ We'll get a notification and accept from our end.
+
+---
+
+## Instagram
+
+Instagram access is managed through your **Facebook Page** if your accounts are linked *(which they should be for best results).*
+
+1. Follow the Facebook steps above first
+2. If your Instagram is connected to your Facebook Page, access carries over automatically
+3. To verify: go to your Facebook Page → **Settings** → **Linked Accounts** → confirm Instagram is connected
+
+**If your Instagram is NOT connected to a Facebook Page:**
+1. Open the Instagram app
+2. Go to your profile → tap the **three lines** (top right) → **Settings**
+3. Tap **Account** → **Sharing and Remixing** → connect to your Facebook Page first
+4. Then follow the Facebook steps above
+
+✅ Once your Instagram is linked to your Facebook Page and we have Page access, we're good to go.
+
+---
+
+## LinkedIn Page
+
+1. Log into LinkedIn and navigate to your **Company Page** *(not your personal profile)*
+2. Click **Admin Tools** in the top right corner of your page
+3. Select **Manage Admins**
+4. Click **Add Admin**
+5. Search for our LinkedIn profile: **[Your Agency LinkedIn Profile Name or URL]**
+6. Select the admin role — choose **Super Admin** for full access
+7. Click **Save**
+
+✅ We'll receive a notification and accept the invite.
+
+---
+
+## Google Business Profile
+
+1. Go to **business.google.com** and log in
+2. Select your business profile if you have more than one
+3. Click **Business Profile Settings** → then **Managers**
+4. Click the **Add** button (person icon with a plus sign)
+5. Enter our Google account email: **[Your Agency Gmail Address]**
+6. Select the role — choose **Manager** for full access
+7. Click **Invite**
+
+✅ We'll accept the invite from our end within 24 hours.
+
+---
+
+## TikTok
+
+1. Log into **TikTok** on a desktop browser at tiktok.com
+2. Go to your profile and click **TikTok Studio**
+3. On the left menu, click **Settings**
+4. Select **Account** → then **Creator Permissions**
+5. Click **Authorize** and enter our TikTok handle: **[Your Agency TikTok Handle]**
+6. Grant the permissions listed and confirm
+
+*Note: TikTok's admin access is more limited than other platforms — we'll discuss what this covers during your kickoff call.*
+
+---
+
+## Yelp
+
+1. Log into your Yelp Business account at **biz.yelp.com**
+2. Click your business name in the top right
+3. Go to **Business Information** → **Account Settings** → **Users**
+4. Click **Invite User**
+5. Enter our email: **[Your Agency Email]**
+6. Select **Admin** as the role
+7. Click **Send Invite**
+
+✅ We'll accept and confirm once received.
+
+---
+
+## A Few Things to Know
+
+- **You stay in control** — adding us as an admin does not remove your own access. You can remove us at any time.
+- **We will never ask for your passwords** — all access is granted through each platform's official admin settings, keeping your accounts secure.
+- **Not on all these platforms?** No problem — only complete the steps for platforms where your business has an active account.
+- **Need help?** Reply to this email or book a quick screen share and we'll walk through it together.
+
+---
+
+Want me to format this as a PDF document you can send to clients, or turn it into an email template that goes out automatically after they submit their onboarding form?
