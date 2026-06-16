@@ -8,6 +8,7 @@ const PLATFORMS = [
     bg: "#E7F0FD",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/><path d="M13.5 8h-1.5a.5.5 0 0 0-.5.5V10H13l-.5 2H11.5v5H9.5v-5H8v-2h1.5V8.5A2.5 2.5 0 0 1 11 6h2.5v2z" fill="white"/></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/><path d="M13.5 8h-1.5a.5.5 0 0 0-.5.5V10H13l-.5 2H11.5v5H9.5v-5H8v-2h1.5V8.5A2.5 2.5 0 0 1 11 6h2.5v2z" fill="white"/></svg>,
+    urlPlaceholder: "https://facebook.com/yourpagename",
     steps: [
       "Log into Facebook and go to your Business Page — not your personal profile.",
       "Click Professional Dashboard near the top of your page.",
@@ -26,6 +27,7 @@ const PLATFORMS = [
     bg: "#FDE8F0",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#E1306C" strokeWidth="1.8"/><circle cx="12" cy="12" r="4.5" stroke="#E1306C" strokeWidth="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="#E1306C"/></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#E1306C" strokeWidth="1.8"/><circle cx="12" cy="12" r="4.5" stroke="#E1306C" strokeWidth="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="#E1306C"/></svg>,
+    urlPlaceholder: "https://instagram.com/yourhandle",
     steps: [
       "Complete the Facebook Page steps first — Instagram access is managed through Facebook.",
       "If Instagram is connected to your Facebook Page, access carries over automatically.",
@@ -41,6 +43,7 @@ const PLATFORMS = [
     bg: "#E7F0FB",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><path d="M7 10h2v7H7v-7zm1-3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 8 7zm4 3h1.9v1h.02C14.22 10.4 15 9.9 16.5 9.9 18.5 9.9 19 11 19 13v4h-2v-3.5c0-.83-.3-1.5-1.1-1.5-.6 0-1 .4-1.15.8-.06.14-.08.32-.08.5V17h-2V10z" fill="white"/></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><path d="M7 10h2v7H7v-7zm1-3a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 8 7zm4 3h1.9v1h.02C14.22 10.4 15 9.9 16.5 9.9 18.5 9.9 19 11 19 13v4h-2v-3.5c0-.83-.3-1.5-1.1-1.5-.6 0-1 .4-1.15.8-.06.14-.08.32-.08.5V17h-2V10z" fill="white"/></svg>,
+    urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: [
       "Log into LinkedIn and go to your Company Page — not your personal profile.",
       "Click Admin Tools in the top right corner of your page.",
@@ -59,6 +62,7 @@ const PLATFORMS = [
     bg: "#E6F4EB",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="white" stroke="#E0E0E0" strokeWidth="1"/><path d="M20.64 12.2c0-.63-.06-1.25-.16-1.84H12v3.49h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.63z" fill="#4285F4"/><path d="M12 21c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.84.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H3.95v2.33A8.99 8.99 0 0 0 12 21z" fill="#34A853"/><path d="M6.96 13.71A5.41 5.41 0 0 1 6.68 12c0-.59.1-1.17.28-1.71V7.96H3.95A8.99 8.99 0 0 0 3 12c0 1.45.35 2.82.95 4.04l3.01-2.33z" fill="#FBBC05"/><path d="M12 6.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C16.46 3.89 14.43 3 12 3A8.99 8.99 0 0 0 3.95 7.96l3.01 2.33C7.67 8.16 9.66 6.58 12 6.58z" fill="#EA4335"/></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="white" stroke="#E0E0E0" strokeWidth="1"/><path d="M20.64 12.2c0-.63-.06-1.25-.16-1.84H12v3.49h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.63z" fill="#4285F4"/><path d="M12 21c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.84.86-3.05.86-2.34 0-4.33-1.58-5.04-3.71H3.95v2.33A8.99 8.99 0 0 0 12 21z" fill="#34A853"/><path d="M6.96 13.71A5.41 5.41 0 0 1 6.68 12c0-.59.1-1.17.28-1.71V7.96H3.95A8.99 8.99 0 0 0 3 12c0 1.45.35 2.82.95 4.04l3.01-2.33z" fill="#FBBC05"/><path d="M12 6.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C16.46 3.89 14.43 3 12 3A8.99 8.99 0 0 0 3.95 7.96l3.01 2.33C7.67 8.16 9.66 6.58 12 6.58z" fill="#EA4335"/></svg>,
+    urlPlaceholder: "https://business.google.com/...",
     steps: [
       "Go to business.google.com and log in.",
       "Select your business profile if you have more than one.",
@@ -77,6 +81,7 @@ const PLATFORMS = [
     bg: "#F0F0F0",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#010101"/><path d="M15.5 6.5c.5 1.2 1.5 2 2.5 2.2v2c-.8-.1-1.6-.4-2.3-.9v4c0 2.1-1.7 3.7-3.7 3.7s-3.7-1.7-3.7-3.7 1.7-3.7 3.7-3.7c.2 0 .4 0 .5.02v2c-.2-.03-.35-.05-.5-.05-1 0-1.7.8-1.7 1.7 0 1 .8 1.7 1.7 1.7s1.7-.8 1.7-1.7V6.5h2.1z" fill="white"/></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#010101"/><path d="M15.5 6.5c.5 1.2 1.5 2 2.5 2.2v2c-.8-.1-1.6-.4-2.3-.9v4c0 2.1-1.7 3.7-3.7 3.7s-3.7-1.7-3.7-3.7 1.7-3.7 3.7-3.7c.2 0 .4 0 .5.02v2c-.2-.03-.35-.05-.5-.05-1 0-1.7.8-1.7 1.7 0 1 .8 1.7 1.7 1.7s1.7-.8 1.7-1.7V6.5h2.1z" fill="white"/></svg>,
+    urlPlaceholder: "https://tiktok.com/@yourhandle",
     steps: [
       "Log into TikTok on a desktop browser at tiktok.com.",
       "Go to your profile and click TikTok Studio.",
@@ -94,6 +99,7 @@ const PLATFORMS = [
     bg: "#FDEAEA",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#D32323"/><text x="12" y="17" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="serif">y</text></svg>,
     smallIcon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="#D32323"/><text x="12" y="17" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="serif">y</text></svg>,
+    urlPlaceholder: "https://yelp.com/biz/your-business",
     steps: [
       "Log into your Yelp Business account at biz.yelp.com.",
       "Click your business name in the top right.",
@@ -110,6 +116,7 @@ const PLATFORMS = [
 export function InstructionWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
+  const [urls, setUrls] = useState<Record<string, string>>({});
 
   const isSummary = currentStep === PLATFORMS.length;
   const platform = PLATFORMS[currentStep];
@@ -173,9 +180,28 @@ export function InstructionWizard() {
               </ol>
 
               {/* Note */}
-              <div style={{ background: "#F0F7F3", border: "1px solid rgba(45,107,79,0.2)", borderRadius: 8, padding: "9px 12px", marginBottom: 18, display: "flex", gap: 7 }}>
+              <div style={{ background: "#F0F7F3", border: "1px solid rgba(45,107,79,0.2)", borderRadius: 8, padding: "9px 12px", marginBottom: 16, display: "flex", gap: 7 }}>
                 <span style={{ fontSize: 12 }}>✅</span>
                 <p style={{ fontSize: 12, color: "#2D6B4F", margin: 0, lineHeight: 1.5 }}>{platform.note}</p>
+              </div>
+
+              {/* Page link input */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
+                  Paste a link to your {platform.name} page <span style={{ fontWeight: 400, color: "#9CA3AF" }}>(optional)</span>
+                </label>
+                <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                  <span style={{ position: "absolute", left: 10, opacity: 0.35 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </span>
+                  <input
+                    type="url"
+                    value={urls[platform.id] || ""}
+                    onChange={e => setUrls(u => ({ ...u, [platform.id]: e.target.value }))}
+                    placeholder={platform.urlPlaceholder}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F9F7", border: "1.5px solid rgba(31,61,44,0.12)", borderRadius: 8, outline: "none", fontFamily: "inherit" }}
+                  />
+                </div>
               </div>
 
               {/* Action buttons */}
@@ -209,22 +235,30 @@ export function InstructionWizard() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 22 }}>
               {PLATFORMS.map(p => (
-                <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "#F9F9F7", borderRadius: 10, border: "1px solid rgba(31,61,44,0.08)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    {p.smallIcon}
-                    <span style={{ fontSize: 13, fontWeight: 500, color: "#1F3D2C" }}>{p.name}</span>
+                <div key={p.id} style={{ padding: "10px 14px", background: "#F9F9F7", borderRadius: 10, border: "1px solid rgba(31,61,44,0.08)" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      {p.smallIcon}
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#1F3D2C" }}>{p.name}</span>
+                    </div>
+                    {completed[p.id] ? (
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#2D6B4F", background: "rgba(45,107,79,0.1)", padding: "3px 10px", borderRadius: 20 }}>Done ✓</span>
+                    ) : (
+                      <span style={{ fontSize: 11, color: "#9CA3AF" }}>Skipped</span>
+                    )}
                   </div>
-                  {completed[p.id] ? (
-                    <span style={{ fontSize: 11, fontWeight: 600, color: "#2D6B4F", background: "rgba(45,107,79,0.1)", padding: "3px 10px", borderRadius: 20 }}>Done ✓</span>
-                  ) : (
-                    <span style={{ fontSize: 11, color: "#9CA3AF" }}>Skipped</span>
+                  {urls[p.id] && (
+                    <div style={{ marginTop: 6, paddingLeft: 26, display: "flex", alignItems: "center", gap: 5 }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                      <span style={{ fontSize: 11, color: "#6B7280", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 260 }}>{urls[p.id]}</span>
+                    </div>
                   )}
                 </div>
               ))}
             </div>
 
             <button
-              onClick={() => { setCurrentStep(0); setCompleted({}); }}
+              onClick={() => { setCurrentStep(0); setCompleted({}); setUrls({}); }}
               style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
             >
               Start Over
