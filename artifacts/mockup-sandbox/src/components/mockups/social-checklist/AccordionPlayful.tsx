@@ -123,7 +123,7 @@ export function AccordionPlayful() {
 
         {/* Section label */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: "#1F3D2C" }}>Pick your platforms</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: "#7D2A03" }}>Pick your platforms</span>
           <span style={{ fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "rgba(125,42,3,0.08)", color: "#7D2A03" }}>
             {selected.length} of {limit} selected
           </span>
@@ -171,11 +171,11 @@ export function AccordionPlayful() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, padding: "10px 16px", background: "white", borderRadius: 12, border: "1px solid rgba(31,61,44,0.08)" }}>
             <div style={{ display: "flex", gap: 5 }}>
               {selected.map(id => (
-                <div key={id} style={{ width: 10, height: 10, borderRadius: "50%", background: completed[id] ? "#2D6B4F" : "rgba(31,61,44,0.12)", transition: "background 0.3s" }}/>
+                <div key={id} style={{ width: 10, height: 10, borderRadius: "50%", background: completed[id] ? "#2D6B4F" : "rgba(125,42,3,0.18)", transition: "background 0.3s" }}/>
               ))}
             </div>
             <span style={{ fontSize: 12, color: "#6B7280" }}>
-              {completedCount === 0 ? "Tap a platform below to get started" : completedCount === selected.length ? "All done! You're all set." : `${selected.length - completedCount} left to go`}
+              {completedCount === 0 ? "Tap a platform below to get started" : completedCount === selected.length ? <span style={{ color: "#7D2A03", fontWeight: 700 }}>All done! You're all set.</span> : `${selected.length - completedCount} left to go`}
             </span>
           </div>
         )}
