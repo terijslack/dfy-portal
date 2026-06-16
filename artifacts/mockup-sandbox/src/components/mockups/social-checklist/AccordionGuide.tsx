@@ -121,7 +121,7 @@ export function AccordionGuide() {
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <h2 style={{ fontSize: 21, fontWeight: 700, color: "#1F3D2C", margin: "0 0 10px", lineHeight: 1.3 }}>Grant us access to your accounts</h2>
           <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.65 }}>
-            To get started managing your social media, we'll need admin access to your accounts. Follow the steps below for each platform you use. If you get stuck on any step, don't worry, just reach out and we'll walk you through it!
+            To get started managing your social media, we'll need admin access to your accounts. Follow the steps below for each platform you use. If you get stuck on any step, don't hesitate to reach out and we will walk you through it!
           </p>
 
           {/* Platform selection chips */}
