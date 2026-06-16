@@ -16,6 +16,7 @@ const PLATFORMS = [
       "Click Give Access and confirm.",
     ],
     note: "We'll get a notification and accept from our end.",
+    urlPlaceholder: "https://facebook.com/yourpagename",
   },
   {
     id: "instagram",
@@ -29,6 +30,7 @@ const PLATFORMS = [
       "If Instagram is NOT yet connected: open the Instagram app → profile → three lines → Settings → Account → Sharing and Remixing → connect your Facebook Page.",
     ],
     note: "Once your Instagram is linked to your Facebook Page and we have Page access, we're good to go.",
+    urlPlaceholder: "https://instagram.com/yourhandle",
   },
   {
     id: "linkedin",
@@ -45,6 +47,7 @@ const PLATFORMS = [
       "Click Save.",
     ],
     note: "We'll receive a notification and accept the invite.",
+    urlPlaceholder: "https://linkedin.com/company/your-company",
   },
   {
     id: "tiktok",
@@ -60,6 +63,7 @@ const PLATFORMS = [
       "Grant the permissions listed and confirm.",
     ],
     note: "TikTok's admin access is more limited than other platforms — we'll discuss what this covers during your kickoff call.",
+    urlPlaceholder: "https://tiktok.com/@yourhandle",
   },
 ];
 
@@ -73,6 +77,7 @@ export function AccordionGuide() {
   const [selected, setSelected] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
+  const [urls, setUrls] = useState<Record<string, string>>({});
 
   const limit = plan === "starter" ? 2 : 4;
 
@@ -245,6 +250,25 @@ export function AccordionGuide() {
                         <div style={{ background: "#F0F7F3", border: "1px solid rgba(45,107,79,0.2)", borderRadius: 8, padding: "10px 14px", marginBottom: 16, display: "flex", gap: 8, alignItems: "flex-start" }}>
                           <span style={{ fontSize: 14 }}>✅</span>
                           <p style={{ fontSize: 12, color: "#2D6B4F", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
+                        </div>
+
+                        {/* Page link input */}
+                        <div style={{ marginBottom: 16 }}>
+                          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
+                            Paste a link to your {p.name} page <span style={{ fontWeight: 400, color: "#9CA3AF" }}>(optional)</span>
+                          </label>
+                          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                            <span style={{ position: "absolute", left: 10, opacity: 0.35 }}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            </span>
+                            <input
+                              type="url"
+                              value={urls[p.id] || ""}
+                              onChange={e => setUrls(u => ({ ...u, [p.id]: e.target.value }))}
+                              placeholder={p.urlPlaceholder}
+                              style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F9F7", border: "1.5px solid rgba(31,61,44,0.12)", borderRadius: 8, outline: "none", fontFamily: "inherit" }}
+                            />
+                          </div>
                         </div>
 
                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
