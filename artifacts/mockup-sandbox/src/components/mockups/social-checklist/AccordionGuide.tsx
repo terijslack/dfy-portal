@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 
 const PLATFORMS = [
   {
@@ -52,7 +52,7 @@ export function AccordionGuide() {
 
   const toggle = (id: string) => setOpenId(openId === id ? null : id);
 
-  const markDone = (id: string, e: React.MouseEvent) => {
+  const markDone = (id: string, e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (handles[id]?.trim()) {
       setCompleted(c => ({ ...c, [id]: true }));
