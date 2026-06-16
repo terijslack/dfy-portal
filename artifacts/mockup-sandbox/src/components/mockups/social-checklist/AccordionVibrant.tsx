@@ -166,7 +166,9 @@ export function AccordionVibrant() {
         {/* Accordion */}
         {selected.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 16, border: "2px dashed rgba(31,61,44,0.12)" }}>
-            <div style={{ fontSize: 28, marginBottom: 8 }}>☝️</div>
+            <div style={{ marginBottom: 12 }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(31,61,44,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
             <p style={{ fontSize: 13, color: "#9CA3AF", margin: 0 }}>Select the platforms you use above to get started.</p>
           </div>
         ) : (
@@ -193,7 +195,6 @@ export function AccordionVibrant() {
                           </div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          {isDone && <span style={{ fontSize: 18 }}>🎉</span>}
                           <div style={{ width: 28, height: 28, borderRadius: "50%", background: isOpen ? "#2D6B4F" : "#F5F2EA", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isOpen ? "white" : "#9CA3AF"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s" }}>
                               <polyline points="6,9 12,15 18,9"/>
@@ -213,7 +214,7 @@ export function AccordionVibrant() {
                             ))}
                           </ol>
                           <div style={{ background: "linear-gradient(135deg, #F0F7F3, #E8F4EE)", border: "1px solid rgba(45,107,79,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 8 }}>
-                            <span style={{ fontSize: 14 }}>✅</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><polyline points="20,6 9,17 4,12"/></svg>
                             <p style={{ fontSize: 12, color: "#2D6B4F", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
                           </div>
                           <div style={{ marginBottom: 14 }}>
@@ -245,7 +246,7 @@ export function AccordionVibrant() {
         )}
 
         <p style={{ textAlign: "center", fontSize: 11, color: "#9CA3AF", marginTop: 24, lineHeight: 1.6 }}>
-          🔒 We will never ask for your passwords. If you need help, just reply to your onboarding email.
+          We will never ask for your passwords. If you need help, just reply to your onboarding email.
         </p>
       </div>
     </div>

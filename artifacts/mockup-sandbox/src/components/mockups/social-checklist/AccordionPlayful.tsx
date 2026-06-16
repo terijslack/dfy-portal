@@ -4,7 +4,7 @@ const PLATFORMS = [
   {
     id: "facebook", name: "Facebook",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
-    emoji: "👥", color: "#E8F0FE", borderColor: "#93C5FD",
+    color: "#E8F0FE", borderColor: "#93C5FD",
     urlPlaceholder: "https://facebook.com/yourpagename",
     steps: [
       "Log into Facebook and go to your Business Page (not your personal profile).",
@@ -20,7 +20,7 @@ const PLATFORMS = [
   {
     id: "instagram", name: "Instagram",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
-    emoji: "📸", color: "#FDF2F8", borderColor: "#F0ABFC",
+    color: "#FDF2F8", borderColor: "#F0ABFC",
     urlPlaceholder: "https://instagram.com/yourhandle",
     steps: [
       "Complete the Facebook Page steps above first — Instagram access is managed through Facebook.",
@@ -33,7 +33,7 @@ const PLATFORMS = [
   {
     id: "linkedin", name: "LinkedIn",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
-    emoji: "💼", color: "#EFF6FF", borderColor: "#93C5FD",
+    color: "#EFF6FF", borderColor: "#93C5FD",
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: [
       "Log into LinkedIn and navigate to your Company Page (not your personal profile).",
@@ -49,7 +49,7 @@ const PLATFORMS = [
   {
     id: "tiktok", name: "TikTok",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
-    emoji: "🎵", color: "#F0FDF4", borderColor: "#86EFAC",
+    color: "#F0FDF4", borderColor: "#86EFAC",
     urlPlaceholder: "https://tiktok.com/@yourhandle",
     steps: [
       "Log into TikTok on a desktop browser at tiktok.com.",
@@ -103,7 +103,9 @@ export function AccordionPlayful() {
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>🔑</div>
+          <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(45,107,79,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1F3D2C", margin: "0 0 10px", lineHeight: 1.2 }}>Grant us access</h2>
           <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 20px", lineHeight: 1.65, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
             To get started managing your social media, we'll need admin access to your accounts. Follow the steps below for each platform you use. If you get stuck on any step, don't hesitate to reach out and we will walk you through it!
@@ -146,15 +148,11 @@ export function AccordionPlayful() {
                   boxShadow: isSel ? "0 4px 14px rgba(0,0,0,0.07)" : "0 1px 3px rgba(0,0,0,0.04)",
                 }}>
                 {/* Check badge */}
-                {isSel && !isDone && (
-                  <div style={{ position: "absolute", top: 8, right: 8, width: 18, height: 18, borderRadius: "50%", background: "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {isSel && (
+                  <div style={{ position: "absolute", top: 8, right: 8, width: 18, height: 18, borderRadius: "50%", background: isDone ? "#2D6B4F" : "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
                   </div>
                 )}
-                {isDone && (
-                  <div style={{ position: "absolute", top: 8, right: 8, fontSize: 16 }}>✅</div>
-                )}
-                <span style={{ fontSize: 24 }}>{p.emoji}</span>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{p.icon}</div>
                 <span style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>{p.name}</span>
                 {isDone && <span style={{ fontSize: 10, color: "#2D6B4F", fontWeight: 600 }}>Done!</span>}
@@ -178,7 +176,7 @@ export function AccordionPlayful() {
               ))}
             </div>
             <span style={{ fontSize: 12, color: "#6B7280" }}>
-              {completedCount === 0 ? "Tap a platform below to get started" : completedCount === selected.length ? "🎉 All done! You're all set." : `${selected.length - completedCount} left to go`}
+              {completedCount === 0 ? "Tap a platform below to get started" : completedCount === selected.length ? "All done! You're all set." : `${selected.length - completedCount} left to go`}
             </span>
           </div>
         )}
@@ -199,8 +197,10 @@ export function AccordionPlayful() {
                   <button onClick={() => setOpenId(isOpen ? null : p.id)}
                     style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: isDone ? p.color : "none", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 44, height: 44, borderRadius: 14, background: isDone ? "white" : p.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1.5px solid ${isDone ? "rgba(45,107,79,0.2)" : p.borderColor}` }}>
-                        {isDone ? <span style={{ fontSize: 20 }}>✅</span> : <span style={{ fontSize: 20 }}>{p.emoji}</span>}
+                      <div style={{ width: 44, height: 44, borderRadius: 14, background: isDone ? "rgba(45,107,79,0.08)" : p.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1.5px solid ${isDone ? "rgba(45,107,79,0.25)" : p.borderColor}` }}>
+                        {isDone
+                          ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+                          : p.icon}
                       </div>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 700, color: "#1F3D2C" }}>{p.name}</div>
@@ -228,7 +228,7 @@ export function AccordionPlayful() {
                       </ol>
 
                       <div style={{ background: "#F0F7F3", border: "1px solid rgba(45,107,79,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 8 }}>
-                        <span style={{ fontSize: 14 }}>✅</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><polyline points="20,6 9,17 4,12"/></svg>
                         <p style={{ fontSize: 12, color: "#2D6B4F", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
                       </div>
 
@@ -247,7 +247,7 @@ export function AccordionPlayful() {
 
                       <button onClick={e => markDone(p.id, e)}
                         style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                        I've completed these steps 🎉
+                        I've completed these steps
                       </button>
                     </div>
                   )}
@@ -258,7 +258,7 @@ export function AccordionPlayful() {
         )}
 
         <p style={{ textAlign: "center", fontSize: 11, color: "#9CA3AF", marginTop: 24, lineHeight: 1.6 }}>
-          🔒 We will never ask for your passwords. If you need help, just reply to your onboarding email.
+          We will never ask for your passwords. If you need help, just reply to your onboarding email.
         </p>
       </div>
     </div>
