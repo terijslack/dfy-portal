@@ -1,10 +1,12 @@
 import { useState, type MouseEvent } from "react";
 
+const SEL_BG     = "rgba(45,107,79,0.08)";
+const SEL_BORDER = "#2D6B4F";
+
 const PLATFORMS = [
   {
     id: "facebook", name: "Facebook",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
-    color: "#E8F0FE", borderColor: "#93C5FD",
     urlPlaceholder: "https://facebook.com/yourpagename",
     steps: [
       "Log into Facebook and go to your Business Page (not your personal profile).",
@@ -20,7 +22,6 @@ const PLATFORMS = [
   {
     id: "instagram", name: "Instagram",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
-    color: "#FDF2F8", borderColor: "#F0ABFC",
     urlPlaceholder: "https://instagram.com/yourhandle",
     steps: [
       "Complete the Facebook Page steps above first — Instagram access is managed through Facebook.",
@@ -33,7 +34,6 @@ const PLATFORMS = [
   {
     id: "linkedin", name: "LinkedIn",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
-    color: "#EFF6FF", borderColor: "#93C5FD",
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: [
       "Log into LinkedIn and navigate to your Company Page (not your personal profile).",
@@ -49,7 +49,6 @@ const PLATFORMS = [
   {
     id: "tiktok", name: "TikTok",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
-    color: "#F0FDF4", borderColor: "#86EFAC",
     urlPlaceholder: "https://tiktok.com/@yourhandle",
     steps: [
       "Log into TikTok on a desktop browser at tiktok.com.",
@@ -103,7 +102,7 @@ export function AccordionPlayful() {
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(45,107,79,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+          <div style={{ width: 52, height: 52, borderRadius: 16, background: SEL_BG, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: "#1F3D2C", margin: "0 0 10px", lineHeight: 1.2 }}>Grant us access</h2>
@@ -141,15 +140,15 @@ export function AccordionPlayful() {
                 style={{
                   position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                   gap: 8, padding: "18px 12px", borderRadius: 16,
-                  background: isDone ? "rgba(45,107,79,0.06)" : isSel ? p.color : "white",
-                  border: `2px solid ${isDone ? "#2D6B4F" : isSel ? p.borderColor : "rgba(31,61,44,0.1)"}`,
+                  background: isSel || isDone ? SEL_BG : "white",
+                  border: `2px solid ${isSel || isDone ? SEL_BORDER : "rgba(31,61,44,0.1)"}`,
                   cursor: isLocked ? "not-allowed" : "pointer", opacity: isLocked ? 0.4 : 1,
                   fontFamily: "inherit", transition: "all 0.15s",
-                  boxShadow: isSel ? "0 4px 14px rgba(0,0,0,0.07)" : "0 1px 3px rgba(0,0,0,0.04)",
+                  boxShadow: isSel ? "0 4px 14px rgba(45,107,79,0.15)" : "0 1px 3px rgba(0,0,0,0.04)",
                 }}>
                 {/* Check badge */}
                 {isSel && (
-                  <div style={{ position: "absolute", top: 8, right: 8, width: 18, height: 18, borderRadius: "50%", background: isDone ? "#2D6B4F" : "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ position: "absolute", top: 8, right: 8, width: 18, height: 18, borderRadius: "50%", background: "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
                   </div>
                 )}
@@ -192,12 +191,12 @@ export function AccordionPlayful() {
               const isOpen = openId === p.id;
               const isDone = completed[p.id];
               return (
-                <div key={p.id} style={{ background: "white", borderRadius: 18, overflow: "hidden", border: `2px solid ${isOpen ? "#2D6B4F" : isDone ? "rgba(45,107,79,0.25)" : "rgba(31,61,44,0.1)"}`, boxShadow: isOpen ? "0 8px 28px rgba(31,61,44,0.1)" : "0 1px 4px rgba(0,0,0,0.04)", transition: "all 0.2s" }}>
+                <div key={p.id} style={{ background: "white", borderRadius: 18, overflow: "hidden", border: `2px solid ${isOpen ? SEL_BORDER : isDone ? "rgba(45,107,79,0.25)" : "rgba(31,61,44,0.1)"}`, boxShadow: isOpen ? "0 8px 28px rgba(31,61,44,0.1)" : "0 1px 4px rgba(0,0,0,0.04)", transition: "all 0.2s" }}>
 
                   <button onClick={() => setOpenId(isOpen ? null : p.id)}
-                    style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: isDone ? p.color : "none", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
+                    style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: isDone ? SEL_BG : "none", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 44, height: 44, borderRadius: 14, background: isDone ? "rgba(45,107,79,0.08)" : p.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1.5px solid ${isDone ? "rgba(45,107,79,0.25)" : p.borderColor}` }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 14, background: SEL_BG, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1.5px solid rgba(45,107,79,0.25)` }}>
                         {isDone
                           ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
                           : p.icon}
@@ -217,11 +216,11 @@ export function AccordionPlayful() {
                   </button>
 
                   {isOpen && (
-                    <div style={{ borderTop: `2px solid ${p.borderColor}20`, padding: "16px 18px 20px" }}>
+                    <div style={{ borderTop: "2px solid rgba(45,107,79,0.1)", padding: "16px 18px 20px" }}>
                       <ol style={{ margin: "0 0 16px", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 12 }}>
                         {p.steps.map((step, i) => (
                           <li key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                            <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: p.color, border: `1.5px solid ${p.borderColor}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#1F3D2C", marginTop: 1 }}>{i + 1}</span>
+                            <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: SEL_BG, border: "1.5px solid rgba(45,107,79,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#2D6B4F", marginTop: 1 }}>{i + 1}</span>
                             <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 4 }}>{step}</span>
                           </li>
                         ))}
@@ -241,7 +240,7 @@ export function AccordionPlayful() {
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                           </span>
                           <input type="url" value={urls[p.id] || ""} onChange={e => setUrls(u => ({ ...u, [p.id]: e.target.value }))} placeholder={p.urlPlaceholder}
-                            style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F9F7", border: `1.5px solid ${p.borderColor}`, borderRadius: 8, outline: "none", fontFamily: "inherit" }}/>
+                            style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F9F7", border: "1.5px solid rgba(45,107,79,0.2)", borderRadius: 8, outline: "none", fontFamily: "inherit" }}/>
                         </div>
                       </div>
 
