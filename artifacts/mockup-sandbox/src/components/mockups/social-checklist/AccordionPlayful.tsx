@@ -124,7 +124,7 @@ export function AccordionPlayful() {
         {/* Section label */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: "#1F3D2C" }}>Pick your platforms</span>
-          <span style={{ fontSize: 12, color: atLimit ? "#7D2A03" : "#6B7280", fontWeight: 500 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "rgba(125,42,3,0.08)", color: "#7D2A03" }}>
             {selected.length} of {limit} selected
           </span>
         </div>
@@ -245,7 +245,7 @@ export function AccordionPlayful() {
                       </div>
 
                       <button onClick={e => markDone(p.id, e)}
-                        style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                        style={{ width: "100%", padding: "12px", background: "#7D2A03", color: "white", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                         I've completed these steps
                       </button>
                     </div>
