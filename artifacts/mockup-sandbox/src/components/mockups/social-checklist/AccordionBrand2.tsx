@@ -36,6 +36,27 @@ const PLANS = [
   { id: "growth", label: "Growth Engine", limit: 4 },
 ];
 
+const IconCheck = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9,11 12,14 22,4"/>
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+  </svg>
+);
+
+const IconClock = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12,6 12,12 16,14"/>
+  </svg>
+);
+
+const IconDone = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22,4 12,14.01 9,11.01"/>
+  </svg>
+);
+
 export function AccordionBrand2() {
   const [plan, setPlan] = useState<"starter" | "growth">("starter");
   const [selected, setSelected] = useState<string[]>([]);
@@ -71,29 +92,30 @@ export function AccordionBrand2() {
 
         {/* Header */}
         <div style={{ marginBottom: 26 }}>
-          <p
-            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px" }}
-            className="text-center">Almost there!</p>
-          <h2
-            style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}
-            className="text-center">Let's connect your accounts</h2>
-          <p
-            style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}
-            className="text-center">To start managing your social media, we'll need access to your accounts. 
-          Stuck? Don't worry, reach out and we'll walk you through each one step by step! </p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px" }}>
+            Almost there!
+          </p>
+          <h2 style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}>
+            Let's connect your accounts
+          </h2>
+          <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}>
+            To start managing your social media, we'll need access to your accounts. Don't worry — we'll walk you through each one step by step. It only takes a few minutes!
+          </p>
 
-          {/* Quick how-it-works strip */}
-          <div style={{ display: "flex", gap: 0, background: "white", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", marginBottom: 18 }}>
-            {[
-              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>, label: "Pick your platforms" },
-              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>, label: "Follow the steps" },
-              { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>, label: "We take it from here" },
-            ].map((item, i, arr) => (
-              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "12px 8px", borderRight: i < arr.length - 1 ? "1px solid rgba(31,61,44,0.07)" : "none" }}>
-                {item.icon}
-                <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>{item.label}</span>
-              </div>
-            ))}
+          {/* Quick how-it-works strip — no SVGs in arrays */}
+          <div style={{ display: "flex", background: "white", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", marginBottom: 18 }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "12px 8px", borderRight: "1px solid rgba(31,61,44,0.07)" }}>
+              <IconCheck />
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>Pick your platforms</span>
+            </div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "12px 8px", borderRight: "1px solid rgba(31,61,44,0.07)" }}>
+              <IconClock />
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>Follow the steps</span>
+            </div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "12px 8px" }}>
+              <IconDone />
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>We take it from here</span>
+            </div>
           </div>
 
           {/* Plan toggle */}
@@ -154,7 +176,11 @@ export function AccordionBrand2() {
               );
             })}
           </div>
-          {atLimit && <p style={{ fontSize: 11, color: "#7D2A03", background: "rgba(125,42,3,0.06)", border: "1px solid rgba(125,42,3,0.12)", borderRadius: 8, padding: "8px 12px", marginTop: 12, marginBottom: 0 }}>You've hit your plan limit — tap one above to swap it out.</p>}
+          {atLimit && (
+            <p style={{ fontSize: 11, color: "#7D2A03", background: "rgba(125,42,3,0.06)", border: "1px solid rgba(125,42,3,0.12)", borderRadius: 8, padding: "8px 12px", marginTop: 12, marginBottom: 0 }}>
+              You've hit your plan limit — tap one above to swap it out.
+            </p>
+          )}
         </div>
 
         {/* Progress — platform name chips */}
@@ -166,7 +192,9 @@ export function AccordionBrand2() {
               </span>
             ))}
             {completedCount === selected.length && selected.length > 0 && (
-              <span style={{ fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#2D6B4F" }}>You're all set!</span>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#2D6B4F" }}>
+                You're all set!
+              </span>
             )}
           </div>
         )}
@@ -175,7 +203,7 @@ export function AccordionBrand2() {
         {selected.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 16, border: "2px dashed rgba(31,61,44,0.1)" }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: "#6B7280", margin: "0 0 4px" }}>Choose your platforms above</p>
-            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one. it's quick, we promise.</p>
+            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one. It's quick, we promise.</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -214,7 +242,6 @@ export function AccordionBrand2() {
 
                   {isOpen && (
                     <div style={{ borderTop: "1px solid rgba(31,61,44,0.06)", padding: "16px 18px 20px" }}>
-                      {/* Steps — small green circles */}
                       <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 14 }}>
                         {p.steps.map((step, i) => (
                           <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
@@ -224,12 +251,12 @@ export function AccordionBrand2() {
                         ))}
                       </div>
 
-                      {/* Note — cream/tan left-border callout */}
                       <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
-                        <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}><strong style={{ fontWeight: 700 }}>Heads up —</strong> {p.note}</p>
+                        <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>
+                          <strong style={{ fontWeight: 700 }}>Heads up —</strong> {p.note}
+                        </p>
                       </div>
 
-                      {/* URL */}
                       <div style={{ marginBottom: 12 }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6B7280", marginBottom: 6 }}>
                           Your {p.name} page link <span style={{ fontWeight: 400, color: "#C4C4C4" }}>(optional)</span>
