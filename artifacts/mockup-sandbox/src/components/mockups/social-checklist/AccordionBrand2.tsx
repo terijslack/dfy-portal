@@ -99,7 +99,7 @@ export function AccordionBrand2() {
             Let's connect your accounts
           </h2>
           <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}>
-            To start managing your social media, we'll need access to your accounts. Don't worry — we'll walk you through each one step by step. It only takes a few minutes!
+            To start managing your social media, we'll need access to your accounts. Stuck? Don't worry, reach out and we'll walk you through each one step by step!
           </p>
 
           {/* Quick how-it-works strip — no SVGs in arrays */}
@@ -203,7 +203,7 @@ export function AccordionBrand2() {
         {selected.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 16, border: "2px dashed rgba(31,61,44,0.1)" }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: "#6B7280", margin: "0 0 4px" }}>Choose your platforms above</p>
-            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one. It's quick, we promise.</p>
+            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one. it's quick, we promise.</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
