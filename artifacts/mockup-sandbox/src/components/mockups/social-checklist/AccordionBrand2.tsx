@@ -3,28 +3,28 @@ import { useState, type MouseEvent } from "react";
 const PLATFORMS = [
   {
     id: "facebook", name: "Facebook",
-    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
     urlPlaceholder: "https://facebook.com/yourpagename",
     steps: ["Log into Facebook and go to your Business Page (not your personal profile).","Click Professional Dashboard near the top of your page.","On the left side menu, click Page Access.","Under People with Facebook Access, click Add New.","Search for our Facebook account: [Agency Facebook Profile].","Toggle on Allow this person to have full control for full admin access.","Click Give Access and confirm."],
     note: "We'll get a notification and accept from our end.",
   },
   {
     id: "instagram", name: "Instagram",
-    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
     urlPlaceholder: "https://instagram.com/yourhandle",
-    steps: ["Complete the Facebook Page steps above first — Instagram access is managed through Facebook.","If your Instagram is connected to your Facebook Page, access carries over automatically.","To verify: go to your Facebook Page → Settings → Linked Accounts → confirm Instagram is connected.","If Instagram is NOT yet connected: open the Instagram app → profile → three lines → Settings → Account → Sharing and Remixing → connect your Facebook Page."],
+    steps: ["Complete the Facebook Page steps above first — Instagram access is managed through Facebook.","If your Instagram is connected to your Facebook Page, access carries over automatically.","To verify: go to your Facebook Page → Settings → Linked Accounts → confirm Instagram is connected.","If Instagram is NOT yet connected: open the Instagram app → Settings → Account → Sharing and Remixing → connect your Facebook Page."],
     note: "Once your Instagram is linked to your Facebook Page and we have Page access, we're good to go.",
   },
   {
     id: "linkedin", name: "LinkedIn",
-    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: ["Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our LinkedIn profile: [Agency LinkedIn Profile].","Select the admin role — choose Super Admin for full access.","Click Save."],
     note: "We'll receive a notification and accept the invite.",
   },
   {
     id: "tiktok", name: "TikTok",
-    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
     urlPlaceholder: "https://tiktok.com/@yourhandle",
     steps: ["Log into TikTok on a desktop browser at tiktok.com.","Go to your profile and click TikTok Studio.","On the left menu, click Settings.","Select Account → then Creator Permissions.","Click Authorize and enter our TikTok handle: [Agency TikTok Handle].","Grant the permissions listed and confirm."],
     note: "TikTok's admin access is more limited than other platforms — we'll discuss what this covers during your kickoff call.",
@@ -47,7 +47,7 @@ export function AccordionBrand2() {
   const atLimit = selected.length >= limit;
   const completedCount = Object.values(completed).filter(Boolean).length;
 
-  const toggleSelect = (id: string) => {
+  const toggle = (id: string) => {
     if (selected.includes(id)) {
       setSelected(s => s.filter(x => x !== id));
       setCompleted(c => { const n = { ...c }; delete n[id]; return n; });
@@ -67,113 +67,91 @@ export function AccordionBrand2() {
 
   return (
     <div style={{ background: "#F5F2EA", minHeight: "100vh", fontFamily: "Inter, sans-serif" }}>
+      <div style={{ maxWidth: 540, margin: "0 auto", padding: "32px 24px 48px" }}>
 
-      {/* ── DARK ZONE: header + platform selection ── */}
-      <div style={{ background: "#1F3D2C" }}>
-        <div style={{ maxWidth: 520, margin: "0 auto", padding: "28px 24px 0" }}>
-
-          {/* Header */}
-          <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.14em", textTransform: "uppercase", color: "#7D2A03", margin: "0 0 10px" }}>
-            Social Media Access
+        {/* Header */}
+        <div style={{ marginBottom: 26 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#7D2A03", margin: "0 0 6px" }}>Social Media Access</p>
+          <h2 style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}>Grant us access</h2>
+          <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 16px", lineHeight: 1.65 }}>
+            We need admin access to manage your accounts. Pick your platforms and follow the steps below.
           </p>
-          <h2 style={{ fontSize: 28, fontWeight: 900, color: "white", margin: "0 0 8px", lineHeight: 1.1, letterSpacing: "-0.025em" }}>
-            Grant us access
-          </h2>
-          <p style={{ fontSize: 13, color: "rgba(235,201,155,0.7)", margin: "0 0 20px", lineHeight: 1.6 }}>
-            We need admin access to manage your accounts. Select your platforms and follow the steps.
-          </p>
-
-          {/* Plan toggle */}
-          <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.07)", borderRadius: 6, padding: 3, gap: 2, marginBottom: 24 }}>
+          {/* Plan toggle — segmented pill */}
+          <div style={{ display: "inline-flex", background: "rgba(31,61,44,0.07)", borderRadius: 8, padding: 3, gap: 2 }}>
             {PLANS.map(p => (
               <button key={p.id} onClick={() => { setPlan(p.id as "starter" | "growth"); setSelected([]); setCompleted({}); setUrls({}); setOpenId(null); }}
-                style={{ padding: "6px 16px", borderRadius: 4, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, fontFamily: "inherit", background: plan === p.id ? "#7D2A03" : "transparent", color: plan === p.id ? "white" : "rgba(255,255,255,0.45)", transition: "all 0.18s" }}>
+                style={{ padding: "6px 16px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "inherit", background: plan === p.id ? "white" : "transparent", color: plan === p.id ? "#1F3D2C" : "#9CA3AF", boxShadow: plan === p.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.18s" }}>
                 {p.label}
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Platform section label */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(235,201,155,0.6)" }}>
-              Your platforms
-            </span>
-            <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "rgba(125,42,3,0.35)", color: "#EBC99B" }}>
-              {selected.length} of {limit} selected
+        {/* Platform cards — 2x2 grid, large, rounded, green fill */}
+        <div style={{ marginBottom: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>Pick your platforms</span>
+            <span style={{ fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "rgba(125,42,3,0.08)", color: "#7D2A03" }}>
+              {selected.length} of {limit}
             </span>
           </div>
-
-          {/* Platform cards on dark background */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, paddingBottom: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {PLATFORMS.map(p => {
               const isSel = selected.includes(p.id);
-              const isLocked = !isSel && atLimit;
               const isDone = completed[p.id];
+              const isLocked = !isSel && atLimit;
               return (
-                <button key={p.id} onClick={() => toggleSelect(p.id)} disabled={isLocked}
+                <button key={p.id} onClick={() => toggle(p.id)} disabled={isLocked}
                   style={{
-                    position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                    gap: 8, padding: "18px 12px", borderRadius: 10,
-                    background: isDone ? "rgba(45,107,79,0.3)" : isSel ? "rgba(45,107,79,0.25)" : "rgba(255,255,255,0.06)",
-                    border: `2px solid ${isDone ? "#2D6B4F" : isSel ? "#2D6B4F" : "rgba(255,255,255,0.1)"}`,
-                    cursor: isLocked ? "not-allowed" : "pointer", opacity: isLocked ? 0.35 : 1,
-                    fontFamily: "inherit", transition: "all 0.15s",
-                    boxShadow: isSel ? "0 4px 16px rgba(0,0,0,0.25)" : "none",
+                    position: "relative",
+                    display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
+                    padding: "22px 12px 18px",
+                    borderRadius: 16,
+                    background: isDone ? "rgba(45,107,79,0.06)" : isSel ? "#2D6B4F" : "white",
+                    border: `2px solid ${isDone ? "#2D6B4F" : isSel ? "#2D6B4F" : "rgba(31,61,44,0.0)"}`,
+                    boxShadow: isSel ? "0 6px 20px rgba(45,107,79,0.22)" : "0 2px 8px rgba(0,0,0,0.06)",
+                    cursor: isLocked ? "not-allowed" : "pointer",
+                    opacity: isLocked ? 0.4 : 1,
+                    fontFamily: "inherit", transition: "all 0.18s",
                   }}>
-                  {isSel && (
-                    <div style={{ position: "absolute", top: 8, right: 8, width: 18, height: 18, borderRadius: "50%", background: "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {isSel && !isDone && (
+                    <div style={{ position: "absolute", top: 10, right: 10, width: 20, height: 20, borderRadius: "50%", background: "rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
                     </div>
                   )}
-                  <span style={{ color: isSel ? "#EBC99B" : "rgba(255,255,255,0.6)" }}>{p.icon}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: isSel ? "white" : "rgba(255,255,255,0.65)" }}>{p.name}</span>
-                  {isDone && <span style={{ fontSize: 10, color: "#EBC99B", fontWeight: 700 }}>Done!</span>}
+                  {isDone && (
+                    <div style={{ position: "absolute", top: 10, right: 10, width: 20, height: 20, borderRadius: "50%", background: "#2D6B4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+                    </div>
+                  )}
+                  <span style={{ color: isSel ? "white" : isDone ? "#2D6B4F" : "#1F3D2C" }}>{p.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: isSel ? "white" : "#1F3D2C" }}>{p.name}</span>
+                  {isDone && <span style={{ fontSize: 10, color: "#2D6B4F", fontWeight: 700 }}>Done!</span>}
                 </button>
               );
             })}
           </div>
-
-          {atLimit && (
-            <p style={{ fontSize: 11, color: "#EBC99B", background: "rgba(125,42,3,0.3)", border: "1px solid rgba(125,42,3,0.4)", borderRadius: 6, padding: "8px 12px", marginTop: -14, marginBottom: 16 }}>
-              Plan limit reached. Tap a platform to swap.
-            </p>
-          )}
+          {atLimit && <p style={{ fontSize: 11, color: "#7D2A03", background: "rgba(125,42,3,0.06)", border: "1px solid rgba(125,42,3,0.12)", borderRadius: 8, padding: "8px 12px", marginTop: 12, marginBottom: 0 }}>Plan limit reached — tap a platform to swap.</p>}
         </div>
-      </div>
 
-      {/* ── RUST DIVIDER ── */}
-      <div style={{ height: 4, background: "#7D2A03" }}/>
-
-      {/* ── CREAM ZONE: progress + accordion ── */}
-      <div style={{ maxWidth: 520, margin: "0 auto", padding: "20px 24px 40px" }}>
-
-        {/* Progress tracker */}
+        {/* Progress — platform name chips */}
         {selected.length > 0 && (
-          <div style={{ marginBottom: 18, padding: "12px 16px", background: "white", borderRadius: 10, border: "1px solid rgba(31,61,44,0.08)" }}>
-            <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9CA3AF", margin: "0 0 10px" }}>Your progress</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {PLATFORMS.filter(p => selected.includes(p.id)).map(p => (
-                <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: completed[p.id] ? "#2D6B4F" : "rgba(125,42,3,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.3s" }}>
-                    {completed[p.id]
-                      ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
-                      : <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#7D2A03", opacity: 0.5 }}/>}
-                  </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: completed[p.id] ? "#2D6B4F" : "#6B7280" }}>{p.name}</span>
-                  {completed[p.id] && <span style={{ fontSize: 10, color: "#2D6B4F", marginLeft: "auto" }}>Access granted ✓</span>}
-                </div>
-              ))}
-            </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "14px 0 18px" }}>
+            {PLATFORMS.filter(p => selected.includes(p.id)).map(p => (
+              <span key={p.id} style={{ fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 20, background: completed[p.id] ? "#2D6B4F" : "rgba(31,61,44,0.07)", color: completed[p.id] ? "white" : "#6B7280", transition: "all 0.3s" }}>
+                {completed[p.id] && "✓ "}{p.name}
+              </span>
+            ))}
             {completedCount === selected.length && selected.length > 0 && (
-              <p style={{ fontSize: 12, fontWeight: 700, color: "#7D2A03", margin: "10px 0 0", borderTop: "1px solid rgba(125,42,3,0.12)", paddingTop: 10 }}>All done! You're all set.</p>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#7D2A03" }}>All done!</span>
             )}
           </div>
         )}
 
-        {/* Accordion */}
+        {/* Accordion — rounded white cards */}
         {selected.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 10, border: "2px dashed rgba(31,61,44,0.12)" }}>
-            <p style={{ fontSize: 13, color: "#9CA3AF", margin: 0 }}>Select your platforms above to see the steps.</p>
+          <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 16, border: "2px dashed rgba(31,61,44,0.1)" }}>
+            <p style={{ fontSize: 13, color: "#9CA3AF", margin: 0 }}>Select your platforms above to get started.</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -182,16 +160,16 @@ export function AccordionBrand2() {
               const isDone = completed[p.id];
               return (
                 <div key={p.id} style={{
-                  background: "white", borderRadius: 10, overflow: "hidden",
-                  border: `2px solid ${isOpen ? "#1F3D2C" : isDone ? "rgba(45,107,79,0.25)" : "rgba(31,61,44,0.1)"}`,
-                  borderLeft: isOpen ? "5px solid #7D2A03" : isDone ? "5px solid #2D6B4F" : "2px solid rgba(31,61,44,0.1)",
-                  boxShadow: isOpen ? "0 6px 24px rgba(31,61,44,0.1)" : "0 1px 4px rgba(0,0,0,0.04)",
+                  background: "white", borderRadius: 16, overflow: "hidden",
+                  boxShadow: isOpen ? "0 8px 28px rgba(31,61,44,0.1)" : "0 2px 8px rgba(0,0,0,0.05)",
+                  border: `2px solid ${isOpen ? "rgba(45,107,79,0.2)" : "transparent"}`,
+                  borderLeft: isOpen ? "4px solid #2D6B4F" : isDone ? "4px solid rgba(45,107,79,0.3)" : "4px solid transparent",
                   transition: "all 0.2s",
                 }}>
                   <button onClick={() => setOpenId(isOpen ? null : p.id)}
-                    style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 14px 14px 12px", background: "none", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
+                    style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "15px 18px", background: "none", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 8, background: isDone ? "rgba(45,107,79,0.08)" : "#F5F2EA", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <div style={{ width: 42, height: 42, borderRadius: 12, background: isDone ? "rgba(45,107,79,0.08)" : "#F5F2EA", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         {isDone
                           ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
                           : <span style={{ color: "#1F3D2C" }}>{p.icon}</span>}
@@ -199,55 +177,50 @@ export function AccordionBrand2() {
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 700, color: "#1F3D2C" }}>{p.name}</div>
                         <div style={{ fontSize: 11, color: isDone ? "#2D6B4F" : "#9CA3AF", fontWeight: isDone ? 600 : 400 }}>
-                          {isDone ? "Access granted ✓" : `${p.steps.length} steps to complete`}
+                          {isDone ? "Access granted ✓" : `${p.steps.length} steps`}
                         </div>
                       </div>
                     </div>
-                    <div style={{ width: 28, height: 28, borderRadius: 6, background: isOpen ? "#1F3D2C" : "#F5F2EA", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isOpen ? "white" : "#9CA3AF"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.25s" }}>
+                    <div style={{ width: 30, height: 30, borderRadius: 8, background: isOpen ? "#2D6B4F" : "#F5F2EA", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "background 0.2s" }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isOpen ? "white" : "#9CA3AF"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.25s" }}>
                         <polyline points="6,9 12,15 18,9"/>
                       </svg>
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div style={{ borderTop: "1px solid rgba(31,61,44,0.08)", padding: "16px 14px 18px 12px" }}>
-                      {/* Timeline steps */}
-                      <div style={{ position: "relative", margin: "0 0 14px" }}>
-                        {/* Vertical connecting line */}
-                        <div style={{ position: "absolute", left: 11, top: 24, bottom: 8, width: 2, background: "rgba(125,42,3,0.15)", borderRadius: 1 }}/>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                          {p.steps.map((step, i) => (
-                            <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", position: "relative" }}>
-                              <span style={{ flexShrink: 0, width: 24, height: 24, borderRadius: "50%", background: "#7D2A03", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "white", marginTop: 1, zIndex: 1 }}>{i + 1}</span>
-                              <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.55, paddingTop: 3 }}>{step}</span>
-                            </div>
-                          ))}
-                        </div>
+                    <div style={{ borderTop: "1px solid rgba(31,61,44,0.06)", padding: "16px 18px 20px" }}>
+                      {/* Steps — small green circles */}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 14 }}>
+                        {p.steps.map((step, i) => (
+                          <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                            <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: "50%", background: "rgba(45,107,79,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#2D6B4F", marginTop: 1 }}>{i + 1}</span>
+                            <span style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, paddingTop: 2 }}>{step}</span>
+                          </div>
+                        ))}
                       </div>
 
-                      {/* Note callout — forest + tan */}
-                      <div style={{ background: "#1F3D2C", borderRadius: 8, padding: "10px 14px", marginBottom: 14, display: "flex", gap: 8 }}>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EBC99B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><polyline points="20,6 9,17 4,12"/></svg>
-                        <p style={{ fontSize: 12, color: "rgba(235,201,155,0.9)", margin: 0, lineHeight: 1.5 }}>{p.note}</p>
+                      {/* Note — cream/tan left-border callout */}
+                      <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
+                        <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>{p.note}</p>
                       </div>
 
-                      {/* URL input */}
-                      <div style={{ marginBottom: 14 }}>
-                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#374151", marginBottom: 6 }}>
-                          Paste your {p.name} page link <span style={{ fontWeight: 400, color: "#9CA3AF" }}>(optional)</span>
+                      {/* URL */}
+                      <div style={{ marginBottom: 12 }}>
+                        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6B7280", marginBottom: 6 }}>
+                          Your {p.name} page link <span style={{ fontWeight: 400, color: "#C4C4C4" }}>(optional)</span>
                         </label>
                         <div style={{ position: "relative" }}>
-                          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", opacity: 0.35 }}>
+                          <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", opacity: 0.3 }}>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                           </span>
                           <input type="url" value={urls[p.id] || ""} onChange={e => setUrls(u => ({ ...u, [p.id]: e.target.value }))} placeholder={p.urlPlaceholder}
-                            style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F9F7", border: "1.5px solid rgba(31,61,44,0.12)", borderRadius: 8, outline: "none", fontFamily: "inherit" }}/>
+                            style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 32px", fontSize: 12, color: "#1F3D2C", background: "#F9F8F5", border: "1.5px solid rgba(31,61,44,0.1)", borderRadius: 10, outline: "none", fontFamily: "inherit" }}/>
                         </div>
                       </div>
 
                       <button onClick={e => markDone(p.id, e)}
-                        style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                        style={{ width: "100%", padding: "12px", background: "#2D6B4F", color: "white", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                         I've completed these steps
                       </button>
                     </div>
@@ -258,8 +231,8 @@ export function AccordionBrand2() {
           </div>
         )}
 
-        <p style={{ textAlign: "center", fontSize: 11, color: "#9CA3AF", marginTop: 24, lineHeight: 1.6 }}>
-          We will never ask for your passwords. If you need help, just reply to your onboarding email.
+        <p style={{ textAlign: "center", fontSize: 11, color: "#C4C4C4", marginTop: 28, lineHeight: 1.6 }}>
+          We will never ask for your passwords. Reply to your onboarding email if you need help.
         </p>
       </div>
     </div>
