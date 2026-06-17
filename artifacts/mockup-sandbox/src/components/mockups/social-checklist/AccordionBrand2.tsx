@@ -21,6 +21,7 @@ const PLATFORMS = [
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: ["Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our client operations manager's profile: Frankie Lanoue.","Select the admin role: choose Content Admin to allow us to create and manage content.","Click Save."],
     note: "LinkedIn doesn't allow a business page to be made an admin on another page — that's why you'll be adding Frankie Lanoue (our client operations manager) directly. She'll accept and manage access from there.",
+    note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools — you'll see an upgrade prompt if it's not active.",
   },
   {
     id: "tiktok", name: "TikTok",
@@ -251,11 +252,18 @@ export function AccordionBrand2() {
                         ))}
                       </div>
 
-                      <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
+                      <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: (p as any).note2 ? 8 : 14 }}>
                         <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>
                           <strong style={{ fontWeight: 700 }}>Heads up —</strong> {p.note}
                         </p>
                       </div>
+                      {(p as any).note2 && (
+                        <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
+                          <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>
+                            <strong style={{ fontWeight: 700 }}>Also —</strong> {(p as any).note2}
+                          </p>
+                        </div>
+                      )}
 
                       <div style={{ marginBottom: 12 }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6B7280", marginBottom: 6 }}>
