@@ -64,6 +64,7 @@ export function AccordionBrand2() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [urls, setUrls] = useState<Record<string, string>>({});
+  const [expandedNote2, setExpandedNote2] = useState<Record<string, boolean>>({});
 
   const limit = plan === "starter" ? 2 : 4;
   const atLimit = selected.length >= limit;
@@ -244,10 +245,20 @@ export function AccordionBrand2() {
                   {isOpen && (
                     <div style={{ borderTop: "1px solid rgba(31,61,44,0.06)", padding: "16px 18px 20px" }}>
                       {(p as any).note2 && (
-                        <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
-                          <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>
-                            <strong style={{ fontWeight: 700 }}>Before you start:</strong> {(p as any).note2}
-                          </p>
+                        <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", marginBottom: 14, overflow: "hidden" }}>
+                          <button
+                            onClick={() => setExpandedNote2(n => ({ ...n, [p.id]: !n[p.id] }))}
+                            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>Before you start</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: expandedNote2[p.id] ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
+                              <polyline points="6,9 12,15 18,9"/>
+                            </svg>
+                          </button>
+                          {expandedNote2[p.id] && (
+                            <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.55, padding: "0 12px 10px" }}>
+                              {(p as any).note2}
+                            </p>
+                          )}
                         </div>
                       )}
 
@@ -260,9 +271,9 @@ export function AccordionBrand2() {
                         ))}
                       </div>
 
-                      <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "10px 14px", marginBottom: 14 }}>
-                        <p style={{ fontSize: 12, color: "#1F3D2C", margin: 0, lineHeight: 1.55 }}>
-                          <strong style={{ fontWeight: 700 }}>Heads up:</strong> {p.note}
+                      <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "8px 12px", marginBottom: 14 }}>
+                        <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.55 }}>
+                          <strong style={{ fontWeight: 700, color: "#1F3D2C" }}>Heads up:</strong> {p.note}
                         </p>
                       </div>
 
