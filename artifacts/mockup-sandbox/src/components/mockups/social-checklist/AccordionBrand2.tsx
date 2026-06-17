@@ -114,7 +114,7 @@ export function AccordionBrand2() {
             </div>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "12px 8px" }}>
               <IconDone />
-              <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>We take it from here</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#6B7280", textAlign: "center", lineHeight: 1.4 }}>We take it from there</span>
             </div>
           </div>
 
