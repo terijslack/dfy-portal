@@ -92,13 +92,13 @@ export function AccordionBrand2() {
 
         {/* Header */}
         <div style={{ marginBottom: 26 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px", textAlign: "center" }}>
             Almost there!
           </p>
-          <h2 style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}>
+          <h2 style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15, textAlign: "center" }}>
             Let's connect your accounts
           </h2>
-          <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7, textAlign: "center" }}>
             To start managing your social media, we'll need access to your accounts. Stuck? Don't worry, reach out and we'll walk you through each one step by step!
           </p>
 
