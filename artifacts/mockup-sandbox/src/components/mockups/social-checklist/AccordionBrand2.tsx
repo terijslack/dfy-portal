@@ -21,7 +21,7 @@ const PLATFORMS = [
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: ["Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our client operations manager's profile: Frankie Lanoue.","Select the admin role: choose Content Admin to allow us to create and manage content.","Click Save."],
     note: "LinkedIn doesn't allow a business page to be made an admin on another page. That's why you'll be adding Frankie Lanoue (our client operations manager) directly. She'll accept and manage access from there.",
-    note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active.",
+    note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active. Unfortunately, we're unable to manage a non-Premium LinkedIn page for this reason.",
   },
   {
     id: "tiktok", name: "TikTok",
