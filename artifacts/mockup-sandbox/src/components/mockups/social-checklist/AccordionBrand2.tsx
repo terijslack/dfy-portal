@@ -71,11 +71,16 @@ export function AccordionBrand2() {
 
         {/* Header */}
         <div style={{ marginBottom: 26 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px" }}>Almost there!</p>
-          <h2 style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}>Let's connect your accounts</h2>
-          <p style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}>
-            To start managing your social media, we'll need access to your accounts. Don't worry — we'll walk you through each one step by step. It only takes a few minutes!
-          </p>
+          <p
+            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#2D6B4F", margin: "0 0 6px" }}
+            className="text-center">Almost there!</p>
+          <h2
+            style={{ fontSize: 26, fontWeight: 900, color: "#1F3D2C", margin: "0 0 10px", letterSpacing: "-0.025em", lineHeight: 1.15 }}
+            className="text-center">Let's connect your accounts</h2>
+          <p
+            style={{ fontSize: 13, color: "#6B7280", margin: "0 0 18px", lineHeight: 1.7 }}
+            className="text-center">To start managing your social media, we'll need access to your accounts. 
+          Stuck? Don't worry, reach out and we'll walk you through each one step by step! </p>
 
           {/* Quick how-it-works strip */}
           <div style={{ display: "flex", gap: 0, background: "white", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", marginBottom: 18 }}>
@@ -170,7 +175,7 @@ export function AccordionBrand2() {
         {selected.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 20px", background: "white", borderRadius: 16, border: "2px dashed rgba(31,61,44,0.1)" }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: "#6B7280", margin: "0 0 4px" }}>Choose your platforms above</p>
-            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one — it's quick, we promise.</p>
+            <p style={{ fontSize: 12, color: "#C4C4C4", margin: 0 }}>We'll guide you through each one. it's quick, we promise.</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
