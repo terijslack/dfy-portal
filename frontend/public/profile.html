@@ -194,6 +194,61 @@
     }
     .btn-save:disabled { opacity: 0.5; cursor: default; }
     .btn-save:hover:not(:disabled) { opacity: 0.88; }
+
+    /* ── Social Media Checklist ── */
+    .sc-platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+    .sc-platform-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 10px 14px; border-radius: 14px; background: var(--bg); border: 2px solid transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.05); cursor: pointer; font-family: var(--font-sans); transition: all 0.18s; }
+    .sc-platform-card:hover:not(:disabled) { box-shadow: 0 4px 12px rgba(0,0,0,0.09); }
+    .sc-platform-card.sel  { background: #2D6B4F; border-color: #2D6B4F; box-shadow: 0 5px 16px rgba(45,107,79,0.22); }
+    .sc-platform-card.done { background: rgba(45,107,79,0.06); border-color: #2D6B4F; }
+    .sc-platform-card:disabled { opacity: 0.4; cursor: not-allowed; }
+    .sc-card-check { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .sc-platform-card.sel:not(.done) .sc-card-check { background: rgba(255,255,255,0.25); }
+    .sc-platform-card.done .sc-card-check { background: #2D6B4F; }
+    .sc-card-name { font-size: 12px; font-weight: 700; color: var(--forest); }
+    .sc-platform-card.sel .sc-card-name { color: white; }
+    .sc-done-label { font-size: 10px; color: #2D6B4F; font-weight: 700; }
+    .sc-limit-banner { font-size: 11px; color: #7D2A03; background: rgba(125,42,3,0.06); border: 1px solid rgba(125,42,3,0.12); border-radius: 8px; padding: 7px 11px; margin-top: 10px; }
+    .sc-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 16px; }
+    .sc-chip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: rgba(31,61,44,0.07); color: #6B7280; transition: all 0.3s; }
+    .sc-chip.done { background: #2D6B4F; color: white; }
+    .sc-empty { text-align: center; padding: 24px 16px; background: rgba(31,61,44,0.02); border-radius: 12px; border: 1.5px dashed rgba(31,61,44,0.1); }
+    .sc-empty p { font-size: 13px; color: #9CA3AF; margin: 0; }
+    .sc-accordion-list { display: flex; flex-direction: column; gap: 8px; }
+    .sc-accordion-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.05); border: 1.5px solid rgba(31,61,44,0.08); border-left: 4px solid transparent; transition: all 0.2s; }
+    .sc-accordion-card.open { box-shadow: 0 6px 22px rgba(31,61,44,0.1); border-color: rgba(45,107,79,0.2); border-left-color: #2D6B4F; }
+    .sc-accordion-card.done-card { border-left-color: rgba(45,107,79,0.3); }
+    .sc-accordion-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; }
+    .sc-trigger-left { display: flex; align-items: center; gap: 10px; }
+    .sc-icon-wrap { width: 38px; height: 38px; border-radius: 10px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sc-icon-wrap.done-icon { background: rgba(45,107,79,0.08); }
+    .sc-platform-name { font-size: 13px; font-weight: 700; color: var(--forest); }
+    .sc-platform-sub { font-size: 11px; color: #9CA3AF; }
+    .sc-platform-sub.done-sub { color: #2D6B4F; font-weight: 600; }
+    .sc-chevron-wrap { width: 28px; height: 28px; border-radius: 7px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+    .sc-accordion-card.open .sc-chevron-wrap { background: #2D6B4F; }
+    .sc-chevron { transition: transform 0.25s; }
+    .sc-accordion-card.open .sc-chevron { transform: rotate(180deg); }
+    .sc-body { border-top: 1px solid rgba(31,61,44,0.06); padding: 14px 16px 18px; }
+    .sc-bys-wrap { border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+    .sc-bys-trigger { width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 12px; background: rgba(235,201,155,0.25); border: none; border-left: 3px solid #EBC99B; cursor: pointer; font-family: inherit; text-align: left; }
+    .sc-bys-icon { width: 24px; height: 24px; border-radius: 50%; background: #EBC99B; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; font-weight: 900; color: #7D5A1A; }
+    .sc-bys-title { font-size: 11px; font-weight: 700; color: var(--forest); }
+    .sc-bys-hint  { font-size: 10px; color: #9CA3AF; }
+    .sc-bys-body  { background: #FBF8F3; border-left: 3px solid #EBC99B; padding: 9px 12px; font-size: 12px; color: #6B7280; line-height: 1.6; }
+    .sc-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .sc-step { display: flex; gap: 10px; align-items: flex-start; }
+    .sc-step-num { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: rgba(45,107,79,0.1); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #2D6B4F; margin-top: 2px; }
+    .sc-step-text { font-size: 12.5px; color: #374151; line-height: 1.6; padding-top: 1px; }
+    .sc-heads-up { background: #FBF8F3; border-left: 3px solid #EBC99B; border-radius: 0 8px 8px 0; padding: 7px 11px; margin-bottom: 12px; font-size: 12px; color: #6B7280; line-height: 1.55; white-space: pre-line; }
+    .sc-url-label { display: block; font-size: 11px; font-weight: 600; color: #6B7280; margin-bottom: 5px; }
+    .sc-url-wrap  { position: relative; margin-bottom: 12px; }
+    .sc-url-icon  { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); opacity: 0.3; pointer-events: none; }
+    .sc-url-input { width: 100%; box-sizing: border-box; padding: 8px 11px 8px 30px; font-size: 12px; color: var(--forest); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; outline: none; font-family: inherit; }
+    .sc-url-input:focus { border-color: var(--green); }
+    .sc-mark-btn { width: 100%; padding: 10px; background: #2D6B4F; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+    .sc-mark-btn:hover { background: #1F3D2C; }
+    .sc-mark-btn:disabled { background: rgba(45,107,79,0.4); cursor: default; }
   </style>
 </head>
 <body>
@@ -336,32 +391,19 @@
             </div>
           </div>
           <div class="profile-section-body">
-            <div class="platform-grid">
-              <label class="platform-card" id="card-instagram" onclick="togglePlatform('instagram',this)">
-                <input type="checkbox" id="plat-instagram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                <span class="platform-name">Instagram</span>
-              </label>
-              <label class="platform-card" id="card-facebook" onclick="togglePlatform('facebook',this)">
-                <input type="checkbox" id="plat-facebook">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                <span class="platform-name">Facebook</span>
-              </label>
-              <label class="platform-card" id="card-linkedin" onclick="togglePlatform('linkedin',this)">
-                <input type="checkbox" id="plat-linkedin">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                <span class="platform-name">LinkedIn</span>
-              </label>
-              <label class="platform-card" id="card-google" onclick="togglePlatform('google',this)">
-                <input type="checkbox" id="plat-google">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span class="platform-name">Google Business</span>
-              </label>
+            <div style="margin-bottom:6px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span style="font-size:12px;font-weight:700;color:var(--forest);">Which platforms are you on?</span>
+                <span id="scCountPill" style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(125,42,3,0.08);color:#7D2A03;">0 of 4</span>
+              </div>
+              <div class="sc-platform-grid" id="scPlatformGrid"></div>
+              <div class="sc-limit-banner" id="scLimitBanner" style="display:none;">You've hit your plan limit. Tap one above to swap it out.</div>
             </div>
-            <div class="handle-fields" id="handleFields"></div>
+            <div class="sc-chips" id="scChips" style="display:none;"></div>
+            <div id="scAccordionArea"></div>
             <div class="field" style="margin-top:16px;">
               <label>Anything else we should know about your accounts?</label>
-              <textarea id="social_notes" rows="2" placeholder="e.g. I have login access, account was previously inactive…"></textarea>
+              <textarea id="social_notes" rows="2" placeholder="e.g. I had previously run ads, one account was temporarily restricted…"></textarea>
             </div>
           </div>
         </div>
@@ -505,16 +547,86 @@
 
   <script>
     /* ── State ── */
-    const selectedPlatforms = {};
-    const savedSocials      = {};   // tracks what is persisted in social_accounts table
-    let selectedVoice = null;
-    let selectedGoal  = null;
-    let userData      = {};
+    const savedSocials = {};   // platform id -> true, used by completion meter
+    let selectedVoice  = null;
+    let selectedGoal   = null;
+    let userData       = {};
+
+    /* ── Social Checklist state ── */
+    let platformLimit    = 4;
+    let scSelected       = [];
+    let scCompleted      = {};
+    let scOpenId         = null;
+    let scUrls           = {};
+    let scExpandedNote2  = {};
+
+    const SC_PLATFORMS = [
+      {
+        id: 'facebook', name: 'Facebook',
+        icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+        smallIcon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+        urlPlaceholder: 'https://facebook.com/yourpagename',
+        steps: [
+          "Go to business.facebook.com and log in with the Facebook account connected to your business page.",
+          "Click Settings (gear icon) → Business Settings → Partners (under the Users section on the left menu).",
+          "Click Add → select 'Give a partner access to your assets'.",
+          "When prompted, enter our Business Portfolio ID: 1874385073235809, then click Next.",
+          "Select the accounts you'd like us to manage and set the permissions: Facebook Page → select 'Manage Page'. Instagram Account → select 'Manage Instagram Account'. (Please do not select Full Control; we only need what's listed above to manage your content.)",
+          "Click Save Changes. We'll receive a notification and confirm access on our end.",
+        ],
+        note: "If you're also on Instagram, you can grant us access to both in Step 5 of this same flow, so no need to go through a separate process.",
+        note2: null,
+      },
+      {
+        id: 'instagram', name: 'Instagram',
+        icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        smallIcon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        urlPlaceholder: 'https://instagram.com/yourhandle',
+        steps: [
+          "Instagram access is granted through Meta Business Suite alongside your Facebook Page. Follow the Facebook steps above first.",
+          "In Step 5 of the Facebook flow, make sure to select your Instagram Account and set the permission to 'Manage Instagram Account'.",
+          "If your Instagram isn't shown as an option in Step 5, it needs to be linked to your Facebook Page first: open the Instagram app → Settings → Account → Sharing and Remixing → connect your Facebook Page, then return to the Business Suite flow.",
+        ],
+        note: "Once you've saved in the Facebook flow with Instagram selected, we're all set on both platforms.",
+        note2: "Even if we're only managing your Instagram and not your Facebook page, we still need to be connected to both. This is a Meta limitation: Instagram business accounts can only be managed through a linked Facebook Page, so the Facebook steps must be completed regardless.",
+      },
+      {
+        id: 'linkedin', name: 'LinkedIn',
+        icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+        smallIcon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+        urlPlaceholder: 'https://linkedin.com/company/your-company',
+        steps: [
+          "Before completing these steps, please send a connection request to our Client Operations Manager on LinkedIn: Frankie Lanoue. This is required (see the Heads up note below to understand why).",
+          "Log into LinkedIn and navigate to your Company Page (not your personal profile).",
+          "Click Admin Tools in the top right corner of your page.",
+          "Select Manage Admins.",
+          "Click Add Admin.",
+          "Search for our client operations manager's profile: Frankie Lanoue.",
+          "Select the admin role: choose Content Admin to allow us to create and manage content.",
+          "Click Save.",
+        ],
+        note: "LinkedIn doesn't allow a business page to be made an admin on another page, which is why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there.\n\nLinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
+        note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active. Unfortunately, we're unable to manage a non-Premium LinkedIn page for this reason.",
+      },
+      {
+        id: 'tiktok', name: 'TikTok',
+        icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+        smallIcon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+        urlPlaceholder: 'https://tiktok.com/@yourhandle',
+        steps: [
+          "Log into TikTok on a desktop browser at tiktok.com.",
+          "Go to your profile and click TikTok Studio.",
+          "On the left menu, click Settings.",
+          "Select Account → then Creator Permissions.",
+          "Click Authorize and enter our TikTok handle: [Agency TikTok Handle].",
+          "Grant the permissions listed and confirm.",
+        ],
+        note: "TikTok's admin access is more limited than other platforms, so we'll discuss what this covers during your kickoff call.",
+        note2: null,
+      },
+    ];
 
     /* ── Helpers ── */
-    function getPlatformLabel(name) {
-      return { instagram: 'Instagram', facebook: 'Facebook', linkedin: 'LinkedIn', google: 'Google Business' }[name] || name;
-    }
     function escHtml(s) {
       return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
@@ -572,29 +684,38 @@
         document.getElementById('primary_goal').value = o.primary_goal;
       }
 
+      /* Fetch subscription plan for platform limit */
+      try {
+        const planRes = await fetch('/api/account/subscription');
+        if (planRes.ok) {
+          const planData = await planRes.json();
+          const plan = (planData.plan || '').toLowerCase();
+          platformLimit = plan.includes('starter') ? 2 : 4;
+        }
+      } catch (_) {}
+
       await loadSavedSocials();
       updateCompletion();
     }
 
-    /* ── Load saved social accounts from API ── */
+    /* ── Load saved social accounts + init checklist ── */
     async function loadSavedSocials() {
       try {
         const res = await fetch('/api/socials');
         if (!res.ok) return;
         const { accounts } = await res.json();
         accounts.forEach(acc => {
-          savedSocials[acc.platform] = acc;
-          selectedPlatforms[acc.platform] = acc.username;
-          const card = document.getElementById('card-' + acc.platform);
-          if (card) {
-            card.classList.add('selected');
-            card.querySelector('input').checked = true;
-            addHandleField(acc.platform, acc.username, acc.profile_url || '', true);
-          }
+          const p = SC_PLATFORMS.find(x => x.id === acc.platform);
+          if (!p) return;
+          savedSocials[acc.platform] = true;
+          scCompleted[acc.platform]  = true;
+          if (!scSelected.includes(acc.platform)) scSelected.push(acc.platform);
+          if (acc.profile_url) scUrls[acc.platform] = acc.profile_url;
         });
       } catch (e) {
         console.error('Load socials error:', e);
       }
+      scRender();
     }
 
     /* ── Completion meter ── */
@@ -628,124 +749,204 @@
       }
     }
 
-    /* ── Platform toggle ── */
-    function togglePlatform(name, card) {
-      const cb = card.querySelector('input');
-      const nowChecked = !cb.checked;
-      cb.checked = nowChecked;
-      card.classList.toggle('selected', nowChecked);
+    /* ── Social Checklist: render ── */
+    function scRender() {
+      const grid    = document.getElementById('scPlatformGrid');
+      const chips   = document.getElementById('scChips');
+      const area    = document.getElementById('scAccordionArea');
+      const pill    = document.getElementById('scCountPill');
+      const banner  = document.getElementById('scLimitBanner');
+      if (!grid) return;
 
-      if (nowChecked) {
-        selectedPlatforms[name] = '';
-        addHandleField(name, '', '', false);
+      const atLimit = scSelected.length >= platformLimit;
+      const total   = SC_PLATFORMS.length;
+      pill.textContent = `${scSelected.length} of ${platformLimit}`;
+
+      /* Platform grid */
+      grid.innerHTML = SC_PLATFORMS.map(p => {
+        const isSel  = scSelected.includes(p.id);
+        const isDone = !!scCompleted[p.id];
+        const disabled = !isSel && atLimit ? 'disabled' : '';
+        const cls = [
+          'sc-platform-card',
+          isSel && !isDone ? 'sel' : '',
+          isDone ? 'done' : '',
+        ].filter(Boolean).join(' ');
+        const checkSvg = isSel
+          ? `<svg class="sc-card-check" width="11" height="11" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+          : '';
+        return `<button class="${cls}" onclick="scToggle('${p.id}')" ${disabled}>
+          ${checkSvg}
+          <span style="color:${isSel && !isDone ? 'white' : 'var(--forest)'}">${p.icon}</span>
+          <span class="sc-card-name">${p.name}</span>
+          ${isDone ? `<span class="sc-done-label">Connected</span>` : ''}
+        </button>`;
+      }).join('');
+
+      banner.style.display = atLimit ? '' : 'none';
+
+      /* Progress chips */
+      if (scSelected.length > 0) {
+        chips.style.display = '';
+        chips.innerHTML = scSelected.map(id => {
+          const p = SC_PLATFORMS.find(x => x.id === id);
+          return `<span class="sc-chip ${scCompleted[id] ? 'done' : ''}">${p.name}${scCompleted[id] ? ' ✓' : ''}</span>`;
+        }).join('');
       } else {
-        delete selectedPlatforms[name];
-        const f = document.getElementById('handle-field-' + name);
-        if (f) f.remove();
-        if (savedSocials[name]) {
-          delete savedSocials[name];
-          fetch('/api/socials/' + name, { method: 'DELETE' }).catch(console.error);
-          updateCompletion();
-        }
+        chips.style.display = 'none';
+        chips.innerHTML = '';
       }
-      updateCompletion();
+
+      /* Accordion area */
+      if (scSelected.length === 0) {
+        area.innerHTML = `<div class="sc-empty"><p>Select your platforms above to see setup instructions.</p></div>`;
+      } else {
+        area.innerHTML = `<div class="sc-accordion-list">${scSelected.map(id => scAccordionCard(id)).join('')}</div>`;
+      }
     }
 
-    function addHandleField(name, username, profileUrl, isSaved) {
-      const label     = getPlatformLabel(name);
-      const container = document.getElementById('handleFields');
-      const existing  = document.getElementById('handle-field-' + name);
-      if (existing) existing.remove();
+    function scAccordionCard(id) {
+      const p      = SC_PLATFORMS.find(x => x.id === id);
+      const isOpen = scOpenId === id;
+      const isDone = !!scCompleted[id];
+      const url    = scUrls[id] || '';
 
-      const div = document.createElement('div');
-      div.className = 'handle-field-wrap';
-      div.id = 'handle-field-' + name;
-      div.innerHTML = `
-        <div class="handle-field-hdr">
-          <span class="handle-field-name">${label}</span>
-          <span class="handle-field-badge${isSaved ? ' saved' : ''}" id="badge-${name}">${isSaved ? '✓ Connected' : ''}</span>
-        </div>
-        <div class="field-grid hf-grid">
-          <div class="field">
-            <label>Username / Handle</label>
-            <input type="text" id="handle-${name}" value="${escHtml(username)}" placeholder="@yourusername"
-              oninput="selectedPlatforms['${name}']=this.value"/>
-          </div>
-          <div class="field">
-            <label>Profile URL <em>(optional)</em></label>
-            <input type="url" id="url-${name}" value="${escHtml(profileUrl)}" placeholder="https://..."/>
-          </div>
-          <div class="field">
-            <label>Password <em>(optional)</em></label>
-            <div class="pw-wrap">
-              <input type="password" id="pw-${name}" placeholder="Leave blank to skip"/>
-              <button type="button" class="pw-eye" onclick="togglePw('${name}')">
-                <svg id="eye-${name}" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
+      const bysHtml = scBys(p, isOpen);
+      const stepsHtml = p.steps.map((s, i) =>
+        `<div class="sc-step"><div class="sc-step-num">${i + 1}</div><div class="sc-step-text">${s}</div></div>`
+      ).join('');
+
+      const note2Html = p.note2 ? `
+        <div class="sc-bys-wrap" style="margin-bottom:12px;">
+          <button class="sc-bys-trigger" onclick="scToggleNote2('${id}')">
+            <div class="sc-bys-icon">!</div>
+            <div>
+              <div class="sc-bys-title">Important note</div>
+              <div class="sc-bys-hint">${scExpandedNote2[id] ? 'tap to collapse' : 'tap to expand'}</div>
+            </div>
+          </button>
+          ${scExpandedNote2[id] ? `<div class="sc-bys-body">${p.note2}</div>` : ''}
+        </div>` : '';
+
+      const urlHtml = `
+        <label class="sc-url-label">Your ${p.name} profile URL (paste it here once done)</label>
+        <div class="sc-url-wrap">
+          <svg class="sc-url-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <input class="sc-url-input" id="sc-url-${id}" type="url" placeholder="${p.urlPlaceholder}"
+            value="${escHtml(url)}" oninput="scUrls['${id}']=this.value"/>
+        </div>`;
+
+      const btnText  = isDone ? 'Connected' : 'Mark as done';
+      const btnStyle = isDone ? 'background:#2D6B4F;opacity:0.6;' : '';
+
+      return `<div class="sc-accordion-card ${isOpen ? 'open' : ''} ${isDone ? 'done-card' : ''}">
+        <button class="sc-accordion-trigger" onclick="scToggleOpen('${id}')">
+          <div class="sc-trigger-left">
+            <div class="sc-icon-wrap ${isDone ? 'done-icon' : ''}" style="color:${isDone ? '#2D6B4F' : 'var(--forest)'}">
+              ${p.smallIcon}
+            </div>
+            <div>
+              <div class="sc-platform-name">${p.name}</div>
+              <div class="sc-platform-sub ${isDone ? 'done-sub' : ''}">${isDone ? 'Access granted' : 'Follow the steps below'}</div>
             </div>
           </div>
-        </div>
-        <button class="btn-save-platform" id="platbtn-${name}" onclick="savePlatform('${name}')">Save ${label}</button>`;
-      container.appendChild(div);
+          <div class="sc-chevron-wrap">
+            <svg class="sc-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="${isOpen ? 'white' : 'var(--forest)'}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </button>
+        ${isOpen ? `<div class="sc-body">
+          ${bysHtml}
+          <div class="sc-steps">${stepsHtml}</div>
+          ${p.note ? `<div class="sc-heads-up">${p.note}</div>` : ''}
+          ${note2Html}
+          ${urlHtml}
+          <button class="sc-mark-btn" onclick="scMarkDone('${id}')" style="${btnStyle}">${btnText}</button>
+        </div>` : ''}
+      </div>`;
     }
 
-    /* ── Save individual platform to API ── */
-    async function savePlatform(name) {
-      const btn      = document.getElementById('platbtn-' + name);
-      const badge    = document.getElementById('badge-' + name);
-      const username = (document.getElementById('handle-' + name)?.value || '').trim();
-      const profileUrl = (document.getElementById('url-' + name)?.value || '').trim();
-      const password = document.getElementById('pw-' + name)?.value || '';
-      const label    = getPlatformLabel(name);
+    function scBys(p, isOpen) {
+      const bysMap = {
+        facebook: "You'll need admin access to your Facebook Business Manager (or Meta Business Suite) account. If someone else set it up, they may need to complete these steps.",
+        instagram: "Your Instagram account must be a Business or Creator account and must be linked to a Facebook Page. Personal Instagram accounts cannot be connected.",
+        linkedin: "You must be a Super Admin of your LinkedIn Company Page to add other admins. If you're not sure, go to your Page and look for the Admin Tools menu.",
+        tiktok: "Your TikTok account must be a Business Account (not a personal account). You can switch in the TikTok app under Settings → Account → Switch to Business Account.",
+      };
+      const text = bysMap[p.id];
+      if (!text) return '';
+      const key = 'bys-' + p.id;
+      const expanded = scExpandedNote2[key];
+      return `<div class="sc-bys-wrap">
+        <button class="sc-bys-trigger" onclick="scToggleBys('${p.id}')">
+          <div class="sc-bys-icon">i</div>
+          <div>
+            <div class="sc-bys-title">Before you start</div>
+            <div class="sc-bys-hint">${expanded ? 'tap to collapse' : 'tap to expand'}</div>
+          </div>
+        </button>
+        ${expanded ? `<div class="sc-bys-body">${text}</div>` : ''}
+      </div>`;
+    }
 
-      if (!username) {
-        badge.textContent = '⚠ Username required';
-        badge.className = 'handle-field-badge error';
-        return;
+    function scToggle(id) {
+      if (scSelected.includes(id)) {
+        scSelected = scSelected.filter(x => x !== id);
+        if (scOpenId === id) scOpenId = null;
+        if (scCompleted[id]) {
+          delete scCompleted[id];
+          delete savedSocials[id];
+          fetch('/api/socials/' + id, { method: 'DELETE' }).catch(console.error);
+          updateCompletion();
+        }
+      } else {
+        if (scSelected.length >= platformLimit) return;
+        scSelected.push(id);
+        scOpenId = id;
       }
+      scRender();
+    }
 
-      btn.disabled = true;
-      btn.textContent = 'Saving…';
-      badge.textContent = '';
-      badge.className = 'handle-field-badge';
+    function scToggleOpen(id) {
+      scOpenId = scOpenId === id ? null : id;
+      scRender();
+    }
+
+    function scToggleBys(id) {
+      const key = 'bys-' + id;
+      scExpandedNote2[key] = !scExpandedNote2[key];
+      scRender();
+    }
+
+    function scToggleNote2(id) {
+      scExpandedNote2[id] = !scExpandedNote2[id];
+      scRender();
+    }
+
+    async function scMarkDone(id) {
+      const url = (document.getElementById('sc-url-' + id)?.value || '').trim();
+      scUrls[id] = url;
+      const p = SC_PLATFORMS.find(x => x.id === id);
 
       try {
-        const res = await fetch('/api/socials/' + name, {
+        const res = await fetch('/api/socials/' + id, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            username,
-            profile_url: profileUrl || null,
-            account_password: password || null
+            username:         url || p.name,
+            profile_url:      url || null,
+            account_password: null,
           })
         });
-        if (!res.ok) {
-          const d = await res.json();
-          throw new Error(d.error || 'Could not save.');
-        }
-        savedSocials[name] = { platform: name, username };
-        badge.textContent = '✓ Connected';
-        badge.className = 'handle-field-badge saved';
+        if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Could not save.'); }
+        scCompleted[id] = true;
+        savedSocials[id] = true;
         updateCompletion();
+        scRender();
       } catch (err) {
-        badge.textContent = '⚠ ' + err.message;
-        badge.className = 'handle-field-badge error';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save ' + label;
-      }
-    }
-
-    /* ── Password visibility toggle ── */
-    function togglePw(name) {
-      const input = document.getElementById('pw-' + name);
-      const eye   = document.getElementById('eye-' + name);
-      if (input.type === 'password') {
-        input.type = 'text';
-        eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-      } else {
-        input.type = 'password';
-        eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        alert('Could not save: ' + err.message);
       }
     }
 
