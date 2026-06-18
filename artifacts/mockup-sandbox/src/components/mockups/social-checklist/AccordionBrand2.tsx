@@ -10,29 +10,29 @@ const PLATFORMS = [
       "Click Settings (gear icon) → Business Settings → Partners (under the Users section on the left menu).",
       "Click Add → select 'Give a partner access to your assets'.",
       "When prompted, enter our Business Portfolio ID: 1874385073235809, then click Next.",
-      "Select the accounts you'd like us to manage and set the permissions: Facebook Page → select 'Manage Page'. Instagram Account → select 'Manage Instagram Account'. (Please do not select Full Control — we only need what's listed above to manage your content.)",
-      "Click Save Changes — we'll receive a notification and confirm access on our end.",
+      "Select the accounts you'd like us to manage and set the permissions: Facebook Page → select 'Manage Page'. Instagram Account → select 'Manage Instagram Account'. (Please do not select Full Control; we only need what's listed above to manage your content.)",
+      "Click Save Changes. We'll receive a notification and confirm access on our end.",
     ],
-    note: "If you're also on Instagram, you can grant us access to both in Step 5 of this same flow — no need to go through a separate process.",
+    note: "If you're also on Instagram, you can grant us access to both in Step 5 of this same flow, so no need to go through a separate process.",
   },
   {
     id: "instagram", name: "Instagram",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
     urlPlaceholder: "https://instagram.com/yourhandle",
     steps: [
-      "Instagram access is granted through Meta Business Suite alongside your Facebook Page — follow the Facebook steps above first.",
+      "Instagram access is granted through Meta Business Suite alongside your Facebook Page. Follow the Facebook steps above first.",
       "In Step 5 of the Facebook flow, make sure to select your Instagram Account and set the permission to 'Manage Instagram Account'.",
       "If your Instagram isn't shown as an option in Step 5, it needs to be linked to your Facebook Page first: open the Instagram app → Settings → Account → Sharing and Remixing → connect your Facebook Page, then return to the Business Suite flow.",
     ],
     note: "Once you've saved in the Facebook flow with Instagram selected, we're all set on both platforms.",
-    note2: "Even if we're only managing your Instagram and not your Facebook page, we still need to be connected to both. This is a Meta limitation — Instagram business accounts can only be managed through a linked Facebook Page, so the Facebook steps must be completed regardless.",
+    note2: "Even if we're only managing your Instagram and not your Facebook page, we still need to be connected to both. This is a Meta limitation: Instagram business accounts can only be managed through a linked Facebook Page, so the Facebook steps must be completed regardless.",
   },
   {
     id: "linkedin", name: "LinkedIn",
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
     urlPlaceholder: "https://linkedin.com/company/your-company",
-    steps: ["Before completing these steps, please send a connection request to our Client Operations Manager on LinkedIn: Frankie Lanoue. This is required — see the Heads up note below to understand why.","Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our client operations manager's profile: Frankie Lanoue.","Select the admin role: choose Content Admin to allow us to create and manage content.","Click Save."],
-    note: "LinkedIn doesn't allow a business page to be made an admin on another page — that's why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there.\n\nLinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
+    steps: ["Before completing these steps, please send a connection request to our Client Operations Manager on LinkedIn: Frankie Lanoue. This is required (see the Heads up note below to understand why).","Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our client operations manager's profile: Frankie Lanoue.","Select the admin role: choose Content Admin to allow us to create and manage content.","Click Save."],
+    note: "LinkedIn doesn't allow a business page to be made an admin on another page, which is why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there.\n\nLinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
     note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active. Unfortunately, we're unable to manage a non-Premium LinkedIn page for this reason.",
   },
   {
@@ -40,7 +40,7 @@ const PLATFORMS = [
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
     urlPlaceholder: "https://tiktok.com/@yourhandle",
     steps: ["Log into TikTok on a desktop browser at tiktok.com.","Go to your profile and click TikTok Studio.","On the left menu, click Settings.","Select Account → then Creator Permissions.","Click Authorize and enter our TikTok handle: [Agency TikTok Handle].","Grant the permissions listed and confirm."],
-    note: "TikTok's admin access is more limited than other platforms — we'll discuss what this covers during your kickoff call.",
+    note: "TikTok's admin access is more limited than other platforms, so we'll discuss what this covers during your kickoff call.",
   },
 ];
 
@@ -175,7 +175,7 @@ export function AccordionBrand2({ platformLimit = 4 }: { platformLimit?: number 
           </div>
           {atLimit && (
             <p style={{ fontSize: 11, color: "#7D2A03", background: "rgba(125,42,3,0.06)", border: "1px solid rgba(125,42,3,0.12)", borderRadius: 8, padding: "8px 12px", marginTop: 12, marginBottom: 0 }}>
-              You've hit your plan limit — tap one above to swap it out.
+              You've hit your plan limit. Tap one above to swap it out.
             </p>
           )}
         </div>
@@ -249,7 +249,7 @@ export function AccordionBrand2({ platformLimit = 4 }: { platformLimit?: number 
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>Before you start</div>
-                              <div style={{ fontSize: 11, color: "#9CA3AF" }}>{expandedNote2[p.id] ? "tap to hide" : "important — tap to read"}</div>
+                              <div style={{ fontSize: 11, color: "#9CA3AF" }}>{expandedNote2[p.id] ? "tap to hide" : "important, tap to read"}</div>
                             </div>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: expandedNote2[p.id] ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
                               <polyline points="6,9 12,15 18,9"/>
