@@ -245,22 +245,25 @@ export function AccordionBrand2() {
                   {isOpen && (
                     <div style={{ borderTop: "1px solid rgba(31,61,44,0.06)", padding: "16px 18px 20px" }}>
                       {(p as any).note2 && (
-                        <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", marginBottom: 14, overflow: "hidden" }}>
+                        <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 14 }}>
                           <button
                             onClick={() => setExpandedNote2(n => ({ ...n, [p.id]: !n[p.id] }))}
-                            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", background: "rgba(235,201,155,0.18)", border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>Before you start</span>
-                              <span style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 400 }}>{expandedNote2[p.id] ? "hide" : "tap to read"}</span>
+                            style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "rgba(235,201,155,0.25)", border: "none", borderLeft: "3px solid #EBC99B", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
+                            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#EBC99B", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <span style={{ fontSize: 14, fontWeight: 900, color: "#7D5A1A", lineHeight: 1 }}>!</span>
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 12, fontWeight: 700, color: "#1F3D2C" }}>Before you start</div>
+                              <div style={{ fontSize: 11, color: "#9CA3AF" }}>{expandedNote2[p.id] ? "tap to hide" : "important — tap to read"}</div>
                             </div>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: expandedNote2[p.id] ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
                               <polyline points="6,9 12,15 18,9"/>
                             </svg>
                           </button>
                           {expandedNote2[p.id] && (
-                            <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.55, padding: "0 12px 10px" }}>
-                              {(p as any).note2}
-                            </p>
+                            <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", padding: "10px 14px" }}>
+                              <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.6 }}>{(p as any).note2}</p>
+                            </div>
                           )}
                         </div>
                       )}
