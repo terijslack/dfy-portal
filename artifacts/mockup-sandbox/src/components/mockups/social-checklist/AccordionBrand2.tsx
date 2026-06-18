@@ -44,10 +44,6 @@ const PLATFORMS = [
   },
 ];
 
-const PLANS = [
-  { id: "starter", label: "Starter", limit: 2 },
-  { id: "growth", label: "Growth Engine", limit: 4 },
-];
 
 const IconCheck = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -70,15 +66,14 @@ const IconDone = () => (
   </svg>
 );
 
-export function AccordionBrand2() {
-  const [plan, setPlan] = useState<"starter" | "growth">("starter");
+export function AccordionBrand2({ platformLimit = 4 }: { platformLimit?: number }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [urls, setUrls] = useState<Record<string, string>>({});
   const [expandedNote2, setExpandedNote2] = useState<Record<string, boolean>>({});
 
-  const limit = plan === "starter" ? 2 : 4;
+  const limit = platformLimit;
   const atLimit = selected.length >= limit;
   const completedCount = Object.values(completed).filter(Boolean).length;
 
@@ -132,18 +127,6 @@ export function AccordionBrand2() {
             </div>
           </div>
 
-          {/* Plan toggle */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 12, color: "#9CA3AF" }}>My plan:</span>
-            <div style={{ display: "inline-flex", background: "rgba(31,61,44,0.07)", borderRadius: 8, padding: 3, gap: 2 }}>
-              {PLANS.map(p => (
-                <button key={p.id} onClick={() => { setPlan(p.id as "starter" | "growth"); setSelected([]); setCompleted({}); setUrls({}); setOpenId(null); }}
-                  style={{ padding: "6px 16px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "inherit", background: plan === p.id ? "white" : "transparent", color: plan === p.id ? "#1F3D2C" : "#9CA3AF", boxShadow: plan === p.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.18s" }}>
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Platform cards — 2x2 grid, large, rounded, green fill */}
