@@ -179,7 +179,8 @@
 
     <div class="field">
       <label>Confirm password</label>
-      <input type="password" id="confirmPassword" placeholder="Re-enter your password" />
+      <input type="password" id="confirmPassword" placeholder="Re-enter your password" oninput="checkPasswordMatch()" />
+      <p id="matchMsg" style="margin: 5px 0 0; font-size: 12px; display: none;"></p>
     </div>
 
     <div class="error-msg" id="errorMsg"></div>
@@ -203,6 +204,22 @@
       const planText = document.getElementById('selectedPlanText');
       planText.style.display = 'block';
       document.getElementById('selectedPlanName').textContent = planName;
+    }
+
+    function checkPasswordMatch() {
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('confirmPassword').value;
+      const msg      = document.getElementById('matchMsg');
+      if (!confirm) { msg.style.display = 'none'; return; }
+      if (password === confirm) {
+        msg.style.display = 'block';
+        msg.style.color   = '#2D6B4F';
+        msg.textContent   = '✓ Passwords match';
+      } else {
+        msg.style.display = 'block';
+        msg.style.color   = '#B91C1C';
+        msg.textContent   = '✗ Passwords do not match';
+      }
     }
 
     async function handleSignup() {
