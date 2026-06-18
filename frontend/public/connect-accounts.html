@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect Accounts — DFY Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <style>
+    .connect-wrap {
+      max-width: 560px;
+    }
+
+    /* ── Header strip ── */
+    .connect-header {
+      margin-bottom: 28px;
+    }
+    .connect-header h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1F3D2C;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    .connect-header p {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.7;
+      margin: 0 0 18px;
+    }
+
+    /* ── How-it-works strip ── */
+    .how-strip {
+      display: flex;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 0;
+    }
+    .how-strip-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      border-right: 1px solid rgba(31,61,44,0.07);
+    }
+    .how-strip-item:last-child { border-right: none; }
+    .how-strip-item svg { color: #2D6B4F; }
+    .how-strip-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6B7280;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ── Platform grid ── */
+    .platform-section { margin-bottom: 6px; }
+    .platform-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .platform-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1F3D2C;
+    }
+    .platform-count-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(125,42,3,0.08);
+      color: #7D2A03;
+    }
+    .platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .platform-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 12px 18px;
+      border-radius: 16px;
+      background: white;
+      border: 2px solid transparent;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.18s;
+    }
+    .platform-card:hover:not(:disabled) {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+    .platform-card.selected {
+      background: #2D6B4F;
+      border-color: #2D6B4F;
+      box-shadow: 0 6px 20px rgba(45,107,79,0.22);
+    }
+    .platform-card.done {
+      background: rgba(45,107,79,0.06);
+      border-color: #2D6B4F;
+    }
+    .platform-card:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .platform-card-check {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .platform-card.selected:not(.done) .platform-card-check {
+      background: rgba(255,255,255,0.25);
+    }
+    .platform-card.done .platform-card-check {
+      background: #2D6B4F;
+    }
+    .platform-card-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1F3D2C;
+    }
+    .platform-card.selected .platform-card-name { color: white; }
+    .platform-card-done-label {
+      font-size: 10px;
+      color: #2D6B4F;
+      font-weight: 700;
+    }
+
+    /* limit banner */
+    .limit-banner {
+      font-size: 11px;
+      color: #7D2A03;
+      background: rgba(125,42,3,0.06);
+      border: 1px solid rgba(125,42,3,0.12);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 12px;
+    }
+
+    /* ── Progress chips ── */
+    .progress-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 14px 0 18px;
+    }
+    .progress-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(31,61,44,0.07);
+      color: #6B7280;
+      transition: all 0.3s;
+    }
+    .progress-chip.done {
+      background: #2D6B4F;
+      color: white;
+    }
+    .all-set-label {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: #2D6B4F;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 32px 20px;
+      background: white;
+      border-radius: 16px;
+      border: 2px dashed rgba(31,61,44,0.1);
+    }
+    .empty-state p:first-child {
+      font-size: 14px;
+      font-weight: 600;
+      color: #6B7280;
+      margin: 0 0 4px;
+    }
+    .empty-state p:last-child {
+      font-size: 12px;
+      color: #C4C4C4;
+      margin: 0;
+    }
+
+    /* ── Accordion ── */
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .accordion-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 2px solid transparent;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+    }
+    .accordion-card.open {
+      box-shadow: 0 8px 28px rgba(31,61,44,0.1);
+      border-color: rgba(45,107,79,0.2);
+      border-left-color: #2D6B4F;
+    }
+    .accordion-card.done-card {
+      border-left-color: rgba(45,107,79,0.3);
+    }
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+    .accordion-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .accordion-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #F5F2EA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #1F3D2C;
+    }
+    .accordion-icon-wrap.done-icon {
+      background: rgba(45,107,79,0.08);
+    }
+    .accordion-platform-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1F3D2C;
+    }
+    .accordion-platform-sub {
+      font-size: 11px;
+      color: #9CA3AF;
+      font-weight: 400;
+    }
+    .accordion-platform-sub.done-sub {
+      color: #2D6B4F;
+      font-weight: 600;
+    }
+    .accordion-chevron-wrap {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #F5F2EA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .accordion-card.open .accordion-chevron-wrap {
+      background: #2D6B4F;
+    }
+    .accordion-chevron {
+      transition: transform 0.25s;
+    }
+    .accordion-card.open .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ── Accordion body ── */
+    .accordion-body {
+      border-top: 1px solid rgba(31,61,44,0.06);
+      padding: 16px 18px 20px;
+    }
+
+    /* Before you start */
+    .bys-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .bys-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(235,201,155,0.25);
+      border: none;
+      border-left: 3px solid #EBC99B;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+    }
+    .bys-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #EBC99B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+      font-weight: 900;
+      color: #7D5A1A;
+      line-height: 1;
+    }
+    .bys-title { font-size: 12px; font-weight: 700; color: #1F3D2C; }
+    .bys-hint  { font-size: 11px; color: #9CA3AF; }
+    .bys-body {
+      background: #FBF8F3;
+      border-left: 3px solid #EBC99B;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #6B7280;
+      line-height: 1.6;
+    }
+
+    /* Steps */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 14px;
+    }
+    .step-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(45,107,79,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #2D6B4F;
+      margin-top: 1px;
+    }
+    .step-text {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.6;
+      padding-top: 2px;
+    }
+
+    /* Heads up */
+    .heads-up {
+      background: #FBF8F3;
+      border-left: 3px solid #EBC99B;
+      border-radius: 0 10px 10px 0;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: #6B7280;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    /* URL field */
+    .url-field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6B7280;
+      margin-bottom: 6px;
+    }
+    .url-field-optional { font-weight: 400; color: #C4C4C4; }
+    .url-input-wrap { position: relative; margin-bottom: 12px; }
+    .url-input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .url-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 12px 9px 32px;
+      font-size: 12px;
+      color: #1F3D2C;
+      background: #F9F8F5;
+      border: 1.5px solid rgba(31,61,44,0.1);
+      border-radius: 10px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    /* Mark done button */
+    .mark-done-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2D6B4F;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .mark-done-btn:hover { background: #1F3D2C; }
+    .mark-done-btn:disabled {
+      background: rgba(45,107,79,0.4);
+      cursor: default;
+    }
+    .mark-done-btn.saving { opacity: 0.7; }
+
+    /* Footer note */
+    .connect-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #C4C4C4;
+      margin-top: 28px;
+      line-height: 1.6;
+    }
+
+    /* ── Right rail connected list ── */
+    .connected-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .connected-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: white;
+      border-radius: 10px;
+      border: 1.5px solid rgba(31,61,44,0.08);
+    }
+    .connected-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2D6B4F;
+      flex-shrink: 0;
+    }
+    .connected-platform-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1F3D2C;
+    }
+    .connected-date {
+      font-size: 10px;
+      color: #9CA3AF;
+      margin-top: 1px;
+    }
+    .connected-empty {
+      font-size: 12px;
+      color: #C4C4C4;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <button class="header-sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="header-right">
+        <a href="https://dfymarketinggroup.com" target="_blank" rel="noopener noreferrer" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="portal-layout">
+
+    <aside class="portal-sidebar" id="portalSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-logo">
+          <img src="/logo.png?v=2" alt="Done For You Marketing">
+        </div>
+        <div class="sidebar-header">
+          <div>
+            <p class="sidebar-welcome-label">Marketing, handled.</p>
+            <p class="sidebar-name" id="sidebarName">…</p>
+          </div>
+        </div>
+        <nav>
+          <a href="/dashboard" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+            Dashboard
+          </a>
+          <div class="sidebar-nav-item sidebar-nav-parent-active" onclick="toggleSocialMenu()">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+            Your Social Media
+            <span class="sidebar-nav-chevron"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,4 6,8 10,4"/></svg></span>
+          </div>
+          <div class="sidebar-subitems" id="socialSubitems">
+            <a href="/posts" class="sidebar-subitem">
+              <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+              Post Approval
+            </a>
+            <a href="/calendar" class="sidebar-subitem">
+              <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              Content Calendar
+            </a>
+            <a href="/socials" class="sidebar-subitem">
+              <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+              Your Socials
+            </a>
+            <a href="/connect-accounts" class="sidebar-subitem active">
+              <span class="sidebar-subitem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+              Connect Accounts
+            </a>
+          </div>
+          <a href="/gbp" class="sidebar-nav-item" style="margin-top:4px;">
+            <span class="sidebar-nav-icon" style="font-family:Inter,sans-serif;font-size:14px;font-weight:300;">G</span>
+            Google Business Profile
+          </a>
+          <a href="/analytics" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            Performance Analytics
+          </a>
+          <a href="/account" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            Your Account
+          </a>
+          <a href="/contact" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            Contact Us
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="portal-main">
+      <div class="portal-main-content">
+        <div class="portal-posts-layout">
+
+          <div class="portal-posts-col">
+            <div class="connect-wrap">
+
+              <div class="connect-header">
+                <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2D6B4F;margin:0 0 6px;">Almost there!</p>
+                <h1>Let's connect your accounts</h1>
+                <p>To start managing your social media, we'll need access to your accounts. Stuck? Don't worry, reach out and we'll walk you through each one step by step!</p>
+
+                <div class="how-strip">
+                  <div class="how-strip-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    <span class="how-strip-label">Pick your platforms</span>
+                  </div>
+                  <div class="how-strip-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                    <span class="how-strip-label">Follow the steps</span>
+                  </div>
+                  <div class="how-strip-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+                    <span class="how-strip-label">We take it from there</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Platform grid -->
+              <div class="platform-section">
+                <div class="platform-section-header">
+                  <span class="platform-section-label">Which platforms are you on?</span>
+                  <span class="platform-count-pill" id="countPill">0 of 4</span>
+                </div>
+                <div class="platform-grid" id="platformGrid"></div>
+                <div class="limit-banner" id="limitBanner" style="display:none;">
+                  You've hit your plan limit. Tap one above to swap it out.
+                </div>
+              </div>
+
+              <!-- Progress chips -->
+              <div class="progress-chips" id="progressChips" style="display:none;"></div>
+
+              <!-- Accordion -->
+              <div id="accordionArea"></div>
+
+              <p class="connect-footer">
+                We'll never ask for your passwords — ever. Stuck on a step? Just reply to your onboarding email and we'll sort it out.
+              </p>
+
+            </div>
+          </div>
+
+          <!-- Right rail -->
+          <aside class="portal-right-rail">
+            <p class="portal-rail-label">Social Media</p>
+            <div class="portal-rail-cards">
+              <a href="/posts" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Post Approval</div>
+                  <div class="portal-rail-card-sub">Review content</div>
+                </div>
+              </a>
+              <a href="/calendar" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Content Calendar</div>
+                  <div class="portal-rail-card-sub">See upcoming posts</div>
+                </div>
+              </a>
+              <a href="/socials" class="portal-rail-card">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Your Socials</div>
+                  <div class="portal-rail-card-sub">Activity feed</div>
+                </div>
+              </a>
+              <a href="/connect-accounts" class="portal-rail-card portal-rail-card-active">
+                <span class="portal-rail-card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </span>
+                <div>
+                  <div class="portal-rail-card-title">Connect Accounts</div>
+                  <div class="portal-rail-card-sub" id="railConnectedSub">Loading…</div>
+                </div>
+              </a>
+            </div>
+
+            <p class="portal-rail-label" style="margin-top:20px;">Connected</p>
+            <div id="connectedList">
+              <span class="connected-empty">Loading…</span>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ── Platform data ───────────────────────────────────────────────
+    const PLATFORMS = [
+      {
+        id: 'facebook', name: 'Facebook',
+        icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+        smallIcon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+        urlPlaceholder: 'https://facebook.com/yourpagename',
+        steps: [
+          "Go to business.facebook.com and log in with the Facebook account connected to your business page.",
+          "Click Settings (gear icon) → Business Settings → Partners (under the Users section on the left menu).",
+          "Click Add → select 'Give a partner access to your assets'.",
+          "When prompted, enter our Business Portfolio ID: 1874385073235809, then click Next.",
+          "Select the accounts you'd like us to manage and set the permissions: Facebook Page → select 'Manage Page'. Instagram Account → select 'Manage Instagram Account'. (Please do not select Full Control; we only need what's listed above to manage your content.)",
+          "Click Save Changes. We'll receive a notification and confirm access on our end.",
+        ],
+        note: "If you're also on Instagram, you can grant us access to both in Step 5 of this same flow, so no need to go through a separate process.",
+        note2: null,
+      },
+      {
+        id: 'instagram', name: 'Instagram',
+        icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        smallIcon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        urlPlaceholder: 'https://instagram.com/yourhandle',
+        steps: [
+          "Instagram access is granted through Meta Business Suite alongside your Facebook Page. Follow the Facebook steps above first.",
+          "In Step 5 of the Facebook flow, make sure to select your Instagram Account and set the permission to 'Manage Instagram Account'.",
+          "If your Instagram isn't shown as an option in Step 5, it needs to be linked to your Facebook Page first: open the Instagram app → Settings → Account → Sharing and Remixing → connect your Facebook Page, then return to the Business Suite flow.",
+        ],
+        note: "Once you've saved in the Facebook flow with Instagram selected, we're all set on both platforms.",
+        note2: "Even if we're only managing your Instagram and not your Facebook page, we still need to be connected to both. This is a Meta limitation: Instagram business accounts can only be managed through a linked Facebook Page, so the Facebook steps must be completed regardless.",
+      },
+      {
+        id: 'linkedin', name: 'LinkedIn',
+        icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+        smallIcon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+        urlPlaceholder: 'https://linkedin.com/company/your-company',
+        steps: [
+          "Before completing these steps, please send a connection request to our Client Operations Manager on LinkedIn: Frankie Lanoue. This is required (see the Heads up note below to understand why).",
+          "Log into LinkedIn and navigate to your Company Page (not your personal profile).",
+          "Click Admin Tools in the top right corner of your page.",
+          "Select Manage Admins.",
+          "Click Add Admin.",
+          "Search for our client operations manager's profile: Frankie Lanoue.",
+          "Select the admin role: choose Content Admin to allow us to create and manage content.",
+          "Click Save.",
+        ],
+        note: "LinkedIn doesn't allow a business page to be made an admin on another page, which is why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there.\n\nLinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
+        note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active. Unfortunately, we're unable to manage a non-Premium LinkedIn page for this reason.",
+      },
+      {
+        id: 'tiktok', name: 'TikTok',
+        icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+        smallIcon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+        urlPlaceholder: 'https://tiktok.com/@yourhandle',
+        steps: [
+          "Log into TikTok on a desktop browser at tiktok.com.",
+          "Go to your profile and click TikTok Studio.",
+          "On the left menu, click Settings.",
+          "Select Account → then Creator Permissions.",
+          "Click Authorize and enter our TikTok handle: [Agency TikTok Handle].",
+          "Grant the permissions listed and confirm.",
+        ],
+        note: "TikTok's admin access is more limited than other platforms, so we'll discuss what this covers during your kickoff call.",
+        note2: null,
+      },
+    ];
+
+    // ── State ───────────────────────────────────────────────────────
+    let platformLimit = 4;
+    let selected = [];      // platform IDs selected in the UI
+    let completed = {};     // { id: true } — marked done this session or from API
+    let openId = null;
+    let urls = {};
+    let expandedNote2 = {};
+    let alreadyConnected = []; // from API
+
+    // ── Plan → limit ────────────────────────────────────────────────
+    function limitForPlan(planName) {
+      if (!planName) return 4;
+      const lower = planName.toLowerCase();
+      if (lower.includes('starter')) return 2;
+      return 4;
+    }
+
+    // ── Render ──────────────────────────────────────────────────────
+    function render() {
+      const atLimit = selected.length >= platformLimit;
+      const completedCount = selected.filter(id => completed[id]).length;
+
+      // Count pill
+      document.getElementById('countPill').textContent = `${selected.length} of ${platformLimit}`;
+      document.getElementById('limitBanner').style.display = atLimit ? 'block' : 'none';
+
+      // Platform grid
+      document.getElementById('platformGrid').innerHTML = PLATFORMS.map(p => {
+        const isSel  = selected.includes(p.id);
+        const isDone = !!completed[p.id];
+        const isLocked = !isSel && atLimit;
+
+        const checkmark = (isSel || isDone) ? `
+          <div class="platform-card-check">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${isDone ? 'white' : 'white'}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>` : '';
+
+        const doneLabel = isDone ? `<span class="platform-card-done-label">Done!</span>` : '';
+        const iconColor = isSel ? 'white' : isDone ? '#2D6B4F' : '#1F3D2C';
+        const iconHtml  = p.icon.replace('stroke="currentColor"', `stroke="${iconColor}"`);
+
+        return `<button class="platform-card${isSel && !isDone ? ' selected' : ''}${isDone ? ' done' : ''}"
+          onclick="togglePlatform('${p.id}')" ${isLocked ? 'disabled' : ''}>
+          ${checkmark}
+          <span>${iconHtml}</span>
+          <span class="platform-card-name" style="color:${isSel && !isDone ? 'white' : '#1F3D2C'}">${p.name}</span>
+          ${doneLabel}
+        </button>`;
+      }).join('');
+
+      // Progress chips
+      const chipsEl = document.getElementById('progressChips');
+      if (selected.length > 0) {
+        chipsEl.style.display = 'flex';
+        const chips = PLATFORMS.filter(p => selected.includes(p.id)).map(p =>
+          `<span class="progress-chip${completed[p.id] ? ' done' : ''}">${completed[p.id] ? '✓ ' : ''}${p.name}</span>`
+        ).join('');
+        const allDone = completedCount === selected.length && selected.length > 0;
+        chipsEl.innerHTML = chips + (allDone ? '<span class="all-set-label">You\'re all set!</span>' : '');
+      } else {
+        chipsEl.style.display = 'none';
+      }
+
+      // Accordion
+      const accordionEl = document.getElementById('accordionArea');
+      const visible = PLATFORMS.filter(p => selected.includes(p.id));
+      if (visible.length === 0) {
+        accordionEl.innerHTML = `<div class="empty-state">
+          <p>Choose your platforms above</p>
+          <p>We'll guide you through each one. It's quick, we promise.</p>
+        </div>`;
+        return;
+      }
+
+      accordionEl.innerHTML = `<div class="accordion-list">${visible.map(p => renderAccordionCard(p)).join('')}</div>`;
+
+      // Re-attach input listeners
+      visible.forEach(p => {
+        const inp = document.getElementById(`url-${p.id}`);
+        if (inp) inp.addEventListener('input', e => { urls[p.id] = e.target.value; });
+      });
+    }
+
+    function renderAccordionCard(p) {
+      const isOpen = openId === p.id;
+      const isDone = !!completed[p.id];
+
+      const iconHtml = isDone
+        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>`
+        : p.icon.replace('width="28" height="28"', 'width="22" height="22"').replace('stroke="currentColor"', 'stroke="#1F3D2C"');
+
+      const subText = isDone ? 'All done! Thank you.' : `${p.steps.length} quick steps`;
+      const chevronStroke = isOpen ? 'white' : '#9CA3AF';
+
+      const bodyHtml = isOpen ? `
+        <div class="accordion-body">
+          ${p.note2 ? renderBys(p) : ''}
+          <div class="steps-list">
+            ${p.steps.map((step, i) => `
+              <div class="step-row">
+                <span class="step-num">${i + 1}</span>
+                <span class="step-text">${esc(step)}</span>
+              </div>`).join('')}
+          </div>
+          <div class="heads-up"><strong style="font-weight:700;color:#1F3D2C;">Heads up:</strong> ${esc(p.note)}</div>
+          <label class="url-field-label">
+            Your ${p.name} page link <span class="url-field-optional">(optional)</span>
+          </label>
+          <div class="url-input-wrap">
+            <span class="url-input-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </span>
+            <input id="url-${p.id}" class="url-input" type="url" value="${esc(urls[p.id] || '')}" placeholder="${p.urlPlaceholder}" />
+          </div>
+          <button class="mark-done-btn" id="btn-${p.id}" onclick="markDone('${p.id}')">
+            Done! Mark ${p.name} as connected
+          </button>
+        </div>` : '';
+
+      return `<div class="accordion-card${isOpen ? ' open' : ''}${isDone ? ' done-card' : ''}" id="card-${p.id}">
+        <button class="accordion-trigger" onclick="toggleAccordion('${p.id}')">
+          <div class="accordion-trigger-left">
+            <div class="accordion-icon-wrap${isDone ? ' done-icon' : ''}">${iconHtml}</div>
+            <div>
+              <div class="accordion-platform-name">${p.name}</div>
+              <div class="accordion-platform-sub${isDone ? ' done-sub' : ''}">${subText}</div>
+            </div>
+          </div>
+          <div class="accordion-chevron-wrap">
+            <svg class="accordion-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${chevronStroke}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"/></svg>
+          </div>
+        </button>
+        ${bodyHtml}
+      </div>`;
+    }
+
+    function renderBys(p) {
+      const isExp = !!expandedNote2[p.id];
+      return `<div class="bys-wrap">
+        <button class="bys-trigger" onclick="toggleNote2('${p.id}'); event.stopPropagation();">
+          <div class="bys-icon">!</div>
+          <div style="flex:1;min-width:0;">
+            <div class="bys-title">Before you start</div>
+            <div class="bys-hint">${isExp ? 'tap to hide' : 'important, tap to read'}</div>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:${isExp ? 'rotate(180deg)' : 'none'};transition:transform 0.2s;flex-shrink:0;"><polyline points="6,9 12,15 18,9"/></svg>
+        </button>
+        ${isExp ? `<div class="bys-body">${esc(p.note2)}</div>` : ''}
+      </div>`;
+    }
+
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Interactions ────────────────────────────────────────────────
+    function togglePlatform(id) {
+      if (selected.includes(id)) {
+        selected = selected.filter(x => x !== id);
+        delete completed[id];
+        delete urls[id];
+        if (openId === id) openId = null;
+      } else {
+        if (selected.length >= platformLimit) return;
+        selected.push(id);
+      }
+      render();
+    }
+
+    function toggleAccordion(id) {
+      openId = openId === id ? null : id;
+      render();
+    }
+
+    function toggleNote2(id) {
+      expandedNote2[id] = !expandedNote2[id];
+      render();
+    }
+
+    async function markDone(id) {
+      const btn = document.getElementById(`btn-${id}`);
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+      const url = urls[id] || '';
+      const username = url.trim() || id;
+
+      try {
+        const res = await fetch(`/api/socials/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, profile_url: url || null }),
+        });
+        if (!res.ok) {
+          const d = await res.json();
+          alert(d.error || 'Could not save. Please try again.');
+          if (btn) { btn.disabled = false; btn.textContent = `Done! Mark ${PLATFORMS.find(p=>p.id===id)?.name} as connected`; }
+          return;
+        }
+        completed[id] = true;
+        openId = null;
+        alreadyConnected = alreadyConnected.filter(a => a.platform !== id);
+        alreadyConnected.push({ platform: id, connected_at: new Date().toISOString() });
+        renderConnectedRail();
+        render();
+      } catch (err) {
+        console.error('Mark done error:', err);
+        alert('Network error. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = `Done! Mark ${PLATFORMS.find(p=>p.id===id)?.name} as connected`; }
+      }
+    }
+
+    // ── Right rail connected list ───────────────────────────────────
+    function renderConnectedRail() {
+      const el = document.getElementById('connectedList');
+      const sub = document.getElementById('railConnectedSub');
+      if (!alreadyConnected.length) {
+        el.innerHTML = '<span class="connected-empty">No platforms connected yet.</span>';
+        sub.textContent = 'None connected yet';
+        return;
+      }
+      sub.textContent = `${alreadyConnected.length} connected`;
+      el.innerHTML = `<div class="connected-list">${alreadyConnected.map(a => {
+        const p = PLATFORMS.find(pl => pl.id === a.platform);
+        const name = p ? p.name : (a.platform.charAt(0).toUpperCase() + a.platform.slice(1));
+        const date = a.connected_at ? new Date(a.connected_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        return `<div class="connected-item">
+          <div class="connected-dot"></div>
+          <div>
+            <div class="connected-platform-name">${name}</div>
+            ${date ? `<div class="connected-date">Connected ${date}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
+    // ── Sidebar ─────────────────────────────────────────────────────
+    function toggleSidebar() {
+      const s = document.getElementById('portalSidebar');
+      const open = !s.classList.contains('collapsed');
+      s.classList.toggle('collapsed', open);
+      localStorage.setItem('sidebarOpen', open ? '0' : '1');
+    }
+    function toggleSocialMenu() {
+      const sub = document.getElementById('socialSubitems');
+      const par = document.querySelector('.sidebar-nav-parent-active');
+      const open = !sub.classList.contains('hidden');
+      sub.classList.toggle('hidden', open);
+      par.classList.toggle('group-collapsed', open);
+      localStorage.setItem('socialMenuOpen', open ? '0' : '1');
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────
+    async function init() {
+      // Auth check
+      try {
+        const meRes = await fetch('/api/auth/me');
+        if (!meRes.ok) { window.location.href = '/login'; return; }
+        const me = await meRes.json();
+        document.getElementById('sidebarName').textContent = me.name || me.business_name || '';
+      } catch { window.location.href = '/login'; return; }
+
+      // Sidebar preferences
+      if (localStorage.getItem('sidebarOpen') === '0')
+        document.getElementById('portalSidebar').classList.add('collapsed');
+      if (localStorage.getItem('socialMenuOpen') === '0') {
+        document.getElementById('socialSubitems').classList.add('hidden');
+        document.querySelector('.sidebar-nav-parent-active').classList.add('group-collapsed');
+      }
+
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/login';
+      });
+
+      // Fetch plan and existing connections in parallel
+      const [planRes, socialsRes] = await Promise.all([
+        fetch('/api/account/subscription'),
+        fetch('/api/socials'),
+      ]);
+
+      if (planRes.ok) {
+        const planData = await planRes.json();
+        platformLimit = limitForPlan(planData.plan);
+      }
+
+      if (socialsRes.ok) {
+        const socialsData = await socialsRes.json();
+        alreadyConnected = socialsData.accounts || [];
+        // Pre-select and mark done any already-connected platforms
+        alreadyConnected.forEach(a => {
+          const pid = a.platform.toLowerCase();
+          if (PLATFORMS.find(p => p.id === pid)) {
+            if (!selected.includes(pid)) selected.push(pid);
+            completed[pid] = true;
+          }
+        });
+      }
+
+      renderConnectedRail();
+      render();
+    }
+
+    init();
+  </script>
+</body>
+</html>

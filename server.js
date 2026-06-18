@@ -95,6 +95,10 @@ app.get('/socials', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/socials.html'));
 });
 
+app.get('/connect-accounts', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/connect-accounts.html'));
+});
+
 app.get('/analytics', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/analytics.html'));
 });
