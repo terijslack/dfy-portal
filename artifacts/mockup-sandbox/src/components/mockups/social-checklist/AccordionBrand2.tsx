@@ -32,7 +32,7 @@ const PLATFORMS = [
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
     urlPlaceholder: "https://linkedin.com/company/your-company",
     steps: ["Before completing these steps, please send a connection request to our Client Operations Manager on LinkedIn: Frankie Lanoue. This is required — see the Heads up note below to understand why.","Log into LinkedIn and navigate to your Company Page (not your personal profile).","Click Admin Tools in the top right corner of your page.","Select Manage Admins.","Click Add Admin.","Search for our client operations manager's profile: Frankie Lanoue.","Select the admin role: choose Content Admin to allow us to create and manage content.","Click Save."],
-    note: "LinkedIn doesn't allow a business page to be made an admin on another page — that's why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there. LinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
+    note: "LinkedIn doesn't allow a business page to be made an admin on another page — that's why you'll be adding Frankie Lanoue directly. She'll accept and manage access from there.\n\nLinkedIn also only allows you to add someone as an admin if they are a connection, and in some cases they may need to follow your Page first.",
     note2: "To add admins at all, your LinkedIn Company Page needs to be on a Premium plan. If you're not sure whether you have it, check under your Page's Admin Tools. You'll see an upgrade prompt if it's not active. Unfortunately, we're unable to manage a non-Premium LinkedIn page for this reason.",
   },
   {
@@ -290,7 +290,7 @@ export function AccordionBrand2() {
                       </div>
 
                       <div style={{ background: "#FBF8F3", borderLeft: "3px solid #EBC99B", borderRadius: "0 10px 10px 0", padding: "8px 12px", marginBottom: 14 }}>
-                        <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.55 }}>
+                        <p style={{ fontSize: 12, color: "#6B7280", margin: 0, lineHeight: 1.55, whiteSpace: "pre-line" }}>
                           <strong style={{ fontWeight: 700, color: "#1F3D2C" }}>Heads up:</strong> {p.note}
                         </p>
                       </div>
