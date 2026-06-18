@@ -177,6 +177,11 @@
       <input type="password" id="password" placeholder="At least 8 characters" />
     </div>
 
+    <div class="field">
+      <label>Confirm password</label>
+      <input type="password" id="confirmPassword" placeholder="Re-enter your password" />
+    </div>
+
     <div class="error-msg" id="errorMsg"></div>
 
     <button class="btn-primary" id="submitBtn" onclick="handleSignup()">
@@ -204,9 +209,10 @@
       const business_name = document.getElementById('business_name').value.trim();
       const name          = document.getElementById('name').value.trim();
       const email         = document.getElementById('email').value.trim();
-      const password      = document.getElementById('password').value;
-      const errorMsg      = document.getElementById('errorMsg');
-      const btn           = document.getElementById('submitBtn');
+      const password        = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMsg        = document.getElementById('errorMsg');
+      const btn             = document.getElementById('submitBtn');
 
       errorMsg.textContent = '';
 
@@ -215,13 +221,18 @@
         return;
       }
 
-      if (!business_name || !name || !email || !password) {
+      if (!business_name || !name || !email || !password || !confirmPassword) {
         errorMsg.textContent = 'Please fill in all fields.';
         return;
       }
 
       if (password.length < 8) {
         errorMsg.textContent = 'Password must be at least 8 characters.';
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = 'Passwords do not match.';
         return;
       }
 
