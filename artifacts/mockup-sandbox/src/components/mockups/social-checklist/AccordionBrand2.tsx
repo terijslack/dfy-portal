@@ -14,6 +14,7 @@ const PLATFORMS = [
     urlPlaceholder: "https://instagram.com/yourhandle",
     steps: ["Complete the Facebook Page steps above first — Instagram access is managed through Facebook.","If your Instagram is connected to your Facebook Page, access carries over automatically.","To verify: go to your Facebook Page → Settings → Linked Accounts → confirm Instagram is connected.","If Instagram is NOT yet connected: open the Instagram app → Settings → Account → Sharing and Remixing → connect your Facebook Page."],
     note: "Once your Instagram is linked to your Facebook Page and we have Page access, we're good to go.",
+    note2: "Even if we're only managing your Instagram and not your Facebook page, we still need to be connected to both. This is a Meta limitation. Instagram business accounts can only be managed through a linked Facebook Page, so the Facebook steps must be completed regardless.",
   },
   {
     id: "linkedin", name: "LinkedIn",
