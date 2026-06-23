@@ -13,7 +13,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 // Add reset token columns if they don't exist yet
 pool.query(`
   ALTER TABLE clients
-    ADD COLUMN IF NOT EXISTS password_reset_token VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS password_reset_token VARCHAR,
     ADD COLUMN IF NOT EXISTS password_reset_expires TIMESTAMP
 `).catch(err => console.error('Migration error (reset cols):', err.message));
 
