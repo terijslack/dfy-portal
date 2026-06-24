@@ -78,6 +78,32 @@
     }
     .field textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
 
+    /* Brand Assets */
+    .ba-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: var(--bg);
+    }
+    .ba-upload-zone:hover { border-color: var(--green); background: rgba(45,107,79,0.03); }
+    .ba-upload-zone.ba-dragover { border-color: var(--green); background: rgba(45,107,79,0.06); }
+    .ba-upload-zone input[type=file] { display: none; }
+    .ba-logo-preview { max-width: 100%; max-height: 180px; object-fit: contain; margin: 0 auto 12px; display: block; border-radius: 6px; }
+    .ba-upload-label { font-size: 13px; color: #6B7280; line-height: 1.5; }
+    .ba-upload-label span { color: var(--green); font-weight: 600; cursor: pointer; }
+    .ba-hint { font-size: 11px; color: #9CA3AF; margin-top: 4px; }
+    .ba-msg { font-size: 12px; margin-top: 8px; }
+    .ba-msg.error { color: #B91C1C; }
+    .ba-msg.success { color: var(--green); font-weight: 600; }
+    .ba-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 12px; margin-top: 14px; }
+    .ba-gallery-item { position: relative; border-radius: 8px; overflow: hidden; background: var(--bg); border: 1px solid var(--border); aspect-ratio: 1; }
+    .ba-gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ba-del { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.55); border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 13px; line-height: 1; }
+    .ba-del:hover { background: rgba(185,28,28,0.85); }
+
     /* Platform grid */
     .platform-grid {
       display: grid;
@@ -421,7 +447,52 @@
           </div>
         </div>
 
-        <!-- SECTION 2: Social Media -->
+        <!-- SECTION 2: Brand Assets -->
+        <div class="profile-section">
+          <div class="profile-section-header">
+            <div class="profile-section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+            </div>
+            <div>
+              <div class="profile-section-title">Brand Assets</div>
+              <div class="profile-section-desc">Your logo and marketing content for us to use</div>
+            </div>
+          </div>
+          <div class="profile-section-body">
+
+            <!-- Logo upload -->
+            <div style="margin-bottom:24px;">
+              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Business Logo</div>
+              <div class="ba-upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" ondragover="baDragOver(event,'logoZone')" ondragleave="baDragLeave('logoZone')" ondrop="baDropLogo(event)">
+                <input type="file" id="logoInput" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg" onchange="baPickLogo(this)"/>
+                <img id="logoPreview" class="ba-logo-preview" src="" alt="Logo preview" style="display:none;"/>
+                <div id="logoPlaceholder">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                  <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                  <div class="ba-hint">PNG, SVG, or JPG &nbsp;·&nbsp; Max 2MB</div>
+                </div>
+                <div id="logoMsg" class="ba-msg"></div>
+              </div>
+            </div>
+
+            <!-- Marketing content upload -->
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Marketing Content</div>
+              <div style="font-size:12px;color:#6B7280;margin-bottom:12px;">Photos of your team, business, or products we can use in your posts.</div>
+              <div class="ba-upload-zone" id="contentZone" onclick="document.getElementById('contentInput').click()" ondragover="baDragOver(event,'contentZone')" ondragleave="baDragLeave('contentZone')" ondrop="baDropContent(event)">
+                <input type="file" id="contentInput" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onchange="baPickContent(this)"/>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                <div class="ba-hint">PNG or JPG &nbsp;·&nbsp; Max 2MB each &nbsp;·&nbsp; Multiple files OK</div>
+                <div id="contentMsg" class="ba-msg"></div>
+              </div>
+              <div class="ba-gallery" id="contentGallery"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION 3: Social Media -->
         <div class="profile-section">
           <div class="profile-section-header">
             <div class="profile-section-icon">
@@ -1136,11 +1207,151 @@
       window.location.href = '/login';
     });
 
+    /* ── Brand Assets ── */
+    const BA_MAX = 2 * 1024 * 1024;
+    const BA_LOGO_TYPES    = ['image/png','image/svg+xml','image/jpeg'];
+    const BA_CONTENT_TYPES = ['image/png','image/jpeg'];
+
+    async function baLoadAssets() {
+      try {
+        const res = await fetch('/api/brand-assets');
+        if (!res.ok) return;
+        const { logo_url, content_urls } = await res.json();
+        if (logo_url) baShowLogoPreview(logo_url);
+        if (content_urls?.length) baRenderGallery(content_urls);
+      } catch {}
+    }
+
+    function baShowLogoPreview(url) {
+      const img = document.getElementById('logoPreview');
+      const ph  = document.getElementById('logoPlaceholder');
+      img.src = url;
+      img.style.display = 'block';
+      ph.style.display  = 'none';
+    }
+
+    function baRenderGallery(files) {
+      const gallery = document.getElementById('contentGallery');
+      gallery.innerHTML = files.map(f => `
+        <div class="ba-gallery-item" data-path="${escHtml(f.path)}">
+          <img src="${escHtml(f.url)}" alt="${escHtml(f.name || '')}"/>
+          <button class="ba-del" onclick="baDeleteContent(this)" title="Remove">&#x2715;</button>
+        </div>`).join('');
+    }
+
+    function baValidate(file, allowedTypes) {
+      if (!allowedTypes.includes(file.type)) return 'Only PNG, SVG, or JPG files are allowed.';
+      if (file.size > BA_MAX) return 'File exceeds the 2MB limit.';
+      return null;
+    }
+
+    function baDragOver(e, zoneId) {
+      e.preventDefault();
+      document.getElementById(zoneId).classList.add('ba-dragover');
+    }
+    function baDragLeave(zoneId) {
+      document.getElementById(zoneId).classList.remove('ba-dragover');
+    }
+
+    function baSetMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'ba-msg' + (type ? ' ' + type : '');
+    }
+
+    async function baPickLogo(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const err = baValidate(file, BA_LOGO_TYPES);
+      if (err) { baSetMsg('logoMsg', err, 'error'); input.value = ''; return; }
+      baSetMsg('logoMsg', 'Uploading…', '');
+      const form = new FormData();
+      form.append('logo', file);
+      try {
+        const res  = await fetch('/api/brand-assets/logo', { method: 'POST', body: form });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed.');
+        baShowLogoPreview(data.url);
+        baSetMsg('logoMsg', 'Logo saved.', 'success');
+        setTimeout(() => baSetMsg('logoMsg', '', ''), 3000);
+      } catch (e) { baSetMsg('logoMsg', e.message, 'error'); }
+      input.value = '';
+    }
+
+    function baDropLogo(e) {
+      e.preventDefault();
+      baDragLeave('logoZone');
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      const input = document.getElementById('logoInput');
+      input.files = dt.files;
+      baPickLogo(input);
+    }
+
+    async function baPickContent(input) {
+      const files = Array.from(input.files);
+      if (!files.length) return;
+      baSetMsg('contentMsg', `Uploading ${files.length} file${files.length > 1 ? 's' : ''}…`, '');
+      let uploaded = [], errors = [];
+      for (const file of files) {
+        const err = baValidate(file, BA_CONTENT_TYPES);
+        if (err) { errors.push(`${file.name}: ${err}`); continue; }
+        const form = new FormData();
+        form.append('file', file);
+        try {
+          const res  = await fetch('/api/brand-assets/content', { method: 'POST', body: form });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Upload failed.');
+          uploaded.push(data);
+        } catch (e) { errors.push(`${file.name}: ${e.message}`); }
+      }
+      const gallery = document.getElementById('contentGallery');
+      uploaded.forEach(f => {
+        const div = document.createElement('div');
+        div.className = 'ba-gallery-item';
+        div.dataset.path = f.path;
+        div.innerHTML = `<img src="${escHtml(f.url)}" alt="${escHtml(f.name)}"/><button class="ba-del" onclick="baDeleteContent(this)" title="Remove">&#x2715;</button>`;
+        gallery.appendChild(div);
+      });
+      if (errors.length) baSetMsg('contentMsg', errors.join(' · '), 'error');
+      else { baSetMsg('contentMsg', `${uploaded.length} file${uploaded.length > 1 ? 's' : ''} uploaded.`, 'success'); setTimeout(() => baSetMsg('contentMsg', '', ''), 3000); }
+      input.value = '';
+    }
+
+    function baDropContent(e) {
+      e.preventDefault();
+      baDragLeave('contentZone');
+      const dt = new DataTransfer();
+      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+      const input = document.getElementById('contentInput');
+      input.files = dt.files;
+      baPickContent(input);
+    }
+
+    async function baDeleteContent(btn) {
+      const item = btn.closest('.ba-gallery-item');
+      const path = item.dataset.path;
+      if (!path) { item.remove(); return; }
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/brand-assets/content', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path })
+        });
+        if (!res.ok) throw new Error();
+        item.remove();
+      } catch { btn.disabled = false; }
+    }
+
     document.querySelectorAll('input:not([type=checkbox]):not([type=hidden]), textarea').forEach(el => {
       el.addEventListener('input', updateCompletion);
     });
 
     init();
+    baLoadAssets();
   </script>
 </body>
 </html>

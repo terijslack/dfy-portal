@@ -42,6 +42,7 @@ app.use('/api/account', require('./backend/routes/account')); // subscription ma
 app.use('/api/onboarding', require('./backend/routes/onboarding')); // client intake form
 app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
 app.use('/api/socials', require('./backend/routes/socials'));       // social account connections
+app.use('/api/brand-assets', require('./backend/routes/brandAssets')); // logo + content uploads
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file
