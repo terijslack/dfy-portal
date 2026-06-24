@@ -38,6 +38,8 @@ pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS address VARCH
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS city VARCHAR(100)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS state VARCHAR(100)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS zip VARCHAR(20)`).catch(() => {});
+pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS business_email VARCHAR(255)`).catch(() => {});
+pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS timezone VARCHAR(100)`).catch(() => {});
 
 // Middleware: require valid JWT cookie
 function requireAuth(req, res, next) {
@@ -56,7 +58,7 @@ router.post('/', requireAuth, async (req, res) => {
   const clientId = req.user.id;
   const {
     industry, website, phone, location,
-    address, city, state, zip,
+    address, city, state, zip, business_email, timezone,
     platforms, social_notes, brand_voice, target_audience,
     content_themes, avoid_content,
     primary_goal, additional_notes, referral_source
@@ -66,9 +68,10 @@ router.post('/', requireAuth, async (req, res) => {
     await pool.query(`
       INSERT INTO client_onboarding
         (client_id, industry, website, phone, location, address, city, state, zip,
-         platforms, social_notes, brand_voice, target_audience, content_themes,
-         avoid_content, primary_goal, additional_notes, referral_source, completed_at, updated_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18, NOW(), NOW())
+         business_email, timezone, platforms, social_notes, brand_voice, target_audience,
+         content_themes, avoid_content, primary_goal, additional_notes, referral_source,
+         completed_at, updated_at)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20, NOW(), NOW())
       ON CONFLICT (client_id) DO UPDATE SET
         industry = EXCLUDED.industry,
         website = EXCLUDED.website,
@@ -78,6 +81,8 @@ router.post('/', requireAuth, async (req, res) => {
         city = EXCLUDED.city,
         state = EXCLUDED.state,
         zip = EXCLUDED.zip,
+        business_email = EXCLUDED.business_email,
+        timezone = EXCLUDED.timezone,
         platforms = EXCLUDED.platforms,
         social_notes = EXCLUDED.social_notes,
         brand_voice = EXCLUDED.brand_voice,
@@ -91,6 +96,7 @@ router.post('/', requireAuth, async (req, res) => {
     `, [
       clientId, industry, website, phone, location || null,
       address || null, city || null, state || null, zip || null,
+      business_email || null, timezone || null,
       JSON.stringify(platforms || []), social_notes || null,
       brand_voice, target_audience, content_themes, avoid_content,
       primary_goal, additional_notes, referral_source

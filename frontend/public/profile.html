@@ -375,7 +375,10 @@
               </div>
               <div class="field">
                 <label>Business phone</label>
-                <input type="tel" id="phone" placeholder="(916) 555-0100"/>
+                <div style="display:flex;align-items:center;gap:0;">
+                  <span style="display:flex;align-items:center;padding:0 10px;height:42px;background:var(--bg);border:1px solid #D1C9B8;border-right:none;border-radius:8px 0 0 8px;font-size:14px;color:#6B7280;white-space:nowrap;">+1</span>
+                  <input type="tel" id="phone" placeholder="916-555-0100" maxlength="12" style="border-radius:0 8px 8px 0;" oninput="formatPhone(this)"/>
+                </div>
               </div>
               <div class="field">
                 <label>Business website</label>
@@ -396,6 +399,23 @@
               <div class="field">
                 <label>ZIP Code</label>
                 <input type="text" id="zip" placeholder="95814"/>
+              </div>
+              <div class="field">
+                <label>Business Email</label>
+                <input type="email" id="business_email" placeholder="hello@yourbusiness.com"/>
+              </div>
+              <div class="field field-full">
+                <label>Time Zone</label>
+                <select id="timezone">
+                  <option value="" disabled selected>Select your time zone…</option>
+                  <option value="America/New_York">Eastern Time — ET (New York)</option>
+                  <option value="America/Chicago">Central Time — CT (Chicago)</option>
+                  <option value="America/Denver">Mountain Time — MT (Denver)</option>
+                  <option value="America/Phoenix">Mountain Time — no DST (Phoenix)</option>
+                  <option value="America/Los_Angeles">Pacific Time — PT (Los Angeles)</option>
+                  <option value="America/Anchorage">Alaska Time — AKT (Anchorage)</option>
+                  <option value="Pacific/Honolulu">Hawaii Time — HT (Honolulu)</option>
+                </select>
               </div>
             </div>
           </div>
@@ -679,6 +699,16 @@
       const el = document.getElementById(id);
       if (el) el.value = val;
     }
+    function formatPhone(el) {
+      let digits = el.value.replace(/\D/g, '').slice(0, 10);
+      if (digits.length <= 3) {
+        el.value = digits;
+      } else if (digits.length <= 6) {
+        el.value = digits.slice(0,3) + '-' + digits.slice(3);
+      } else {
+        el.value = digits.slice(0,3) + '-' + digits.slice(3,6) + '-' + digits.slice(6);
+      }
+    }
 
     /* ── Auth + load ── */
     async function init() {
@@ -716,6 +746,8 @@
       setValue('city',           o.city              || '');
       setValue('state',          o.state             || '');
       setValue('zip',            o.zip               || '');
+      setValue('business_email', o.business_email    || '');
+      if (o.timezone) document.getElementById('timezone').value = o.timezone;
       setValue('social_notes',   o.social_notes      || '');
       setValue('target_audience',o.target_audience   || '');
       setValue('content_themes', o.content_themes    || '');
@@ -1061,6 +1093,8 @@
             city:             document.getElementById('city').value.trim(),
             state:            document.getElementById('state').value.trim(),
             zip:              document.getElementById('zip').value.trim(),
+            business_email:   document.getElementById('business_email').value.trim(),
+            timezone:         document.getElementById('timezone').value,
             social_notes:     document.getElementById('social_notes').value.trim(),
             brand_voice:      selectedVoice,
             target_audience:  document.getElementById('target_audience').value.trim(),
