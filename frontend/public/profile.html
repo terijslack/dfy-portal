@@ -361,7 +361,17 @@
               </div>
               <div class="field">
                 <label>Industry / Niche</label>
-                <input type="text" id="industry" placeholder="Health & wellness, Real estate…"/>
+                <select id="industry" onchange="document.getElementById('industry_other_wrap').style.display=this.value==='Other'?'block':'none'">
+                  <option value="" disabled selected>Select your industry…</option>
+                  <option value="Home Services">Home Services</option>
+                  <option value="Auto Dealer">Auto Dealer</option>
+                  <option value="Beauty Services">Beauty Services</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="field" id="industry_other_wrap" style="display:none;">
+                <label>Please describe your industry</label>
+                <input type="text" id="industry_other" placeholder="e.g. Health &amp; wellness, Real estate…"/>
               </div>
               <div class="field">
                 <label>Business phone</label>
@@ -679,7 +689,15 @@
       const o = obData.onboarding || {};
 
       setValue('business_name',  u.business_name     || '');
-      setValue('industry',       o.industry          || '');
+      const knownIndustries = ['Home Services', 'Auto Dealer', 'Beauty Services'];
+      const savedIndustry = o.industry || '';
+      if (knownIndustries.includes(savedIndustry)) {
+        document.getElementById('industry').value = savedIndustry;
+      } else if (savedIndustry) {
+        document.getElementById('industry').value = 'Other';
+        document.getElementById('industry_other').value = savedIndustry;
+        document.getElementById('industry_other_wrap').style.display = 'block';
+      }
       setValue('phone',          o.phone             || '');
       setValue('website',        o.website           || '');
       setValue('location',       o.location          || '');
@@ -1019,7 +1037,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            industry:         document.getElementById('industry').value.trim(),
+            industry:         document.getElementById('industry').value === 'Other'
+                                ? document.getElementById('industry_other').value.trim()
+                                : document.getElementById('industry').value.trim(),
             website:          document.getElementById('website').value.trim(),
             phone:            document.getElementById('phone').value.trim(),
             location:         document.getElementById('location').value.trim(),
