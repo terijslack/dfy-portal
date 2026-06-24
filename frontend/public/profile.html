@@ -526,54 +526,79 @@
             </div>
           </div>
           <div class="profile-section-body">
-            <div class="field" style="margin-bottom:20px;">
-              <label style="margin-bottom:10px;display:block;">Choose your brand voice</label>
-              <div class="voice-grid">
-                <div class="voice-card" onclick="selectVoice('Professional',this)">
-                  <div class="voice-card-title">Professional</div>
-                  <div class="voice-card-desc">Authoritative and polished. Builds credibility.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Friendly',this)">
-                  <div class="voice-card-title">Friendly</div>
-                  <div class="voice-card-desc">Warm and approachable. Like a knowledgeable friend.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Trustworthy',this)">
-                  <div class="voice-card-title">Trustworthy</div>
-                  <div class="voice-card-desc">Reliable and honest. Inspires confidence in your brand.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Confident',this)">
-                  <div class="voice-card-title">Confident</div>
-                  <div class="voice-card-desc">Bold and assured. Speaks with authority and conviction.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Engaging',this)">
-                  <div class="voice-card-title">Engaging</div>
-                  <div class="voice-card-desc">Captivating and interactive. Draws people in and keeps them interested.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Empathetic',this)">
-                  <div class="voice-card-title">Empathetic</div>
-                  <div class="voice-card-desc">Understanding and caring. Connects with your audience on a human level.</div>
-                </div>
-                <div class="voice-card" onclick="selectVoice('Innovative',this)">
-                  <div class="voice-card-title">Innovative</div>
-                  <div class="voice-card-desc">Fresh and forward-thinking. Positions your brand as a leader.</div>
-                </div>
-              </div>
-              <input type="hidden" id="brand_voice"/>
+
+            <!-- Mode selector -->
+            <p class="ba-mode-prompt">Would you like to fill in your brand identity yourself, or have us handle it for you?</p>
+            <div class="ba-mode-cards">
+              <button class="ba-mode-card" id="biModeCardSelf" onclick="biSetMode('self')">
+                <div class="ba-mode-card-title">Do it myself</div>
+                <div class="ba-mode-card-desc">Choose your tone of voice and describe your audience and content goals.</div>
+              </button>
+              <button class="ba-mode-card" id="biModeCardImport" onclick="biSetMode('import')">
+                <div class="ba-mode-card-title">Do it for me</div>
+                <div class="ba-mode-card-desc">We'll use your website to set up your tone of voice, audience, and content themes.</div>
+              </button>
             </div>
-            <div class="field-grid">
-              <div class="field field-full">
-                <label>Who is your target audience?</label>
-                <textarea id="target_audience" rows="2" placeholder="e.g. Women 30–50 in Sacramento interested in holistic health, local small business owners…"></textarea>
-              </div>
-              <div class="field field-full">
-                <label>Customer pain points</label>
-                <textarea id="content_themes" rows="3" placeholder="e.g. Behind-the-scenes, tips & education, client success stories, seasonal promotions…"></textarea>
-              </div>
-              <div class="field field-full">
-                <label>Things we should <em>never</em> post about</label>
-                <textarea id="avoid_content" rows="2" placeholder="e.g. Politics, competitor mentions, pricing details, personal photos…"></textarea>
-              </div>
+
+            <!-- Panel: Do it for me -->
+            <div class="ba-panel" id="biPanelImport">
+              <p style="font-size:13px;color:#6B7280;background:rgba(45,107,79,0.04);border-radius:8px;padding:12px 14px;margin:0;">
+                We'll pull your brand identity directly from your website — no extra steps needed from you.
+              </p>
             </div>
+
+            <!-- Panel: Do it myself -->
+            <div class="ba-panel" id="biPanelSelf">
+              <div class="field" style="margin-bottom:20px;">
+                <label style="margin-bottom:10px;display:block;">Choose your brand voice</label>
+                <div class="voice-grid">
+                  <div class="voice-card" onclick="selectVoice('Professional',this)">
+                    <div class="voice-card-title">Professional</div>
+                    <div class="voice-card-desc">Authoritative and polished. Builds credibility.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Friendly',this)">
+                    <div class="voice-card-title">Friendly</div>
+                    <div class="voice-card-desc">Warm and approachable. Like a knowledgeable friend.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Trustworthy',this)">
+                    <div class="voice-card-title">Trustworthy</div>
+                    <div class="voice-card-desc">Reliable and honest. Inspires confidence in your brand.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Confident',this)">
+                    <div class="voice-card-title">Confident</div>
+                    <div class="voice-card-desc">Bold and assured. Speaks with authority and conviction.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Engaging',this)">
+                    <div class="voice-card-title">Engaging</div>
+                    <div class="voice-card-desc">Captivating and interactive. Draws people in and keeps them interested.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Empathetic',this)">
+                    <div class="voice-card-title">Empathetic</div>
+                    <div class="voice-card-desc">Understanding and caring. Connects with your audience on a human level.</div>
+                  </div>
+                  <div class="voice-card" onclick="selectVoice('Innovative',this)">
+                    <div class="voice-card-title">Innovative</div>
+                    <div class="voice-card-desc">Fresh and forward-thinking. Positions your brand as a leader.</div>
+                  </div>
+                </div>
+                <input type="hidden" id="brand_voice"/>
+              </div>
+              <div class="field-grid">
+                <div class="field field-full">
+                  <label>Who is your target audience?</label>
+                  <textarea id="target_audience" rows="2" placeholder="e.g. Women 30–50 in Sacramento interested in holistic health, local small business owners…"></textarea>
+                </div>
+                <div class="field field-full">
+                  <label>Customer pain points</label>
+                  <textarea id="content_themes" rows="3" placeholder="e.g. Behind-the-scenes, tips & education, client success stories, seasonal promotions…"></textarea>
+                </div>
+                <div class="field field-full">
+                  <label>Things we should <em>never</em> post about</label>
+                  <textarea id="avoid_content" rows="2" placeholder="e.g. Politics, competitor mentions, pricing details, personal photos…"></textarea>
+                </div>
+              </div>
+            </div><!-- /biPanelSelf -->
+
           </div>
         </div>
 
@@ -877,6 +902,8 @@
       setValue('avoid_content',  o.avoid_content     || '');
       setValue('additional_notes',o.additional_notes || '');
 
+      if (o.brand_identity_mode) biSetMode(o.brand_identity_mode);
+
       if (o.brand_voice) {
         document.querySelectorAll('.voice-card').forEach(c => {
           if (c.querySelector('.voice-card-title').textContent.replace(/&amp;/g,'&').trim() === o.brand_voice.trim())
@@ -1161,6 +1188,22 @@
       }
     }
 
+    /* ── Brand Identity mode selector ── */
+    let brandIdentityMode = null;
+    function biSetMode(mode) {
+      brandIdentityMode = mode;
+      document.getElementById('biModeCardSelf').classList.toggle('ba-selected', mode === 'self');
+      document.getElementById('biModeCardImport').classList.toggle('ba-selected', mode === 'import');
+      document.getElementById('biPanelSelf').classList.toggle('ba-active', mode === 'self');
+      document.getElementById('biPanelImport').classList.toggle('ba-active', mode === 'import');
+      fetch('/api/onboarding/brand-identity-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode })
+      }).catch(err => console.error('biSetMode save error:', err));
+      updateCompletion();
+    }
+
     /* ── Voice selection ── */
     function selectVoice(name, card) {
       document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
@@ -1230,6 +1273,15 @@
         if (!obRes.ok) {
           const d = await obRes.json();
           throw new Error(d.error || 'Could not save profile data.');
+        }
+
+        // Save brand identity mode
+        if (brandIdentityMode) {
+          await fetch('/api/onboarding/brand-identity-mode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: brandIdentityMode })
+          });
         }
 
         // Save brand assets mode + data

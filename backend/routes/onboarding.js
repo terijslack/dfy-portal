@@ -40,6 +40,7 @@ pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS state VARCHAR
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS zip VARCHAR(20)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS business_email VARCHAR(255)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS timezone VARCHAR(100)`).catch(() => {});
+pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS brand_identity_mode TEXT`).catch(() => {});
 
 // Middleware: require valid JWT cookie
 function requireAuth(req, res, next) {
@@ -123,6 +124,24 @@ router.post('/', requireAuth, async (req, res) => {
   } catch (err) {
     console.error('Onboarding save error:', err);
     res.status(500).json({ error: 'Could not save onboarding data.' });
+  }
+});
+
+// POST /api/onboarding/brand-identity-mode — save mode choice ('self' or 'import')
+router.post('/brand-identity-mode', requireAuth, async (req, res) => {
+  const { mode } = req.body;
+  if (!['self', 'import'].includes(mode)) return res.status(400).json({ error: 'Invalid mode.' });
+  try {
+    await pool.query(
+      `INSERT INTO client_onboarding (client_id, brand_identity_mode, completed_at, updated_at)
+       VALUES ($1, $2, NOW(), NOW())
+       ON CONFLICT (client_id) DO UPDATE SET brand_identity_mode = $2, updated_at = NOW()`,
+      [req.user.id, mode]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Brand identity mode save error:', err.message);
+    res.status(500).json({ error: 'Could not save.' });
   }
 });
 
