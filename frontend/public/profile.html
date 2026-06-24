@@ -103,6 +103,25 @@
     .ba-gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .ba-del { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.55); border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 13px; line-height: 1; }
     .ba-del:hover { background: rgba(185,28,28,0.85); }
+    /* Mode selector */
+    .ba-mode-prompt { font-size: 13px; color: #4B5563; margin-bottom: 14px; }
+    .ba-mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .ba-mode-card { border: 2px solid var(--border); border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s; background: var(--bg); text-align: left; }
+    .ba-mode-card:hover { border-color: var(--green); background: rgba(45,107,79,0.03); }
+    .ba-mode-card.ba-selected { border-color: var(--green); background: rgba(45,107,79,0.05); }
+    .ba-mode-card-title { font-size: 13px; font-weight: 700; color: var(--forest); margin-bottom: 3px; }
+    .ba-mode-card-desc { font-size: 12px; color: #6B7280; line-height: 1.4; }
+    .ba-panel { display: none; }
+    .ba-panel.ba-active { display: block; }
+    /* Color rows */
+    .ba-color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .ba-color-swatch { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; background: #fff; }
+    .ba-color-input { flex: 1; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: var(--font-sans); color: var(--text); background: var(--bg); }
+    .ba-color-input:focus { outline: none; border-color: var(--green); }
+    .ba-color-remove { background: none; border: none; cursor: pointer; color: #9CA3AF; font-size: 17px; line-height: 1; padding: 4px; }
+    .ba-color-remove:hover { color: #B91C1C; }
+    .ba-add-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; color: var(--green); cursor: pointer; margin-top: 4px; transition: border-color 0.15s; }
+    .ba-add-btn:hover { border-color: var(--green); background: rgba(45,107,79,0.04); }
 
     /* Platform grid */
     .platform-grid {
@@ -613,34 +632,90 @@
           </div>
           <div class="profile-section-body">
 
-            <!-- Logo upload -->
-            <div style="margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Business Logo</div>
-              <div class="ba-upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" ondragover="baDragOver(event,'logoZone')" ondragleave="baDragLeave('logoZone')" ondrop="baDropLogo(event)">
-                <input type="file" id="logoInput" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg" onchange="baPickLogo(this)"/>
-                <img id="logoPreview" class="ba-logo-preview" src="" alt="Logo preview" style="display:none;"/>
-                <div id="logoPlaceholder">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-                  <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
-                  <div class="ba-hint">PNG, SVG, or JPG &nbsp;·&nbsp; Max 2MB</div>
-                </div>
-                <div id="logoMsg" class="ba-msg"></div>
-              </div>
+            <!-- Mode selector -->
+            <p class="ba-mode-prompt">Would you like to input your brand assets yourself, or have us import them from your website?</p>
+            <div class="ba-mode-cards">
+              <button class="ba-mode-card" id="baModeCardSelf" onclick="baSetMode('self')">
+                <div class="ba-mode-card-title">Do it myself</div>
+                <div class="ba-mode-card-desc">Upload your logo, photos, colors, and fonts directly.</div>
+              </button>
+              <button class="ba-mode-card" id="baModeCardImport" onclick="baSetMode('import')">
+                <div class="ba-mode-card-title">Do it for me</div>
+                <div class="ba-mode-card-desc">Give us your website URL and we'll pull everything.</div>
+              </button>
             </div>
 
-            <!-- Marketing content upload -->
-            <div>
-              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Marketing Content</div>
-              <div style="font-size:12px;color:#6B7280;margin-bottom:12px;">Photos of your team, business, or products we can use in your posts.</div>
-              <div class="ba-upload-zone" id="contentZone" onclick="document.getElementById('contentInput').click()" ondragover="baDragOver(event,'contentZone')" ondragleave="baDragLeave('contentZone')" ondrop="baDropContent(event)">
-                <input type="file" id="contentInput" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onchange="baPickContent(this)"/>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
-                <div class="ba-hint">PNG or JPG &nbsp;·&nbsp; Max 2MB each &nbsp;·&nbsp; Multiple files OK</div>
-                <div id="contentMsg" class="ba-msg"></div>
+            <!-- Panel: Do it for me -->
+            <div class="ba-panel" id="baPanelImport">
+              <div class="field">
+                <label>Your website URL</label>
+                <input type="url" id="baImportUrl" placeholder="https://yourbusiness.com"/>
               </div>
-              <div class="ba-gallery" id="contentGallery"></div>
+              <p style="font-size:12px;color:#6B7280;margin-top:8px;">We'll extract your logo, brand colors, and fonts and have them ready before we start creating content.</p>
             </div>
+
+            <!-- Panel: Do it myself -->
+            <div class="ba-panel" id="baPanelSelf">
+
+              <!-- Logo upload -->
+              <div style="margin-bottom:24px;">
+                <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Business Logo</div>
+                <div class="ba-upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" ondragover="baDragOver(event,'logoZone')" ondragleave="baDragLeave('logoZone')" ondrop="baDropLogo(event)">
+                  <input type="file" id="logoInput" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg" onchange="baPickLogo(this)"/>
+                  <img id="logoPreview" class="ba-logo-preview" src="" alt="Logo preview" style="display:none;"/>
+                  <div id="logoPlaceholder">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                    <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                    <div class="ba-hint">PNG, SVG, or JPG &nbsp;·&nbsp; Max 2MB</div>
+                  </div>
+                  <div id="logoMsg" class="ba-msg"></div>
+                </div>
+              </div>
+
+              <!-- Brand Colors -->
+              <div style="margin-bottom:24px;">
+                <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Brand Colors</div>
+                <div id="baColorRows"></div>
+                <button class="ba-add-btn" id="baAddColorBtn" onclick="baAddColorRow()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add color
+                </button>
+              </div>
+
+              <!-- Typography -->
+              <div style="margin-bottom:24px;">
+                <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Typography</div>
+                <div class="field-grid">
+                  <div class="field">
+                    <label>Heading font</label>
+                    <input type="text" id="baHeadingFont" placeholder="e.g. Montserrat, Playfair Display"/>
+                  </div>
+                  <div class="field">
+                    <label>Body font</label>
+                    <input type="text" id="baBodyFont" placeholder="e.g. Inter, Open Sans"/>
+                  </div>
+                  <div class="field field-full">
+                    <label>Typography notes</label>
+                    <textarea id="baTypoNotes" rows="2" placeholder="Any other font details, weights, or style guidelines…"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Marketing content upload -->
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Marketing Content</div>
+                <div style="font-size:12px;color:#6B7280;margin-bottom:12px;">Photos of your team, business, or products we can use in your posts.</div>
+                <div class="ba-upload-zone" id="contentZone" onclick="document.getElementById('contentInput').click()" ondragover="baDragOver(event,'contentZone')" ondragleave="baDragLeave('contentZone')" ondrop="baDropContent(event)">
+                  <input type="file" id="contentInput" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onchange="baPickContent(this)"/>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                  <div class="ba-hint">PNG or JPG &nbsp;·&nbsp; Max 2MB each &nbsp;·&nbsp; Multiple files OK</div>
+                  <div id="contentMsg" class="ba-msg"></div>
+                </div>
+                <div class="ba-gallery" id="contentGallery"></div>
+              </div>
+
+            </div><!-- /baPanelSelf -->
 
           </div>
         </div>
@@ -1154,6 +1229,36 @@
           throw new Error(d.error || 'Could not save profile data.');
         }
 
+        // Save brand assets mode + data
+        const baMode = document.getElementById('baModeCardSelf').classList.contains('ba-selected') ? 'self'
+                     : document.getElementById('baModeCardImport').classList.contains('ba-selected') ? 'import'
+                     : null;
+        if (baMode === 'import') {
+          const url = document.getElementById('baImportUrl').value.trim();
+          await fetch('/api/brand-assets/import-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+        } else if (baMode === 'self') {
+          await Promise.all([
+            fetch('/api/brand-assets/colors', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ colors: baGetColors() })
+            }),
+            fetch('/api/brand-assets/typography', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                heading_font: document.getElementById('baHeadingFont').value.trim(),
+                body_font:    document.getElementById('baBodyFont').value.trim(),
+                notes:        document.getElementById('baTypoNotes').value.trim()
+              })
+            })
+          ]);
+        }
+
         updateCompletion();
         msg.textContent = '✓ Profile saved successfully!';
         msg.className = 'save-bar-msg success';
@@ -1185,12 +1290,81 @@
     const BA_MAX = 2 * 1024 * 1024;
     const BA_LOGO_TYPES    = ['image/png','image/svg+xml','image/jpeg'];
     const BA_CONTENT_TYPES = ['image/png','image/jpeg'];
+    const BA_MAX_COLORS    = 10;
+
+    /* ── Mode selector ── */
+    function baSetMode(mode) {
+      document.getElementById('baModeCardSelf').classList.toggle('ba-selected', mode === 'self');
+      document.getElementById('baModeCardImport').classList.toggle('ba-selected', mode === 'import');
+      document.getElementById('baPanelSelf').classList.toggle('ba-active', mode === 'self');
+      document.getElementById('baPanelImport').classList.toggle('ba-active', mode === 'import');
+    }
+
+    /* ── Color rows ── */
+    function baAddColorRow(value) {
+      const container = document.getElementById('baColorRows');
+      if (container.children.length >= BA_MAX_COLORS) return;
+      const row = document.createElement('div');
+      row.className = 'ba-color-row';
+      const hex = value || '';
+      row.innerHTML = `
+        <div class="ba-color-swatch" style="background:${baValidHex(hex) ? hex : '#ffffff'};"></div>
+        <input class="ba-color-input" type="text" maxlength="7" placeholder="#RRGGBB" value="${escHtml(hex)}" oninput="baUpdateSwatch(this)" onblur="baNormalizeHex(this)"/>
+        <button class="ba-color-remove" onclick="this.closest('.ba-color-row').remove();baToggleAddBtn()" title="Remove">&#x2715;</button>`;
+      container.appendChild(row);
+      baToggleAddBtn();
+    }
+
+    function baUpdateSwatch(input) {
+      const swatch = input.closest('.ba-color-row').querySelector('.ba-color-swatch');
+      const val = input.value.trim();
+      swatch.style.background = baValidHex(val) ? val : '#ffffff';
+    }
+
+    function baNormalizeHex(input) {
+      let val = input.value.trim();
+      if (val && !val.startsWith('#')) val = '#' + val;
+      if (val.length === 4) val = '#' + val[1]+val[1]+val[2]+val[2]+val[3]+val[3];
+      input.value = val.toUpperCase();
+      baUpdateSwatch(input);
+    }
+
+    function baValidHex(hex) {
+      return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex);
+    }
+
+    function baToggleAddBtn() {
+      const container = document.getElementById('baColorRows');
+      const btn = document.getElementById('baAddColorBtn');
+      if (btn) btn.style.display = container.children.length >= BA_MAX_COLORS ? 'none' : 'inline-flex';
+    }
+
+    function baGetColors() {
+      return Array.from(document.querySelectorAll('#baColorRows .ba-color-input'))
+        .map(i => i.value.trim())
+        .filter(v => baValidHex(v));
+    }
 
     async function baLoadAssets() {
       try {
         const res = await fetch('/api/brand-assets');
         if (!res.ok) return;
-        const { logo_url, content_urls } = await res.json();
+        const { logo_url, content_urls, brand_import_mode, brand_website_url, brand_colors, brand_typography } = await res.json();
+
+        if (brand_import_mode) baSetMode(brand_import_mode);
+
+        if (brand_website_url) document.getElementById('baImportUrl').value = brand_website_url;
+
+        if (brand_colors?.length) {
+          brand_colors.forEach(c => baAddColorRow(c));
+        }
+
+        if (brand_typography) {
+          if (brand_typography.heading_font) document.getElementById('baHeadingFont').value = brand_typography.heading_font;
+          if (brand_typography.body_font)    document.getElementById('baBodyFont').value    = brand_typography.body_font;
+          if (brand_typography.notes)        document.getElementById('baTypoNotes').value   = brand_typography.notes;
+        }
+
         if (logo_url) baShowLogoPreview(logo_url);
         if (content_urls?.length) baRenderGallery(content_urls);
       } catch {}
