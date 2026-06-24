@@ -382,8 +382,20 @@
                 <input type="url" id="website" placeholder="https://yourbusiness.com"/>
               </div>
               <div class="field field-full">
-                <label>City &amp; State</label>
-                <input type="text" id="location" placeholder="Sacramento, CA"/>
+                <label>Street Address</label>
+                <input type="text" id="address" placeholder="123 Main St, Suite 100"/>
+              </div>
+              <div class="field">
+                <label>City</label>
+                <input type="text" id="city" placeholder="Sacramento"/>
+              </div>
+              <div class="field">
+                <label>State</label>
+                <input type="text" id="state" placeholder="CA"/>
+              </div>
+              <div class="field">
+                <label>ZIP Code</label>
+                <input type="text" id="zip" placeholder="95814"/>
               </div>
             </div>
           </div>
@@ -700,7 +712,10 @@
       }
       setValue('phone',          o.phone             || '');
       setValue('website',        o.website           || '');
-      setValue('location',       o.location          || '');
+      setValue('address',        o.address           || '');
+      setValue('city',           o.city              || '');
+      setValue('state',          o.state             || '');
+      setValue('zip',            o.zip               || '');
       setValue('social_notes',   o.social_notes      || '');
       setValue('target_audience',o.target_audience   || '');
       setValue('content_themes', o.content_themes    || '');
@@ -764,7 +779,7 @@
       const fields = [
         !!document.getElementById('business_name').value.trim(),
         !!document.getElementById('industry').value.trim(),
-        !!document.getElementById('location').value.trim(),
+        !!document.getElementById('city').value.trim(),
         !!document.getElementById('phone').value.trim(),
         !!document.getElementById('website').value.trim(),
         Object.keys(savedSocials).length > 0,
@@ -1042,7 +1057,10 @@
                                 : document.getElementById('industry').value.trim(),
             website:          document.getElementById('website').value.trim(),
             phone:            document.getElementById('phone').value.trim(),
-            location:         document.getElementById('location').value.trim(),
+            address:          document.getElementById('address').value.trim(),
+            city:             document.getElementById('city').value.trim(),
+            state:            document.getElementById('state').value.trim(),
+            zip:              document.getElementById('zip').value.trim(),
             social_notes:     document.getElementById('social_notes').value.trim(),
             brand_voice:      selectedVoice,
             target_audience:  document.getElementById('target_audience').value.trim(),
