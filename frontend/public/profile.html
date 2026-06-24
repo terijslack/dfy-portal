@@ -447,52 +447,7 @@
           </div>
         </div>
 
-        <!-- SECTION 2: Brand Assets -->
-        <div class="profile-section">
-          <div class="profile-section-header">
-            <div class="profile-section-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-            </div>
-            <div>
-              <div class="profile-section-title">Brand Assets</div>
-              <div class="profile-section-desc">Your logo and marketing content for us to use</div>
-            </div>
-          </div>
-          <div class="profile-section-body">
-
-            <!-- Logo upload -->
-            <div style="margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Business Logo</div>
-              <div class="ba-upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" ondragover="baDragOver(event,'logoZone')" ondragleave="baDragLeave('logoZone')" ondrop="baDropLogo(event)">
-                <input type="file" id="logoInput" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg" onchange="baPickLogo(this)"/>
-                <img id="logoPreview" class="ba-logo-preview" src="" alt="Logo preview" style="display:none;"/>
-                <div id="logoPlaceholder">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-                  <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
-                  <div class="ba-hint">PNG, SVG, or JPG &nbsp;·&nbsp; Max 2MB</div>
-                </div>
-                <div id="logoMsg" class="ba-msg"></div>
-              </div>
-            </div>
-
-            <!-- Marketing content upload -->
-            <div>
-              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Marketing Content</div>
-              <div style="font-size:12px;color:#6B7280;margin-bottom:12px;">Photos of your team, business, or products we can use in your posts.</div>
-              <div class="ba-upload-zone" id="contentZone" onclick="document.getElementById('contentInput').click()" ondragover="baDragOver(event,'contentZone')" ondragleave="baDragLeave('contentZone')" ondrop="baDropContent(event)">
-                <input type="file" id="contentInput" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onchange="baPickContent(this)"/>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
-                <div class="ba-hint">PNG or JPG &nbsp;·&nbsp; Max 2MB each &nbsp;·&nbsp; Multiple files OK</div>
-                <div id="contentMsg" class="ba-msg"></div>
-              </div>
-              <div class="ba-gallery" id="contentGallery"></div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- SECTION 3: Social Media -->
+        <!-- SECTION 2: Social Media -->
         <div class="profile-section">
           <div class="profile-section-header">
             <div class="profile-section-icon">
@@ -652,22 +607,44 @@
         <div class="profile-section">
           <div class="profile-section-header">
             <div class="profile-section-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             </div>
             <div>
               <div class="profile-section-title">Brand Assets</div>
-              <div class="profile-section-desc">Logos, photos, and visual content for your team</div>
+              <div class="profile-section-desc">Your logo and marketing content for us to use</div>
             </div>
           </div>
           <div class="profile-section-body">
-            <div class="upload-zone">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-              <p>Send your logos, brand photos, and any visual assets to your team<br>and they'll use them across all your content.</p>
-              <a href="/contact">Send files via the Contact page →</a>
+
+            <!-- Logo upload -->
+            <div style="margin-bottom:24px;">
+              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Business Logo</div>
+              <div class="ba-upload-zone" id="logoZone" onclick="document.getElementById('logoInput').click()" ondragover="baDragOver(event,'logoZone')" ondragleave="baDragLeave('logoZone')" ondrop="baDropLogo(event)">
+                <input type="file" id="logoInput" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg" onchange="baPickLogo(this)"/>
+                <img id="logoPreview" class="ba-logo-preview" src="" alt="Logo preview" style="display:none;"/>
+                <div id="logoPlaceholder">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                  <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                  <div class="ba-hint">PNG, SVG, or JPG &nbsp;·&nbsp; Max 2MB</div>
+                </div>
+                <div id="logoMsg" class="ba-msg"></div>
+              </div>
             </div>
-            <p class="upload-note">
-              📎 <strong>How to share:</strong> Email your files to your account manager, or use the Contact page to send them directly to your team. Direct file upload is coming soon.
-            </p>
+
+            <!-- Marketing content upload -->
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--forest);margin-bottom:10px;">Marketing Content</div>
+              <div style="font-size:12px;color:#6B7280;margin-bottom:12px;">Photos of your team, business, or products we can use in your posts.</div>
+              <div class="ba-upload-zone" id="contentZone" onclick="document.getElementById('contentInput').click()" ondragover="baDragOver(event,'contentZone')" ondragleave="baDragLeave('contentZone')" ondrop="baDropContent(event)">
+                <input type="file" id="contentInput" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple onchange="baPickContent(this)"/>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D1C9B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div class="ba-upload-label"><span>Click to upload</span> or drag and drop</div>
+                <div class="ba-hint">PNG or JPG &nbsp;·&nbsp; Max 2MB each &nbsp;·&nbsp; Multiple files OK</div>
+                <div id="contentMsg" class="ba-msg"></div>
+              </div>
+              <div class="ba-gallery" id="contentGallery"></div>
+            </div>
+
           </div>
         </div>
 
