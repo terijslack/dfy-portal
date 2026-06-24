@@ -41,6 +41,7 @@ pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS zip VARCHAR(2
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS business_email VARCHAR(255)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS timezone VARCHAR(100)`).catch(() => {});
 pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS brand_identity_mode TEXT`).catch(() => {});
+pool.query(`ALTER TABLE client_onboarding ADD COLUMN IF NOT EXISTS unique_selling_point TEXT`).catch(() => {});
 
 // Middleware: require valid JWT cookie
 function requireAuth(req, res, next) {
@@ -61,7 +62,7 @@ router.post('/', requireAuth, async (req, res) => {
     industry, website, phone, location,
     address, city, state, zip, business_email, timezone,
     platforms, social_notes, brand_voice, target_audience,
-    content_themes, avoid_content,
+    content_themes, unique_selling_point, avoid_content,
     primary_goal, additional_notes, referral_source
   } = req.body;
 
@@ -70,9 +71,9 @@ router.post('/', requireAuth, async (req, res) => {
       INSERT INTO client_onboarding
         (client_id, industry, website, phone, location, address, city, state, zip,
          business_email, timezone, platforms, social_notes, brand_voice, target_audience,
-         content_themes, avoid_content, primary_goal, additional_notes, referral_source,
+         content_themes, unique_selling_point, avoid_content, primary_goal, additional_notes, referral_source,
          completed_at, updated_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20, NOW(), NOW())
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21, NOW(), NOW())
       ON CONFLICT (client_id) DO UPDATE SET
         industry = EXCLUDED.industry,
         website = EXCLUDED.website,
@@ -89,6 +90,7 @@ router.post('/', requireAuth, async (req, res) => {
         brand_voice = EXCLUDED.brand_voice,
         target_audience = EXCLUDED.target_audience,
         content_themes = EXCLUDED.content_themes,
+        unique_selling_point = EXCLUDED.unique_selling_point,
         avoid_content = EXCLUDED.avoid_content,
         primary_goal = EXCLUDED.primary_goal,
         additional_notes = EXCLUDED.additional_notes,
@@ -99,8 +101,8 @@ router.post('/', requireAuth, async (req, res) => {
       address || null, city || null, state || null, zip || null,
       business_email || null, timezone || null,
       JSON.stringify(platforms || []), social_notes || null,
-      brand_voice, target_audience, content_themes, avoid_content,
-      primary_goal, additional_notes, referral_source
+      brand_voice, target_audience, content_themes, unique_selling_point || null,
+      avoid_content, primary_goal, additional_notes, referral_source
     ]);
 
     res.json({ success: true });

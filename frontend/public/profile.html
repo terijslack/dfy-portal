@@ -590,7 +590,11 @@
                 </div>
                 <div class="field field-full">
                   <label>Customer pain points</label>
-                  <textarea id="content_themes" rows="3" placeholder="e.g. Behind-the-scenes, tips & education, client success stories, seasonal promotions…"></textarea>
+                  <textarea id="content_themes" rows="3" placeholder="e.g. Need a trustworthy provider, overwhelmed by options, waitlisted for services they need now…"></textarea>
+                </div>
+                <div class="field field-full">
+                  <label>What makes your business stand out?</label>
+                  <textarea id="unique_selling_point" rows="2" placeholder="e.g. Same-day availability, family-owned for 20+ years, certified specialists, free consultations…"></textarea>
                 </div>
                 <div class="field field-full">
                   <label>Anything else we should know?</label>
@@ -899,6 +903,7 @@
       setValue('social_notes',   o.social_notes      || '');
       setValue('target_audience',o.target_audience   || '');
       setValue('content_themes', o.content_themes    || '');
+      setValue('unique_selling_point', o.unique_selling_point || '');
       setValue('avoid_content',  o.avoid_content     || '');
       setValue('additional_notes',o.additional_notes || '');
 
@@ -1265,6 +1270,7 @@
             brand_voice:      selectedVoice,
             target_audience:  document.getElementById('target_audience').value.trim(),
             content_themes:   document.getElementById('content_themes').value.trim(),
+            unique_selling_point: document.getElementById('unique_selling_point').value.trim(),
             avoid_content:    document.getElementById('avoid_content').value.trim(),
             primary_goal:     selectedGoal,
             additional_notes: document.getElementById('additional_notes')?.value.trim() || '',
