@@ -8,27 +8,10 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
+const { PLANS } = require('../config/plans');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-const PLANS = {
-  'Starter Presence':  {
-    price: 800,  posts: 8,  platforms: '1 platform',
-    label: 'Starter Presence',
-    priceId: process.env.STRIPE_PRICE_ONLINE_PRESENCE || 'price_1TTK4hJaMlIvd3H414Ffw3Hr',
-  },
-  'Growth Engine':     {
-    price: 1500, posts: 16, platforms: '3 platforms',
-    label: 'Growth Engine',
-    priceId: process.env.STRIPE_PRICE_GROWTH_ENGINE || 'price_1TTK5DJaMlIvd3H4V0LeAYL7',
-  },
-  'Marketing Partner': {
-    price: 2800, posts: 24, platforms: '3–4 platforms',
-    label: 'Marketing Partner',
-    priceId: process.env.STRIPE_PRICE_DFY_PARTNER || 'price_1TTK5jJaMlIvd3H4NFHH6hPl',
-  },
-};
 
 // GET /api/account/subscription
 router.get('/subscription', requireLogin, async (req, res) => {

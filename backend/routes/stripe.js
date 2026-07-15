@@ -9,41 +9,9 @@ const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const { createGHLContact } = require('../services/ghl');
+const { PRICE_TO_PLAN, PLAN_KEY_TO_PRICE, PLAN_KEY_TO_NAME, VALID_PRICE_IDS } = require('../config/plans');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
-// ── Price ID → plan name mapping ─────────────────────────────
-const PRICE_TO_PLAN = {
-  [process.env.STRIPE_PRICE_ONLINE_PRESENCE]: 'Starter Presence',
-  [process.env.STRIPE_PRICE_GROWTH_ENGINE]:   'Growth Engine',
-  [process.env.STRIPE_PRICE_DFY_PARTNER]:     'Marketing Partner',
-  // Hardcoded fallbacks (existing price IDs)
-  'price_1TTK4hJaMlIvd3H414Ffw3Hr': 'Starter Presence',
-  'price_1TTK5DJaMlIvd3H4V0LeAYL7': 'Growth Engine',
-  'price_1TTK5jJaMlIvd3H4NFHH6hPl': 'Marketing Partner',
-};
-
-// Plan key (from spec) → price ID env var
-const PLAN_KEY_TO_PRICE = {
-  'online-presence':      process.env.STRIPE_PRICE_ONLINE_PRESENCE || 'price_1TTK4hJaMlIvd3H414Ffw3Hr',
-  'growth-engine':        process.env.STRIPE_PRICE_GROWTH_ENGINE   || 'price_1TTK5DJaMlIvd3H4V0LeAYL7',
-  'done-for-you-partner': process.env.STRIPE_PRICE_DFY_PARTNER     || 'price_1TTK5jJaMlIvd3H4NFHH6hPl',
-};
-
-const PLAN_KEY_TO_NAME = {
-  'online-presence':      'Starter Presence',
-  'growth-engine':        'Growth Engine',
-  'done-for-you-partner': 'Marketing Partner',
-};
-
-const VALID_PRICE_IDS = new Set([
-  'price_1TTK4hJaMlIvd3H414Ffw3Hr',
-  'price_1TTK5DJaMlIvd3H4V0LeAYL7',
-  'price_1TTK5jJaMlIvd3H4NFHH6hPl',
-  ...(process.env.STRIPE_PRICE_ONLINE_PRESENCE ? [process.env.STRIPE_PRICE_ONLINE_PRESENCE] : []),
-  ...(process.env.STRIPE_PRICE_GROWTH_ENGINE   ? [process.env.STRIPE_PRICE_GROWTH_ENGINE]   : []),
-  ...(process.env.STRIPE_PRICE_DFY_PARTNER     ? [process.env.STRIPE_PRICE_DFY_PARTNER]     : []),
-]);
 
 function appUrl() {
   return process.env.APP_URL
