@@ -291,11 +291,15 @@
                   </div>
                   <div class="plan-badge" id="planBadge">Current Plan</div>
                 </div>
-                <div class="account-row">
+                <div class="account-row" id="rowStatus" style="display:none">
+                  <span class="account-label">Status</span>
+                  <span class="account-value" id="subStatus">—</span>
+                </div>
+                <div class="account-row" id="rowBillingAmount">
                   <span class="account-label">Next billing amount</span>
                   <span class="account-value" id="billingAmount">—</span>
                 </div>
-                <div class="account-row">
+                <div class="account-row" id="rowBillingDate">
                   <span class="account-label">Next billing date</span>
                   <span class="account-value" id="billingDate">—</span>
                 </div>
@@ -450,7 +454,39 @@
         document.getElementById('planName').textContent = data.plan;
         document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
         document.getElementById('billingAmount').textContent = '$' + data.price.toLocaleString();
-        document.getElementById('billingDate').textContent = formatDate(data.billing_date);
+        document.getElementById('billingDate').textContent = data.billing_date ? formatDate(data.billing_date) : '—';
+
+        const st = data.subscription_status;
+        const rowStatus = document.getElementById('rowStatus');
+        const subStatus = document.getElementById('subStatus');
+        const rowBillingAmount = document.getElementById('rowBillingAmount');
+        const rowBillingDate   = document.getElementById('rowBillingDate');
+
+        if (st === 'cancelling') {
+          const endDate = data.cancel_at ? formatDate(data.cancel_at) : 'end of billing period';
+          subStatus.textContent = `Cancels ${endDate}`;
+          subStatus.style.color = '#7D2A03';
+          rowStatus.style.display = '';
+          rowBillingAmount.style.display = 'none';
+          rowBillingDate.style.display   = 'none';
+        } else if (st === 'paused') {
+          subStatus.textContent = 'Paused — billing on hold';
+          subStatus.style.color = '#7a5200';
+          rowStatus.style.display = '';
+          rowBillingAmount.style.display = 'none';
+          rowBillingDate.style.display   = 'none';
+        } else if (st === 'past_due') {
+          subStatus.textContent = 'Payment past due';
+          subStatus.style.color = '#7D2A03';
+          rowStatus.style.display = '';
+          rowBillingAmount.style.display = '';
+          rowBillingDate.style.display   = '';
+        } else {
+          rowStatus.style.display = 'none';
+          rowBillingAmount.style.display = '';
+          rowBillingDate.style.display   = '';
+        }
+
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
       } catch (err) {
@@ -557,7 +593,6 @@
     function selectAction(action) {
       selectedPlan = action;
       document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('plan-option-selected'));
-      document.getElementById('planDetail').style.display = 'none';
       resetBanner();
       const pauseBtn  = document.getElementById('btnBannerPause');
       const cancelBtn = document.getElementById('btnBannerCancel');
@@ -610,6 +645,8 @@
         document.getElementById('planGrid').style.pointerEvents = 'none';
         document.getElementById('bannerStrip').style.opacity = '0.4';
         document.getElementById('bannerStrip').style.pointerEvents = 'none';
+        // Refresh the subscription card in the background
+        loadSubscription();
       } catch {
         document.getElementById('modalError').textContent = 'Network error. Try again.';
         btn.textContent = originalText; btn.disabled = false;

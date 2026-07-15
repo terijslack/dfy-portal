@@ -289,6 +289,37 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       }
     }
 
+    // ── customer.subscription.updated ──────────────────────
+    else if (event.type === 'customer.subscription.updated') {
+      const subscription = event.data.object;
+
+      // Determine effective status
+      let newStatus = subscription.status; // 'active', 'past_due', etc.
+      if (subscription.pause_collection) {
+        newStatus = 'paused';
+      } else if (subscription.cancel_at_period_end) {
+        newStatus = 'cancelling';
+      }
+
+      // Sync plan if the price changed
+      const priceId  = subscription.items?.data?.[0]?.price?.id;
+      const planName = priceId ? (PRICE_TO_PLAN[priceId] || null) : null;
+
+      if (planName && priceId) {
+        await pool.query(
+          `UPDATE clients SET subscription_status = $1, plan = $2, stripe_price_id = $3 WHERE stripe_customer_id = $4`,
+          [newStatus, planName, priceId, subscription.customer]
+        );
+      } else {
+        await pool.query(
+          `UPDATE clients SET subscription_status = $1 WHERE stripe_customer_id = $2`,
+          [newStatus, subscription.customer]
+        );
+      }
+
+      console.log(`🔄 Subscription updated — customer: ${subscription.customer}, status: ${newStatus}${planName ? `, plan: ${planName}` : ''}`);
+    }
+
     // ── customer.subscription.deleted ──────────────────────
     else if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object;
