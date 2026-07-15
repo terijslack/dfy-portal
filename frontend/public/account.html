@@ -167,6 +167,28 @@
       border-color: #7D2A03;
       background: rgba(125,42,3,0.08);
     }
+
+    .btn-resume-plan {
+      background: #2D6B4F;
+      color: #F5F2EA;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.12s;
+    }
+    .btn-resume-plan:hover { background: #245c43; }
+    .btn-resume-plan:disabled { background: #9AA199; cursor: not-allowed; }
+
+    .resume-error {
+      font-size: 12px;
+      color: #7D2A03;
+      margin-top: 6px;
+      min-height: 16px;
+    }
   </style>
 </head>
 <body class="dashboard-page">
@@ -304,6 +326,10 @@
                   <span class="account-value" id="billingDate">—</span>
                 </div>
                 <div class="plan-change-section" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+                  <div id="resumePlanSection" style="display:none;">
+                    <button class="btn-resume-plan" id="resumePlanBtn" onclick="resumePlan()">Resume Plan</button>
+                    <div class="resume-error" id="resumeError"></div>
+                  </div>
                   <button class="btn-plan-change" id="changePlanBtn" onclick="openChangePlanModal()">Change Plan</button>
                   <a href="/contact" class="db-card-link" style="font-size:12px;">Questions about billing? Contact us →</a>
                 </div>
@@ -462,6 +488,9 @@
         const rowBillingAmount = document.getElementById('rowBillingAmount');
         const rowBillingDate   = document.getElementById('rowBillingDate');
 
+        const resumeSection = document.getElementById('resumePlanSection');
+        const changePlanBtn = document.getElementById('changePlanBtn');
+
         if (st === 'cancelling') {
           const endDate = data.cancel_at ? formatDate(data.cancel_at) : 'end of billing period';
           subStatus.textContent = `Cancels ${endDate}`;
@@ -469,28 +498,59 @@
           rowStatus.style.display = '';
           rowBillingAmount.style.display = 'none';
           rowBillingDate.style.display   = 'none';
+          resumeSection.style.display = 'none';
+          changePlanBtn.style.display = '';
         } else if (st === 'paused') {
           subStatus.textContent = 'Paused — billing on hold';
           subStatus.style.color = '#7a5200';
           rowStatus.style.display = '';
           rowBillingAmount.style.display = 'none';
           rowBillingDate.style.display   = 'none';
+          resumeSection.style.display = '';
+          changePlanBtn.style.display = 'none';
         } else if (st === 'past_due') {
           subStatus.textContent = 'Payment past due';
           subStatus.style.color = '#7D2A03';
           rowStatus.style.display = '';
           rowBillingAmount.style.display = '';
           rowBillingDate.style.display   = '';
+          resumeSection.style.display = 'none';
+          changePlanBtn.style.display = '';
         } else {
           rowStatus.style.display = 'none';
           rowBillingAmount.style.display = '';
           rowBillingDate.style.display   = '';
+          resumeSection.style.display = 'none';
+          changePlanBtn.style.display = '';
         }
 
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
       } catch (err) {
         document.getElementById('subscriptionLoading').textContent = 'Could not load subscription info.';
+      }
+    }
+
+    async function resumePlan() {
+      const btn = document.getElementById('resumePlanBtn');
+      const errEl = document.getElementById('resumeError');
+      errEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Resuming…';
+      try {
+        const res  = await fetch('/api/account/resume-plan', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const data = await res.json();
+        if (!res.ok) {
+          errEl.textContent = data.error || 'Could not resume plan. Try again.';
+          btn.disabled = false;
+          btn.textContent = 'Resume Plan';
+          return;
+        }
+        await loadSubscription();
+      } catch {
+        errEl.textContent = 'Network error. Try again.';
+        btn.disabled = false;
+        btn.textContent = 'Resume Plan';
       }
     }
 

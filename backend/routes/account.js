@@ -2,6 +2,7 @@
 // GET  /api/account/subscription  → returns plan, billing_date for the logged-in client
 // POST /api/account/change-plan   → upgrades/downgrades via Stripe API
 // POST /api/account/pause-plan    → pauses billing via Stripe pause_collection
+// POST /api/account/resume-plan   → clears pause_collection to resume billing
 // POST /api/account/cancel-plan   → sets cancel_at_period_end: true via Stripe
 
 const express = require('express');
@@ -196,6 +197,50 @@ router.post('/pause-plan', requireLogin, async (req, res) => {
   } catch (err) {
     console.error('Pause plan error:', err);
     res.status(500).json({ error: err.message || 'Could not pause plan. Try again.' });
+  }
+});
+
+// POST /api/account/resume-plan
+router.post('/resume-plan', requireLogin, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT name, email, plan, stripe_subscription_id, subscription_status FROM clients WHERE id = $1',
+      [req.user.id]
+    );
+    const client = result.rows[0];
+    if (!client) return res.status(404).json({ error: 'Account not found.' });
+    if (client.subscription_status !== 'paused') {
+      return res.status(400).json({ error: 'Your plan is not currently paused.' });
+    }
+
+    if (!process.env.STRIPE_SECRET_KEY || !client.stripe_subscription_id) {
+      await pool.query(
+        'UPDATE clients SET subscription_status = $1 WHERE id = $2',
+        ['active', req.user.id]
+      );
+      return res.json({
+        success: true,
+        message: `Your plan has been resumed. Billing will restart on your next billing date.`,
+      });
+    }
+
+    await getStripe().subscriptions.update(client.stripe_subscription_id, {
+      pause_collection: '',
+    });
+
+    await pool.query(
+      'UPDATE clients SET subscription_status = $1 WHERE id = $2',
+      ['active', req.user.id]
+    );
+
+    console.log(`▶️  Plan resumed: ${client.name} (${client.email})`);
+    res.json({
+      success: true,
+      message: `Your plan has been resumed. Billing will restart on your next billing date.`,
+    });
+  } catch (err) {
+    console.error('Resume plan error:', err);
+    res.status(500).json({ error: err.message || 'Could not resume plan. Try again.' });
   }
 });
 
