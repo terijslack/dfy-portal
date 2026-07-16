@@ -386,6 +386,7 @@
 
     let selectedPlan = null;
     let currentPlan = null;
+    let currentStatus = null;
     let availablePlans = [];
     let currentName = '';
     let currentEmail = '';
@@ -483,6 +484,7 @@
         document.getElementById('billingDate').textContent = data.billing_date ? formatDate(data.billing_date) : '—';
 
         const st = data.subscription_status;
+        currentStatus = st;
         const rowStatus = document.getElementById('rowStatus');
         const subStatus = document.getElementById('subStatus');
         const rowBillingAmount = document.getElementById('rowBillingAmount');
@@ -604,6 +606,8 @@
     }
 
     function openChangePlanModal() {
+      if (currentStatus === 'paused') return;
+
       selectedPlan = null;
       document.getElementById('modalError').textContent = '';
       document.getElementById('modalSuccess').style.display = 'none';
