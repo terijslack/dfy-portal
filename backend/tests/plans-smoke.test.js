@@ -633,6 +633,82 @@ describe('stripe.js /create-checkout-session — env-var override price IDs forw
   });
 });
 
+// ─── 3c. stripe.js webhook — bad signature returns 400 ───────────────────────
+
+describe('stripe.js webhook — bad signature returns 400', () => {
+  let webhookHandler;
+
+  beforeAll(() => {
+    jest.resetModules();
+    delete process.env.STRIPE_PRICE_ONLINE_PRESENCE;
+    delete process.env.STRIPE_PRICE_GROWTH_ENGINE;
+    delete process.env.STRIPE_PRICE_DFY_PARTNER;
+
+    const mockConstructEvent = jest.fn().mockImplementation(() => {
+      throw new Error('No signatures found matching the expected signature for payload');
+    });
+
+    jest.mock('stripe', () => () => ({
+      webhooks: { constructEvent: mockConstructEvent },
+    }));
+
+    jest.mock('pg', () => ({
+      Pool: jest.fn().mockImplementation(() => ({ query: jest.fn() })),
+    }));
+    jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
+    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
+
+    process.env.STRIPE_SECRET_KEY     = 'sk_test_dummy';
+    process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';
+
+    webhookHandler = buildWebhookHandler();
+  });
+
+  afterAll(() => {
+    delete process.env.STRIPE_SECRET_KEY;
+    delete process.env.STRIPE_WEBHOOK_SECRET;
+  });
+
+  test('returns 400 and does not update the DB when the signature is invalid', async () => {
+    const mockQuery = jest.fn();
+    const req = {
+      headers: { 'stripe-signature': 'sig_bad' },
+      body:    Buffer.from('{}'),
+    };
+    const res = {
+      json:   jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      send:   jest.fn(),
+    };
+
+    await webhookHandler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.stringContaining('Webhook Error')
+    );
+    expect(res.json).not.toHaveBeenCalled();
+    expect(mockQuery).not.toHaveBeenCalled();
+  });
+
+  test('returns 400 when stripe-signature header is missing', async () => {
+    const req = {
+      headers: {},
+      body:    Buffer.from('{}'),
+    };
+    const res = {
+      json:   jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      send:   jest.fn(),
+    };
+
+    await webhookHandler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).not.toHaveBeenCalled();
+  });
+});
+
 // ─── 4. account.js change-plan — PLANS[].priceId sent to Stripe ──────────────
 //
 // We extract only the async route handler (the last layer in the route stack)
