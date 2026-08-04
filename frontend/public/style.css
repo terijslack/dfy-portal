@@ -1750,6 +1750,22 @@ h2 em {
   transform: rotate(-90deg);
 }
 
+#accountNavParent.group-collapsed {
+  background: transparent;
+  border-left-color: transparent;
+  color: rgba(245,242,234,0.55);
+  font-weight: 400;
+}
+
+#accountNavParent.group-collapsed:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(245,242,234,0.8);
+}
+
+#accountNavParent.group-collapsed .sidebar-nav-chevron {
+  display: none;
+}
+
 .sidebar-subitems {
   overflow: hidden;
   max-height: 160px;
