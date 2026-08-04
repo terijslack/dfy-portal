@@ -7,6 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
   <style>
+    /* ── CSS variable aliases — fill gaps from style.css ── */
+    :root {
+      --forest: var(--color-forest); /* style.css only defines --color-forest; this page uses --forest */
+      --green:  var(--color-green);  /* style.css --green is #4caf7d (status); brand UI needs #2D6B4F */
+    }
+
     /* ── Page layout ── */
     .profile-page { max-width: 800px; margin: 0 auto; padding: 0 0 60px; }
     .profile-page-header { margin-bottom: 28px; }
