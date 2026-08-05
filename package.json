@@ -1,6 +1,7 @@
 {
   "name": "dfy-portal",
   "version": "1.0.0",
+  "engines": { "node": "20.x" },
   "description": "Client portal for DFY Marketing — clients approve posts, approved posts go to Buffer",
   "main": "server.js",
   "scripts": {
