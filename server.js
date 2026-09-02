@@ -121,6 +121,10 @@ app.get('/landing', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/landing.html'));
 });
 
+app.get('/free-guide', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/free-guide.html'));
+});
+
 app.get('/thank-you', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/thank-you.html'));
 });
