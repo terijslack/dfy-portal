@@ -6,20 +6,20 @@
 }
 
 .benefit-led-page .guide-nav {
-  height: 60px;
+  height: 64px;
   justify-content: flex-start;
-  padding: 0 24px;
+  padding: 0 48px;
   background: #fff;
   border-bottom: 1px solid rgba(31, 61, 44, 0.10);
 }
 
 .benefit-led-page .guide-nav-inner {
   width: 100%;
-  max-width: 1120px;
+  max-width: none;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 0 auto;
+  gap: 0;
+  margin: 0;
 }
 
 .benefit-led-page .nav-logo-link {
@@ -32,9 +32,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
 }
 
 .benefit-led-page .nav-logo {
@@ -49,12 +49,13 @@
 .benefit-led-page .wordmark {
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 7px;
+  margin-left: -5px;
   line-height: 1;
 }
 
 .benefit-led-page .wordmark-serif {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1;
@@ -207,18 +208,18 @@
 
 @media (max-width: 760px) {
   .benefit-led-page .guide-nav {
-    height: 60px;
-    padding: 0 24px;
+    height: 64px;
+    padding: 0 20px;
   }
 
   .benefit-led-page .guide-nav-inner {
-    gap: 9px;
+    gap: 0;
   }
 
   .benefit-led-page .nav-logo-crop {
-    width: 34px;
-    height: 34px;
-    flex-basis: 34px;
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
   }
 
   .benefit-led-page .nav-logo {
@@ -227,15 +228,16 @@
   }
 
   .benefit-led-page .wordmark {
-    gap: 5px;
+    gap: 7px;
+    margin-left: -5px;
   }
 
   .benefit-led-page .wordmark-serif {
-    font-size: 17px;
+    font-size: 19px;
   }
 
   .benefit-led-page .wordmark-sans {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .benefit-led-main {
