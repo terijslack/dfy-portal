@@ -54,11 +54,13 @@ export function BenefitLed() {
       <header className="guide-nav">
         <div className="guide-nav-inner">
           <a href="/" className="nav-logo-link" aria-label="Done For You Marketing home">
-            <img
-              className="nav-logo"
-              src="/__mockup/images/logo.png"
-              alt="Done For You Marketing"
-            />
+            <span className="nav-logo-crop" aria-hidden="true">
+              <img
+                className="nav-logo"
+                src="/__mockup/images/logo.png"
+                alt=""
+              />
+            </span>
           </a>
           <a href="/" className="wordmark" aria-label="Done For You Marketing home">
             <span className="wordmark-serif">Done For You</span>

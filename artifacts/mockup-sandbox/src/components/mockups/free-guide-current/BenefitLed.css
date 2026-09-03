@@ -6,17 +6,20 @@
 }
 
 .benefit-led-page .guide-nav {
-  height: 68px;
+  height: 98px;
   justify-content: flex-start;
-  padding: 0 24px;
+  padding: 0 32px;
   background: #fff;
   border-bottom: 1px solid rgba(31, 61, 44, 0.10);
 }
 
 .benefit-led-page .guide-nav-inner {
+  width: 100%;
+  max-width: 1120px;
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 15px;
+  margin: 0 auto;
 }
 
 .benefit-led-page .nav-logo-link {
@@ -25,11 +28,37 @@
   flex: 0 0 auto;
 }
 
-.benefit-led-page .nav-logo {
+.benefit-led-page .nav-logo-crop {
+  position: relative;
   display: block;
-  width: auto;
-  height: 38px;
-  object-fit: contain;
+  width: 54px;
+  height: 60px;
+  overflow: hidden;
+}
+
+.benefit-led-page .nav-logo {
+  position: absolute;
+  top: -15px;
+  left: -67px;
+  display: block;
+  width: 184px;
+  max-width: none;
+  height: 184px;
+}
+
+.benefit-led-page .wordmark {
+  gap: 8px;
+}
+
+.benefit-led-page .wordmark-serif {
+  font-size: 29px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.benefit-led-page .wordmark-sans {
+  font-size: 13px;
+  letter-spacing: 0.17em;
 }
 
 .benefit-led-page .wordmark-serif {
@@ -165,16 +194,36 @@
 
 @media (max-width: 760px) {
   .benefit-led-page .guide-nav {
-    height: 64px;
-    padding: 0 24px;
+    height: 78px;
+    padding: 0 20px;
   }
 
   .benefit-led-page .guide-nav-inner {
-    gap: 10px;
+    gap: 11px;
+  }
+
+  .benefit-led-page .nav-logo-crop {
+    width: 42px;
+    height: 48px;
   }
 
   .benefit-led-page .nav-logo {
-    height: 32px;
+    top: -12px;
+    left: -55px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .benefit-led-page .wordmark {
+    gap: 6px;
+  }
+
+  .benefit-led-page .wordmark-serif {
+    font-size: 21px;
+  }
+
+  .benefit-led-page .wordmark-sans {
+    font-size: 9px;
   }
 
   .benefit-led-main {
