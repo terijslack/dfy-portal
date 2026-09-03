@@ -43,7 +43,6 @@ export function ThankYouDownload() {
               <span className="seal-ring" />
               <CheckMark />
             </div>
-            <p className="eyebrow">You&apos;re on your way</p>
             <h1 id="thank-you-title">Your next seven posts just got a whole lot easier.</h1>
             <p className="hero-intro">
               Thanks for signing up. Your free guide is ready to open now, and a copy will arrive in your inbox shortly.
