@@ -170,6 +170,11 @@
   box-shadow: 0 18px 42px rgba(20, 54, 39, 0.22);
 }
 
+/* Keep the cream treatment on the panel surrounding the embedded form. */
+.free-guide-mockup .benefit-led-form.form-card {
+  background-color: #F5F2EA;
+}
+
 .benefit-led-form .form-kicker {
   margin-bottom: 8px;
   color: #7D2A03;
