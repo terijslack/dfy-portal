@@ -62,10 +62,7 @@ export function BenefitLed() {
           <section className="benefit-led-copy">
             <span className="eyebrow">Free guide</span>
             <h1>Make your next seven posts the easiest ones yet.</h1>
-            <p className="benefit-led-intro">
-              A practical swipe file for business owners who want to show up consistently
-              without spending all afternoon wondering what to say.
-            </p>
+            <p className="benefit-led-intro">A practical swipe file for business owners who want to show up consistently.</p>
             <div className="benefit-list">
               {benefits.map(([number, title, copy]) => (
                 <div className="benefit-item" key={number}>
