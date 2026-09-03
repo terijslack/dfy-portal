@@ -3,7 +3,7 @@
   --leaf: #2d6b4f;
   --cream: #f5f2ea;
   --gold: #e6b75d;
-  --orange: #c65327;
+  --orange: #7d2a03;
   position: relative;
   overflow: hidden;
   background: var(--cream);
@@ -141,7 +141,7 @@
   color: var(--cream);
 }
 .success-seal svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.seal-ring { position: absolute; inset: -7px; border: 1px solid rgba(198,83,39,.35); border-radius: 50%; }
+.seal-ring { position: absolute; inset: -7px; border: 1px solid rgba(125,42,3,.35); border-radius: 50%; }
 .hero-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .download-button, .home-button, .about-link { transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease; }
 .download-button {
@@ -155,10 +155,10 @@
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 8px 18px rgba(198,83,39,.2);
+  box-shadow: 0 8px 18px rgba(125,42,3,.2);
 }
 .download-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.download-button:hover { background: #a94320; transform: translateY(-2px); }
+.download-button:hover { background: #621f02; transform: translateY(-2px); }
 .download-button:focus-visible, .home-button:focus-visible, .about-link:focus-visible { outline: 3px solid rgba(45,107,79,.35); outline-offset: 4px; }
 .download-button.is-downloaded { background: var(--leaf); }
 .home-button { color: var(--leaf); font-size: 13px; font-weight: 700; text-decoration: none; }
