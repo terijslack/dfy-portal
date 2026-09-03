@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./_group.css";
+import "./BenefitLed.css";
 
 function FormEmbed() {
   useEffect(() => {
@@ -38,8 +39,14 @@ function FormEmbed() {
 }
 
 export function BenefitLed() {
+  const benefits = [
+    ["01", "Seven ready-to-use post prompts", "Start with a clear idea instead of a blank screen."],
+    ["02", "Simple ways to make them yours", "Add your voice, offer, and point of view in minutes."],
+    ["03", "A rhythm you can actually keep", "Build consistency without turning content into a second job."],
+  ];
+
   return (
-    <div className="free-guide-mockup" style={{ background: "#F5F2EA" }}>
+    <div className="free-guide-mockup benefit-led-page">
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;600&display=swap"
@@ -50,34 +57,32 @@ export function BenefitLed() {
           <span className="wordmark-sans">Marketing</span>
         </a>
       </header>
-      <main style={{ flex: 1, padding: "68px 48px 88px" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "0.88fr 1.12fr", gap: 64, alignItems: "start" }}>
-          <section style={{ paddingTop: 28 }}>
+      <main className="benefit-led-main">
+        <div className="benefit-led-grid">
+          <section className="benefit-led-copy">
             <span className="eyebrow">Free guide</span>
-            <h1 style={{ margin: "0 0 22px", color: "#1F3D2C", fontFamily: "'Fraunces', Georgia, serif", fontSize: 58, fontWeight: 400, lineHeight: 1.04, letterSpacing: "-0.035em" }}>
-              Make your next seven posts the easiest ones yet.
-            </h1>
-            <p style={{ maxWidth: 450, margin: "0 0 36px", color: "#6B756B", fontSize: 16, lineHeight: 1.7 }}>
-              A practical swipe file for business owners who want to show up consistently without spending all afternoon wondering what to say.
+            <h1>Make your next seven posts the easiest ones yet.</h1>
+            <p className="benefit-led-intro">
+              A practical swipe file for business owners who want to show up consistently
+              without spending all afternoon wondering what to say.
             </p>
-            <div style={{ display: "grid", gap: 16, maxWidth: 420 }}>
-              {[
-                ["01", "Seven ready-to-use post prompts", "Start with a clear idea instead of a blank screen."],
-                ["02", "Simple ways to make them yours", "Add your voice, offer, and point of view in minutes."],
-                ["03", "A rhythm you can actually keep", "Build consistency without turning content into a second job."],
-              ].map(([number, title, copy]) => (
-                <div key={number} style={{ display: "grid", gridTemplateColumns: "32px 1fr", gap: 14, alignItems: "start" }}>
-                  <span style={{ color: "#7D2A03", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", paddingTop: 3 }}>{number}</span>
+            <div className="benefit-list">
+              {benefits.map(([number, title, copy]) => (
+                <div className="benefit-item" key={number}>
+                  <span className="benefit-number">{number}</span>
                   <div>
-                    <strong style={{ display: "block", color: "#1F3D2C", fontSize: 14, marginBottom: 3 }}>{title}</strong>
-                    <span style={{ color: "#6B756B", fontSize: 12, lineHeight: 1.5 }}>{copy}</span>
+                    <strong>{title}</strong>
+                    <span>{copy}</span>
                   </div>
                 </div>
               ))}
             </div>
+            <p className="benefit-led-note">Made for the busy weeks between “we should post” and actually posting.</p>
           </section>
-          <section className="form-card" style={{ padding: "30px 24px 22px" }}>
-            <div style={{ color: "#1F3D2C", fontFamily: "'Fraunces', Georgia, serif", fontSize: 23, margin: "0 0 18px" }}>Get the guide in your inbox</div>
+          <section className="form-card benefit-led-form">
+            <div className="form-kicker">Your free download</div>
+            <h2>Get the guide in your inbox</h2>
+            <p>Leave your details below and we’ll send it your way.</p>
             <FormEmbed />
           </section>
         </div>
