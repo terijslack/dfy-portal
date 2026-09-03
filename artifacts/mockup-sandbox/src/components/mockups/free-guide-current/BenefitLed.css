@@ -202,6 +202,7 @@
 
 .benefit-led-form > div:last-child {
   height: 708px;
+  margin-top: -52px;
 }
 
 @media (max-width: 760px) {
@@ -259,5 +260,9 @@
   .benefit-led-form {
     min-height: 780px;
     padding: 28px 16px 18px;
+  }
+
+  .benefit-led-form > div:last-child {
+    margin-top: -42px;
   }
 }
