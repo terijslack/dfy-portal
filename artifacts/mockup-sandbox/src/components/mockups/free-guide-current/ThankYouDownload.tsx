@@ -36,7 +36,6 @@ export function ThankYouDownload() {
           </a>
         </div>
       </header>
-
       <main className="thank-you-main">
         <section className="thank-you-hero" aria-labelledby="thank-you-title">
           <div className="hero-copy">
@@ -61,7 +60,7 @@ export function ThankYouDownload() {
               </a>
               <a className="home-button" href="/">Back to the home page <span aria-hidden="true">↗</span></a>
             </div>
-            <p className="download-note">PDF guide · 7 practical prompts · yours to keep</p>
+            <p className="download-note">PDF guide · 7 Proven Posts · yours to keep</p>
           </div>
 
           <div className="guide-preview" aria-label="Preview of the 7 Proven Posts guide">
@@ -109,7 +108,6 @@ export function ThankYouDownload() {
           <a className="about-link" href="/">See how we can help <span aria-hidden="true">↗</span></a>
         </section>
       </main>
-
       <footer className="guide-footer thank-you-footer">
         <p>&copy; 2026 Done For You Marketing Group <span>·</span> dfymarketinggroup.com</p>
         <p><a href="/privacy">Privacy Policy</a><span>·</span><a href="/privacy?tab=tos">Terms of Service</a></p>
