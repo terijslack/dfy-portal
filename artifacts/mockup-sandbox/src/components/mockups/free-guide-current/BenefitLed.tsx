@@ -74,7 +74,7 @@ export function BenefitLed() {
                 </div>
               ))}
             </div>
-            <p className="benefit-led-note">Made for the busy weeks between “we should post” and actually posting.</p>
+            <p className="benefit-led-note">Made for the busy weeks when posting seems impossible.</p>
           </section>
           <section className="form-card benefit-led-form">
             <div className="form-kicker">Your free download</div>
