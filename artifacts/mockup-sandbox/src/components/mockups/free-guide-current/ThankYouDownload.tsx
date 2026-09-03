@@ -77,7 +77,6 @@ export function ThankYouDownload() {
 
         <section className="next-steps" aria-labelledby="next-steps-title">
           <div className="section-heading">
-            <p className="eyebrow">While you wait for the email</p>
             <h2 id="next-steps-title">A little less marketing<br /><em>on your mind.</em></h2>
           </div>
           <div className="steps-list">
