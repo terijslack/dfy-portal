@@ -31,19 +31,19 @@
 .benefit-led-page .nav-logo-crop {
   position: relative;
   display: block;
-  width: 32px;
-  height: 40px;
+  width: 38px;
+  height: 44px;
   overflow: hidden;
 }
 
 .benefit-led-page .nav-logo {
   position: absolute;
-  top: -10px;
-  left: -44px;
+  top: -11px;
+  left: -50px;
   display: block;
-  width: 120px;
+  width: 136px;
   max-width: none;
-  height: 120px;
+  height: 136px;
 }
 
 .benefit-led-page .wordmark {
@@ -210,15 +210,15 @@
   }
 
   .benefit-led-page .nav-logo-crop {
-    width: 29px;
-    height: 36px;
+    width: 34px;
+    height: 39px;
   }
 
   .benefit-led-page .nav-logo {
-    top: -9px;
-    left: -39px;
-    width: 108px;
-    height: 108px;
+    top: -10px;
+    left: -45px;
+    width: 122px;
+    height: 122px;
   }
 
   .benefit-led-page .wordmark {
