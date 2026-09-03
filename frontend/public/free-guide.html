@@ -190,6 +190,7 @@
       background: var(--cream);
       border: 1px solid rgba(235, 201, 155, 0.62);
       border-top: 4px solid #EBC99B;
+      border-radius: 18px;
       box-shadow: 0 18px 42px rgba(20, 54, 39, 0.22);
       color: var(--slate);
       text-align: left;
@@ -250,6 +251,10 @@
       h1 { max-width: 520px; font-size: clamp(2.85rem, 13vw, 4.1rem); }
       .form-card { min-height: 780px; padding: 28px 16px 18px; }
       .form-frame { margin-top: -42px; }
+    }
+
+    @media (max-width: 600px) {
+      .form-card { border-radius: 14px; }
     }
   </style>
 </head>
