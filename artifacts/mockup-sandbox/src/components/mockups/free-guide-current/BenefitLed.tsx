@@ -52,10 +52,19 @@ export function BenefitLed() {
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;600&display=swap"
       />
       <header className="guide-nav">
-        <a href="/" className="wordmark" aria-label="Done For You Marketing home">
-          <span className="wordmark-serif">Done For You</span>
-          <span className="wordmark-sans">Marketing</span>
-        </a>
+        <div className="guide-nav-inner">
+          <a href="/" className="nav-logo-link" aria-label="Done For You Marketing home">
+            <img
+              className="nav-logo"
+              src="/__mockup/images/logo.png"
+              alt="Done For You Marketing"
+            />
+          </a>
+          <a href="/" className="wordmark" aria-label="Done For You Marketing home">
+            <span className="wordmark-serif">Done For You</span>
+            <span className="wordmark-sans">Marketing</span>
+          </a>
+        </div>
       </header>
       <main className="benefit-led-main">
         <div className="benefit-led-grid">
