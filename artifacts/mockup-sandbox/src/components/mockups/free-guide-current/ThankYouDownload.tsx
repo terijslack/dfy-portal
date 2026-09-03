@@ -72,11 +72,6 @@ export function ThankYouDownload() {
               <p className="paper-kicker">The free guide</p>
               <h2>7 Proven<br /><em>Posts</em></h2>
               <p className="paper-caption">You can steal for your small business</p>
-              <div className="paper-scribble" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
               <div className="paper-footer">Marketing that fits real life.</div>
             </div>
           </div>
