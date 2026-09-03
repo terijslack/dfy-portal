@@ -6,19 +6,19 @@
 }
 
 .benefit-led-page .guide-nav {
-  height: 72px;
-  justify-content: flex-start;
-  padding: 0 clamp(24px, 5vw, 72px);
-  background: #2D6B4F;
-  border-bottom-color: rgba(245, 242, 234, 0.18);
+  height: 68px;
+  justify-content: center;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid rgba(31, 61, 44, 0.10);
 }
 
 .benefit-led-page .wordmark-serif {
-  color: #F5F2EA;
+  color: #1F3D2C;
 }
 
 .benefit-led-page .wordmark-sans {
-  color: #EBC99B;
+  color: #2D6B4F;
 }
 
 .benefit-led-main {
@@ -147,6 +147,7 @@
 @media (max-width: 760px) {
   .benefit-led-page .guide-nav {
     height: 64px;
+    padding: 0 24px;
   }
 
   .benefit-led-main {
