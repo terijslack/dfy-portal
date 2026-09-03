@@ -86,8 +86,8 @@ export function BenefitLed() {
             </div>
             <p className="benefit-led-note">Made for the busy weeks when posting seems impossible.</p>
           </section>
-          <section className="form-card benefit-led-form">
-            <h2>Get the guide in your inbox</h2>
+          <section className="form-card benefit-led-form bg-[#f5f2ea]">
+            <h2 className="text-[#2d6b4f]">Get the guide in your inbox</h2>
             <p>Leave your details below and we’ll send it your way.</p>
             <FormEmbed />
           </section>
