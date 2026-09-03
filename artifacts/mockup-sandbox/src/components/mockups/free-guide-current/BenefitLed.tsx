@@ -60,7 +60,6 @@ export function BenefitLed() {
       <main className="benefit-led-main">
         <div className="benefit-led-grid">
           <section className="benefit-led-copy">
-            <span className="eyebrow">Free guide</span>
             <h1>Make your next seven posts the easiest ones yet.</h1>
             <p className="benefit-led-intro">A practical swipe file for business owners who want to show up consistently.</p>
             <div className="benefit-list">
