@@ -86,13 +86,13 @@
   max-width: 1120px;
   display: grid;
   grid-template-columns: minmax(0, 0.88fr) minmax(420px, 1.12fr);
-  gap: clamp(48px, 7vw, 92px);
+  gap: clamp(26px, 3.6vw, 52px);
   align-items: start;
   margin: 0 auto;
 }
 
 .benefit-led-copy {
-  padding-top: 22px;
+  padding-top: 10px;
 }
 
 .benefit-led-copy h1 {
