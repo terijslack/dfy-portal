@@ -14,7 +14,7 @@ function FormEmbed() {
   }, []);
 
   return (
-    <div style={{ height: 708, width: "100%" }}>
+    <div style={{ height: 697, width: "100%" }}>
       <iframe
         src="https://api.leadconnectorhq.com/widget/form/kzv1Ob1IqTbQ8Wf05eMY"
         style={{ width: "100%", height: "100%", border: "none", borderRadius: 4 }}
@@ -27,7 +27,7 @@ function FormEmbed() {
         data-deactivation-type="neverDeactivate"
         data-deactivation-value=""
         data-form-name="Get Your Free Guide - 7 Posts You Can Steal"
-        data-height="708"
+        data-height="697"
         data-layout-iframe-id="inline-kzv1Ob1IqTbQ8Wf05eMY"
         data-form-id="kzv1Ob1IqTbQ8Wf05eMY"
         data-cookie-consent="true"
