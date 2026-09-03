@@ -57,7 +57,7 @@ export function BenefitLed() {
             <span className="nav-logo-crop" aria-hidden="true">
               <img
                 className="nav-logo"
-                src="/__mockup/images/logo.png"
+                src="/__mockup/logo-green.png"
                 alt=""
               />
             </span>
