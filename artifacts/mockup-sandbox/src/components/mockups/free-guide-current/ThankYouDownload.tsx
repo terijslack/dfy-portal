@@ -99,7 +99,9 @@ export function ThankYouDownload() {
         </section>
 
         <section className="about-strip">
-          <div className="about-mark" aria-hidden="true">DFY</div>
+          <div className="about-mark" aria-hidden="true">
+            <img className="about-mark-logo" src="/__mockup/logo-green.png" alt="" />
+          </div>
           <div className="about-copy">
             <p className="eyebrow">More than a content calendar</p>
             <h2>Marketing support for the parts you don&apos;t have time to carry alone.</h2>

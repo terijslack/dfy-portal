@@ -202,6 +202,7 @@
 
 .about-strip { display: grid; grid-template-columns: 100px 1fr auto; gap: 38px; align-items: center; max-width: 1180px; margin: 0 auto; padding: 68px 40px 74px; }
 .about-mark { display: grid; place-items: center; width: 88px; height: 88px; border: 1px solid var(--gold); border-radius: 50%; color: var(--orange); font-family: "Fraunces", Georgia, serif; font-size: 22px; transform: rotate(-9deg); }
+.about-mark-logo { width: 62px; height: 62px; object-fit: contain; transform: rotate(9deg); }
 .about-copy { max-width: 630px; }
 .about-copy h2 { font-size: 31px; margin-bottom: 13px; }
 .about-copy > p:last-child { margin: 0; color: #657368; font-size: 14px; line-height: 1.7; }
@@ -226,5 +227,6 @@
   .step h3 { margin-top: 0; }
   .about-strip { grid-template-columns: 1fr; gap: 22px; padding: 55px 22px; }
   .about-mark { width: 68px; height: 68px; font-size: 17px; }
+  .about-mark-logo { width: 48px; height: 48px; }
   .thank-you-footer { flex-direction: column; gap: 12px; padding: 24px 20px !important; text-align: center !important; }
 }
