@@ -34,7 +34,6 @@ export function ThankYouDownload() {
             <span className="wordmark-serif">Done For You</span>
             <span className="wordmark-sans">Marketing</span>
           </a>
-          <span className="nav-status"><span />Your guide is ready</span>
         </div>
       </header>
 
