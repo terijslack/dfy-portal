@@ -79,7 +79,6 @@ export function ThankYouDownload() {
               </div>
               <div className="paper-footer">Marketing that fits real life.</div>
             </div>
-            <div className="preview-tab">START HERE</div>
           </div>
         </section>
 
