@@ -2,7 +2,7 @@
   --ink: #1f3d2c;
   --leaf: #2d6b4f;
   --cream: #f5f2ea;
-  --gold: #e6b75d;
+  --gold: #ebc99b;
   --orange: #7d2a03;
   position: relative;
   overflow: hidden;
@@ -16,7 +16,7 @@
   right: -8%;
   width: 40%;
   height: 610px;
-  background: #e7b65c;
+  background: var(--gold);
   clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 72%);
   opacity: .9;
   pointer-events: none;
