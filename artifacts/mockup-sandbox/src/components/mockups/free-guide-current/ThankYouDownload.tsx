@@ -103,7 +103,6 @@ export function ThankYouDownload() {
             <img className="about-mark-logo" src="/__mockup/logo-green.png" alt="" />
           </div>
           <div className="about-copy">
-            <p className="eyebrow">More than a content calendar</p>
             <h2>Marketing support for the parts you don&apos;t have time to carry alone.</h2>
             <p>Done For You Marketing Group helps busy small-business owners show up consistently with clear strategy, thoughtful creative, and reliable hands-on support. You run the business. We&apos;ll help keep it visible.</p>
           </div>
