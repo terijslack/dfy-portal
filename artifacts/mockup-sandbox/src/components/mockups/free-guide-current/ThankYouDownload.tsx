@@ -53,7 +53,8 @@ export function ThankYouDownload() {
             <div className="hero-actions">
               <a
                 className={`download-button ${downloaded ? "is-downloaded" : ""}`}
-                href="#"
+                href="/__mockup/downloads/7-proven-posts-for-trades.pdf"
+                download="7-Proven-Posts-For-Trades.pdf"
                 onClick={() => setDownloaded(true)}
               >
                 <ArrowDown />
