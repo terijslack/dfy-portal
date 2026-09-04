@@ -1,0 +1,1 @@
+- [Free guide thank-you routing](free-guide-thank-you-routing.md) — keep it separate from the audit thank-you page; form redirect requires a separate explicit request.

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Free Guide Is Ready | Done For You Marketing</title>
+  <meta name="description" content="Download your free 7 Proven Posts guide from Done For You Marketing Group.">
+  <meta property="og:title" content="Your Free Guide Is Ready | Done For You Marketing">
+  <meta property="og:description" content="Download your free 7 Proven Posts guide from Done For You Marketing Group.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    .thank-you-page {
+      --ink: #1f3d2c;
+      --leaf: #2d6b4f;
+      --cream: #f5f2ea;
+      --tan: #ebc99b;
+      --rust: #7d2a03;
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      color: #6b756b;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .thank-you-page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -8%;
+      width: 40%;
+      height: 610px;
+      background: var(--tan);
+      clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 72%);
+      opacity: .9;
+      pointer-events: none;
+    }
+    .guide-nav {
+      position: relative;
+      z-index: 2;
+      height: 68px;
+      padding: 0 52px;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,.9);
+      border-bottom: 1px solid rgba(31,61,44,.1);
+      backdrop-filter: blur(10px);
+    }
+    .guide-nav-inner {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo-link { display: inline-flex; align-items: center; flex: 0 0 auto; }
+    .nav-logo-crop { width: 58px; height: 58px; display: inline-flex; align-items: center; justify-content: center; }
+    .nav-logo { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .wordmark {
+      margin-left: -4px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      line-height: 1;
+      text-decoration: none;
+    }
+    .wordmark-serif { color: var(--ink); font-family: "Fraunces", Georgia, serif; font-size: 19px; font-weight: 600; }
+    .wordmark-sans { color: var(--leaf); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    main { position: relative; z-index: 1; flex: 1; }
+    .thank-you-hero {
+      max-width: 1180px;
+      min-height: 570px;
+      margin: 0 auto;
+      padding: 74px 40px 64px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 100px;
+      align-items: center;
+    }
+    .hero-copy { animation: rise-in .7s ease both; }
+    .hero-copy h1 {
+      max-width: 680px;
+      margin: 0 0 22px;
+      color: var(--ink);
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(3.25rem, 5vw, 4.65rem);
+      font-weight: 400;
+      line-height: .98;
+      letter-spacing: -.05em;
+    }
+    .hero-intro { max-width: 540px; margin: 0 0 28px; color: #596b5d; font-size: 16px; line-height: 1.7; }
+    .hero-actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    .download-button, .home-button, .about-link {
+      transition: transform .2s ease, background-color .2s ease, color .2s ease;
+    }
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      padding: 15px 21px;
+      border-radius: 6px;
+      background: var(--rust);
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(125,42,3,.2);
+    }
+    .download-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .download-button:hover { background: #621f02; transform: translateY(-2px); }
+    .download-button.is-downloaded { background: var(--leaf); }
+    .download-button:focus-visible, .home-button:focus-visible, .about-link:focus-visible { outline: 3px solid rgba(45,107,79,.35); outline-offset: 4px; }
+    .home-button, .about-link { color: var(--leaf); font-size: 13px; font-weight: 700; text-decoration: none; }
+    .home-button:hover, .about-link:hover { color: var(--rust); transform: translateX(2px); }
+    .home-button span, .about-link span { margin-left: 4px; font-size: 16px; }
+    .download-note { margin: 16px 0 0; color: #879388; font-size: 10px; letter-spacing: .03em; }
+    .guide-preview { position: relative; width: 300px; height: 380px; justify-self: center; animation: float-in .8s .15s ease both; transform: rotate(5deg); }
+    .preview-paper {
+      position: relative;
+      z-index: 1;
+      width: 270px;
+      height: 350px;
+      padding: 22px 23px;
+      background: #fffdf7;
+      color: var(--ink);
+      box-shadow: 14px 20px 0 rgba(31,61,44,.12), 0 20px 40px rgba(31,61,44,.18);
+    }
+    .preview-shadow { position: absolute; top: 22px; left: 23px; width: 270px; height: 350px; background: var(--leaf); transform: rotate(-8deg); }
+    .paper-topline, .paper-footer { display: flex; justify-content: space-between; color: var(--rust); font-size: 8px; font-weight: 700; letter-spacing: .13em; }
+    .paper-rule { height: 1px; margin: 13px 0 36px; background: rgba(31,61,44,.16); }
+    .paper-kicker { margin: 0 0 12px; color: var(--leaf); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .preview-paper h2 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 57px; line-height: .85; font-weight: 400; letter-spacing: -.07em; }
+    .preview-paper h2 em { color: var(--rust); font-style: italic; }
+    .paper-caption { max-width: 150px; margin: 21px 0 0; color: #718174; font-size: 12px; line-height: 1.45; }
+    .paper-footer { position: absolute; bottom: 22px; left: 23px; right: 23px; padding-top: 11px; border-top: 1px solid rgba(31,61,44,.16); color: var(--leaf); letter-spacing: .03em; }
+    .next-steps {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 80px;
+      padding: 65px max(40px, calc((100% - 1100px)/2));
+      background: #fff;
+    }
+    .section-heading h2, .about-copy h2 { margin: 0; color: var(--ink); font-family: "Fraunces", Georgia, serif; font-size: 37px; line-height: 1.05; font-weight: 400; letter-spacing: -.035em; }
+    .section-heading h2 em { color: var(--rust); font-style: italic; }
+    .steps-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+    .step { padding-top: 14px; border-top: 2px solid var(--tan); }
+    .step-number { color: var(--rust); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+    .step h3 { margin: 22px 0 8px; color: var(--ink); font-size: 13px; }
+    .step p { margin: 0; color: #738176; font-size: 12px; line-height: 1.65; }
+    .about-strip {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 68px 40px 74px;
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 38px;
+      align-items: center;
+    }
+    .about-mark { width: 88px; height: 88px; display: grid; place-items: center; transform: rotate(-9deg); }
+    .about-mark-logo { width: 88px; height: 88px; object-fit: contain; transform: rotate(9deg); }
+    .about-copy { max-width: 630px; }
+    .about-copy h2 { margin-bottom: 13px; font-size: 31px; }
+    .about-copy p { margin: 0; color: #657368; font-size: 14px; line-height: 1.7; }
+    .about-link { font-size: 12px; white-space: nowrap; }
+    .guide-footer {
+      position: relative;
+      z-index: 1;
+      padding: 25px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--ink);
+    }
+    .guide-footer p { margin: 0; color: rgba(245,242,234,.55); font-size: 12px; line-height: 1.6; }
+    .guide-footer p + p { display: flex; gap: 10px; }
+    .guide-footer span { margin: 0 8px; color: var(--tan); }
+    .guide-footer a { color: rgba(235,201,155,.85); text-decoration: none; }
+    .guide-footer a:hover { color: var(--tan); }
+    @keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float-in { from { opacity: 0; transform: rotate(5deg) translateY(18px); } to { opacity: 1; transform: rotate(5deg) translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+    @media (max-width: 800px) {
+      .guide-nav { padding: 0 20px; }
+      .thank-you-page::before { right: -35%; width: 85%; height: 650px; }
+      .thank-you-hero { grid-template-columns: 1fr; gap: 48px; padding: 55px 22px 70px; }
+      .hero-copy h1 { font-size: clamp(3rem, 13vw, 4.4rem); }
+      .guide-preview { margin-right: 25px; }
+      .next-steps { grid-template-columns: 1fr; gap: 36px; padding: 52px 22px; }
+      .steps-list { grid-template-columns: 1fr; gap: 26px; }
+      .step { display: grid; grid-template-columns: 38px 1fr; gap: 12px; }
+      .step h3 { margin-top: 0; }
+      .about-strip { grid-template-columns: 1fr; gap: 22px; padding: 55px 22px; }
+      .about-mark, .about-mark-logo { width: 68px; height: 68px; }
+      .guide-footer { flex-direction: column; gap: 12px; padding: 24px 20px; text-align: center; }
+    }
+    @media (max-width: 420px) {
+      .wordmark-serif { font-size: 17px; }
+      .wordmark-sans { font-size: 9px; }
+      .guide-preview { width: 270px; transform: scale(.9) rotate(5deg); transform-origin: top center; margin-bottom: -38px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-you-page">
+    <header class="guide-nav">
+      <div class="guide-nav-inner">
+        <a href="/" class="nav-logo-link" aria-label="Done For You Marketing home">
+          <span class="nav-logo-crop" aria-hidden="true"><img class="nav-logo" src="/logo-green.png" alt=""></span>
+        </a>
+        <a href="/" class="wordmark" aria-label="Done For You Marketing home">
+          <span class="wordmark-serif">Done For You</span>
+          <span class="wordmark-sans">Marketing</span>
+        </a>
+      </div>
+    </header>
+    <main>
+      <section class="thank-you-hero" aria-labelledby="thank-you-title">
+        <div class="hero-copy">
+          <h1 id="thank-you-title">Your next seven posts just got a whole lot easier.</h1>
+          <p class="hero-intro">Thanks for signing up. Your free guide is ready to open now, and a copy will arrive in your inbox shortly.</p>
+          <div class="hero-actions">
+            <a class="download-button" href="/downloads/7-proven-posts-for-trades.pdf" download="7-Proven-Posts-For-Trades.pdf">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10M6 9.5l4 4 4-4M4 17h12"></path></svg>
+              <span>Download the free guide</span>
+            </a>
+            <a class="home-button" href="/">Visit our website <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="download-note">PDF guide · 7 Proven Posts · yours to keep</p>
+        </div>
+        <div class="guide-preview" aria-label="Preview of the 7 Proven Posts guide">
+          <div class="preview-shadow"></div>
+          <div class="preview-paper">
+            <div class="paper-topline"><span>DONE FOR YOU</span></div>
+            <div class="paper-rule"></div>
+            <p class="paper-kicker">The free guide</p>
+            <h2>7 Proven<br><em>Posts</em></h2>
+            <p class="paper-caption">You can steal for your small business</p>
+            <div class="paper-footer">Marketing that fits real life.</div>
+          </div>
+        </div>
+      </section>
+      <section class="next-steps" aria-labelledby="next-steps-title">
+        <div class="section-heading"><h2 id="next-steps-title">A little less marketing<br><em>on your mind.</em></h2></div>
+        <div class="steps-list">
+          <article class="step"><span class="step-number">01</span><div><h3>Open the guide today</h3><p>Pick one prompt that sounds like you. One useful post is a strong start.</p></div></article>
+          <article class="step"><span class="step-number">02</span><div><h3>Make it yours</h3><p>Swap in your story, your offer, and the words your customers already use.</p></div></article>
+          <article class="step"><span class="step-number">03</span><div><h3>Keep the momentum</h3><p>When the week gets full, come back to the guide and choose the next easy win.</p></div></article>
+        </div>
+      </section>
+      <section class="about-strip">
+        <div class="about-mark" aria-hidden="true"><img class="about-mark-logo" src="/logo-green.png" alt=""></div>
+        <div class="about-copy">
+          <h2>Marketing support for the parts you don’t have time to carry alone.</h2>
+          <p>Done For You Marketing Group helps busy small-business owners show up consistently with clear strategy, thoughtful creative, and reliable hands-on support. You run the business. We’ll help keep it visible.</p>
+        </div>
+        <a class="about-link" href="/">See how we can help <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+    <footer class="guide-footer">
+      <p>&copy; 2026 Done For You Marketing Group <span>·</span> dfymarketinggroup.com</p>
+      <p><a href="/privacy">Privacy Policy</a><span>·</span><a href="/privacy?tab=tos">Terms of Service</a></p>
+    </footer>
+  </div>
+  <script>
+    const downloadButton = document.querySelector('.download-button');
+    downloadButton.addEventListener('click', () => {
+      downloadButton.classList.add('is-downloaded');
+      downloadButton.querySelector('span').textContent = 'Guide ready to read';
+    });
+  </script>
+</body>
+</html>
