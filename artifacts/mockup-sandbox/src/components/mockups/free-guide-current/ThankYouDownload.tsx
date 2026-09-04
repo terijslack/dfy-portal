@@ -45,7 +45,7 @@ export function ThankYouDownload() {
                 <ArrowDown />
                 <span>{downloaded ? "Guide ready to read" : "Download the free guide"}</span>
               </a>
-              <a className="home-button" href="/">Back to the home page <span aria-hidden="true">↗</span></a>
+              <a className="home-button" href="/">Visit our website <span aria-hidden="true">↗</span></a>
             </div>
             <p className="download-note">PDF guide · 7 Proven Posts · yours to keep</p>
           </div>
