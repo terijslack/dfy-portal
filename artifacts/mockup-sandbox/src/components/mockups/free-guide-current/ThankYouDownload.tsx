@@ -2,14 +2,6 @@ import { useState } from "react";
 import "./_group.css";
 import "./ThankYouDownload.css";
 
-function CheckMark() {
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true">
-      <path d="m5 10.5 3.1 3.1L15.5 6" />
-    </svg>
-  );
-}
-
 function ArrowDown() {
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -39,9 +31,6 @@ export function ThankYouDownload() {
       <main className="thank-you-main">
         <section className="thank-you-hero" aria-labelledby="thank-you-title">
           <div className="hero-copy">
-            <div className="success-seal" aria-hidden="true">
-              <CheckMark />
-            </div>
             <h1 id="thank-you-title">Your next seven posts just got a whole lot easier.</h1>
             <p className="hero-intro">
               Thanks for signing up. Your free guide is ready to open now, and a copy will arrive in your inbox shortly.
