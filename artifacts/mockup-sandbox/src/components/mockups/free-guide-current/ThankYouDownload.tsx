@@ -40,7 +40,6 @@ export function ThankYouDownload() {
         <section className="thank-you-hero" aria-labelledby="thank-you-title">
           <div className="hero-copy">
             <div className="success-seal" aria-hidden="true">
-              <span className="seal-ring" />
               <CheckMark />
             </div>
             <h1 id="thank-you-title">Your next seven posts just got a whole lot easier.</h1>
