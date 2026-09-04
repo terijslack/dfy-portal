@@ -53,7 +53,7 @@ export function ThankYouDownload() {
           <div className="guide-preview" aria-label="Preview of the 7 Proven Posts guide">
             <div className="preview-shadow" />
             <div className="preview-paper">
-              <div className="paper-topline"><span>DONE FOR YOU</span><span>01 / 07</span></div>
+              <div className="paper-topline"><span>DONE FOR YOU</span></div>
               <div className="paper-rule" />
               <p className="paper-kicker">The free guide</p>
               <h2>7 Proven<br /><em>Posts</em></h2>
