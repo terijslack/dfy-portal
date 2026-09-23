@@ -1,6 +1,7 @@
 // routes/stripe.js — Handles Stripe checkout and webhooks
 // POST /api/stripe/create-checkout         — original flow: user data + priceId together
 // POST /api/stripe/create-checkout-session — new flow: userId + plan key (account already created)
+// POST /api/stripe/create-test-checkout    — admin only: real $1/month charge to verify the pipeline
 // POST /api/stripe/webhook                 — Stripe calls this for subscription events
 
 const express = require('express');
@@ -8,7 +9,9 @@ const router = express.Router();
 const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const { createGHLContact } = require('../services/ghl');
+const { requireAdmin } = require('../middleware/auth');
 const { PRICE_TO_PLAN, PLAN_KEY_TO_PRICE, PLAN_KEY_TO_NAME, VALID_PRICE_IDS } = require('../config/plans');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -177,6 +180,70 @@ router.post('/create-checkout-session', async (req, res) => {
   } catch (err) {
     console.error('create-checkout-session error:', err);
     res.status(500).json({ error: 'Could not create checkout session.' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// POST /api/stripe/create-test-checkout   (admin only)
+// Creates a REAL $1/month subscription checkout so you can run an
+// actual card through the whole pipeline — Stripe → webhook →
+// database → GHL tag → welcome email — without touching real plans
+// or real clients. Cancel/refund the resulting subscription in
+// Stripe afterward; it reuses the same test client row every run.
+// ─────────────────────────────────────────────────────────────
+router.post('/create-test-checkout', requireAdmin, async (req, res) => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return res.status(400).json({ error: 'Stripe is not configured.' });
+  }
+
+  const testEmail = 'stripe-test@dfymarketinggroup.com';
+
+  try {
+    // Reuse the same test client row every time instead of piling up new ones
+    const existing = await pool.query('SELECT id FROM clients WHERE email = $1', [testEmail]);
+    let userId = existing.rows[0]?.id;
+
+    if (!userId) {
+      const randomPassword = await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10);
+      const insertResult = await pool.query(`
+        INSERT INTO clients (name, email, password, is_admin, status, subscription_status, plan)
+        VALUES ('Stripe Test', $1, $2, false, 'pending', 'inactive', 'Test Subscription')
+        RETURNING id
+      `, [testEmail, randomPassword]);
+      userId = insertResult.rows[0].id;
+    }
+
+    const session = await getStripe().checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      customer_email: testEmail,
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          unit_amount: 100, // $1.00 — a real charge, to confirm live-mode cards actually process
+          recurring: { interval: 'month' },
+          product_data: { name: 'DFY Portal — $1 Test Subscription' },
+        },
+        quantity: 1,
+      }],
+      success_url: `${appUrl()}/admin?test=success`,
+      cancel_url:  `${appUrl()}/admin?test=cancelled`,
+      subscription_data: {
+        metadata: { userId: String(userId), plan: 'Test Subscription', isTest: 'true' },
+      },
+      metadata: {
+        email:  testEmail,
+        userId: String(userId),
+        plan:   'Test Subscription',
+        isTest: 'true',
+      },
+    });
+
+    res.json({ url: session.url });
+
+  } catch (err) {
+    console.error('create-test-checkout error:', err);
+    res.status(500).json({ error: 'Could not create test checkout session.' });
   }
 });
 

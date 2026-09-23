@@ -34,6 +34,7 @@
       <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
       <div class="header-right">
         <span class="admin-badge">Admin</span>
+        <button class="btn-secondary" id="stripeTestBtn">Run $1 Stripe test</button>
         <button class="btn-logout" id="logoutBtn">Sign out</button>
       </div>
     </div>
@@ -326,6 +327,34 @@
       await fetch('/api/auth/logout', { method: 'POST' });
       window.location.href = '/';
     });
+
+    // Runs a real $1/month charge through the full pipeline (Stripe → webhook →
+    // database → GHL tag → welcome email) so you can confirm it all works end to end.
+    // Cancel/refund the resulting subscription in Stripe afterward.
+    document.getElementById('stripeTestBtn').addEventListener('click', async () => {
+      if (!confirm('This will charge a real card $1/month to test the full payment pipeline. Continue?')) return;
+      try {
+        const res = await fetch('/api/stripe/create-test-checkout', { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok || !data.url) {
+          alert(data.error || 'Could not start the test checkout.');
+          return;
+        }
+        window.location.href = data.url;
+      } catch (err) {
+        alert('Network error starting the test checkout.');
+      }
+    });
+
+    // After returning from Stripe, let you know whether the test checkout went through
+    (function checkTestResult() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('test') === 'success') {
+        alert('Test payment submitted. Check Railway deploy logs for "Subscription activated", then check GHL for the stripe-test@dfymarketinggroup.com contact and the welcome email.');
+      } else if (params.get('test') === 'cancelled') {
+        alert('Test checkout was cancelled — no charge was made.');
+      }
+    })();
 
     function formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
