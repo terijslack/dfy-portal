@@ -62,11 +62,11 @@ describe('POST /api/account/resume-plan', () => {
       subscription_status: 'paused',
     };
 
-    // First query returns client row; second query is the UPDATE
-    let callCount = 0;
-    mockQueryImpl = jest.fn(() => {
-      callCount++;
-      if (callCount === 1) return Promise.resolve({ rows: [client] });
+    mockQueryImpl = jest.fn((sql) => {
+      if (/SELECT status, subscription_status FROM clients/.test(sql))
+        return Promise.resolve({ rows: [{ status: 'active', subscription_status: 'paused' }] });
+      if (/SELECT name.*FROM clients/.test(sql))
+        return Promise.resolve({ rows: [client] });
       return Promise.resolve({ rows: [] });
     });
 
@@ -87,8 +87,8 @@ describe('POST /api/account/resume-plan', () => {
     });
 
     // DB UPDATE should have set status → 'active'
-    const updateCall = mockQueryImpl.mock.calls[1];
-    expect(updateCall[0]).toMatch(/UPDATE clients SET subscription_status/i);
+    const updateCall = mockQueryImpl.mock.calls.find(c => /UPDATE clients SET subscription_status/i.test(c[0]));
+    expect(updateCall).toBeDefined();
     expect(updateCall[1]).toContain('active');
   });
 
@@ -104,10 +104,11 @@ describe('POST /api/account/resume-plan', () => {
       subscription_status: 'paused',
     };
 
-    let callCount = 0;
-    mockQueryImpl = jest.fn(() => {
-      callCount++;
-      if (callCount === 1) return Promise.resolve({ rows: [client] });
+    mockQueryImpl = jest.fn((sql) => {
+      if (/SELECT status, subscription_status FROM clients/.test(sql))
+        return Promise.resolve({ rows: [{ status: 'active', subscription_status: 'paused' }] });
+      if (/SELECT name.*FROM clients/.test(sql))
+        return Promise.resolve({ rows: [client] });
       return Promise.resolve({ rows: [] });
     });
 
@@ -132,7 +133,13 @@ describe('POST /api/account/resume-plan', () => {
       subscription_status: 'active',
     };
 
-    mockQueryImpl = jest.fn(() => Promise.resolve({ rows: [client] }));
+    mockQueryImpl = jest.fn((sql) => {
+      if (/SELECT status, subscription_status FROM clients/.test(sql))
+        return Promise.resolve({ rows: [{ status: 'active', subscription_status: 'active' }] });
+      if (/SELECT name.*FROM clients/.test(sql))
+        return Promise.resolve({ rows: [client] });
+      return Promise.resolve({ rows: [] });
+    });
 
     const res = await request(app)
       .post('/api/account/resume-plan')
@@ -161,7 +168,13 @@ describe('POST /api/account/resume-plan', () => {
       subscription_status: 'paused',
     };
 
-    mockQueryImpl = jest.fn(() => Promise.resolve({ rows: [client] }));
+    mockQueryImpl = jest.fn((sql) => {
+      if (/SELECT status, subscription_status FROM clients/.test(sql))
+        return Promise.resolve({ rows: [{ status: 'active', subscription_status: 'paused' }] });
+      if (/SELECT name.*FROM clients/.test(sql))
+        return Promise.resolve({ rows: [client] });
+      return Promise.resolve({ rows: [] });
+    });
     mockStripeUpdate.mockRejectedValue(new Error('Stripe network failure'));
 
     const res = await request(app)
@@ -174,7 +187,13 @@ describe('POST /api/account/resume-plan', () => {
 
   // ── Account not found → 404 ───────────────────────────────────────────────
   it('returns 404 when the client row does not exist', async () => {
-    mockQueryImpl = jest.fn(() => Promise.resolve({ rows: [] }));
+    // requireLogin must pass (status check returns a row), but the route
+    // handler's SELECT returns empty so the handler can return 404.
+    mockQueryImpl = jest.fn((sql) => {
+      if (/SELECT status, subscription_status FROM clients/.test(sql))
+        return Promise.resolve({ rows: [{ status: 'active', subscription_status: 'active' }] });
+      return Promise.resolve({ rows: [] });
+    });
 
     const res = await request(app)
       .post('/api/account/resume-plan')

@@ -29,13 +29,17 @@ describe('stripe webhook — checkout.session.completed UPDATE parameter count',
       webhooks: { constructEvent: mockConstructEvent },
     }));
 
-    mockDbQuery = jest.fn().mockResolvedValue({ rows: [] });
+    mockDbQuery = jest.fn().mockImplementation((sql) => {
+      if (/SELECT id.*name.*FROM clients WHERE/.test(sql))
+        return Promise.resolve({ rows: [{ id: 5, name: 'Test User' }] });
+      return Promise.resolve({ rows: [] });
+    });
     jest.mock('pg', () => ({
       Pool: jest.fn().mockImplementation(() => ({ query: mockDbQuery })),
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
+    jest.mock('../services/ghl', () => ({ upsertGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY     = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';

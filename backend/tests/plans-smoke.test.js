@@ -323,13 +323,17 @@ describe('stripe.js webhook — checkout.session.completed activates correct pla
       webhooks: { constructEvent: mockConstructEvent },
     }));
 
-    mockDbQuery = jest.fn().mockResolvedValue({ rows: [] });
+    mockDbQuery = jest.fn().mockImplementation((sql) => {
+      if (/SELECT id.*name.*FROM clients WHERE/.test(sql))
+        return Promise.resolve({ rows: [{ id: 10, name: 'Test User' }] });
+      return Promise.resolve({ rows: [] });
+    });
     jest.mock('pg', () => ({
       Pool: jest.fn().mockImplementation(() => ({ query: mockDbQuery })),
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
+    jest.mock('../services/ghl', () => ({ upsertGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY    = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';
@@ -386,11 +390,14 @@ describe('stripe.js webhook — checkout.session.completed activates correct pla
     expect(res.json).toHaveBeenCalledWith({ received: true });
   });
 
-  test('checkout.session.completed with unknown plan falls back to "Starter Presence"', async () => {
+  test('checkout.session.completed with no plan in metadata uses "Custom Plan"', async () => {
     mockDbQuery.mockClear();
-    // Simulate old flow: no plan in metadata, stripe_price_id lookup returns unknown ID
+    // No plan in metadata — Stripe expand is attempted but the mock lacks checkout.sessions,
+    // so it throws. Handler catches, falls back to 'Custom Plan'.
+    // Client found by email → should UPDATE with 'Custom Plan'.
     mockDbQuery.mockImplementation((sql) => {
-      if (/SELECT stripe_price_id/.test(sql)) return Promise.resolve({ rows: [{ stripe_price_id: 'price_UNKNOWN' }] });
+      if (/SELECT id.*name.*FROM clients WHERE email/.test(sql))
+        return Promise.resolve({ rows: [{ id: 5, name: 'Unknown User' }] });
       return Promise.resolve({ rows: [] });
     });
 
@@ -398,8 +405,8 @@ describe('stripe.js webhook — checkout.session.completed activates correct pla
       type: 'checkout.session.completed',
       data: {
         object: {
-          customer:     'cus_unknown',
-          subscription: 'sub_unknown',
+          customer:       'cus_unknown',
+          subscription:   'sub_unknown',
           customer_email: 'x@test.com',
           metadata: {},
         },
@@ -411,7 +418,7 @@ describe('stripe.js webhook — checkout.session.completed activates correct pla
     const updateCalls = mockDbQuery.mock.calls.filter(c => /UPDATE clients/.test(c[0]));
     expect(updateCalls.length).toBeGreaterThan(0);
     const planArg = updateCalls[0][1][2];
-    expect(planArg).toBe('Starter Presence');
+    expect(planArg).toBe('Custom Plan');
     expect(res.json).toHaveBeenCalledWith({ received: true });
   });
 });
