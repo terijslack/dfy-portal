@@ -6,6 +6,8 @@ require('dotenv').config(); // load .env variables first thing
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const { Pool } = require('pg');
+const { runMigrations } = require('./database/migrate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -146,7 +148,16 @@ app.get('*', (req, res) => {
 });
 
 // ─── START SERVER ─────────────────────────────────────────────
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`   Open: http://localhost:${PORT}`);
-});
+const dbPool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+runMigrations(dbPool)
+  .then(() => {
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`   Open: http://localhost:${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ Migration failed, server not started:', err.message);
+    process.exit(1);
+  });

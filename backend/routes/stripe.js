@@ -274,19 +274,13 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       let planName = session.metadata?.plan || null;
 
       // Find the user (by userId if available, otherwise by email)
-      let whereClause, whereParam;
-      if (userId) {
-        whereClause = 'id = $1';
-        whereParam  = userId;
-      } else {
-        whereClause = 'email = $1';
-        whereParam  = email;
-      }
+      const whereCol   = userId ? 'id'    : 'email';
+      const whereParam = userId ? userId  : email;
 
       // If plan not in metadata, look it up from stripe_price_id in DB
       if (!planName) {
         const lookup = await pool.query(
-          `SELECT stripe_price_id FROM clients WHERE ${whereClause}`,
+          `SELECT stripe_price_id FROM clients WHERE ${whereCol} = $1`,
           [whereParam]
         );
         const priceId = lookup.rows[0]?.stripe_price_id;
@@ -302,7 +296,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
           stripe_subscription_id   = $2,
           subscription_start_date  = NOW(),
           plan                     = $3
-        WHERE ${whereClause.replace('$1', '$4')}
+        WHERE ${whereCol} = $4
         RETURNING id, name, stripe_price_id
       `, [session.customer, session.subscription, planName, whereParam]);
 
