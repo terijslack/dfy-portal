@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 // ─── MIDDLEWARE ───────────────────────────────────────────────
 // These run on every request before hitting the routes
 
+// Stripe webhook needs the raw body to verify its signature. Must come BEFORE express.json().
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
+
 app.use(express.json()); // lets us read JSON request bodies
 app.use(express.urlencoded({ extended: true })); // lets us read form data
 app.use(cookieParser()); // lets us read cookies (used for the auth token)
