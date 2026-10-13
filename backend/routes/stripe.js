@@ -302,7 +302,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
           stripe_subscription_id   = $2,
           subscription_start_date  = NOW(),
           plan                     = $3
-        WHERE ${whereClause}
+        WHERE ${whereClause.replace('$1', '$4')}
         RETURNING id, name, stripe_price_id
       `, [session.customer, session.subscription, planName, whereParam]);
 
