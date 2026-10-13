@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Your plan has ended — Done For You Marketing</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="palette.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.plan-ended-page {
+      min-height: 100vh;
+      background: var(--color-cream);
+      background-image: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(45,107,79,0.08) 0%, transparent 70%);
+    }
+
+    .pe-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    .pe-logo { text-align: center; margin-bottom: 8px; }
+    .pe-logo img { height: 96px; width: auto; }
+
+    /* ── Welcome-back card ─────────────────────────── */
+    .pe-hero {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto 48px;
+    }
+
+    .pe-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-green);
+      margin-bottom: 14px;
+    }
+
+    .pe-title {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--color-forest);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .pe-body {
+      color: var(--color-slate);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .pe-btn {
+      display: block;
+      width: 100%;
+      background: var(--color-rust);
+      color: var(--color-cream);
+      text-decoration: none;
+      text-align: center;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 15px 28px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.14s, transform 0.1s;
+    }
+    .pe-btn:hover { background: var(--color-rust-hover); }
+    .pe-btn:active { transform: scale(0.98); }
+    .pe-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .pe-btn small { display: block; font-weight: 400; font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+
+    .pe-btn-outline {
+      background: transparent;
+      color: var(--color-green);
+      border: 1.5px solid var(--color-green);
+    }
+    .pe-btn-outline:hover { background: var(--color-green); color: var(--color-cream); }
+
+    .pe-custom-note {
+      background: var(--color-tan-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--color-forest);
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .pe-error {
+      color: #b3261e;
+      font-size: 0.9rem;
+      margin-top: 14px;
+    }
+    .pe-error:empty { display: none; }
+
+    /* ── Plan choices ──────────────────────────────── */
+    .pe-section-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--color-forest);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .pe-section-sub {
+      color: var(--color-slate);
+      text-align: center;
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    .pe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .pe-card {
+      position: relative;
+      background: var(--color-white);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    .pe-card.previous { border-color: var(--color-green); }
+
+    .pe-badge {
+      position: absolute;
+      top: -11px;
+      left: 24px;
+      background: var(--color-green);
+      color: var(--color-cream);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .pe-plan-name {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--color-forest);
+      margin-bottom: 6px;
+    }
+    .pe-plan-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-forest);
+      margin-bottom: 4px;
+    }
+    .pe-plan-price span { font-size: 14px; font-weight: 400; color: var(--color-slate); }
+    .pe-plan-meta { font-size: 0.85rem; color: var(--color-slate-light); margin-bottom: 18px; }
+
+    .pe-features {
+      list-style: none;
+      border-top: 1px solid var(--color-border);
+      padding-top: 16px;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+    .pe-features li {
+      position: relative;
+      padding-left: 22px;
+      font-size: 0.875rem;
+      color: var(--color-slate);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .pe-features li::before {
+      content: '';
+      position: absolute;
+      left: 2px; top: 6px;
+      width: 9px; height: 5px;
+      border-left: 2px solid var(--color-green);
+      border-bottom: 2px solid var(--color-green);
+      transform: rotate(-45deg);
+    }
+
+    .pe-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: var(--color-slate);
+      line-height: 1.9;
+    }
+    .pe-footer a { color: var(--color-green); text-decoration: none; font-weight: 500; }
+    .pe-footer a:hover { text-decoration: underline; }
+    .pe-footer button {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font: inherit; color: var(--color-slate-light);
+    }
+    .pe-footer button:hover { color: var(--color-forest); text-decoration: underline; }
+
+    .pe-loading { text-align: center; color: var(--color-slate-light); padding: 80px 0; }
+
+    @media (max-width: 860px) {
+      .pe-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .pe-hero { padding: 36px 24px; }
+      .pe-title { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body class="plan-ended-page">
+  <div class="pe-wrap">
+
+    <div class="pe-logo">
+      <a href="/"><img src="/logo-full-transparent.png" alt="Done For You Marketing" /></a>
+    </div>
+
+    <div class="pe-loading" id="loading">Loading…</div>
+
+    <div id="content" style="display:none;">
+
+      <!-- Welcome-back card -->
+      <div class="pe-hero">
+        <div class="pe-eyebrow">Your plan has ended</div>
+        <h1 class="pe-title" id="title">We'd love to have you back</h1>
+        <p class="pe-body" id="bodyText"></p>
+
+        <div class="pe-custom-note" id="customNote" style="display:none;">
+          You were on a custom plan, so we'll set it back up for you personally.
+          Send us a quick note and we'll get you going again.
+        </div>
+
+        <button class="pe-btn" id="restartBtn" style="display:none;"></button>
+        <a class="pe-btn" id="contactBtn" href="mailto:hello@dfymarketinggroup.com" style="display:none;">Contact us to restart</a>
+        <div class="pe-error" id="errorMsg" role="alert"></div>
+      </div>
+
+      <!-- Plan choices -->
+      <h2 class="pe-section-title" id="choiceTitle">Or choose a different plan</h2>
+      <p class="pe-section-sub">You can switch plans anytime from your account once you're back in.</p>
+
+      <div class="pe-grid" id="planGrid"></div>
+
+      <div class="pe-footer">
+        Questions? <a id="footerContact" href="mailto:hello@dfymarketinggroup.com?subject=Question%20about%20my%20plan">Contact us</a> and we'll help you find the right fit.<br>
+        <button type="button" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Plan details match the signup page (/signup)
+    const PLANS = [
+      {
+        name: 'Starter Presence', price: '$800', meta: 'Essential visibility',
+        features: [
+          'Up to 2 social media platforms', 'Up to 16 posts (total)', 'Caption writing',
+          'Google Business Profile setup or review', 'Monthly performance summary email'
+        ]
+      },
+      {
+        name: 'Growth Engine', price: '$1,500', meta: 'Our most popular plan',
+        features: [
+          'Access to ongoing strategic support', 'Up to 4 social media platforms', 'Up to 32 posts (total)',
+          'Caption writing', '2 promotional emails/month', 'Automated Google Review requests',
+          'Google Business Profile management', 'Full client dashboard with analytics'
+        ]
+      },
+      {
+        name: 'Marketing Partner', price: '$2,800', meta: 'Done-For-You Management',
+        features: [
+          '1 hour strategic onboarding call', 'Monthly strategy check-ins', 'Complete social media management',
+          'Google Business Profile management', 'Appointment calendar setup',
+          'Email campaigns & newsletters', 'Paid ads management & reporting'
+        ]
+      }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const errorMsg = $('errorMsg');
+    let previousPlan = null;
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    async function startCheckout(planName, btn) {
+      errorMsg.textContent = '';
+      const original = btn.innerHTML;
+      document.querySelectorAll('.pe-btn').forEach(b => b.disabled = true);
+      btn.textContent = 'Taking you to checkout…';
+      try {
+        const res = await fetch('/api/plan-ended/restart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: planName })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url) throw new Error(data.error || 'Something went wrong. Please try again.');
+        window.location.href = data.url;
+      } catch (err) {
+        errorMsg.textContent = err.message;
+        document.querySelectorAll('.pe-btn').forEach(b => b.disabled = false);
+        btn.innerHTML = original;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function renderPage(info) {
+      const first = (info.name || '').trim().split(/\s+/)[0];
+      const known = PLANS.find(p => p.name === info.plan);
+      previousPlan = known ? known.name : null;
+      const isCustom = !known && !!info.plan;
+
+      $('title').textContent = first ? `Welcome back, ${first}` : "We'd love to have you back";
+
+      if (known) {
+        $('bodyText').textContent =
+          `Thank you for being part of Done For You Marketing. Your ${known.name} plan has ended and your portal is on pause. ` +
+          `Ready to pick up where we left off?`;
+        const rb = $('restartBtn');
+        rb.innerHTML = `Restart my ${esc(known.name)} plan<small>${esc(known.price)}/month</small>`;
+        rb.style.display = 'block';
+        rb.onclick = () => startCheckout(known.name, rb);
+      } else if (isCustom) {
+        $('bodyText').textContent =
+          'Thank you for being part of Done For You Marketing. Your plan has ended and your portal is on pause.';
+        $('customNote').style.display = 'block';
+        const cb = $('contactBtn');
+        cb.href = 'mailto:hello@dfymarketinggroup.com' +
+          '?subject=' + encodeURIComponent('Restart my custom plan') +
+          '&body=' + encodeURIComponent(
+            `Hi,\n\nI'd like to restart my custom plan (${info.plan}).\n\nThank you,\n${info.name || ''}`);
+        cb.style.display = 'block';
+        $('choiceTitle').textContent = 'Or start fresh with one of our standard plans';
+      } else {
+        $('bodyText').textContent =
+          'Thank you for being part of Done For You Marketing. Your plan has ended and your portal is on pause. Pick a plan below to get started again.';
+        $('choiceTitle').textContent = 'Choose your plan';
+      }
+
+      $('planGrid').innerHTML = PLANS.map((p, i) => {
+        const isPrev = p.name === previousPlan;
+        return `
+          <div class="pe-card${isPrev ? ' previous' : ''}">
+            ${isPrev ? '<div class="pe-badge">Your previous plan</div>' : ''}
+            <div class="pe-plan-name">${esc(p.name)}</div>
+            <div class="pe-plan-price">${esc(p.price)}<span>/mo</span></div>
+            <div class="pe-plan-meta">${esc(p.meta)}</div>
+            <ul class="pe-features">${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+            <button type="button" class="pe-btn pe-btn-outline" data-plan="${i}">
+              ${isPrev ? 'Restart this plan' : 'Choose this plan'}
+            </button>
+          </div>`;
+      }).join('');
+
+      document.querySelectorAll('#planGrid button').forEach(btn => {
+        btn.onclick = () => startCheckout(PLANS[btn.dataset.plan].name, btn);
+      });
+
+      $('loading').style.display = 'none';
+      $('content').style.display = 'block';
+    }
+
+    $('logoutBtn').onclick = async () => {
+      try { await fetch('/api/auth/logout', { method: 'POST' }); } catch (_) {}
+      window.location.href = '/login';
+    };
+
+    (async function init() {
+      try {
+        const res = await fetch('/api/plan-ended');
+        if (res.status === 401) { window.location.href = '/login'; return; }
+        const info = await res.json();
+        // Only people whose plan has actually ended belong on this page
+        if (!info.ended) { window.location.href = '/dashboard'; return; }
+        renderPage(info);
+      } catch (err) {
+        $('loading').textContent = "We couldn't load this page. Please refresh, or contact us for help.";
+      }
+    })();
+  </script>
+</body>
+</html>

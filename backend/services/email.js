@@ -87,4 +87,49 @@ async function sendPasswordReset(toEmail, resetUrl) {
   console.log(`✅ Password reset email sent via GHL to ${toEmail}`);
 }
 
-module.exports = { sendPasswordReset };
+// Send a contact-form inquiry to hello@dfymarketinggroup.com
+async function sendContactInquiry({ name, email, message }) {
+  const contactId      = await getOrCreateContact('hello@dfymarketinggroup.com');
+  const conversationId = await getOrCreateConversation(contactId);
+
+  await axios.post(
+    `${GHL_BASE}/conversations/messages`,
+    {
+      type:           'Email',
+      conversationId,
+      contactId,
+      subject:        `New website inquiry from ${name}`,
+      html: `
+        <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;">
+          <img src="https://dfy-portal-production.up.railway.app/logo.png" alt="Done For You Marketing" style="height:80px;margin-bottom:24px;" />
+          <h2 style="font-size:22px;color:#1F3D2C;margin:0 0 16px;">New website inquiry</h2>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
+            <strong>Name:</strong> ${escapeHtml(name)}
+          </p>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
+            <strong>Email:</strong> <a href="mailto:${escapeHtml(email)}" style="color:#2D6B4F;">${escapeHtml(email)}</a>
+          </p>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 24px;">
+            <strong>Message:</strong><br>${escapeHtml(message)}
+          </p>
+          <p style="color:#9AA199;font-size:13px;margin-top:24px;">
+            Sent from the DFY Marketing contact form.
+          </p>
+        </div>
+      `,
+    },
+    { headers: GHL_HEADERS() }
+  );
+
+  console.log(`✅ Contact inquiry email sent for ${email}`);
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+module.exports = { sendPasswordReset, sendContactInquiry };

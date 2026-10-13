@@ -69,10 +69,16 @@
   <script>
     // Check if already logged in — redirect immediately
     fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(data => {
+      .then(r => r.json().then(data => ({ status: r.status, data })))
+      .then(({ status, data }) => {
         if (data.user) {
           window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+        } else if (status === 403 && data.redirect) {
+          // Plan has ended — send them to the restart page
+          window.location.href = data.redirect;
+        } else if (status === 403 && data.error) {
+          // Payment not finished (or similar) — show the reason instead of silently staying here
+          document.getElementById('errorMsg').textContent = data.error;
         }
       })
       .catch(() => {}); // not logged in = stay on this page

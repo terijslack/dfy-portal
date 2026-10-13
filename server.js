@@ -44,6 +44,7 @@ app.use('/api/posts', require('./backend/routes/posts'));   // client post actio
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
 app.use('/api/account', require('./backend/routes/account')); // subscription management
+app.use('/api/plan-ended', require('./backend/routes/planEnded')); // restart flow for clients whose plan ended
 app.use('/api/onboarding', require('./backend/routes/onboarding')); // client intake form
 app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
 app.use('/api/socials', require('./backend/routes/socials'));       // social account connections
@@ -79,6 +80,10 @@ app.get('/create-account', (req, res) => {
 
 app.get('/signup-success', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/signup-success.html'));
+});
+
+app.get('/plan-ended', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/plan-ended.html'));
 });
 
 app.get('/payment-success', (req, res) => {
