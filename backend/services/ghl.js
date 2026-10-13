@@ -27,40 +27,58 @@ function parseName(fullName = '') {
   };
 }
 
-// Creates a contact in GHL and optionally adds a note with add-on details.
-async function createGHLContact({ name, email, stripePriceId, addons }) {
-  const { firstName, lastName } = parseName(name);
-  const planName = PLAN_NAMES[stripePriceId] || 'Unknown Plan';
+// Standard plans get their own tag; anything else (custom deals) is tagged "Custom Plan"
+// so GHL doesn't end up with a one-off tag for every custom client.
+const STANDARD_PLAN_TAGS = new Set(Object.values(PLAN_NAMES));
+function planTag(planName) {
+  return STANDARD_PLAN_TAGS.has(planName) ? planName : 'Custom Plan';
+}
 
-  const contact = await axios.post(
-    `${GHL_BASE}/contacts/`,
+// Creates the contact in GHL, or updates it if that email is already there (many clients
+// start as leads), then ADDS the new-client + plan tags. GHL's own workflow takes it from
+// there (welcome email, sub-account setup, etc.).
+// Safe to run more than once for the same client: upsert never duplicates a contact, and
+// adding a tag that's already present changes nothing.
+async function upsertGHLContact({ name, email, planName, stripePriceId, addons }) {
+  const { firstName, lastName } = parseName(name);
+  const plan = planName || PLAN_NAMES[stripePriceId] || 'Custom Plan';
+  const opts = { headers: GHL_HEADERS(), timeout: 10000 };
+
+  const upsert = await axios.post(
+    `${GHL_BASE}/contacts/upsert`,
     {
       locationId: process.env.GHL_LOCATION_ID,
       email,
       firstName,
       lastName,
       name: `${firstName} ${lastName}`.trim(),
-      tags: ['new-client', planName],
       source: 'DFY Portal',
     },
-    { headers: GHL_HEADERS() }
+    opts
   );
 
-  const contactId = contact.data?.contact?.id;
+  const contactId = upsert.data?.contact?.id;
+  if (!contactId) throw new Error('GHL did not return a contact id');
+
+  // Tags are added (not replaced), so any tags the contact already has are kept
+  await axios.post(
+    `${GHL_BASE}/contacts/${contactId}/tags`,
+    { tags: ['new-client', planTag(plan)] },
+    opts
+  );
 
   // If add-ons were selected, attach them as a note so the team can see them
-  if (contactId && addons) {
+  if (addons) {
     await axios.post(
       `${GHL_BASE}/contacts/${contactId}/notes`,
       { body: `Add-ons selected at signup: ${addons}` },
-      { headers: GHL_HEADERS() }
+      opts
     );
   }
 
-  return contact.data;
+  return upsert.data;
 }
 
-module.exports = { createGHLContact };
 
 // ─── Profile sync ────────────────────────────────────────────────────────────
 // Upserts a GHL contact with full profile data after a client saves their profile.
@@ -125,4 +143,4 @@ async function syncContactToGHL(client, profileData, socialAccounts) {
   }
 }
 
-module.exports = { createGHLContact, syncContactToGHL };
+module.exports = { upsertGHLContact, createGHLContact: upsertGHLContact, syncContactToGHL, planTag };

@@ -507,8 +507,9 @@
         currentPlan = data.plan;
         availablePlans = data.available_plans;
         document.getElementById('planName').textContent = data.plan;
-        document.getElementById('planPrice').textContent = '$' + data.price.toLocaleString() + '/month';
-        document.getElementById('billingAmount').textContent = '$' + data.price.toLocaleString();
+        const hasPrice = typeof data.price === 'number';
+        document.getElementById('planPrice').textContent = hasPrice ? '$' + data.price.toLocaleString() + '/month' : 'Custom plan';
+        document.getElementById('billingAmount').textContent = hasPrice ? '$' + data.price.toLocaleString() : '—';
         document.getElementById('billingDate').textContent = data.billing_date ? formatDate(data.billing_date) : '—';
 
         const st = data.subscription_status;
@@ -557,7 +558,7 @@
         document.getElementById('subscriptionLoading').style.display = 'none';
         document.getElementById('subscriptionContent').style.display = 'block';
       } catch (err) {
-        document.getElementById('subscriptionLoading').textContent = 'Could not load subscription info.';
+        document.getElementById('subscriptionLoading').textContent = 'Could not load your plan info.';
       }
     }
 

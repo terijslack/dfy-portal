@@ -26,7 +26,17 @@ router.get('/subscription', requireLogin, async (req, res) => {
     if (!row) return res.status(404).json({ error: 'Account not found.' });
 
     const planKey  = row.plan || 'Starter Presence';
-    const planInfo = PLANS[planKey] || PLANS['Starter Presence'];
+    const planInfo = PLANS[planKey] || null;   // null = a custom plan
+
+    // Custom plans aren't in our plan list, so read the real monthly price from Stripe
+    let price = planInfo ? planInfo.price : null;
+    if (!planInfo && row.stripe_subscription_id && process.env.STRIPE_SECRET_KEY) {
+      try {
+        const sub = await getStripe().subscriptions.retrieve(row.stripe_subscription_id);
+        const cents = sub.items?.data?.[0]?.price?.unit_amount;
+        if (typeof cents === 'number') price = cents / 100;
+      } catch (_) {}
+    }
 
     // Try to get cancel_at from Stripe if subscription is cancelling
     let cancel_at = null;
@@ -39,9 +49,10 @@ router.get('/subscription', requireLogin, async (req, res) => {
 
     res.json({
       plan: planKey,
-      price: planInfo.price,
-      posts_per_month: planInfo.posts,
-      platforms: planInfo.platforms,
+      price,
+      custom: !planInfo,
+      posts_per_month: planInfo ? planInfo.posts : null,
+      platforms: planInfo ? planInfo.platforms : null,
       billing_date: row.billing_date,
       subscription_status: row.subscription_status,
       cancel_at,
@@ -56,7 +67,7 @@ router.get('/subscription', requireLogin, async (req, res) => {
     });
   } catch (err) {
     console.error('Subscription fetch error:', err);
-    res.status(500).json({ error: 'Could not load subscription.' });
+    res.status(500).json({ error: 'Could not load your plan.' });
   }
 });
 
@@ -130,7 +141,7 @@ router.post('/change-plan', requireLogin, async (req, res) => {
     // Retrieve the subscription to get the current item ID
     const subscription = await stripe.subscriptions.retrieve(client.stripe_subscription_id);
     const itemId = subscription.items.data[0]?.id;
-    if (!itemId) return res.status(500).json({ error: 'Could not find subscription item. Contact support.' });
+    if (!itemId) return res.status(500).json({ error: 'We could not find your plan details. Please contact support.' });
 
     // Update the subscription with the new price and immediate proration
     await stripe.subscriptions.update(client.stripe_subscription_id, {

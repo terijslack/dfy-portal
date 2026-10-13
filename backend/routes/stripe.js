@@ -10,7 +10,7 @@ const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { createGHLContact } = require('../services/ghl');
+const { upsertGHLContact } = require('../services/ghl');
 const { requireAdmin } = require('../middleware/auth');
 const { PRICE_TO_PLAN, PLAN_KEY_TO_PRICE, PLAN_KEY_TO_NAME, VALID_PRICE_IDS } = require('../config/plans');
 
@@ -19,7 +19,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 function appUrl() {
   return process.env.APP_URL
     || process.env.BASE_URL
-    || ('https://' + process.env.REPLIT_DEV_DOMAIN);
+    || 'https://dfymarketinggroup.com';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -263,59 +263,13 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  // From here on, any failure returns 500 so Stripe retries the event for up to 3 days.
+  // Every step below is safe to run twice (find-or-create, upserts, tags that are added
+  // only once), so a retry or a duplicate delivery never creates duplicates.
   try {
     // ── checkout.session.completed ──────────────────────────
     if (event.type === 'checkout.session.completed') {
-      const session = event.data.object;
-      const email   = session.metadata?.email || session.customer_email;
-      const userId  = session.metadata?.userId ? parseInt(session.metadata.userId, 10) : null;
-
-      // Resolve plan name: prefer metadata, fall back to DB stripe_price_id
-      let planName = session.metadata?.plan || null;
-
-      // Find the user (by userId if available, otherwise by email)
-      const whereCol   = userId ? 'id'    : 'email';
-      const whereParam = userId ? userId  : email;
-
-      // If plan not in metadata, look it up from stripe_price_id in DB
-      if (!planName) {
-        const lookup = await pool.query(
-          `SELECT stripe_price_id FROM clients WHERE ${whereCol} = $1`,
-          [whereParam]
-        );
-        const priceId = lookup.rows[0]?.stripe_price_id;
-        planName = PRICE_TO_PLAN[priceId] || 'Starter Presence';
-      }
-
-      const result = await pool.query(`
-        UPDATE clients
-        SET
-          status                   = 'active',
-          subscription_status      = 'active',
-          stripe_customer_id       = $1,
-          stripe_subscription_id   = $2,
-          subscription_start_date  = NOW(),
-          plan                     = $3
-        WHERE ${whereCol} = $4
-        RETURNING id, name, stripe_price_id
-      `, [session.customer, session.subscription, planName, whereParam]);
-
-      const client = result.rows[0];
-      console.log(`✅ Subscription activated — plan: ${planName}, customer: ${session.customer}`);
-
-      // Create GHL contact (non-fatal)
-      if (client && process.env.GHL_API_KEY && process.env.GHL_LOCATION_ID) {
-        createGHLContact({
-          name:          client.name,
-          email,
-          stripePriceId: client.stripe_price_id,
-          addons:        session.metadata?.addons || '',
-        }).then(() => {
-          console.log(`✅ GHL contact created: ${email}`);
-        }).catch(err => {
-          console.error(`GHL contact creation failed:`, err.response?.data || err.message);
-        });
-      }
+      await handleCheckoutCompleted(event.data.object);
     }
 
     // ── customer.subscription.updated ──────────────────────
@@ -330,7 +284,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         newStatus = 'cancelling';
       }
 
-      // Sync plan if the price changed
+      // Sync plan if the price changed (custom prices keep whatever plan name they have)
       const priceId  = subscription.items?.data?.[0]?.price?.id;
       const planName = priceId ? (PRICE_TO_PLAN[priceId] || null) : null;
 
@@ -346,17 +300,33 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         );
       }
 
-      console.log(`🔄 Subscription updated — customer: ${subscription.customer}, status: ${newStatus}${planName ? `, plan: ${planName}` : ''}`);
+      console.log(`🔄 Plan updated — customer: ${subscription.customer}, status: ${newStatus}${planName ? `, plan: ${planName}` : ''}`);
     }
 
     // ── customer.subscription.deleted ──────────────────────
     else if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object;
       await pool.query(
-        `UPDATE clients SET subscription_status = 'cancelled' WHERE stripe_customer_id = $1`,
+        `UPDATE clients SET subscription_status = 'cancelled', status = 'cancelled' WHERE stripe_customer_id = $1`,
         [subscription.customer]
       );
-      console.log(`❌ Subscription cancelled — customer: ${subscription.customer}`);
+      console.log(`❌ Plan ended — customer: ${subscription.customer}`);
+    }
+
+    // ── invoice.payment_succeeded ───────────────────────────
+    // Keeps the "next billing date" on the account page current.
+    else if (event.type === 'invoice.payment_succeeded') {
+      const invoice = event.data.object;
+      const periodEnd = invoice.lines?.data?.[0]?.period?.end || invoice.period_end;
+      if (periodEnd) {
+        // Match by Stripe customer, or by email — on a first payment this event can arrive
+        // before the checkout event has linked the Stripe customer to the account.
+        await pool.query(
+          `UPDATE clients SET billing_date = to_timestamp($1)::date
+           WHERE stripe_customer_id = $2 OR ($3::text IS NOT NULL AND email = lower($3::text))`,
+          [periodEnd, invoice.customer, invoice.customer_email || null]
+        );
+      }
     }
 
     // ── invoice.payment_failed ──────────────────────────────
@@ -370,10 +340,121 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     }
 
   } catch (err) {
-    console.error('Webhook DB error:', err);
+    console.error(`Webhook error (${event.type}, ${event.id || 'no id'}):`, err.response?.data || err);
+    return res.status(500).json({ error: 'Webhook processing failed — Stripe will retry.' });
   }
 
   res.json({ received: true });
 });
+
+// ─────────────────────────────────────────────────────────────
+// A payment finished. Works for EVERY way someone can pay:
+//   • the portal signup page (the account already exists, found by userId)
+//   • a Stripe Payment Link / custom package (no account yet, so we create one)
+//   • the admin $1 test button
+// Steps: find or create the portal account → activate it → add the contact + new-client
+// tag in GoHighLevel. GHL's own workflow handles the welcome email and everything after.
+// ─────────────────────────────────────────────────────────────
+async function handleCheckoutCompleted(session) {
+  // One-time payments (not a recurring plan) don't create or activate a client
+  if (session.mode && session.mode !== 'subscription') {
+    console.log(`ℹ️  Skipping non-plan checkout (mode: ${session.mode})`);
+    return;
+  }
+
+  const email = (session.metadata?.email || session.customer_details?.email || session.customer_email || '')
+    .toLowerCase().trim();
+  const userId = session.metadata?.userId ? parseInt(session.metadata.userId, 10) : null;
+
+  if (!email && !userId) {
+    throw new Error('Checkout has no email or userId — cannot tell who paid.');
+  }
+
+  // ── Work out the plan name ──
+  let planName = session.metadata?.plan || null;
+  let priceId  = null;
+
+  if (!planName) {
+    // Payment Links carry no metadata, so ask Stripe what was bought
+    try {
+      const full = await getStripe().checkout.sessions.retrieve(session.id, {
+        expand: ['line_items.data.price.product'],
+      });
+      const price = full.line_items?.data?.[0]?.price;
+      priceId  = price?.id || null;
+      planName = (priceId && PRICE_TO_PLAN[priceId]) || price?.product?.name || null;
+    } catch (err) {
+      console.warn('Could not look up what was purchased:', err.message);
+    }
+  }
+
+  // ── Find the client (by id from signup, otherwise by email) ──
+  const findBy = async (col, val) => {
+    const r = await pool.query(
+      `SELECT id, name, email, stripe_price_id FROM clients WHERE ${col} = $1`, [val]
+    );
+    return r.rows[0] || null;
+  };
+
+  let client = null;
+  if (userId) client = await findBy('id', userId);
+  if (!client && email) client = await findBy('email', email);
+
+  // Signup-page clients saved their price when they signed up; use it if we still have no plan
+  if (!planName && client?.stripe_price_id) planName = PRICE_TO_PLAN[client.stripe_price_id] || null;
+  if (!planName) planName = 'Custom Plan';
+
+  // ── No account yet (Payment Link / custom package) → create one ──
+  if (!client) {
+    const randomPassword = await bcrypt.hash(crypto.randomBytes(24).toString('hex'), 10);
+    const displayName = session.customer_details?.name || email.split('@')[0];
+    const created = await pool.query(`
+      INSERT INTO clients (name, email, password, is_admin, status, subscription_status, plan)
+      VALUES ($1, $2, $3, false, 'active', 'active', $4)
+      ON CONFLICT (email) DO NOTHING
+      RETURNING id, name, email, stripe_price_id
+    `, [displayName, email, randomPassword, planName]);
+    // If a retry or duplicate delivery got there first, the insert is skipped — just find it
+    client = created.rows[0] || await findBy('email', email);
+    console.log(`🆕 Account created for payment-link customer: ${email}`);
+  }
+
+  // ── Activate ──
+  await pool.query(`
+    UPDATE clients
+    SET
+      status                   = 'active',
+      subscription_status      = 'active',
+      stripe_customer_id       = $1,
+      stripe_subscription_id   = $2,
+      subscription_start_date  = NOW(),
+      plan                     = $3
+    WHERE id = $4
+    RETURNING id, name, stripe_price_id
+  `, [session.customer, session.subscription, planName, client.id]);
+
+  if (priceId) {
+    await pool.query('UPDATE clients SET stripe_price_id = $1 WHERE id = $2', [priceId, client.id]);
+  }
+
+  console.log(`✅ Plan activated — plan: ${planName}, customer: ${session.customer}`);
+
+  // ── GoHighLevel: contact + new-client tag ──
+  // The account is already saved above, so a GHL problem never costs anyone their login.
+  // We still fail the webhook so Stripe retries until the tag lands and the welcome
+  // email can fire.
+  if (process.env.GHL_API_KEY && process.env.GHL_LOCATION_ID) {
+    await upsertGHLContact({
+      name:          client.name,
+      email:         client.email || email,
+      planName,
+      stripePriceId: priceId || client.stripe_price_id,
+      addons:        session.metadata?.addons || '',
+    });
+    console.log(`✅ GHL contact tagged new-client: ${client.email || email}`);
+  } else {
+    console.warn('GHL_API_KEY / GHL_LOCATION_ID not set — skipped GHL contact.');
+  }
+}
 
 module.exports = router;

@@ -151,13 +151,13 @@ app.get('*', (req, res) => {
 const dbPool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 runMigrations(dbPool)
-  .then(() => {
+  .catch(err => {
+    // Log it loudly, but keep the site up — a migration hiccup shouldn't take every client offline
+    console.error('❌ Database migration failed (server starting anyway):', err.message);
+  })
+  .finally(() => {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`   Open: http://localhost:${PORT}`);
     });
-  })
-  .catch(err => {
-    console.error('❌ Migration failed, server not started:', err.message);
-    process.exit(1);
   });
