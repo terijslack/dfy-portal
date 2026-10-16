@@ -78,15 +78,43 @@
       text-align: center;
     }
 
-    /* Eyebrow */
-    .lp-eyebrow {
+    /* ── INTRO BLOCK ── */
+    .lp-intro-headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 30px;
+      font-weight: 500;
+      color: #1F3D2C;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      max-width: 520px;
+      margin: 0 auto 16px;
+    }
+    .lp-intro-body {
+      font-size: 16px;
+      color: #6B756B;
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 28px;
+    }
+    .lp-intro-btn {
       display: inline-block;
-      font-size: 11px;
+      background: #7D2A03;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
       font-weight: 600;
-      color: #7D2A03;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
+      padding: 13px 26px;
+      border-radius: 8px;
+      transition: opacity 0.15s;
+    }
+    .lp-intro-btn:hover { opacity: 0.88; }
+
+    /* Divider */
+    .lp-divider {
+      width: 56px;
+      height: 2px;
+      background: #d9cfbd;
+      margin: 44px auto 40px;
     }
 
     /* Headline */
@@ -169,7 +197,11 @@
   <main class="lp-main">
     <div class="lp-content">
 
-      <span class="lp-eyebrow">Free Audit</span>
+      <h2 class="lp-intro-headline">We handle your marketing, so you don't have to.</h2>
+      <p class="lp-intro-body">Done For You Marketing plans, creates, and posts your social media and online presence, so you can get back to running your business.</p>
+      <a href="https://dfymarketinggroup.com" target="_blank" rel="noopener" class="lp-intro-btn">Visit our website →</a>
+
+      <div class="lp-divider"></div>
 
       <h1 class="lp-headline">Ready for your free Google<br><em>Business Profile audit?</em></h1>
 
