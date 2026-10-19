@@ -258,6 +258,31 @@
     .btn-custom-request { display: inline-block; font-size: 15px; font-weight: 500; color: #1F3D2C; text-decoration: none; border-bottom: 1px solid rgba(31,61,44,0.4); padding-bottom: 2px; transition: border-color 0.15s, color 0.15s; }
     .btn-custom-request:hover { color: #7D2A03; border-color: #7D2A03; }
 
+    /* ── OUR WORK ── */
+    .work-section { padding: 80px 48px 24px; }
+    .work-inner { max-width: 1100px; margin: 0 auto; }
+    .work-header { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .work-header .section-heading { margin-bottom: 18px; }
+    .work-body { font-size: 16px; color: #6B756B; line-height: 1.7; margin-bottom: 14px; }
+    .work-note { font-size: 14px; font-style: italic; color: #9AA199; }
+    .gallery-grid { columns: 3; column-gap: 18px; }
+    .gallery-tile { break-inside: avoid; margin-bottom: 18px; border-radius: 14px; position: relative; overflow: hidden; box-shadow: 0 4px 18px rgba(31,61,44,0.09); cursor: pointer; display: block; }
+    .gallery-tile img { width: 100%; display: block; border-radius: 14px; transition: transform 0.35s ease; }
+    .gallery-tile:hover img { transform: scale(1.03); }
+    .gallery-tile figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 14px; background: linear-gradient(transparent, rgba(0,0,0,0.52)); color: #fff; font-size: 13px; line-height: 1.4; border-radius: 0 0 14px 14px; }
+    #lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
+    #lightbox.open { display: flex; }
+    #lightboxImg { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; box-shadow: 0 16px 64px rgba(0,0,0,0.40); }
+    #lightboxClose { position: absolute; top: 20px; right: 24px; background: none; border: none; cursor: pointer; color: #fff; opacity: 0.75; font-size: 32px; line-height: 1; padding: 4px 8px; }
+    #lightboxClose:hover { opacity: 1; }
+    @media (max-width: 768px) {
+      .work-section { padding: 56px 20px 8px; }
+      .work-header { margin-bottom: 32px; }
+      .work-body { font-size: 15px; }
+      .gallery-grid { columns: 2; column-gap: 12px; }
+      .gallery-tile { margin-bottom: 12px; }
+    }
+
     /* ── PRICING ── */
     .pricing-section { padding: 80px 48px; }
     .pricing-inner { max-width: 1100px; margin: 0 auto; }
@@ -560,6 +585,7 @@
     <div class="nav-links">
       <a href="#about">About</a>
       <a href="#services">Services</a>
+      <a href="#work">Our Work</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
       <a href="/login" class="btn-nav-login">Client Login</a>
@@ -574,6 +600,7 @@
   <div class="nav-mobile-drawer" id="navDrawer">
     <a href="#about" class="nav-drawer-link">About</a>
     <a href="#services" class="nav-drawer-link">Services</a>
+    <a href="#work" class="nav-drawer-link">Our Work</a>
     <a href="#faq" class="nav-drawer-link">FAQ</a>
     <a href="#contact" class="nav-drawer-link">Contact</a>
     <a href="/login" class="btn-nav-login">Client Login</a>
@@ -754,6 +781,19 @@ Consultant</div>
           <div class="service-desc">We build your content pillars, shape your brand voice, and map out your campaign calendar, then show up every day to execute it with consistency.</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- OUR WORK -->
+  <section id="work" class="work-section">
+    <div class="work-inner">
+      <div class="work-header">
+        <div class="section-eyebrow">Our Work</div>
+        <h2 class="section-heading">Photos that make your products stand out.</h2>
+        <p class="work-body">A great photo is the difference between a quick scroll-past and a customer who stops, looks, and buys.</p>
+        <p class="work-note">A look at the type of product photos we create for local businesses.</p>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
     </div>
   </section>
 
@@ -999,6 +1039,7 @@ Consultant</div>
             <div class="footer-col-links">
               <a href="#about">About</a>
               <a href="#services">Services</a>
+              <a href="#work">Our Work</a>
               <a href="#faq">FAQ</a>
               <a href="#contact">Contact</a>
             </div>
@@ -1098,6 +1139,39 @@ Consultant</div>
     }
   });
 </script>
-  <script src="https://beta.leadconnectorhq.com/loader.js" data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="6a21e1dc384d3095010738c4"></script>
+  <!-- LIGHTBOX -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button id="lightboxClose" aria-label="Close">&times;</button>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <script>
+    // Our Work photos. To add one: drop the file in frontend/public/gallery/ and add a line here.
+    // caption is optional. Remove a line to remove a photo.
+    const PHOTOS = [
+      { src: "/gallery/photo-5.jpg", alt: "Two gold-bezel wristwatches with purple and red dials displayed on white cushions against a black background", caption: "" },
+      { src: "/gallery/photo-1.jpg", alt: "Gold nugget pendant on a chain hanging against a black background", caption: "" },
+      { src: "/gallery/photo-3.jpg", alt: "Colorful wooden owl jigsaw puzzle with a few loose pieces on a white surface", caption: "" },
+      { src: "/gallery/photo-2.jpg", alt: "Handmade beaded grape-cluster earrings in green and purple hanging from a display", caption: "" },
+      { src: "/gallery/photo-6.jpg", alt: "Blue wedding congratulations card beside a champagne bottle greeting card on a soft gray background", caption: "" },
+      { src: "/gallery/photo-4.jpg", alt: "Hand-painted Vampiric Tutor trading card in a clear display holder", caption: "" },
+    ];
+    const grid = document.getElementById('galleryGrid');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    function openLightbox(src, alt) { lightboxImg.src = src; lightboxImg.alt = alt; lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { lightbox.classList.remove('open'); document.body.style.overflow = ''; lightboxImg.src = ''; }
+    PHOTOS.forEach(photo => {
+      const fig = document.createElement('figure');
+      fig.className = 'gallery-tile';
+      const cap = photo.caption ? `<figcaption>${photo.caption}</figcaption>` : '';
+      fig.innerHTML = `<img src="${photo.src}" alt="${photo.alt}" loading="lazy" />${cap}`;
+      fig.addEventListener('click', () => openLightbox(photo.src, photo.alt));
+      grid.appendChild(fig);
+    });
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
 </body>
 </html>
