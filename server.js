@@ -147,6 +147,10 @@ app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/privacy.html'));
 });
 
+app.get('/gallery', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/gallery.html'));
+});
+
 // Anything else → send to the login page
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/login.html'));

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1789838805662621');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1789838805662621&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <!-- REMOVE THIS LINE when the gallery goes live: -->
+  <meta name="robots" content="noindex">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Done For You Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F2EA; color: #6B756B; }
+    a { text-decoration: none; }
+
+    /* ── NAV (matches home.html exactly) ── */
+    .site-nav {
+      background: #fff;
+      border-bottom: 1px solid rgba(31,61,44,0.10);
+      padding: 0 48px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0; }
+    .nav-logo { width: 60px; height: 60px; object-fit: contain; mix-blend-mode: multiply; display: block; }
+    .nav-wordmark { display: flex; align-items: baseline; gap: 7px; margin-left: -5px; }
+    .nav-wordmark-serif { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; color: #1F3D2C; }
+    .nav-wordmark-sans { font-size: 10px; font-weight: 600; color: #2D6B4F; letter-spacing: 0.16em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { color: #6B756B; font-size: 14px; }
+    .nav-links a.btn-nav-cta { color: #F5F2EA; }
+    .nav-links a:hover { color: #1F3D2C; }
+    .btn-nav-login {
+      border: 1px solid rgba(31,61,44,0.25);
+      border-radius: 6px;
+      padding: 7px 18px;
+      font-size: 13px;
+      color: #1F3D2C;
+      font-weight: 500;
+    }
+    .btn-nav-login:hover { background: rgba(31,61,44,0.05); }
+    .btn-nav-cta {
+      background: #7D2A03;
+      border-radius: 6px;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #F5F2EA;
+      font-weight: 500;
+    }
+    .btn-nav-cta:hover { background: #6a2303; }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 20;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #1F3D2C;
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE NAV DRAWER ── */
+    .nav-mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0; right: 0; bottom: 0;
+      background: #fff;
+      z-index: 9;
+      padding: 28px 24px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+    }
+    .nav-mobile-drawer.open { display: flex; }
+    .nav-mobile-drawer a {
+      display: block;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(31,61,44,0.08);
+      font-size: 17px;
+      color: #1F3D2C;
+      font-weight: 500;
+    }
+    .nav-mobile-drawer a:hover { color: #2D6B4F; }
+    .nav-mobile-drawer .btn-nav-login {
+      margin-top: 20px;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1.5px solid rgba(31,61,44,0.25);
+    }
+    .nav-mobile-drawer .btn-nav-cta {
+      margin-top: 12px;
+      display: block;
+      text-align: center;
+      background: #7D2A03;
+      color: #F5F2EA;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* ── GALLERY HERO ── */
+    .gallery-hero {
+      text-align: center;
+      padding: 72px 24px 48px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: #7D2A03;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .gallery-headline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 44px;
+      font-weight: 400;
+      color: #1F3D2C;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .gallery-body {
+      font-size: 16px;
+      color: #6B756B;
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 18px;
+    }
+    .gallery-note {
+      font-size: 14px;
+      font-style: italic;
+      color: #9AA199;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── PHOTO GRID ── */
+    .gallery-grid-wrap {
+      max-width: 1100px;
+      margin: 48px auto 0;
+      padding: 0 24px;
+    }
+    .gallery-grid {
+      columns: 3;
+      column-gap: 18px;
+    }
+    .gallery-tile {
+      break-inside: avoid;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(31,61,44,0.09);
+      cursor: pointer;
+      display: block;
+    }
+    .gallery-tile img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      transition: transform 0.35s ease;
+    }
+    .gallery-tile:hover img { transform: scale(1.03); }
+    .gallery-tile figcaption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 40px 16px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.52));
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.4;
+      border-radius: 0 0 14px 14px;
+    }
+
+    /* Placeholder tiles (shown when PHOTOS is empty) */
+    .gallery-tile.is-placeholder {
+      cursor: default;
+    }
+    .gallery-tile.is-placeholder:hover img { transform: none; }
+    .tile-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0.55;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── CTA BAND ── */
+    .gallery-cta {
+      background: #1F3D2C;
+      padding: 64px 24px;
+      text-align: center;
+      margin-top: 64px;
+    }
+    .gallery-cta h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: #F5F2EA;
+      margin-bottom: 28px;
+      line-height: 1.2;
+    }
+    .btn-see-plans {
+      display: inline-block;
+      background: #fff;
+      color: #1F3D2C;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 8px;
+      transition: opacity 0.15s;
+    }
+    .btn-see-plans:hover { opacity: 0.88; }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #lightbox.open { display: flex; }
+    #lightboxImg {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      object-fit: contain;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.40);
+    }
+    #lightboxClose {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      opacity: 0.75;
+      font-size: 32px;
+      line-height: 1;
+      padding: 4px 8px;
+    }
+    #lightboxClose:hover { opacity: 1; }
+
+    /* ── FOOTER (matches home.html exactly) ── */
+    .site-footer { background: #1F3D2C; padding: 48px 48px 36px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+    .footer-brand-wordmark { display: flex; align-items: baseline; gap: 7px; margin-bottom: 12px; }
+    .footer-brand-serif { font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600; color: #F5F2EA; }
+    .footer-brand-sans { font-size: 9px; font-weight: 600; color: #EBC99B; letter-spacing: 0.16em; text-transform: uppercase; }
+    .footer-tagline { font-size: 13px; color: rgba(245,242,234,0.50); max-width: 240px; line-height: 1.6; }
+    .footer-cols { display: flex; gap: 48px; }
+    .footer-col-head { font-size: 11px; font-weight: 600; color: #EBC99B; letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 14px; }
+    .footer-col-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col-links a { color: rgba(245,242,234,0.60); font-size: 13px; }
+    .footer-col-links a:hover { color: #F5F2EA; }
+    .footer-login-link { color: #EBC99B !important; font-weight: 500; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; }
+    .footer-copy { font-size: 12px; color: rgba(245,242,234,0.30); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .site-nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .gallery-hero { padding: 48px 20px 36px; }
+      .gallery-headline { font-size: 30px; }
+      .gallery-body { font-size: 15px; }
+      .gallery-grid-wrap { padding: 0 16px; }
+      .gallery-grid { columns: 2; column-gap: 12px; }
+      .gallery-tile { margin-bottom: 12px; }
+      .gallery-cta { padding: 48px 20px; margin-top: 48px; }
+      .gallery-cta h2 { font-size: 24px; }
+
+      .site-footer { padding: 40px 20px 28px; }
+      .footer-top { flex-direction: column; gap: 32px; }
+      .footer-cols { flex-wrap: wrap; gap: 28px; }
+    }
+  </style>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-brand">
+      <img src="/logo-green.png" alt="DFY Logo" class="nav-logo" />
+      <div class="nav-wordmark">
+        <span class="nav-wordmark-serif">Done For You</span>
+        <span class="nav-wordmark-sans">Marketing</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#services">Services</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/#contact">Contact</a>
+      <a href="/login" class="btn-nav-login">Client Login</a>
+      <a href="/signup" class="btn-nav-cta">Get Started</a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div class="nav-mobile-drawer" id="navDrawer">
+    <a href="/#about" class="nav-drawer-link">About</a>
+    <a href="/#services" class="nav-drawer-link">Services</a>
+    <a href="/#faq" class="nav-drawer-link">FAQ</a>
+    <a href="/#contact" class="nav-drawer-link">Contact</a>
+    <a href="/login" class="btn-nav-login">Client Login</a>
+    <a href="/signup" class="btn-nav-cta">Get Started</a>
+  </div>
+
+  <!-- GALLERY HERO -->
+  <section class="gallery-hero">
+    <div class="section-eyebrow">Our Work</div>
+    <h1 class="gallery-headline">Photos that make your products stand out.</h1>
+    <p class="gallery-body">Before anyone reads a word, they judge your product by its photo. A great photo is the difference between a quick scroll-past and a customer who stops, looks, and buys.</p>
+    <p class="gallery-note">A look at the type of product photos we create for local businesses.</p>
+  </section>
+
+  <!-- PHOTO GRID -->
+  <div class="gallery-grid-wrap">
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+
+  <!-- CTA BAND -->
+  <section class="gallery-cta">
+    <h2>Want photos like these for your business?</h2>
+    <a href="/#pricing" class="btn-see-plans">See our plans</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div style="display:inline-flex;flex-direction:column;align-items:center;">
+            <img src="/logo-inverse-transparent.png" alt="" style="width:72px;height:72px;object-fit:contain;display:block;margin-bottom:16px;" />
+            <div class="footer-brand-wordmark">
+              <span class="footer-brand-serif">Done For You</span>
+              <span class="footer-brand-sans">Marketing</span>
+            </div>
+          </div>
+          <p class="footer-tagline">Social media management that keeps you in control.</p>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <div class="footer-col-head">Company</div>
+            <div class="footer-col-links">
+              <a href="/#about">About</a>
+              <a href="/#services">Services</a>
+              <a href="/#faq">FAQ</a>
+              <a href="/#contact">Contact</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-head">Contact</div>
+            <div class="footer-col-links">
+              <a href="mailto:hello@dfymarketinggroup.com">hello@dfymarketinggroup.com</a>
+              <a href="tel:+19163843455">(916) 384-3455</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-head">Legal</div>
+            <div class="footer-col-links">
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/privacy?tab=tos">Terms of Service</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-head">Portal</div>
+            <div class="footer-col-links">
+              <a href="/login" class="footer-login-link">Client Login →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <span class="footer-copy">© 2026 Done For You Marketing Group. All rights reserved.</span>
+        <img src="/logo-inverse-transparent.png" alt="" style="width:38px;height:38px;object-fit:contain;opacity:0.60;" />
+        <div style="display:flex;gap:20px;">
+          <a href="/privacy" style="font-size:12px;color:rgba(245,242,234,0.40);">Privacy Policy</a>
+          <a href="/privacy?tab=tos" style="font-size:12px;color:rgba(245,242,234,0.40);">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button id="lightboxClose" aria-label="Close">&times;</button>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <script>
+    // ── PHOTOS list ────────────────────────────────────────────────────────────
+    // To add photos: drop the file in frontend/public/gallery/, then add a line
+    // here like: { src: "gallery/photo-1.jpg", alt: "Description", caption: "Caption" }
+    // caption is optional. Remove a line to remove a photo from the grid.
+    // When this list is empty, six placeholder tiles are shown instead.
+    const PHOTOS = [
+      // { src: "gallery/photo-1.jpg", alt: "Short description for accessibility", caption: "Optional caption" },
+    ];
+
+    // ── Build grid ─────────────────────────────────────────────────────────────
+    const grid = document.getElementById('galleryGrid');
+
+    const CAMERA_ICON = `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg>`;
+
+    const PLACEHOLDERS = [
+      { style: 'aspect-ratio:0.800;background:linear-gradient(145deg,#E7C7A0,#C98A52);color:#5b4a30', caption: 'Seasonal menu feature' },
+      { style: 'aspect-ratio:1.000;background:linear-gradient(145deg,#2D6B4F,#1F3D2C);color:#fff',   caption: 'Close-up product shot' },
+      { style: 'aspect-ratio:1.333;background:linear-gradient(145deg,#D9CFBD,#B9A98C);color:#5b4a30', caption: 'Storefront flat lay' },
+      { style: 'aspect-ratio:0.800;background:linear-gradient(145deg,#7FA58F,#2D6B4F);color:#fff',   caption: 'Holiday gift bundle' },
+      { style: 'aspect-ratio:1.333;background:linear-gradient(145deg,#E2C9A6,#BF9A68);color:#5b4a30', caption: 'In-use lifestyle shot' },
+      { style: 'aspect-ratio:1.000;background:linear-gradient(145deg,#1F3D2C,#12281D);color:#fff',   caption: 'Detail on linen' },
+    ];
+
+    if (PHOTOS.length === 0) {
+      PLACEHOLDERS.forEach(p => {
+        const fig = document.createElement('figure');
+        fig.className = 'gallery-tile is-placeholder';
+        fig.setAttribute('style', p.style);
+        fig.innerHTML =
+          `<div class="tile-placeholder">${CAMERA_ICON}<span>Your photo here</span></div>` +
+          `<figcaption>${p.caption}</figcaption>`;
+        grid.appendChild(fig);
+      });
+    } else {
+      PHOTOS.forEach(photo => {
+        const fig = document.createElement('figure');
+        fig.className = 'gallery-tile';
+        const cap = photo.caption ? `<figcaption>${photo.caption}</figcaption>` : '';
+        fig.innerHTML = `<img src="${photo.src}" alt="${photo.alt}" loading="lazy" />${cap}`;
+        fig.addEventListener('click', () => openLightbox(photo.src, photo.alt));
+        grid.appendChild(fig);
+      });
+    }
+
+    // ── Lightbox ───────────────────────────────────────────────────────────────
+    const lightbox    = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+
+    function openLightbox(src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      lightboxImg.src = '';
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // ── Hamburger menu ─────────────────────────────────────────────────────────
+    const hamburger = document.getElementById('navHamburger');
+    const drawer    = document.getElementById('navDrawer');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      drawer.classList.toggle('open');
+      document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+    });
+    document.querySelectorAll('.nav-drawer-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+
+  <script src="https://beta.leadconnectorhq.com/loader.js" data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="6a21e1dc384d3095010738c4"></script>
+</body>
+</html>
