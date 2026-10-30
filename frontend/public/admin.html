@@ -26,12 +26,20 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="stylesheet" href="/admin.css" />
 </head>
 <body class="admin-page">
 
   <header class="header">
     <div class="header-inner">
-      <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+      <div class="header-left">
+        <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin" aria-current="page">Clients</a>
+          <a href="/admin/contacts">Contacts</a>
+          <a href="/admin/pipeline">Pipeline</a>
+        </nav>
+      </div>
       <div class="header-right">
         <span class="admin-badge">Admin</span>
         <button class="btn-secondary" id="stripeTestBtn">Run $1 Stripe test</button>
@@ -48,12 +56,29 @@
       <div id="clientList"><div class="loading">Loading…</div></div>
     </aside>
 
-    <!-- Right: posts for selected client -->
+    <!-- Right: selected client -->
     <section class="client-posts-section">
       <div id="clientPostsHeader" class="client-posts-header">
-        <p class="select-prompt">← Select a client to see their posts</p>
+        <p class="select-prompt">← Select a client to see their profile and posts</p>
       </div>
 
+      <div id="clientTabs" class="cd-tabs hidden">
+        <button class="cd-tab active" data-tab="profile" onclick="showTab('profile')">Profile</button>
+        <button class="cd-tab" data-tab="posts" onclick="showTab('posts')">Posts</button>
+      </div>
+
+      <!-- PROFILE TAB -->
+      <div id="profilePane" class="hidden">
+        <div id="profileBody"></div>
+        <div class="cd-savebar hidden" id="profileSaveBar">
+          <span id="profileSaveMsg" class="cd-save-msg"></span>
+          <button class="btn-secondary" id="profileResetBtn" onclick="renderProfile(currentDetail)">Discard changes</button>
+          <button class="btn-primary" id="profileSaveBtn" onclick="saveProfile()">Save changes</button>
+        </div>
+      </div>
+
+      <!-- POSTS TAB -->
+      <div id="postsPane" class="hidden">
       <div id="addPostForm" class="add-post-form hidden">
         <h3>Add New Post</h3>
         <div class="form-row">
@@ -80,6 +105,7 @@
       </div>
 
       <div id="adminPostsGrid" class="posts-grid"></div>
+      </div>
     </section>
 
   </main>
@@ -135,7 +161,10 @@
         return;
       }
 
-      loadClients();
+      await loadClients();
+      // Opened from a contact ("Open client account")
+      const cid = parseInt(new URLSearchParams(location.search).get('client'), 10);
+      if (cid) selectClient(cid);
     }
 
     async function loadClients() {
@@ -156,32 +185,264 @@
         return;
       }
 
-      list.innerHTML = clients.map(client => `
-        <div class="client-item ${client.id == selectedClientId ? 'active' : ''}" onclick="selectClient(${client.id}, '${escapeHtml(client.name)}')">
-          <div class="client-name">${escapeHtml(client.name)}</div>
+      list.innerHTML = clients.map(client => {
+        const pct = Math.round((Number(client.profile_filled) / Number(client.profile_total || 1)) * 100);
+        const status = client.subscription_status || client.status || '';
+        const statusClass = ['active'].includes(status) ? 'ok' : (['past_due', 'cancelled', 'cancelling', 'pending'].includes(status) ? 'warn' : '');
+        return `
+        <div class="client-item ${client.id == selectedClientId ? 'active' : ''}" data-id="${client.id}" onclick="selectClient(${client.id})">
+          <div class="client-name">${escapeHtml(client.business_name || client.name)}</div>
+          ${client.business_name ? `<div class="client-biz">${escapeHtml(client.name)}</div>` : ''}
+          <div class="client-meta">
+            ${client.plan ? `<span class="pill">${escapeHtml(client.plan)}</span>` : ''}
+            ${status ? `<span class="pill ${statusClass}">${escapeHtml(status.replace('_', ' '))}</span>` : ''}
+            <span class="pill">${client.social_count} socials</span>
+          </div>
+          <div class="progress" title="Profile ${pct}% complete"><span style="width:${pct}%"></span></div>
           <div class="client-stats">
             <span class="stat pending">${client.pending} pending</span>
             <span class="stat changes">${client.changes_requested} changes</span>
             <span class="stat approved">${client.approved} approved</span>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     }
 
-    async function selectClient(clientId, clientName) {
-      selectedClientId = clientId;
-      selectedClientName = clientName;
+    let currentDetail = null;
+    let currentTab = 'profile';
 
-      // Update header
-      document.getElementById('clientPostsHeader').innerHTML = `<h2>${escapeHtml(clientName)}'s Posts</h2>`;
+    async function selectClient(clientId) {
+      if (profileDirty() && !confirm('You have unsaved profile changes. Leave without saving?')) return;
+      selectedClientId = clientId;
+
+      document.querySelectorAll('.client-item').forEach(el =>
+        el.classList.toggle('active', el.dataset.id == clientId));
+
+      document.getElementById('clientPostsHeader').innerHTML = '<div class="loading">Loading…</div>';
+      document.getElementById('clientTabs').classList.remove('hidden');
       document.getElementById('addPostForm').classList.remove('hidden');
 
-      // Highlight selected client
-      document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-
+      await loadClientDetail(clientId);
+      showTab(currentTab);
       loadClientPosts(clientId);
     }
+
+    function showTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.cd-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.getElementById('profilePane').classList.toggle('hidden', tab !== 'profile');
+      document.getElementById('postsPane').classList.toggle('hidden', tab !== 'posts');
+    }
+
+    // ─── PROFILE TAB ─────────────────────────────────────────────
+    // Every editable field maps to one column. "src" says which part of the
+    // API response it comes from. Edits save to the same records the client's
+    // own Profile page uses, so there is one copy of each client's data.
+    const VOICES = ['Professional', 'Friendly', 'Trustworthy', 'Confident', 'Engaging', 'Empathetic', 'Innovative'];
+    const GOALS = ['Build brand awareness', 'Grow followers & engagement', 'Generate leads & sales', 'Build community & loyalty', 'Establish thought leadership'];
+    const TIMEZONES = [
+      ['America/Los_Angeles', 'Pacific (Los Angeles)'], ['America/Denver', 'Mountain (Denver)'],
+      ['America/Phoenix', 'Mountain, no DST (Phoenix)'], ['America/Chicago', 'Central (Chicago)'],
+      ['America/New_York', 'Eastern (New York)'], ['America/Anchorage', 'Alaska'], ['Pacific/Honolulu', 'Hawaii'],
+    ];
+    const SECTIONS = [
+      { title: 'Account', desc: 'Login and contact details.', fields: [
+        { key: 'business_name', label: 'Business name', src: 'client' },
+        { key: 'name', label: 'Contact name', src: 'client' },
+        { key: 'email', label: 'Login email', src: 'client', type: 'email', hint: 'Changing this changes the email they log in with.' },
+      ]},
+      { title: 'Business info', desc: 'From the client\'s Business Profile.', fields: [
+        { key: 'industry', label: 'Industry', list: ['Home Services', 'Auto Dealer', 'Beauty Services'] },
+        { key: 'website', label: 'Website', type: 'url' },
+        { key: 'phone', label: 'Business phone', type: 'tel' },
+        { key: 'business_email', label: 'Business email', type: 'email' },
+        { key: 'address', label: 'Street address', full: true },
+        { key: 'city', label: 'City' },
+        { key: 'state', label: 'State' },
+        { key: 'zip', label: 'ZIP' },
+        { key: 'timezone', label: 'Time zone', options: TIMEZONES },
+        { key: 'referral_source', label: 'How they heard about us' },
+      ]},
+      { title: 'Brand & content', desc: 'What we use to write their posts.', fields: [
+        { key: 'brand_voice', label: 'Brand voice', options: VOICES.map(v => [v, v]) },
+        { key: 'primary_goal', label: 'Primary goal', options: GOALS.map(g => [g, g]) },
+        { key: 'target_audience', label: 'Target audience', textarea: true, full: true },
+        { key: 'content_themes', label: 'Customer pain points / content themes', textarea: true, full: true },
+        { key: 'unique_selling_point', label: 'What makes them different', textarea: true, full: true },
+        { key: 'avoid_content', label: 'Topics to avoid', textarea: true, full: true },
+        { key: 'additional_notes', label: 'Anything else they told us', textarea: true, full: true },
+      ]},
+    ];
+
+    async function loadClientDetail(clientId) {
+      try {
+        const res = await fetch(`/api/admin/clients/${clientId}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not load client.');
+        currentDetail = data;
+        const c = data.client;
+        selectedClientName = c.business_name || c.name;
+        document.getElementById('clientPostsHeader').innerHTML = `<h2>${escapeHtml(selectedClientName)}</h2>` +
+          (data.contact_id ? `<a class="btn-secondary btn-sm" style="text-decoration:none" href="/admin/contacts?contact=${data.contact_id}">Notes &amp; deals →</a>` : '');
+        renderProfile(data);
+      } catch (err) {
+        document.getElementById('clientPostsHeader').innerHTML = `<div class="error">${escapeHtml(err.message)}</div>`;
+        document.getElementById('profileBody').innerHTML = '';
+      }
+    }
+
+    function fieldValue(data, f) {
+      const src = f.src === 'client' ? data.client : data.profile;
+      return src[f.key] ?? '';
+    }
+
+    function renderField(data, f) {
+      const v = fieldValue(data, f);
+      const attrs = `data-key="${f.key}" data-original="${escapeHtml(v)}" oninput="markChanged(this)" onchange="markChanged(this)"`;
+      let input;
+      if (f.textarea) {
+        input = `<textarea rows="3" ${attrs}>${escapeHtml(v)}</textarea>`;
+      } else if (f.options) {
+        const known = f.options.some(([val]) => val === v);
+        input = `<select ${attrs}>
+          <option value="">Not set</option>
+          ${f.options.map(([val, label]) => `<option value="${escapeHtml(val)}" ${val === v ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}
+          ${v && !known ? `<option value="${escapeHtml(v)}" selected>${escapeHtml(v)}</option>` : ''}
+        </select>`;
+      } else {
+        const listId = f.list ? `dl-${f.key}` : '';
+        input = `<input type="${f.type || 'text'}" value="${escapeHtml(v)}" ${listId ? `list="${listId}"` : ''} ${attrs} />
+          ${f.list ? `<datalist id="${listId}">${f.list.map(o => `<option value="${escapeHtml(o)}">`).join('')}</datalist>` : ''}`;
+      }
+      return `<div class="cd-field ${f.full ? 'full' : ''}">
+        <label>${escapeHtml(f.label)}</label>${input}
+        ${f.hint ? `<span class="cd-hint">${escapeHtml(f.hint)}</span>` : ''}
+      </div>`;
+    }
+
+    function readonly(label, value, full) {
+      const empty = value === null || value === undefined || value === '';
+      return `<div class="cd-field ${full ? 'full' : ''}"><label>${escapeHtml(label)}</label>
+        <div class="cd-readonly ${empty ? 'empty' : ''}">${empty ? 'Not set' : value}</div></div>`;
+    }
+
+    function renderProfile(data) {
+      if (!data) return;
+      const c = data.client, p = data.profile, b = data.brand_assets;
+      const fmt = d => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+      const sections = SECTIONS.map(s => `
+        <div class="cd-section">
+          <h3>${escapeHtml(s.title)}</h3><p class="cd-desc">${escapeHtml(s.desc)}</p>
+          <div class="cd-grid">${s.fields.map(f => renderField(data, f)).join('')}</div>
+        </div>`).join('');
+
+      const plan = `
+        <div class="cd-section">
+          <h3>Plan & billing</h3><p class="cd-desc">Read-only here. Billing changes happen in Stripe so the two never disagree.</p>
+          <div class="cd-grid">
+            ${readonly('Plan', escapeHtml(c.plan || ''))}
+            ${readonly('Subscription', escapeHtml((c.subscription_status || '').replace('_', ' ')))}
+            ${readonly('Client since', fmt(c.subscription_start_date || c.created_at))}
+            ${readonly('Next billing date', fmt(c.billing_date))}
+            ${c.stripe_customer_id ? readonly('Stripe', `<a href="https://dashboard.stripe.com/customers/${encodeURIComponent(c.stripe_customer_id)}" target="_blank" rel="noopener">Open customer in Stripe ↗</a>`, true) : ''}
+            ${readonly('Profile last updated', fmt(p.updated_at))}
+          </div>
+        </div>`;
+
+      const socials = `
+        <div class="cd-section">
+          <h3>Social accounts</h3><p class="cd-desc">Accounts the client marked as connected on their Profile page.</p>
+          <div class="cd-socials">
+            ${data.socials.length ? data.socials.map(s => `
+              <div class="cd-social">
+                <strong>${escapeHtml(s.platform)}</strong>
+                <span>${escapeHtml(s.username)}</span>
+                ${s.profile_url ? `<a href="${escapeHtml(safeUrl(s.profile_url))}" target="_blank" rel="noopener">${escapeHtml(s.profile_url)}</a>` : ''}
+                <span class="when">${fmt(s.connected_at)}</span>
+              </div>`).join('') : '<div class="cd-readonly empty">None connected yet.</div>'}
+          </div>
+          <div class="cd-grid">${renderField(data, { key: 'social_notes', label: 'Client notes about their accounts', textarea: true, full: true })}</div>
+        </div>`;
+
+      const colors = (b.brand_colors || []).map(col => typeof col === 'string' ? col : (col.hex || col.value || '')).filter(Boolean);
+      const t = b.brand_typography || {};
+      const brand = `
+        <div class="cd-section">
+          <h3>Brand assets</h3><p class="cd-desc">Logo, colors, fonts and photos the client uploaded.</p>
+          <div class="cd-grid">
+            ${readonly('Logo', b.logo_url ? `<a href="${escapeHtml(safeUrl(b.logo_url))}" target="_blank" rel="noopener"><img class="cd-logo" src="${escapeHtml(safeUrl(b.logo_url))}" alt="Logo"></a>` : '')}
+            ${readonly('Brand colors', colors.length ? `<div class="cd-swatches">${colors.map(h => `<span class="cd-swatch"><i style="background:${escapeHtml(h)}"></i>${escapeHtml(h)}</span>`).join('')}</div>` : '')}
+            ${readonly('Heading font', escapeHtml(t.heading_font || ''))}
+            ${readonly('Body font', escapeHtml(t.body_font || ''))}
+            ${t.notes ? readonly('Font notes', escapeHtml(t.notes), true) : ''}
+            ${b.brand_website_url ? readonly('Brand imported from', `<a href="${escapeHtml(safeUrl(b.brand_website_url))}" target="_blank" rel="noopener">${escapeHtml(b.brand_website_url)}</a>`, true) : ''}
+            ${readonly('Photos & content', (b.content_urls || []).length ? `<div class="cd-thumbs">${b.content_urls.map(u => { const url = typeof u === 'string' ? u : (u.url || ''); return url ? `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener"><img src="${escapeHtml(safeUrl(url))}" alt=""></a>` : ''; }).join('')}</div>` : '', true)}
+          </div>
+        </div>`;
+
+      const notes = `
+        <div class="cd-section private">
+          <h3>Internal notes</h3><p class="cd-desc">Only you and your team see this. The client never does.</p>
+          <div class="cd-grid">${renderField(data, { key: 'admin_notes', label: 'Notes', src: 'client', textarea: true, full: true })}</div>
+        </div>`;
+
+      document.getElementById('profileBody').innerHTML = sections + socials + brand + notes + plan;
+      document.getElementById('profileSaveBar').classList.add('hidden');
+      document.getElementById('profileSaveMsg').textContent = '';
+    }
+
+    function markChanged(el) {
+      el.classList.toggle('changed', el.value !== el.dataset.original);
+      const dirty = profileDirty();
+      document.getElementById('profileSaveBar').classList.toggle('hidden', !dirty);
+      if (dirty) {
+        const msg = document.getElementById('profileSaveMsg');
+        msg.className = 'cd-save-msg';
+        msg.textContent = `${document.querySelectorAll('#profileBody .changed').length} unsaved change(s)`;
+      }
+    }
+
+    function profileDirty() {
+      return document.querySelectorAll('#profileBody .changed').length > 0;
+    }
+
+    async function saveProfile() {
+      const changed = [...document.querySelectorAll('#profileBody .changed')];
+      if (!changed.length) return;
+      const body = {};
+      changed.forEach(el => { body[el.dataset.key] = el.value; });
+
+      const btn = document.getElementById('profileSaveBtn');
+      const msg = document.getElementById('profileSaveMsg');
+      btn.disabled = true; btn.textContent = 'Saving…';
+      try {
+        const res = await fetch(`/api/admin/clients/${selectedClientId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not save.');
+        await loadClientDetail(selectedClientId);
+        loadClients();
+        msg.className = 'cd-save-msg ok';
+        msg.textContent = 'Saved. The client will see these changes on their Profile page.';
+        document.getElementById('profileSaveBar').classList.remove('hidden');
+        setTimeout(() => { if (!profileDirty()) document.getElementById('profileSaveBar').classList.add('hidden'); }, 4000);
+      } catch (err) {
+        msg.className = 'cd-save-msg error';
+        msg.textContent = err.message;
+      }
+      btn.disabled = false; btn.textContent = 'Save changes';
+    }
+
+    function safeUrl(u) {
+      try { const url = new URL(u, window.location.origin); return ['http:', 'https:'].includes(url.protocol) ? url.href : '#'; }
+      catch { return '#'; }
+    }
+
+    window.addEventListener('beforeunload', e => { if (profileDirty()) { e.preventDefault(); e.returnValue = ''; } });
 
     async function loadClientPosts(clientId) {
       const grid = document.getElementById('adminPostsGrid');

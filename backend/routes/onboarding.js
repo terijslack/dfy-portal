@@ -58,52 +58,32 @@ function requireAuth(req, res, next) {
 // POST /api/onboarding — save/update intake form data
 router.post('/', requireAuth, async (req, res) => {
   const clientId = req.user.id;
-  const {
-    industry, website, phone, location,
-    address, city, state, zip, business_email, timezone,
-    platforms, social_notes, brand_voice, target_audience,
-    content_themes, unique_selling_point, avoid_content,
-    primary_goal, additional_notes, referral_source
-  } = req.body;
+  const body = req.body || {};
+
+  // Only save the fields this request actually sent. The onboarding form and the
+  // profile page each send a different set of fields; saving one must not blank out
+  // answers that only the other one collects (e.g. referral_source, platforms).
+  const FIELDS = [
+    'industry', 'website', 'phone', 'location', 'address', 'city', 'state', 'zip',
+    'business_email', 'timezone', 'platforms', 'social_notes', 'brand_voice',
+    'target_audience', 'content_themes', 'unique_selling_point', 'avoid_content',
+    'primary_goal', 'additional_notes', 'referral_source',
+  ];
+  const sent = FIELDS.filter(f => f in body);
+  const value = f => f === 'platforms'
+    ? JSON.stringify(body.platforms || [])
+    : (typeof body[f] === 'string' ? (body[f].trim() || null) : (body[f] ?? null));
 
   try {
-    await pool.query(`
-      INSERT INTO client_onboarding
-        (client_id, industry, website, phone, location, address, city, state, zip,
-         business_email, timezone, platforms, social_notes, brand_voice, target_audience,
-         content_themes, unique_selling_point, avoid_content, primary_goal, additional_notes, referral_source,
-         completed_at, updated_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21, NOW(), NOW())
-      ON CONFLICT (client_id) DO UPDATE SET
-        industry = EXCLUDED.industry,
-        website = EXCLUDED.website,
-        phone = EXCLUDED.phone,
-        location = EXCLUDED.location,
-        address = EXCLUDED.address,
-        city = EXCLUDED.city,
-        state = EXCLUDED.state,
-        zip = EXCLUDED.zip,
-        business_email = EXCLUDED.business_email,
-        timezone = EXCLUDED.timezone,
-        platforms = EXCLUDED.platforms,
-        social_notes = EXCLUDED.social_notes,
-        brand_voice = EXCLUDED.brand_voice,
-        target_audience = EXCLUDED.target_audience,
-        content_themes = EXCLUDED.content_themes,
-        unique_selling_point = EXCLUDED.unique_selling_point,
-        avoid_content = EXCLUDED.avoid_content,
-        primary_goal = EXCLUDED.primary_goal,
-        additional_notes = EXCLUDED.additional_notes,
-        referral_source = EXCLUDED.referral_source,
-        updated_at = NOW()
-    `, [
-      clientId, industry, website, phone, location || null,
-      address || null, city || null, state || null, zip || null,
-      business_email || null, timezone || null,
-      JSON.stringify(platforms || []), social_notes || null,
-      brand_voice, target_audience, content_themes, unique_selling_point || null,
-      avoid_content, primary_goal, additional_notes, referral_source
-    ]);
+    const cols = sent.join(', ');
+    const placeholders = sent.map((_, i) => `$${i + 2}`).join(', ');
+    const updates = sent.map(f => `${f} = EXCLUDED.${f}`).concat('updated_at = NOW()').join(', ');
+    await pool.query(
+      `INSERT INTO client_onboarding (client_id${sent.length ? ', ' + cols : ''}, completed_at, updated_at)
+       VALUES ($1${sent.length ? ', ' + placeholders : ''}, NOW(), NOW())
+       ON CONFLICT (client_id) DO UPDATE SET ${updates}`,
+      [clientId, ...sent.map(value)]
+    );
 
     res.json({ success: true });
 

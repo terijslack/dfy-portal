@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Pipeline — DFY Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/admin.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</head>
+<body class="admin-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin">Clients</a>
+          <a href="/admin/contacts">Contacts</a>
+          <a href="/admin/pipeline" aria-current="page">Pipeline</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <span class="admin-badge">Admin</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="crm-main">
+    <div class="crm-top">
+      <div>
+        <h1>Pipeline</h1>
+        <div class="crm-sub">Drag a deal to move it. Website messages land in “New lead”; signups move along on their own.</div>
+      </div>
+      <div class="crm-tools">
+        <input id="search" class="crm-search" type="search" placeholder="Filter deals" />
+        <button class="btn-primary btn-sm" onclick="openDeal()">+ Add deal</button>
+      </div>
+    </div>
+
+    <div class="crm-stats" id="stats"></div>
+    <div class="board" id="board"><div class="crm-empty">Loading…</div></div>
+  </main>
+
+  <!-- Deal dialog (add + edit) -->
+  <div class="dlg-back" id="dealDlg">
+    <div class="dlg">
+      <h2 id="dlgTitle">Deal</h2>
+      <div class="cd-grid">
+        <div class="cd-field full" id="contactPick">
+          <label>Contact *</label>
+          <select id="fContact"></select>
+          <span class="cd-hint">Not listed? <a href="/admin/contacts">Add them on Contacts</a> first.</span>
+        </div>
+        <div class="cd-field full" id="contactShow" style="display:none">
+          <label>Contact</label>
+          <div class="cd-readonly" id="fContactName"></div>
+        </div>
+        <div class="cd-field full"><label>Deal name *</label><input id="fTitle" placeholder="e.g. Smith Plumbing — Growth Engine" /></div>
+        <div class="cd-field"><label>Stage</label><select id="fStage"></select></div>
+        <div class="cd-field"><label>Value ($/month)</label><input id="fValue" inputmode="decimal" placeholder="e.g. 1500" /></div>
+        <div class="cd-field full"><label>Plan</label>
+          <input id="fPlan" list="plans" placeholder="Starter Presence, Growth Engine, Marketing Partner, custom…" />
+          <datalist id="plans"><option value="Starter Presence"><option value="Growth Engine"><option value="Marketing Partner"><option value="Custom"></datalist>
+        </div>
+        <div class="cd-field full" id="lostWrap" style="display:none"><label>Why it was lost</label><input id="fLost" /></div>
+        <div class="cd-field full"><label>Notes</label><textarea id="fNotes" rows="3"></textarea></div>
+      </div>
+      <div class="row-actions">
+        <span class="msg" id="fMsg"></span>
+        <button class="btn-danger-link" id="fDelete" onclick="deleteDeal()">Delete deal</button>
+        <button class="btn-secondary btn-sm" onclick="closeDeal()">Cancel</button>
+        <button class="btn-primary btn-sm" id="fSave" onclick="saveDeal()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin-common.js"></script>
+  <script>
+    const { esc, api, money, ago, setMsg, stageOptions } = Admin;
+    let stages = [];
+    let deals = [];
+    let editing = null; // deal being edited, or null when adding
+
+    async function load() {
+      try {
+        const data = await api('/api/admin/pipeline');
+        stages = data.stages;
+        deals = data.opportunities;
+        render();
+      } catch (err) {
+        document.getElementById('board').innerHTML = `<div class="crm-empty">${esc(err.message)}</div>`;
+      }
+    }
+
+    function sum(list) { return list.reduce((t, d) => t + (Number(d.value) || 0), 0); }
+
+    function render() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const shown = q ? deals.filter(d => [d.title, d.contact_name, d.contact_company, d.contact_email]
+        .some(v => (v || '').toLowerCase().includes(q))) : deals;
+
+      const open = deals.filter(d => !stages.find(s => s.key === d.stage)?.closed);
+      const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+      const wonMonth = deals.filter(d => d.stage === 'won' && d.closed_at && new Date(d.closed_at) >= monthStart);
+      document.getElementById('stats').innerHTML = `
+        <div class="crm-stat"><b>${open.length}</b><span>open deals</span></div>
+        <div class="crm-stat"><b>${money(sum(open)) || '$0'}</b><span>open pipeline / month</span></div>
+        <div class="crm-stat"><b>${wonMonth.length}</b><span>won this month</span></div>
+        <div class="crm-stat"><b>${money(sum(wonMonth)) || '$0'}</b><span>new monthly revenue this month</span></div>`;
+
+      document.getElementById('board').innerHTML = stages.map(s => {
+        const inCol = shown.filter(d => d.stage === s.key);
+        return `
+          <section class="col ${s.closed ? 'closed' : ''}" data-stage="${esc(s.key)}">
+            <div class="col-head"><b>${esc(s.label)}</b><span>${inCol.length}${sum(inCol) ? ' · ' + money(sum(inCol)) : ''}</span></div>
+            ${inCol.map(card).join('') || '<div class="col-empty">Nothing here</div>'}
+          </section>`;
+      }).join('');
+      wireDrag();
+    }
+
+    function card(d) {
+      return `
+        <article class="card" draggable="true" data-id="${d.id}" onclick="openDeal(${d.id})">
+          <b>${esc(d.title)}</b>
+          <div class="who">${esc(d.contact_name)}${d.contact_company && d.contact_company !== d.contact_name ? ' · ' + esc(d.contact_company) : ''}${d.client_id ? ' · client' : ''}</div>
+          <div class="foot"><span class="val">${money(d.value)}</span><span title="Time in this stage">${esc(ago(d.stage_changed_at))}</span></div>
+        </article>`;
+    }
+
+    // ── Drag and drop between columns ──
+    function wireDrag() {
+      document.querySelectorAll('.card').forEach(el => {
+        el.addEventListener('dragstart', e => {
+          el.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', el.dataset.id);
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        el.addEventListener('dragend', () => el.classList.remove('dragging'));
+      });
+      document.querySelectorAll('.col').forEach(col => {
+        col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drop'); });
+        col.addEventListener('dragleave', e => { if (!col.contains(e.relatedTarget)) col.classList.remove('drop'); });
+        col.addEventListener('drop', e => {
+          e.preventDefault();
+          col.classList.remove('drop');
+          moveTo(parseInt(e.dataTransfer.getData('text/plain'), 10), col.dataset.stage);
+        });
+      });
+    }
+
+    async function moveTo(id, stage) {
+      const d = deals.find(x => x.id === id);
+      if (!d || d.stage === stage) return;
+      const body = { stage };
+      if (stage === 'lost') {
+        const why = prompt('Why was it lost? (optional)');
+        if (why === null) return; // cancelled
+        if (why.trim()) body.lost_reason = why;
+      }
+      const before = d.stage;
+      d.stage = stage; d.stage_changed_at = new Date().toISOString();
+      render();
+      try {
+        await api(`/api/admin/opportunities/${id}`, { method: 'PUT', body });
+        load();
+      } catch (err) {
+        d.stage = before; render();
+        alert(err.message);
+      }
+    }
+
+    // ── Add / edit dialog ──
+    async function openDeal(id, contactId) {
+      editing = id ? deals.find(d => d.id === id) : null;
+      const d = editing || {};
+      document.getElementById('dlgTitle').textContent = editing ? 'Edit deal' : 'Add a deal';
+      document.getElementById('fTitle').value = d.title || '';
+      document.getElementById('fStage').innerHTML = stageOptions(stages, d.stage || 'new');
+      document.getElementById('fValue').value = d.value != null ? Number(d.value) : '';
+      document.getElementById('fPlan').value = d.plan || '';
+      document.getElementById('fNotes').value = d.notes || '';
+      document.getElementById('fLost').value = d.lost_reason || '';
+      document.getElementById('fDelete').style.display = editing ? '' : 'none';
+      document.getElementById('contactPick').style.display = editing ? 'none' : '';
+      document.getElementById('contactShow').style.display = editing ? '' : 'none';
+      setMsg(document.getElementById('fMsg'), '');
+      toggleLost();
+
+      if (editing) {
+        document.getElementById('fContactName').innerHTML =
+          `<a href="/admin/contacts?contact=${d.contact_id}">${esc(d.contact_name)}${d.contact_company ? ' · ' + esc(d.contact_company) : ''}</a>`;
+      } else {
+        const sel = document.getElementById('fContact');
+        sel.innerHTML = '<option value="">Loading…</option>';
+        try {
+          const { contacts } = await api('/api/admin/contacts');
+          sel.innerHTML = '<option value="">Choose a contact…</option>' + contacts
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(c => `<option value="${c.id}" ${c.id == contactId ? 'selected' : ''}>${esc(c.name)}${c.company ? ' — ' + esc(c.company) : ''}</option>`).join('');
+        } catch (err) {
+          sel.innerHTML = '<option value="">Could not load contacts</option>';
+        }
+      }
+      document.getElementById('dealDlg').classList.add('open');
+    }
+
+    function closeDeal() { document.getElementById('dealDlg').classList.remove('open'); editing = null; }
+    function toggleLost() { document.getElementById('lostWrap').style.display = document.getElementById('fStage').value === 'lost' ? '' : 'none'; }
+    document.getElementById('fStage').addEventListener('change', toggleLost);
+
+    // Suggest a deal name from the contact when adding
+    document.getElementById('fContact').addEventListener('change', e => {
+      const t = document.getElementById('fTitle');
+      if (!t.value && e.target.value) t.value = e.target.selectedOptions[0].textContent.replace(' — ', ' · ');
+    });
+
+    async function saveDeal() {
+      const v = id => document.getElementById(id).value;
+      const msg = document.getElementById('fMsg');
+      const btn = document.getElementById('fSave');
+      const body = { title: v('fTitle'), stage: v('fStage'), value: v('fValue'), plan: v('fPlan'), notes: v('fNotes') };
+      if (body.stage === 'lost') body.lost_reason = v('fLost');
+      if (!body.title.trim()) return setMsg(msg, 'Give the deal a name.', 'error');
+      btn.disabled = true;
+      try {
+        if (editing) {
+          await api(`/api/admin/opportunities/${editing.id}`, { method: 'PUT', body });
+        } else {
+          if (!v('fContact')) { btn.disabled = false; return setMsg(msg, 'Choose a contact.', 'error'); }
+          await api('/api/admin/opportunities', { method: 'POST', body: { ...body, contact_id: v('fContact') } });
+        }
+        closeDeal();
+        load();
+      } catch (err) {
+        setMsg(msg, err.message, 'error');
+      }
+      btn.disabled = false;
+    }
+
+    async function deleteDeal() {
+      if (!editing || !confirm(`Delete “${editing.title}”? The contact stays; only this deal is removed.`)) return;
+      try {
+        await api(`/api/admin/opportunities/${editing.id}`, { method: 'DELETE' });
+        closeDeal();
+        load();
+      } catch (err) {
+        setMsg(document.getElementById('fMsg'), err.message, 'error');
+      }
+    }
+
+    document.getElementById('search').addEventListener('input', render);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDeal(); });
+    Admin.bindLogout();
+
+    Admin.requireAdmin().then(async () => {
+      await load();
+      // Coming from a contact's "+ Add deal" button
+      const add = new URLSearchParams(location.search).get('add');
+      if (add) {
+        history.replaceState(null, '', location.pathname);
+        openDeal(null, parseInt(add, 10));
+      }
+    });
+  </script>
+</body>
+</html>
