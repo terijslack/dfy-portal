@@ -12,6 +12,51 @@ async function runMigrations(pool) {
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS subscription_start_date TIMESTAMP`,
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS plan                 TEXT`,
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS billing_date         DATE`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS admin_notes          TEXT`,
+
+    // ── Contacts & pipeline (admin CRM) ──
+    // Everyone the business deals with: leads, clients, past clients.
+    `CREATE TABLE IF NOT EXISTS contacts (
+      id          SERIAL PRIMARY KEY,
+      name        TEXT NOT NULL,
+      email       TEXT,
+      phone       TEXT,
+      company     TEXT,
+      source      TEXT,
+      client_id   INTEGER UNIQUE REFERENCES clients(id) ON DELETE SET NULL,
+      notes       TEXT,
+      created_at  TIMESTAMPTZ DEFAULT NOW(),
+      updated_at  TIMESTAMPTZ DEFAULT NOW()
+    )`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS contacts_email_unique ON contacts (LOWER(email)) WHERE email IS NOT NULL`,
+    // Deals moving through the sales pipeline
+    `CREATE TABLE IF NOT EXISTS opportunities (
+      id                SERIAL PRIMARY KEY,
+      contact_id        INTEGER NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      title             TEXT NOT NULL,
+      value             NUMERIC(10,2),
+      stage             TEXT NOT NULL DEFAULT 'new',
+      plan              TEXT,
+      notes             TEXT,
+      lost_reason       TEXT,
+      created_at        TIMESTAMPTZ DEFAULT NOW(),
+      updated_at        TIMESTAMPTZ DEFAULT NOW(),
+      stage_changed_at  TIMESTAMPTZ DEFAULT NOW(),
+      closed_at         TIMESTAMPTZ
+    )`,
+    `CREATE INDEX IF NOT EXISTS opportunities_contact ON opportunities (contact_id)`,
+    // Timeline for each contact: notes, form messages, signups, stage moves.
+    // "ref" makes automatic entries safe to run twice (it's unique when set).
+    `CREATE TABLE IF NOT EXISTS contact_activity (
+      id          SERIAL PRIMARY KEY,
+      contact_id  INTEGER NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      type        TEXT NOT NULL,
+      body        TEXT,
+      ref         TEXT,
+      created_at  TIMESTAMPTZ DEFAULT NOW()
+    )`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS contact_activity_ref ON contact_activity (ref) WHERE ref IS NOT NULL`,
+    `CREATE INDEX IF NOT EXISTS contact_activity_contact ON contact_activity (contact_id, created_at DESC)`,
   ];
 
   for (const sql of steps) {

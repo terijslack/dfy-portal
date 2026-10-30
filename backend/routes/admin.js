@@ -14,8 +14,8 @@ const { requireAdmin } = require('../middleware/auth');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-// Private notes only admins can see (never returned by any client-facing route)
-pool.query(`ALTER TABLE clients ADD COLUMN IF NOT EXISTS admin_notes TEXT`).catch(() => {});
+// admin_notes: private notes only admins can see (added in database/migrate.js;
+// never returned by any client-facing route)
 
 // Business-profile fields the admin can edit. These live in the same tables the
 // client's /profile page reads and writes, so there is only ever one copy of the data.
@@ -66,7 +66,7 @@ router.get('/clients/:id', requireAdmin, async (req, res) => {
   if (!id) return res.status(400).json({ error: 'Invalid client id.' });
 
   try {
-    const [clientRes, profileRes, socialsRes] = await Promise.all([
+    const [clientRes, profileRes, socialsRes, contactRes] = await Promise.all([
       pool.query(
         `SELECT id, name, email, business_name, created_at, plan, status, subscription_status,
                 billing_date, subscription_start_date, stripe_customer_id, admin_notes
@@ -79,6 +79,7 @@ router.get('/clients/:id', requireAdmin, async (req, res) => {
          FROM social_accounts WHERE client_id = $1 ORDER BY connected_at ASC`,
         [id]
       ),
+      pool.query('SELECT id FROM contacts WHERE client_id = $1', [id]).catch(() => ({ rows: [] })),
     ]);
 
     const client = clientRes.rows[0];
@@ -103,6 +104,7 @@ router.get('/clients/:id', requireAdmin, async (req, res) => {
       },
       // Passwords are never sent to the browser, not even to admins
       socials: socialsRes.rows,
+      contact_id: contactRes.rows[0] ? contactRes.rows[0].id : null,
     });
   } catch (err) {
     console.error('Admin get client error:', err);

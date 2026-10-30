@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Contacts — DFY Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/admin.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</head>
+<body class="admin-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin">Clients</a>
+          <a href="/admin/contacts" aria-current="page">Contacts</a>
+          <a href="/admin/pipeline">Pipeline</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <span class="admin-badge">Admin</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="crm-main">
+    <div class="crm-top">
+      <div>
+        <h1>Contacts</h1>
+        <div class="crm-sub">Everyone you deal with — leads from the website and every client. Newest activity first.</div>
+      </div>
+      <div class="crm-tools">
+        <input id="search" class="crm-search" type="search" placeholder="Search name, email, business, phone" />
+        <div class="seg" id="typeSeg">
+          <button data-type="" class="on">All</button>
+          <button data-type="lead">Leads</button>
+          <button data-type="client">Clients</button>
+        </div>
+        <button class="btn-primary btn-sm" onclick="openAdd()">+ Add contact</button>
+      </div>
+    </div>
+
+    <div class="crm-table-wrap">
+      <table class="crm-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th class="hide-sm">Contact</th>
+            <th>Status</th>
+            <th class="hide-sm">Source</th>
+            <th class="hide-sm">Last activity</th>
+          </tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="5" class="crm-empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Contact detail drawer -->
+  <div class="drawer-back" id="drawerBack" onclick="closeDrawer()"></div>
+  <aside class="drawer" id="drawer" aria-label="Contact details">
+    <div class="drawer-head">
+      <div style="min-width:0">
+        <h2 id="dName"></h2>
+        <div class="sub" id="dSub"></div>
+        <div class="badges" id="dBadges"></div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">×</button>
+    </div>
+    <div class="drawer-body" id="dBody"></div>
+  </aside>
+
+  <!-- Add contact dialog -->
+  <div class="dlg-back" id="addDlg">
+    <div class="dlg">
+      <h2>Add a contact</h2>
+      <div class="cd-grid">
+        <div class="cd-field"><label>Name *</label><input id="aName" /></div>
+        <div class="cd-field"><label>Business</label><input id="aCompany" /></div>
+        <div class="cd-field"><label>Email</label><input id="aEmail" type="email" /></div>
+        <div class="cd-field"><label>Phone</label><input id="aPhone" type="tel" /></div>
+        <div class="cd-field full"><label>Where they came from</label>
+          <input id="aSource" list="sources" placeholder="Referral, phone call, event…" />
+          <datalist id="sources"><option value="Referral"><option value="Phone call"><option value="Facebook ad"><option value="Instagram"><option value="Google Business Profile"><option value="Networking event"></datalist>
+        </div>
+        <div class="cd-field full"><label>Notes</label><textarea id="aNotes" rows="2"></textarea></div>
+        <div class="cd-field full"><label style="display:flex;gap:8px;align-items:center;font-weight:500"><input id="aDeal" type="checkbox" checked style="width:auto" /> Also add them to the pipeline</label></div>
+        <div class="cd-field"><label>Stage</label><select id="aStage"></select></div>
+        <div class="cd-field"><label>Deal value ($/month)</label><input id="aValue" inputmode="decimal" placeholder="e.g. 1500" /></div>
+      </div>
+      <div class="row-actions">
+        <span class="msg" id="aMsg"></span>
+        <button class="btn-secondary btn-sm" onclick="closeAdd()">Cancel</button>
+        <button class="btn-primary btn-sm" id="aSave" onclick="saveAdd()">Add contact</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin-common.js"></script>
+  <script>
+    const { esc, api, money, date, ago, when, setMsg, stageOptions } = Admin;
+    let stages = [];
+    let filterType = '';
+    let current = null; // contact detail currently open
+
+    const stageName = key => (stages.find(s => s.key === key) || {}).label || key || '';
+
+    async function loadList() {
+      const q = document.getElementById('search').value.trim();
+      const params = new URLSearchParams();
+      if (q) params.set('q', q);
+      if (filterType) params.set('type', filterType);
+      try {
+        const data = await api('/api/admin/contacts?' + params);
+        stages = data.stages;
+        renderRows(data.contacts);
+      } catch (err) {
+        document.getElementById('rows').innerHTML = `<tr><td colspan="5" class="crm-empty">${esc(err.message)}</td></tr>`;
+      }
+    }
+
+    function statusPills(c) {
+      if (c.client_id) {
+        const sub = c.client_subscription && c.client_subscription !== 'active' && c.client_subscription !== 'inactive'
+          ? ` <span class="pill">${esc(c.client_subscription.replace('_', ' '))}</span>` : '';
+        const pending = c.client_status === 'pending' ? ' <span class="pill stage-checkout">not paid yet</span>' : '';
+        return `<span class="pill client">Client${c.client_plan ? ' · ' + esc(c.client_plan) : ''}</span>${pending}${sub}`;
+      }
+      return c.stage ? `<span class="pill stage-${esc(c.stage)}">${esc(stageName(c.stage))}</span>` : '<span class="pill">Lead</span>';
+    }
+
+    function renderRows(list) {
+      const tb = document.getElementById('rows');
+      if (!list.length) {
+        tb.innerHTML = '<tr><td colspan="5" class="crm-empty">No contacts match.</td></tr>';
+        return;
+      }
+      tb.innerHTML = list.map(c => `
+        <tr data-id="${c.id}" class="${current && current.contact.id === c.id ? 'sel' : ''}" onclick="openContact(${c.id})">
+          <td class="who"><b>${esc(c.name)}</b>${c.company ? `<span class="muted">${esc(c.company)}</span>` : ''}</td>
+          <td class="hide-sm">${c.email ? esc(c.email) : ''}${c.phone ? `<div class="muted">${esc(c.phone)}</div>` : ''}</td>
+          <td>${statusPills(c)}</td>
+          <td class="hide-sm muted">${esc(c.source || '')}</td>
+          <td class="hide-sm muted">${esc(ago(c.last_activity || c.created_at))}</td>
+        </tr>`).join('');
+    }
+
+    // ── Drawer ──
+    async function openContact(id) {
+      document.querySelectorAll('#rows tr').forEach(tr => tr.classList.toggle('sel', tr.dataset.id == id));
+      try {
+        current = await api(`/api/admin/contacts/${id}`);
+        stages = current.stages;
+        renderDrawer();
+        document.getElementById('drawer').classList.add('open');
+        document.getElementById('drawerBack').classList.add('open');
+        history.replaceState(null, '', `?contact=${id}`);
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('drawerBack').classList.remove('open');
+      document.querySelectorAll('#rows tr.sel').forEach(tr => tr.classList.remove('sel'));
+      current = null;
+      history.replaceState(null, '', location.pathname);
+    }
+
+    function field(label, key, value, opts = {}) {
+      const input = opts.textarea
+        ? `<textarea rows="3" data-k="${key}">${esc(value)}</textarea>`
+        : `<input data-k="${key}" type="${opts.type || 'text'}" value="${esc(value)}" ${opts.readonly ? 'readonly disabled' : ''} />`;
+      return `<div class="cd-field ${opts.full ? 'full' : ''}"><label>${esc(label)}</label>${input}${opts.hint ? `<span class="cd-hint">${opts.hint}</span>` : ''}</div>`;
+    }
+
+    function renderDrawer() {
+      const { contact: c, activity, opportunities, client } = current;
+      document.getElementById('dName').textContent = c.name;
+      document.getElementById('dSub').textContent = [c.company, `Added ${date(c.created_at)}`].filter(Boolean).join(' · ');
+      document.getElementById('dBadges').innerHTML = statusPills({
+        client_id: c.client_id, client_plan: client && client.plan, client_status: client && client.status,
+        client_subscription: client && client.subscription_status, stage: opportunities[0] && opportunities[0].stage,
+      });
+
+      const isClient = !!c.client_id;
+      const lockHint = isClient ? 'Edit on the <a href="/admin?client=' + c.client_id + '">Clients page</a>' : '';
+
+      document.getElementById('dBody').innerHTML = `
+        <div class="quick">
+          ${c.email ? `<a href="mailto:${esc(c.email)}">Email</a>` : ''}
+          ${c.phone ? `<a href="tel:${esc(c.phone.replace(/[^\d+]/g, ''))}">Call</a><a href="sms:${esc(c.phone.replace(/[^\d+]/g, ''))}">Text</a>` : ''}
+          ${isClient ? `<a href="/admin?client=${c.client_id}">Open client account →</a>` : ''}
+        </div>
+
+        <div class="cd-section">
+          <h3>Details</h3>
+          <div class="cd-grid" id="detailForm">
+            ${field('Name', 'name', c.name, { readonly: isClient, hint: lockHint })}
+            ${field('Business', 'company', c.company, { readonly: isClient })}
+            ${field('Email', 'email', c.email, { type: 'email', readonly: isClient })}
+            ${field('Phone', 'phone', c.phone, { type: 'tel' })}
+            ${field('Where they came from', 'source', c.source, { full: true })}
+            ${field('Background', 'notes', c.notes, { textarea: true, full: true, hint: 'Standing info about them. For calls and updates, add a note to the timeline below.' })}
+          </div>
+          <div class="row-actions">
+            <span class="msg" id="dMsg"></span>
+            ${isClient ? '' : '<button class="btn-danger-link" onclick="deleteContact()">Delete contact</button>'}
+            <button class="btn-primary btn-sm" onclick="saveDetails()">Save details</button>
+          </div>
+        </div>
+
+        <div class="cd-section">
+          <h3>Deals</h3>
+          <p class="cd-desc">Where this contact is in your pipeline.</p>
+          ${opportunities.length ? opportunities.map(o => `
+            <div class="deal">
+              <div class="deal-top"><b>${esc(o.title)}</b><span class="val">${money(o.value)}</span></div>
+              <div class="deal-meta">${esc(stageName(o.stage))} since ${esc(date(o.stage_changed_at))}${o.plan ? ' · ' + esc(o.plan) : ''}</div>
+              <select onchange="moveDeal(${o.id}, this.value)" aria-label="Move to stage">${stageOptions(stages, o.stage)}</select>
+            </div>`).join('') : '<div class="cd-readonly empty">No deals yet.</div>'}
+          <div class="row-actions">
+            <a class="btn-secondary btn-sm" style="text-decoration:none" href="/admin/pipeline?add=${c.id}">+ Add deal</a>
+          </div>
+        </div>
+
+        <div class="cd-section">
+          <h3>Timeline</h3>
+          <div class="cd-field full">
+            <textarea id="noteText" rows="2" placeholder="Add a note — a call, a meeting, what they asked for…"></textarea>
+          </div>
+          <div class="row-actions">
+            <span class="msg" id="nMsg"></span>
+            <button class="btn-primary btn-sm" onclick="addNote()">Add note</button>
+          </div>
+          <ul class="timeline">
+            ${activity.map(a => `<li class="t-${esc(a.type)}"><div class="t-body">${esc(a.body)}</div><div class="t-when">${esc(when(a.created_at))}</div></li>`).join('')}
+          </ul>
+        </div>`;
+    }
+
+    async function saveDetails() {
+      const msg = document.getElementById('dMsg');
+      const body = {};
+      document.querySelectorAll('#detailForm [data-k]').forEach(el => {
+        if (el.disabled) return;
+        const orig = current.contact[el.dataset.k] ?? '';
+        if (el.value !== orig) body[el.dataset.k] = el.value;
+      });
+      if (!Object.keys(body).length) return setMsg(msg, 'Nothing to save.');
+      try {
+        await api(`/api/admin/contacts/${current.contact.id}`, { method: 'PUT', body });
+        await openContact(current.contact.id);
+        setMsg(document.getElementById('dMsg'), 'Saved.', 'ok');
+        loadList();
+      } catch (err) {
+        setMsg(msg, err.message, 'error');
+      }
+    }
+
+    async function deleteContact() {
+      if (!confirm(`Delete ${current.contact.name}? Their deals and notes will be deleted too. This can't be undone.`)) return;
+      try {
+        await api(`/api/admin/contacts/${current.contact.id}`, { method: 'DELETE' });
+        closeDrawer();
+        loadList();
+      } catch (err) {
+        setMsg(document.getElementById('dMsg'), err.message, 'error');
+      }
+    }
+
+    async function moveDeal(id, stage) {
+      let lost_reason;
+      if (stage === 'lost') lost_reason = prompt('Why was it lost? (optional)') || undefined;
+      try {
+        await api(`/api/admin/opportunities/${id}`, { method: 'PUT', body: { stage, lost_reason } });
+        await openContact(current.contact.id);
+        loadList();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function addNote() {
+      const text = document.getElementById('noteText').value.trim();
+      const msg = document.getElementById('nMsg');
+      if (!text) return setMsg(msg, 'Write a note first.', 'error');
+      try {
+        await api(`/api/admin/contacts/${current.contact.id}/notes`, { method: 'POST', body: { body: text } });
+        await openContact(current.contact.id);
+        loadList();
+      } catch (err) {
+        setMsg(msg, err.message, 'error');
+      }
+    }
+
+    // ── Add contact ──
+    function openAdd() {
+      ['aName', 'aCompany', 'aEmail', 'aPhone', 'aSource', 'aNotes', 'aValue'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('aStage').innerHTML = stageOptions(stages.filter(s => !s.closed), 'new');
+      setMsg(document.getElementById('aMsg'), '');
+      document.getElementById('addDlg').classList.add('open');
+      document.getElementById('aName').focus();
+    }
+    function closeAdd() { document.getElementById('addDlg').classList.remove('open'); }
+
+    async function saveAdd() {
+      const v = id => document.getElementById(id).value;
+      const msg = document.getElementById('aMsg');
+      const btn = document.getElementById('aSave');
+      btn.disabled = true;
+      try {
+        const r = await api('/api/admin/contacts', { method: 'POST', body: {
+          name: v('aName'), company: v('aCompany'), email: v('aEmail'), phone: v('aPhone'),
+          source: v('aSource'), notes: v('aNotes'),
+          create_opportunity: document.getElementById('aDeal').checked, stage: v('aStage'), value: v('aValue'),
+        }});
+        closeAdd();
+        await loadList();
+        openContact(r.id);
+      } catch (err) {
+        setMsg(msg, err.message, 'error');
+      }
+      btn.disabled = false;
+    }
+
+    // ── Wiring ──
+    let searchTimer;
+    document.getElementById('search').addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadList, 250);
+    });
+    document.querySelectorAll('#typeSeg button').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#typeSeg button').forEach(x => x.classList.toggle('on', x === b));
+      filterType = b.dataset.type;
+      loadList();
+    }));
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if (document.getElementById('addDlg').classList.contains('open')) closeAdd();
+      else if (current) closeDrawer();
+    });
+    Admin.bindLogout();
+
+    Admin.requireAdmin().then(async () => {
+      await loadList();
+      const open = new URLSearchParams(location.search).get('contact');
+      if (open) openContact(parseInt(open, 10));
+    });
+  </script>
+</body>
+</html>

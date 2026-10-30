@@ -26,57 +26,20 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <style>
-    /* ── Client list extras ── */
-    .client-item .client-biz { font-size: 12px; color: var(--text-body); margin-top: 2px; }
-    .client-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--bg-surface-alt); color: var(--text-heading); }
-    .pill.ok { background: rgba(45,107,79,0.12); color: var(--color-green-dark); }
-    .pill.warn { background: rgba(125,42,3,0.10); color: var(--color-rust); }
-    .progress { height: 4px; border-radius: 4px; background: var(--bg-surface-alt); margin-top: 8px; overflow: hidden; }
-    .progress > span { display: block; height: 100%; background: var(--color-green); }
-
-    /* ── Client detail ── */
-    .cd-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px; }
-    .cd-tab { background: none; border: none; padding: 10px 16px; font: inherit; font-size: 14px; font-weight: 600; color: var(--text-body); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-    .cd-tab.active { color: var(--text-heading); border-bottom-color: var(--color-rust); }
-    .cd-section { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-    .cd-section h3 { font-size: 15px; color: var(--text-heading); margin: 0 0 4px; }
-    .cd-section .cd-desc { font-size: 12px; color: var(--text-muted); margin: 0 0 16px; }
-    .cd-section.private { border-color: rgba(125,42,3,0.25); background: #FFFCF8; }
-    .cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
-    .cd-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-    .cd-field.full { grid-column: 1 / -1; }
-    .cd-field label { font-size: 12px; font-weight: 600; color: var(--text-heading); }
-    .cd-field input, .cd-field select, .cd-field textarea { font: inherit; font-size: 14px; padding: 9px 11px; border: 1px solid var(--border-strong, rgba(31,61,44,0.2)); border-radius: 8px; background: #fff; color: var(--text-heading); width: 100%; box-sizing: border-box; }
-    .cd-field textarea { resize: vertical; min-height: 64px; }
-    .cd-field input.changed, .cd-field select.changed, .cd-field textarea.changed { border-color: var(--color-rust); background: #FFFAF5; }
-    .cd-readonly { font-size: 14px; color: var(--text-heading); padding: 9px 0; word-break: break-word; }
-    .cd-readonly.empty { color: var(--text-muted); font-style: italic; }
-    .cd-hint { font-size: 11px; color: var(--text-muted); }
-    .cd-socials { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-    .cd-social { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 14px; }
-    .cd-social strong { min-width: 90px; color: var(--text-heading); text-transform: capitalize; }
-    .cd-social a { color: var(--color-green); word-break: break-all; }
-    .cd-social .when { margin-left: auto; font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-    .cd-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
-    .cd-swatch { display: flex; align-items: center; gap: 6px; font-size: 12px; font-family: monospace; }
-    .cd-swatch i { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border-subtle); display: inline-block; }
-    .cd-logo { max-width: 160px; max-height: 90px; object-fit: contain; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px; background: #fff; }
-    .cd-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
-    .cd-thumbs img { width: 84px; height: 84px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-subtle); }
-    .cd-savebar { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; box-shadow: 0 -4px 16px rgba(31,61,44,0.08); }
-    .cd-save-msg { margin-right: auto; font-size: 13px; color: var(--text-body); }
-    .cd-save-msg.error { color: var(--color-rust); }
-    .cd-save-msg.ok { color: var(--color-green-dark); }
-    @media (max-width: 760px) { .cd-grid { grid-template-columns: 1fr; } }
-  </style>
+  <link rel="stylesheet" href="/admin.css" />
 </head>
 <body class="admin-page">
 
   <header class="header">
     <div class="header-inner">
-      <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+      <div class="header-left">
+        <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin" aria-current="page">Clients</a>
+          <a href="/admin/contacts">Contacts</a>
+          <a href="/admin/pipeline">Pipeline</a>
+        </nav>
+      </div>
       <div class="header-right">
         <span class="admin-badge">Admin</span>
         <button class="btn-secondary" id="stripeTestBtn">Run $1 Stripe test</button>
@@ -198,7 +161,10 @@
         return;
       }
 
-      loadClients();
+      await loadClients();
+      // Opened from a contact ("Open client account")
+      const cid = parseInt(new URLSearchParams(location.search).get('client'), 10);
+      if (cid) selectClient(cid);
     }
 
     async function loadClients() {
@@ -316,7 +282,8 @@
         currentDetail = data;
         const c = data.client;
         selectedClientName = c.business_name || c.name;
-        document.getElementById('clientPostsHeader').innerHTML = `<h2>${escapeHtml(selectedClientName)}</h2>`;
+        document.getElementById('clientPostsHeader').innerHTML = `<h2>${escapeHtml(selectedClientName)}</h2>` +
+          (data.contact_id ? `<a class="btn-secondary btn-sm" style="text-decoration:none" href="/admin/contacts?contact=${data.contact_id}">Notes &amp; deals →</a>` : '');
         renderProfile(data);
       } catch (err) {
         document.getElementById('clientPostsHeader').innerHTML = `<div class="error">${escapeHtml(err.message)}</div>`;

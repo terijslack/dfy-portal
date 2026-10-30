@@ -42,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'frontend/public')));
 app.use('/api/auth', require('./backend/routes/auth'));     // login, logout, /me
 app.use('/api/posts', require('./backend/routes/posts'));   // client post actions
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
+app.use('/api/admin', require('./backend/routes/adminCrm')); // admin contacts + pipeline
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
 app.use('/api/account', require('./backend/routes/account')); // subscription management
 app.use('/api/plan-ended', require('./backend/routes/planEnded')); // restart flow for clients whose plan ended
@@ -68,6 +69,14 @@ app.get('/dashboard', (req, res) => {
 
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/admin.html'));
+});
+
+app.get('/admin/contacts', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/admin-contacts.html'));
+});
+
+app.get('/admin/pipeline', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/admin-pipeline.html'));
 });
 
 app.get('/signup', (req, res) => {
