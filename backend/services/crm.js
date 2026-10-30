@@ -81,6 +81,11 @@ async function addInquiryLead(inquiry) {
 
 // Bring the contacts list up to date with the clients table and any contact
 // form messages that came in before contacts existed. Safe to run any time.
+const BILLING_WORDS = {
+  active: 'active', past_due: 'payment late', cancelling: 'cancelling at period end', paused: 'paused',
+  cancelled: 'cancelled', inactive: 'not billing', pending: 'not paid yet',
+};
+
 let syncing = null;
 function syncAll() {
   // If a sync is already running, wait for that one instead of starting another
@@ -107,6 +112,17 @@ async function runSync() {
     await logActivity(pool, contact.id, 'signup', `Created a portal account${c.plan ? ` (${c.plan})` : ''}`, `signup:client:${c.id}`);
     if (contact.created) {
       await pool.query('UPDATE contact_activity SET created_at = $2 WHERE ref = $1', [`signup:client:${c.id}`, c.created_at]);
+    }
+
+    // Billing changes (from Stripe, or a plan pause/cancel) go on the timeline
+    const billing = c.status === 'pending' ? 'pending' : (c.subscription_status || 'inactive');
+    const seen = (await pool.query('SELECT last_billing_status FROM contacts WHERE id = $1', [contact.id])).rows[0];
+    if (seen && seen.last_billing_status !== billing) {
+      if (seen.last_billing_status) {
+        await logActivity(pool, contact.id, 'system',
+          `Billing status changed: ${BILLING_WORDS[seen.last_billing_status] || seen.last_billing_status} → ${BILLING_WORDS[billing] || billing}`);
+      }
+      await pool.query('UPDATE contacts SET last_billing_status = $2 WHERE id = $1', [contact.id, billing]);
     }
 
     const isPaying = c.status === 'active' && c.subscription_status !== 'cancelled';
@@ -149,6 +165,17 @@ async function runSync() {
       }
     }
   }
+
+  // People whose business name matches exactly one client become part of that account
+  await pool.query(`
+    UPDATE contacts p SET account_id = m.id
+    FROM (
+      SELECT REGEXP_REPLACE(LOWER(business_name), '[^a-z0-9]', '', 'g') AS key, MIN(id) AS id
+      FROM clients WHERE is_admin = false AND COALESCE(business_name, '') <> ''
+      GROUP BY 1 HAVING COUNT(*) = 1
+    ) m
+    WHERE p.client_id IS NULL AND p.account_id IS NULL AND LENGTH(m.key) >= 4
+      AND REGEXP_REPLACE(LOWER(COALESCE(p.company, '')), '[^a-z0-9]', '', 'g') = m.key`);
 
   // Older contact-form messages
   try {

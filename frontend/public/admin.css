@@ -176,3 +176,38 @@
 .imp-row small { display: block; color: var(--text-muted); font-size: 12px; word-break: break-word; }
 .imp-row em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--color-rust); background: rgba(125,42,3,0.08); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
 .imp-row.off span { opacity: .55; }
+
+/* ── Accounts ── */
+.crm-table td .muted, .muted { color: var(--text-muted); font-size: 12px; }
+.crm-table td.who .muted { display: block; font-size: 13px; }
+.pill.tier { background: rgba(31,61,44,0.08); color: var(--color-forest); }
+.pill.prio-high { background: rgba(125,42,3,0.12); color: var(--color-rust); }
+.pill.prio-medium { background: rgba(201,168,106,0.25); color: #6B5320; }
+.pill.prio-low { background: var(--bg-surface-alt); color: var(--text-muted); }
+.back-link { display: inline-block; font-size: 14px; font-weight: 600; color: var(--color-green-dark); text-decoration: none; margin-bottom: 12px; }
+.back-link:hover { text-decoration: underline; }
+.acct-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 18px; }
+.acct-title h1 { font-family: var(--font-serif); font-weight: 400; font-size: 30px; color: var(--text-heading); margin: 0; }
+.acct-title .crm-sub { margin-top: 4px; }
+.acct-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.acct-chip { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 10px 14px; min-width: 120px; }
+.acct-chip label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+.prio-select { font: inherit; font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border-strong); background: #fff; color: var(--text-heading); }
+.prio-select.prio-high { background: rgba(125,42,3,0.10); color: var(--color-rust); border-color: rgba(125,42,3,0.3); }
+.prio-select.prio-medium { background: rgba(201,168,106,0.2); color: #6B5320; }
+.prio-select.prio-low { color: var(--text-muted); }
+.person { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--border-subtle); flex-wrap: wrap; }
+.person:first-of-type { border-top: 0; }
+.person-main b { color: var(--text-heading); }
+.person-actions { display: flex; gap: 12px; align-items: center; font-size: 13px; font-weight: 600; }
+.person-actions a { color: var(--color-green-dark); text-decoration: none; }
+.acct-act-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.acct-act-head h3 { margin: 0; }
+.kind { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-right: 8px; vertical-align: 1px; }
+.kind.k-client { background: rgba(125,42,3,0.10); color: var(--color-rust); }
+.kind.k-dfy { background: rgba(45,107,79,0.14); color: var(--color-green-dark); }
+.kind.k-note { background: rgba(201,168,106,0.25); color: #6B5320; }
+.kind.k-system { background: var(--bg-surface-alt); color: var(--text-muted); }
+.timeline li.t-client::before { background: var(--color-rust); }
+.timeline li.t-dfy::before { background: var(--color-green); }
+#acctView .add-post-form { margin-bottom: 20px; }
