@@ -75,6 +75,14 @@ async function runMigrations(pool) {
     `CREATE INDEX IF NOT EXISTS contacts_account ON contacts (account_id)`,
     // Last billing status we saw, so changes from Stripe show up on the account timeline
     `ALTER TABLE contacts ADD COLUMN IF NOT EXISTS last_billing_status TEXT`,
+
+    // ── Metricool ──
+    // Which Metricool "brand" a client's posts schedule under. Set per-account
+    // in the admin once you have Metricool IDs; nothing is sent to Metricool
+    // until this is set.
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_blog_id TEXT`,
+    // Metricool's own id for a post, once it's been scheduled there
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_post_id TEXT`,
   ];
 
   for (const sql of steps) {
