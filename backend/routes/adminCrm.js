@@ -44,17 +44,19 @@ router.get('/contacts', requireAdmin, synced, async (req, res) => {
     where.push(`(LOWER(c.name) LIKE $${params.length} OR LOWER(COALESCE(c.email,'')) LIKE $${params.length}
                  OR LOWER(COALESCE(c.company,'')) LIKE $${params.length} OR COALESCE(c.phone,'') LIKE $${params.length})`);
   }
-  if (type === 'client') where.push('c.client_id IS NOT NULL');
-  if (type === 'lead') where.push('c.client_id IS NULL');
+  if (type === 'client') where.push('(c.client_id IS NOT NULL OR c.account_id IS NOT NULL)');
+  if (type === 'lead') where.push('c.client_id IS NULL AND c.account_id IS NULL');
 
   try {
     const result = await pool.query(`
-      SELECT c.id, c.name, c.email, c.phone, c.company, c.source, c.client_id, c.created_at,
+      SELECT c.id, c.name, c.email, c.phone, c.company, c.source, c.client_id, c.account_id, c.job_title, c.created_at,
+             acct.business_name AS account_name,
              cl.plan AS client_plan, cl.status AS client_status, cl.subscription_status AS client_subscription,
              (SELECT o.stage FROM opportunities o WHERE o.contact_id = c.id ORDER BY o.updated_at DESC LIMIT 1) AS stage,
              (SELECT MAX(a.created_at) FROM contact_activity a WHERE a.contact_id = c.id) AS last_activity
       FROM contacts c
       LEFT JOIN clients cl ON cl.id = c.client_id
+      LEFT JOIN clients acct ON acct.id = c.account_id
       ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
       ORDER BY COALESCE((SELECT MAX(a.created_at) FROM contact_activity a WHERE a.contact_id = c.id), c.created_at) DESC
     `, params);
@@ -118,8 +120,8 @@ router.get('/contacts/:id', requireAdmin, async (req, res) => {
     const [activity, opportunities, client] = await Promise.all([
       pool.query('SELECT id, type, body, created_at FROM contact_activity WHERE contact_id = $1 ORDER BY created_at DESC, id DESC LIMIT 200', [id]),
       pool.query('SELECT * FROM opportunities WHERE contact_id = $1 ORDER BY created_at DESC', [id]),
-      contact.client_id
-        ? pool.query('SELECT id, plan, status, subscription_status, billing_date FROM clients WHERE id = $1', [contact.client_id])
+      (contact.client_id || contact.account_id)
+        ? pool.query('SELECT id, business_name, plan, status, subscription_status, billing_date FROM clients WHERE id = $1', [contact.client_id || contact.account_id])
         : Promise.resolve({ rows: [] }),
     ]);
     res.json({
@@ -139,7 +141,7 @@ router.put('/contacts/:id', requireAdmin, async (req, res) => {
   const id = idParam(req);
   if (!id) return res.status(400).json({ error: 'Invalid contact id.' });
   const b = req.body || {};
-  const FIELDS = ['name', 'email', 'phone', 'company', 'source', 'notes'];
+  const FIELDS = ['name', 'email', 'phone', 'company', 'job_title', 'source', 'notes'];
   const sent = FIELDS.filter(f => f in b);
   if (!sent.length) return res.json({ success: true });
   if ('name' in b && !clean(b.name)) return res.status(400).json({ error: 'Name cannot be empty.' });

@@ -65,6 +65,16 @@ async function runMigrations(pool) {
     `ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS ghl_id TEXT`,
     `CREATE UNIQUE INDEX IF NOT EXISTS opportunities_ghl_id ON opportunities (ghl_id) WHERE ghl_id IS NOT NULL`,
     `CREATE INDEX IF NOT EXISTS contact_activity_contact ON contact_activity (contact_id, created_at DESC)`,
+
+    // ── Accounts ──
+    // How much attention an account needs right now: high | medium | low
+    `ALTER TABLE clients  ADD COLUMN IF NOT EXISTS priority   TEXT`,
+    // People who work at a client's business but don't log in (e.g. the owner)
+    `ALTER TABLE contacts ADD COLUMN IF NOT EXISTS account_id INTEGER REFERENCES clients(id) ON DELETE SET NULL`,
+    `ALTER TABLE contacts ADD COLUMN IF NOT EXISTS job_title  TEXT`,
+    `CREATE INDEX IF NOT EXISTS contacts_account ON contacts (account_id)`,
+    // Last billing status we saw, so changes from Stripe show up on the account timeline
+    `ALTER TABLE contacts ADD COLUMN IF NOT EXISTS last_billing_status TEXT`,
   ];
 
   for (const sql of steps) {

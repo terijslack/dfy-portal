@@ -19,7 +19,7 @@
       <div class="header-left">
         <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
         <nav class="admin-nav" aria-label="Admin">
-          <a href="/admin">Clients</a>
+          <a href="/admin">Accounts</a>
           <a href="/admin/contacts" aria-current="page">Contacts</a>
           <a href="/admin/pipeline">Pipeline</a>
         </nav>
@@ -154,6 +154,7 @@
         const pending = c.client_status === 'pending' ? ' <span class="pill stage-checkout">not paid yet</span>' : '';
         return `<span class="pill client">Client${c.client_plan ? ' · ' + esc(c.client_plan) : ''}</span>${pending}${sub}`;
       }
+      if (c.account_id) return `<span class="pill client">At ${esc(c.account_name || 'a client')}</span>`;
       return c.stage ? `<span class="pill stage-${esc(c.stage)}">${esc(stageName(c.stage))}</span>` : '<span class="pill">Lead</span>';
     }
 
@@ -210,6 +211,7 @@
       document.getElementById('dBadges').innerHTML = statusPills({
         client_id: c.client_id, client_plan: client && client.plan, client_status: client && client.status,
         client_subscription: client && client.subscription_status, stage: opportunities[0] && opportunities[0].stage,
+        account_id: c.account_id, account_name: client && client.business_name,
       });
 
       const isClient = !!c.client_id;
@@ -219,7 +221,7 @@
         <div class="quick">
           ${c.email ? `<a href="mailto:${esc(c.email)}">Email</a>` : ''}
           ${c.phone ? `<a href="tel:${esc(c.phone.replace(/[^\d+]/g, ''))}">Call</a><a href="sms:${esc(c.phone.replace(/[^\d+]/g, ''))}">Text</a>` : ''}
-          ${isClient ? `<a href="/admin?client=${c.client_id}">Open client account →</a>` : ''}
+          ${(c.client_id || c.account_id) ? `<a href="/admin?client=${c.client_id || c.account_id}">Open ${esc((client && client.business_name) || 'client')} account →</a>` : ''}
         </div>
 
         <div class="cd-section">
@@ -229,7 +231,8 @@
             ${field('Business', 'company', c.company, { readonly: isClient })}
             ${field('Email', 'email', c.email, { type: 'email', readonly: isClient })}
             ${field('Phone', 'phone', c.phone, { type: 'tel' })}
-            ${field('Where they came from', 'source', c.source, { full: true })}
+            ${field('Job title', 'job_title', c.job_title)}
+            ${field('Where they came from', 'source', c.source)}
             ${field('Background', 'notes', c.notes, { textarea: true, full: true, hint: 'Standing info about them. For calls and updates, add a note to the timeline below.' })}
           </div>
           <div class="row-actions">

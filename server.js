@@ -39,6 +39,9 @@ app.use(express.static(path.join(__dirname, 'frontend/public')));
 // ─── API ROUTES ───────────────────────────────────────────────
 // All API endpoints live under /api/
 
+// Record what clients do in their portal on their account timeline (admin)
+app.use(require('./backend/middleware/activityLog').activityLog());
+
 app.use('/api/auth', require('./backend/routes/auth'));     // login, logout, /me
 app.use('/api/posts', require('./backend/routes/posts'));   // client post actions
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
