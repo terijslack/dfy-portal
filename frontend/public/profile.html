@@ -269,14 +269,14 @@
     .sc-platform-card:hover:not(:disabled) { box-shadow: 0 4px 12px rgba(0,0,0,0.09); }
     .sc-platform-card.sel  { background: #2D6B4F; border-color: #2D6B4F; box-shadow: 0 5px 16px rgba(45,107,79,0.22); }
     .sc-platform-card.done { background: rgba(45,107,79,0.06); border-color: #2D6B4F; }
-    .sc-platform-card:disabled { opacity: 0.4; cursor: not-allowed; }
+    .sc-platform-card:disabled, .sc-platform-card.over-limit { opacity: 0.4; }
     .sc-card-check { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .sc-platform-card.sel:not(.done) .sc-card-check { background: rgba(255,255,255,0.25); }
     .sc-platform-card.done .sc-card-check { background: #2D6B4F; }
     .sc-card-name { font-size: 12px; font-weight: 700; color: var(--forest); }
     .sc-platform-card.sel .sc-card-name { color: white; }
     .sc-done-label { font-size: 10px; color: #2D6B4F; font-weight: 700; }
-    .sc-limit-banner { font-size: 11px; color: #2D6B4F; background: rgba(45,107,79,0.06); border: 1px solid rgba(45,107,79,0.15); border-radius: 8px; padding: 7px 11px; margin-top: 10px; }
+    .sc-limit-banner { font-size: 11px; color: #7D2A03; background: rgba(125,42,3,0.06); border: 1px solid rgba(125,42,3,0.12); border-radius: 8px; padding: 7px 11px; margin-top: 10px; }
     .sc-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 16px; }
     .sc-chip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: rgba(31,61,44,0.07); color: #6B7280; transition: all 0.3s; }
     .sc-chip.done { background: #2D6B4F; color: white; }
@@ -1038,16 +1038,16 @@
       grid.innerHTML = SC_PLATFORMS.map(p => {
         const isSel  = scSelected.includes(p.id);
         const isDone = !!scCompleted[p.id];
-        const disabled = !isSel && atLimit ? 'disabled' : '';
         const cls = [
           'sc-platform-card',
+          !isSel && atLimit ? 'over-limit' : '',
           isSel && !isDone ? 'sel' : '',
           isDone ? 'done' : '',
         ].filter(Boolean).join(' ');
         const checkSvg = isSel
           ? `<svg class="sc-card-check" width="11" height="11" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
           : '';
-        return `<button class="${cls}" onclick="scToggle('${p.id}')" ${disabled}>
+        return `<button class="${cls}" onclick="scToggle('${p.id}')">
           ${checkSvg}
           <span style="color:${isSel && !isDone ? 'white' : 'var(--forest)'}">${p.icon}</span>
           <span class="sc-card-name">${p.name}</span>
@@ -1055,9 +1055,8 @@
         </button>`;
       }).join('');
 
-      banner.style.display = atLimit ? '' : 'none';
-      // Informational, not an error: they've used every platform their plan includes
-      banner.textContent = `That's ${platformLimit === 2 ? 'both' : 'all ' + platformLimit} platforms your plan includes. To switch one, tap it above to remove it, then pick another.`;
+      // The limit message only shows when they try to add one more (see scToggle)
+      if (!atLimit) banner.style.display = 'none';
 
       /* Progress chips */
       if (scSelected.length > 0) {
@@ -1176,7 +1175,13 @@
           updateCompletion();
         }
       } else {
-        if (scSelected.length >= platformLimit) return;
+        if (scSelected.length >= platformLimit) {
+          const name = (SC_PLATFORMS.find(x => x.id === id) || {}).name || 'another platform';
+          const banner = document.getElementById('scLimitBanner');
+          banner.textContent = `Your plan includes ${platformLimit} platforms. To add ${name}, tap one you've picked above to remove it first, or upgrade your plan on Your Account.`;
+          banner.style.display = '';
+          return;
+        }
         scSelected.push(id);
         scOpenId = id;
       }
