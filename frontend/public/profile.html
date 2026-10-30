@@ -276,7 +276,7 @@
     .sc-card-name { font-size: 12px; font-weight: 700; color: var(--forest); }
     .sc-platform-card.sel .sc-card-name { color: white; }
     .sc-done-label { font-size: 10px; color: #2D6B4F; font-weight: 700; }
-    .sc-limit-banner { font-size: 11px; color: #7D2A03; background: rgba(125,42,3,0.06); border: 1px solid rgba(125,42,3,0.12); border-radius: 8px; padding: 7px 11px; margin-top: 10px; }
+    .sc-limit-banner { font-size: 11px; color: #2D6B4F; background: rgba(45,107,79,0.06); border: 1px solid rgba(45,107,79,0.15); border-radius: 8px; padding: 7px 11px; margin-top: 10px; }
     .sc-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 16px; }
     .sc-chip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: rgba(31,61,44,0.07); color: #6B7280; transition: all 0.3s; }
     .sc-chip.done { background: #2D6B4F; color: white; }
@@ -775,7 +775,7 @@
                 <span id="scCountPill" style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(125,42,3,0.08);color:#7D2A03;">0 of 4</span>
               </div>
               <div class="sc-platform-grid" id="scPlatformGrid"></div>
-              <div class="sc-limit-banner" id="scLimitBanner" style="display:none;">You've hit your plan limit. Tap one above to swap it out.</div>
+              <div class="sc-limit-banner" id="scLimitBanner" style="display:none;"></div>
             </div>
             <div class="sc-chips" id="scChips" style="display:none;"></div>
             <div id="scAccordionArea"></div>
@@ -1056,6 +1056,8 @@
       }).join('');
 
       banner.style.display = atLimit ? '' : 'none';
+      // Informational, not an error: they've used every platform their plan includes
+      banner.textContent = `That's ${platformLimit === 2 ? 'both' : 'all ' + platformLimit} platforms your plan includes. To switch one, tap it above to remove it, then pick another.`;
 
       /* Progress chips */
       if (scSelected.length > 0) {
