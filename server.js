@@ -53,6 +53,7 @@ app.use('/api/onboarding', require('./backend/routes/onboarding')); // client in
 app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
 app.use('/api/socials', require('./backend/routes/socials'));       // social account connections
 app.use('/api/brand-assets', require('./backend/routes/brandAssets')); // logo + content uploads
+app.use('/api/messages', require('./backend/routes/messages'));    // messages from DFY on the client dashboard
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
 // For any URL that isn't an API route, send the appropriate HTML file

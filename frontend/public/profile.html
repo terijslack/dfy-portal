@@ -796,6 +796,7 @@
     </main>
   </div>
 
+  <script src="/profile-completion.js"></script>
   <script>
     /* ── State ── */
     const savedSocials = {};   // platform id -> true, used by completion meter
@@ -941,7 +942,7 @@
       setValue('avoid_content',  o.avoid_content     || '');
       setValue('additional_notes',o.additional_notes || '');
 
-      if (o.brand_identity_mode) biSetMode(o.brand_identity_mode);
+      if (o.brand_identity_mode) biSetMode(o.brand_identity_mode, false);
 
       if (o.brand_voice) {
         document.querySelectorAll('.voice-card').forEach(c => {
@@ -997,19 +998,13 @@
 
     /* ── Completion meter ── */
     function updateCompletion() {
-      const fields = [
-        !!document.getElementById('business_name').value.trim(),
-        !!document.getElementById('industry').value.trim(),
-        !!document.getElementById('city').value.trim(),
-        !!document.getElementById('phone').value.trim(),
-        !!document.getElementById('website').value.trim(),
-        Object.keys(savedSocials).length > 0,
-        !!selectedVoice,
-        !!document.getElementById('target_audience').value.trim(),
-        !!selectedGoal,
-      ];
-      const done = fields.filter(Boolean).length;
-      const pct  = Math.round(done / fields.length * 100);
+      const v = id => document.getElementById(id).value.trim();
+      const industry = v('industry') === 'Other' ? v('industry_other') : v('industry');
+      const { pct, missing } = profileCompletion({
+        businessName: v('business_name'), industry, city: v('city'), phone: v('phone'), website: v('website'),
+        socialsCount: Object.keys(savedSocials).length, brandIdentityMode,
+        brandVoice: selectedVoice, targetAudience: v('target_audience'), primaryGoal: selectedGoal,
+      });
       const r = 17, circ = 2 * Math.PI * r;
 
       document.getElementById('completionArc').setAttribute('stroke-dasharray', `${circ * pct / 100} ${circ * (1 - pct / 100)}`);
@@ -1022,7 +1017,7 @@
         document.getElementById('completionSub').textContent   = 'Your team has everything they need. ✓';
       } else {
         document.getElementById('completionLabel').textContent = 'Complete your profile';
-        document.getElementById('completionSub').textContent   = `${fields.length - done} field${fields.length - done !== 1 ? 's' : ''} still needed`;
+        document.getElementById('completionSub').textContent   = `Still needed: ${missing.join(', ')}`;
       }
     }
 
@@ -1229,12 +1224,17 @@
 
     /* ── Brand Identity mode selector ── */
     let brandIdentityMode = null;
-    function biSetMode(mode) {
+    // save = false when just showing what they chose before (page load), so we
+    // don't re-save it — and re-log it on their timeline — on every visit
+    function biSetMode(mode, save = true) {
+      const changed = mode !== brandIdentityMode;
       brandIdentityMode = mode;
       document.getElementById('biModeCardSelf').classList.toggle('ba-selected', mode === 'self');
       document.getElementById('biModeCardImport').classList.toggle('ba-selected', mode === 'import');
       document.getElementById('biPanelSelf').classList.toggle('ba-active', mode === 'self');
       document.getElementById('biPanelImport').classList.toggle('ba-active', mode === 'import');
+      updateCompletion();
+      if (!save || !changed) return;
       fetch('/api/onboarding/brand-identity-mode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1315,14 +1315,7 @@
           throw new Error(d.error || 'Could not save profile data.');
         }
 
-        // Save brand identity mode
-        if (brandIdentityMode) {
-          await fetch('/api/onboarding/brand-identity-mode', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mode: brandIdentityMode })
-          });
-        }
+        // (Brand identity mode saves the moment they pick it — see biSetMode)
 
         // Save brand assets mode + data
         const baMode = document.getElementById('baModeCardSelf').classList.contains('ba-selected') ? 'self'

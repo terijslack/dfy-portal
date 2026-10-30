@@ -83,6 +83,22 @@ async function runMigrations(pool) {
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_blog_id TEXT`,
     // Metricool's own id for a post, once it's been scheduled there
     `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_post_id TEXT`,
+
+    // ── Messages from DFY to a client ──
+    // Shown on the client's dashboard under "From your marketing team".
+    // ask = true asks them for a yes / no answer; otherwise they just tap "Got it".
+    // Their answer (and optional note) is saved here and on the account timeline.
+    `CREATE TABLE IF NOT EXISTS client_messages (
+      id            SERIAL PRIMARY KEY,
+      client_id     INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+      body          TEXT NOT NULL,
+      ask           BOOLEAN NOT NULL DEFAULT false,
+      response      TEXT,          -- yes | no | ok
+      reply         TEXT,          -- optional note they typed back
+      responded_at  TIMESTAMPTZ,
+      created_at    TIMESTAMPTZ DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS client_messages_client ON client_messages (client_id, created_at DESC)`,
   ];
 
   for (const sql of steps) {
