@@ -577,7 +577,28 @@
       const loginName = (data.people.find(x => x.client_id) || {}).name;
       const list = data.activity.filter(a => !activityFilter ||
         (activityFilter === 'client' ? ['client', 'form'].includes(a.type) : activityFilter === 'other' ? ['signup', 'stage', 'system'].includes(a.type) : a.type === activityFilter));
+      const ANSWER = { yes: ['Yes', 'ok'], no: ['Not this time', ''], ok: ['Got it', 'ok'] };
+      const msgs = data.messages || [];
       document.getElementById('pane-activity').innerHTML = `
+        <div class="cd-section">
+          <h3>Send to their dashboard</h3>
+          <p class="cd-desc">Shows on their dashboard under "From your marketing team". Their answer comes back here and on the timeline below.</p>
+          <div class="cd-field full"><textarea id="msgText" rows="3" placeholder="e.g. Want us to put together a holiday promotion post?"></textarea></div>
+          <div class="row-actions">
+            <label style="display:flex;gap:6px;align-items:center;font-size:13px;margin-right:auto"><input type="checkbox" id="msgAsk" style="width:auto" checked /> Ask for a Yes / Not this time answer</label>
+            <span class="msg" id="mMsg"></span>
+            <button class="btn-primary btn-sm" onclick="sendMessage()">Send</button>
+          </div>
+          ${msgs.length ? `<ul class="timeline" style="margin-top:14px">${msgs.map(m => {
+            const [word, cls] = ANSWER[m.response] || [];
+            return `<li><div class="t-body">${escapeHtml(m.body)}
+                ${m.responded_at
+                  ? `<div style="margin-top:4px"><span class="pill ${cls}">${m.ask ? word : 'Read'}</span>${m.reply ? ` “${escapeHtml(m.reply)}”` : ''}</div>`
+                  : `<div style="margin-top:4px"><span class="pill">Waiting on them</span> <button class="btn-danger-link" onclick="unsendMessage(${m.id})">Take back</button></div>`}
+              </div>
+              <div class="t-when">Sent ${escapeHtml(when(m.created_at))}${m.responded_at ? ' · answered ' + escapeHtml(when(m.responded_at)) : ''}</div></li>`;
+          }).join('')}</ul>` : ''}
+        </div>
         <div class="cd-section">
           <h3>Add an internal note</h3>
           <div class="cd-field full"><textarea id="noteText" rows="2" placeholder="A call, a meeting, what they asked for… (the client won't see this)"></textarea></div>
@@ -609,6 +630,25 @@
         await loadClientDetail(selectedClientId);
         showTab('activity');
       } catch (err) { m.textContent = err.message; m.className = 'msg error'; }
+    }
+
+    async function sendMessage() {
+      const text = document.getElementById('msgText').value.trim();
+      const m = document.getElementById('mMsg');
+      if (!text) { m.textContent = 'Write a message first.'; m.className = 'msg error'; return; }
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/messages`, 'POST', { body: text, ask: document.getElementById('msgAsk').checked });
+        await loadClientDetail(selectedClientId);
+        showTab('activity');
+      } catch (err) { m.textContent = err.message; m.className = 'msg error'; }
+    }
+    async function unsendMessage(mid) {
+      if (!confirm('Take this message back? It will disappear from their dashboard.')) return;
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/messages/${mid}`, 'DELETE');
+        await loadClientDetail(selectedClientId);
+        showTab('activity');
+      } catch (err) { alert(err.message); }
     }
 
     async function savePriority(value) {

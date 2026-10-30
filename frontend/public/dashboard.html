@@ -281,6 +281,15 @@
       width: 90px; justify-content: flex-end;
     }
     .social-perf-likes svg { flex-shrink: 0; }
+    .social-perf-handle { font-size: 11px; color: var(--color-slate-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .social-perf-note { font-size: 11px; color: var(--color-slate-light); margin-top: 10px; line-height: 1.5; }
+    .suggestion-reply {
+      width: 100%; box-sizing: border-box; margin-bottom: 8px;
+      font: inherit; font-size: 12px; padding: 7px 9px; resize: vertical;
+      border: 1px solid rgba(31,61,44,0.15); border-radius: 6px; background: #fff;
+    }
+    .suggestion-when { font-size: 10px; color: var(--color-slate-light); }
+    .suggestion-err { font-size: 11px; color: var(--color-rust); margin-top: 6px; }
 
 
     /* Profile completion banner */
@@ -684,7 +693,7 @@
             <div class="hero-lock-overlay" id="reviewsLock">
               <a href="/profile" class="hero-lock-link">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Upgrade or complete profile to unlock
+                Not connected yet
               </a>
             </div>
           </div>
@@ -698,7 +707,7 @@
             <div class="hero-lock-overlay" id="ratingLock">
               <a href="/profile" class="hero-lock-link">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Upgrade or complete profile to unlock
+                Not connected yet
               </a>
             </div>
           </div>
@@ -716,67 +725,13 @@
         <!-- Main two-col row -->
         <div class="two-col" style="margin-top:16px;">
 
-          <!-- Left: Social Performance -->
-          <div class="db-card hero-card--locked" id="socialPerfCard" style="position:relative;overflow:hidden;">
+          <!-- Left: Social accounts we manage (real stats arrive once Metricool is connected) -->
+          <div class="db-card" id="socialPerfCard">
             <div class="db-card-header">
-              <div class="db-card-title">Social Performance</div>
-              <a href="/profile" class="db-card-link">Connect socials →</a>
+              <div class="db-card-title">Your social accounts</div>
+              <a href="/profile" class="db-card-link">Manage →</a>
             </div>
-            <!-- Teaser rows (blurred) -->
-            <div>
-              <div class="social-perf-row">
-                <div class="social-perf-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                </div>
-                <div class="social-perf-name">Instagram</div>
-                <div class="social-perf-followers">
-                  <div class="social-perf-followers-num">4,820</div>
-                  <div class="social-perf-followers-label">followers</div>
-                </div>
-                <span class="social-perf-gain">+47 this month ↑</span>
-                <div class="social-perf-likes">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  312 likes
-                </div>
-              </div>
-              <div class="social-perf-row">
-                <div class="social-perf-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                </div>
-                <div class="social-perf-name">Facebook</div>
-                <div class="social-perf-followers">
-                  <div class="social-perf-followers-num">1,240</div>
-                  <div class="social-perf-followers-label">followers</div>
-                </div>
-                <span class="social-perf-gain">+12 this month ↑</span>
-                <div class="social-perf-likes">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  87 likes
-                </div>
-              </div>
-              <div class="social-perf-row">
-                <div class="social-perf-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F3D2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                </div>
-                <div class="social-perf-name">LinkedIn</div>
-                <div class="social-perf-followers">
-                  <div class="social-perf-followers-num">380</div>
-                  <div class="social-perf-followers-label">followers</div>
-                </div>
-                <span class="social-perf-gain">+5 this month ↑</span>
-                <div class="social-perf-likes">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  24 likes
-                </div>
-              </div>
-            </div>
-            <!-- Lock overlay -->
-            <div class="hero-lock-overlay" style="justify-content:flex-end;align-items:flex-start;padding:14px 16px;">
-              <a href="/profile" class="hero-lock-link">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2D6B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Connect your socials to unlock
-              </a>
-            </div>
+            <div id="socialList"><div class="empty-state">Loading…</div></div>
           </div>
 
           <!-- Right: From your marketing team -->
@@ -785,31 +740,9 @@
             <div class="db-card">
               <div class="db-card-header">
                 <div class="db-card-title">From your marketing team</div>
+                <a href="/contact" class="db-card-link">Message us →</a>
               </div>
-              <div class="suggestion">
-                <div class="suggestion-top">
-                  <div class="suggestion-avatar">DFY</div>
-                  <div class="suggestion-from">Done For You Marketing</div>
-                  <div class="suggestion-tag">Opportunity</div>
-                </div>
-                <div class="suggestion-body"><strong>Summer is approaching</strong> — peak season for many businesses. Want us to create a seasonal promotion post?</div>
-                <div class="suggestion-actions">
-                  <button class="btn-yes" onclick="dismissSuggestion(this, 'summer')">Yes, create it</button>
-                  <button class="btn-no" onclick="dismissSuggestion(this, 'summer')">Not this time</button>
-                </div>
-              </div>
-              <div class="suggestion" style="margin-top:8px;" id="suggestion2">
-                <div class="suggestion-top">
-                  <div class="suggestion-avatar">DFY</div>
-                  <div class="suggestion-from">Done For You Marketing</div>
-                  <div class="suggestion-tag">Seasonal</div>
-                </div>
-                <div class="suggestion-body"><strong>Consistency drives results.</strong> We recommend 3–4 posts per week for maximum reach. Your calendar is looking great!</div>
-                <div class="suggestion-actions">
-                  <button class="btn-yes" onclick="dismissSuggestion(this, 'consistency')">Sounds good</button>
-                  <button class="btn-no" onclick="dismissSuggestion(this, 'consistency')">Got it</button>
-                </div>
-              </div>
+              <div id="teamMessages"><div class="empty-state">Loading…</div></div>
             </div>
 
           </div>
@@ -820,6 +753,7 @@
     </main>
   </div>
 
+  <script src="/profile-completion.js"></script>
   <script>
     /* ── Sidebar ────────────────────────────────────── */
     function toggleSidebar() {
@@ -956,6 +890,103 @@
       sessionStorage.setItem('dismissed_' + key, '1');
     }
 
+    /* ── Your social accounts (the ones they've connected) ─────────── */
+    const PLATFORM_NAMES = { instagram: 'Instagram', facebook: 'Facebook', linkedin: 'LinkedIn', tiktok: 'TikTok',
+      twitter: 'X (Twitter)', x: 'X (Twitter)', youtube: 'YouTube', google: 'Google Business', gbp: 'Google Business' };
+    async function loadSocials() {
+      const el = document.getElementById('socialList');
+      try {
+        const { accounts = [] } = await fetch('/api/socials').then(r => r.json());
+        if (!accounts.length) {
+          el.innerHTML = `<div class="empty-state">No accounts connected yet.<br><a href="/profile" style="color:#2D6B4F;font-weight:500;text-decoration:none;">Connect your socials →</a></div>`;
+          return;
+        }
+        el.innerHTML = accounts.map(a => `
+          <div class="social-perf-row">
+            <div class="social-perf-icon">${platformIcon(a.platform)}</div>
+            <div class="social-perf-name">${escapeHtml(PLATFORM_NAMES[a.platform] || a.platform)}</div>
+            <div class="social-perf-followers">
+              <div class="social-perf-handle">${/^https?:\/\//i.test(a.profile_url || '')
+                ? `<a href="${escapeHtml(a.profile_url)}" target="_blank" rel="noopener" style="color:inherit">${escapeHtml(a.username || a.profile_url)}</a>`
+                : escapeHtml(a.username || '')}</div>
+            </div>
+            <span class="social-perf-gain">Connected</span>
+          </div>`).join('') +
+          `<div class="social-perf-note">Follower and engagement numbers will show here once we finish connecting your accounts to our reporting.</div>`;
+      } catch {
+        el.innerHTML = '<div class="empty-state">Could not load your accounts.</div>';
+      }
+    }
+
+    /* ── Google review cards: included on Growth Engine and Marketing Partner ── */
+    async function loadPlanCards() {
+      try {
+        const { plan } = await fetch('/api/account/subscription').then(r => r.json());
+        const hasGBP = ['Growth Engine', 'Marketing Partner'].includes(plan);
+        const msg = hasGBP ? 'Shows once your Google Business Profile is connected' : 'Included on Growth Engine and Marketing Partner';
+        const href = hasGBP ? '/gbp' : '/account';
+        ['reviewsLock', 'ratingLock'].forEach(id => {
+          const a = document.querySelector(`#${id} a`);
+          if (a) { a.lastChild.textContent = ' ' + msg; a.href = href; }
+        });
+      } catch {}
+    }
+
+    /* ── From your marketing team (sent from the admin) ───────────── */
+    const fmtWhen = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    async function loadMessages() {
+      const el = document.getElementById('teamMessages');
+      try {
+        const { messages = [] } = await fetch('/api/messages').then(r => r.json());
+        if (!messages.length) {
+          el.innerHTML = `<div class="empty-state">Nothing new from your team right now.</div>`;
+          return;
+        }
+        el.innerHTML = messages.map(m => `
+          <div class="suggestion" data-id="${m.id}">
+            <div class="suggestion-top">
+              <div class="suggestion-avatar">DFY</div>
+              <div class="suggestion-from">Done For You Marketing</div>
+              <div class="suggestion-when">${fmtWhen(m.created_at)}</div>
+            </div>
+            <div class="suggestion-body">${escapeHtml(m.body).replace(/\n/g, '<br>')}</div>
+            <textarea class="suggestion-reply" rows="2" placeholder="Add a note for us (optional)"></textarea>
+            <div class="suggestion-actions">
+              ${m.ask
+                ? `<button class="btn-yes" onclick="respondMessage(this, 'yes')">Yes</button>
+                   <button class="btn-no" onclick="respondMessage(this, 'no')">Not this time</button>`
+                : `<button class="btn-yes" onclick="respondMessage(this, 'ok')">Got it</button>`}
+            </div>
+          </div>`).join('');
+      } catch {
+        el.innerHTML = '<div class="empty-state">Could not load messages.</div>';
+      }
+    }
+
+    async function respondMessage(btn, answer) {
+      const card = btn.closest('.suggestion');
+      const reply = card.querySelector('.suggestion-reply').value.trim();
+      card.querySelectorAll('button').forEach(b => b.disabled = true);
+      card.querySelector('.suggestion-err')?.remove();
+      try {
+        const r = await fetch(`/api/messages/${card.dataset.id}/respond`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answer, reply }),
+        });
+        if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Could not send. Try again.');
+        card.querySelector('.suggestion-reply').remove();
+        card.querySelector('.suggestion-actions').innerHTML =
+          `<span class="suggestion-when" style="color:#2D6B4F;font-weight:600">✓ Sent to your team</span>`;
+        setTimeout(() => {
+          card.style.transition = 'opacity 0.3s'; card.style.opacity = '0';
+          setTimeout(() => { card.remove(); if (!document.querySelector('#teamMessages .suggestion')) loadMessages(); }, 320);
+        }, 1800);
+      } catch (err) {
+        card.querySelectorAll('button').forEach(b => b.disabled = false);
+        card.insertAdjacentHTML('beforeend', `<div class="suggestion-err">${escapeHtml(err.message)}</div>`);
+      }
+    }
+
     /* ── Main init ─────────────────────────────────── */
     async function init() {
       const res  = await fetch('/api/auth/me');
@@ -967,23 +998,26 @@
       document.getElementById('homeGreeting').textContent = `Welcome back, ${firstName}!`;
       initSidebar(data.user.business_name || data.user.name);
 
+      /* These don't depend on each other — load them alongside the profile */
+      loadSocials();
+      loadMessages();
+      loadPlanCards();
+
       /* Onboarding check + populate profile details */
       try {
-        const ob = await fetch('/api/onboarding');
-        const od = await ob.json();
-
+        const [od, sd] = await Promise.all([
+          fetch('/api/onboarding').then(r => r.json()),
+          fetch('/api/socials').then(r => r.json()).catch(() => ({})),
+        ]);
         const o = od.onboarding || {};
 
-        /* Profile completion banner */
-        const fields = [
-          !!data.user.business_name,
-          !!o.industry,
-          !!o.location,
-          !!o.phone,
-          !!o.website,
-        ];
-        const filled = fields.filter(Boolean).length;
-        const pct    = Math.round(filled / fields.length * 100);
+        /* Profile completion banner — same calculation as the Business Profile page */
+        const { pct } = profileCompletion({
+          businessName: data.user.business_name, industry: o.industry, city: o.city,
+          phone: o.phone, website: o.website, socialsCount: (sd.accounts || []).length,
+          brandIdentityMode: o.brand_identity_mode, brandVoice: o.brand_voice,
+          targetAudience: o.target_audience, primaryGoal: o.primary_goal,
+        });
         const r = 19, circ = 2 * Math.PI * r;
 
         if (pct < 100 && !sessionStorage.getItem('profileBannerDismissed')) {
@@ -1009,15 +1043,20 @@
           document.getElementById('profileBannerSub').textContent   = 'Your team has everything they need to create on-brand content for you.';
           document.getElementById('profileBannerCta').textContent   = 'View profile →';
 
-          /* Launch confetti */
-          launchConfetti();
-
-          /* After 3s transition to calm "Your Business Profile" state */
-          setTimeout(() => {
-            stopConfetti();
+          /* Celebrate once (per browser), then just show the calm state */
+          const calm = () => {
             document.getElementById('profileBannerTitle').textContent = 'Your Business Profile';
             document.getElementById('profileBannerSub').textContent   = 'View or update your details anytime.';
-          }, 3000);
+          };
+          let celebrated = false;
+          try { celebrated = localStorage.getItem('profileCelebrated') === '1'; localStorage.setItem('profileCelebrated', '1'); } catch {}
+          if (celebrated) {
+            calm();
+          } else {
+            launchConfetti();
+            /* After 3s transition to calm "Your Business Profile" state */
+            setTimeout(() => { stopConfetti(); calm(); }, 3000);
+          }
         }
       } catch {}
 
@@ -1028,10 +1067,10 @@
         const posts = pd.posts || [];
 
         const now        = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        const thisMonth  = posts.filter(p => new Date(p.scheduled_date) >= monthStart);
+        // scheduled_date is a plain date — read it as a calendar day, not a UTC midnight
+        const dayOf      = s => { const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
+        const thisMonth  = posts.filter(p => { const d = dayOf(p.scheduled_date); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); });
         const pending    = posts.filter(p => p.status === 'pending');
-        const approved   = posts.filter(p => p.status === 'approved' || p.status === 'queued');
 
         /* Hero stats */
         const pendingCount   = pending.length;
@@ -1052,56 +1091,20 @@
         document.getElementById('statScheduled').textContent = scheduledCount;
         document.getElementById('statScheduledSub').textContent = scheduledCount === 1 ? 'piece of content going out' : 'pieces of content going out';
 
-        /* Cards 3 & 4: unlock if plan includes GBP management */
-        const gbpPlans = ['growth-engine', 'done-for-you-partner'];
-        const hasGBP   = gbpPlans.includes(data.user.plan);
-        if (hasGBP) {
-          document.getElementById('cardReviews').classList.remove('hero-card--locked');
-          document.getElementById('reviewsLock').style.display  = 'none';
-          document.getElementById('cardRating').classList.remove('hero-card--locked');
-          document.getElementById('ratingLock').style.display   = 'none';
-        }
-
-        /* Approval queue */
-        const approvalEl = document.getElementById('approvalList');
-        if (pending.length === 0) {
-          approvalEl.innerHTML = `<div class="empty-state"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 6px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>All caught up! No posts waiting.</div>`;
-        } else {
-          approvalEl.innerHTML = pending.slice(0, 4).map(p => `
-            <div class="post-item">
-              <div class="post-icon-sm">${platformIcon(p.platform)}</div>
-              <div class="post-body">
-                <div class="post-caption">${escapeHtml(p.caption)}</div>
-                <div class="post-meta">
-                  <span class="badge-review">Needs review</span>
-                  <span class="post-date">${formatDate(p.scheduled_date)}</span>
-                </div>
-              </div>
-              <button class="btn-approve-sm" onclick="approvePost(${p.id}, this)">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><polyline points="20 6 9 14 4 10"/></svg> Approve
-              </button>
-            </div>
-          `).join('');
-        }
-
         /* Month feed */
         const feedEl     = document.getElementById('monthFeed');
-        const monthPosts = posts
-          .filter(p => {
-            const d = new Date(p.scheduled_date);
-            return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-          })
-          .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
+        const monthPosts = thisMonth.slice().sort((a, b) => dayOf(a.scheduled_date) - dayOf(b.scheduled_date));
 
         if (monthPosts.length === 0) {
           feedEl.innerHTML = `<div class="empty-state">No content scheduled this month yet.<br><a href="/posts" style="color:#2D6B4F;font-weight:500;text-decoration:none;">View all posts →</a></div>`;
         } else {
           const show = monthPosts.slice(0, 10);
           feedEl.innerHTML = show.map(p => {
-            const d      = new Date(p.scheduled_date);
+            const d      = dayOf(p.scheduled_date);
             const dayStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             let badge = '';
             if (p.status === 'pending')        badge = `<span class="badge-pending">Needs approval</span>`;
+            else if (p.status === 'changes_requested') badge = `<span class="badge-pending">Changes requested</span>`;
             else if (p.status === 'published') badge = `<span class="badge-published">Published</span>`;
             else                               badge = `<span class="badge-scheduled">Scheduled</span>`;
             return `

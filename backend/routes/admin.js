@@ -3,6 +3,8 @@
 // GET    /api/admin/clients/:id                → one account: profile, plan, people, brand, socials, deals, timeline
 // PUT    /api/admin/clients/:id                → edit account info, priority, business profile, internal notes
 // POST   /api/admin/clients/:id/notes          → add an internal note to the account timeline
+// POST   /api/admin/clients/:id/messages       → send a message / yes-no question to their dashboard
+// DELETE /api/admin/clients/:id/messages/:mid  → take back a message they haven't answered
 // POST   /api/admin/clients/:id/people         → add a person to the account (new, or link an existing contact)
 // DELETE /api/admin/clients/:id/people/:pid    → unlink a person from the account
 // GET    /api/admin/clients/:id/posts          → get all posts for a specific client
@@ -94,7 +96,7 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
   if (!id) return res.status(400).json({ error: 'Invalid client id.' });
 
   try {
-    const [clientRes, profileRes, socialsRes, peopleRes, activityRes, dealsRes] = await Promise.all([
+    const [clientRes, profileRes, socialsRes, peopleRes, activityRes, dealsRes, messagesRes] = await Promise.all([
       pool.query(
         `SELECT id, name, email, business_name, created_at, plan, status, subscription_status,
                 billing_date, subscription_start_date, stripe_customer_id, admin_notes, priority,
@@ -128,6 +130,11 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
          ORDER BY o.created_at DESC`,
         [id]
       ),
+      pool.query(
+        `SELECT id, body, ask, response, reply, responded_at, created_at
+         FROM client_messages WHERE client_id = $1 ORDER BY created_at DESC LIMIT 50`,
+        [id]
+      ),
     ]);
 
     const client = clientRes.rows[0];
@@ -157,6 +164,7 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
       contact_id: (people.find(x => x.client_id === id) || {}).id || null,
       activity: activityRes.rows,
       deals: dealsRes.rows,
+      messages: messagesRes.rows,
     });
   } catch (err) {
     console.error('Admin get client error:', err);
@@ -269,6 +277,46 @@ router.post('/clients/:id/notes', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin account note error:', err);
     res.status(500).json({ error: 'Could not save note.' });
+  }
+});
+
+// POST /api/admin/clients/:id/messages — { body, ask } shows a message on the
+// client's dashboard under "From your marketing team". ask = true asks them for
+// a yes / no answer; otherwise they just tap "Got it".
+router.post('/clients/:id/messages', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const text = typeof req.body?.body === 'string' ? req.body.body.trim() : '';
+  const ask = !!req.body?.ask;
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  if (!text) return res.status(400).json({ error: 'Write a message first.' });
+  if (text.length > 2000) return res.status(400).json({ error: 'Keep it under 2,000 characters.' });
+  try {
+    const exists = await pool.query('SELECT 1 FROM clients WHERE id = $1 AND is_admin = false', [id]);
+    if (!exists.rows.length) return res.status(404).json({ error: 'Account not found.' });
+    await pool.query('INSERT INTO client_messages (client_id, body, ask) VALUES ($1, $2, $3)', [id, text, ask]);
+    await logForClient(id, 'dfy', `DFY sent ${ask ? 'a yes/no question' : 'a message'} to their dashboard: “${text.length > 140 ? text.slice(0, 139) + '…' : text}”`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Admin send message error:', err);
+    res.status(500).json({ error: 'Could not send message.' });
+  }
+});
+
+// DELETE /api/admin/clients/:id/messages/:mid — take back a message they haven't answered yet
+router.delete('/clients/:id/messages/:mid', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const mid = parseInt(req.params.mid, 10);
+  if (!id || !mid) return res.status(400).json({ error: 'Invalid id.' });
+  try {
+    const r = await pool.query(
+      'DELETE FROM client_messages WHERE id = $1 AND client_id = $2 AND responded_at IS NULL RETURNING id',
+      [mid, id]
+    );
+    if (!r.rows.length) return res.status(400).json({ error: 'Already answered, so it can\'t be taken back.' });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Admin delete message error:', err);
+    res.status(500).json({ error: 'Could not remove message.' });
   }
 });
 
