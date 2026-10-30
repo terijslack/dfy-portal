@@ -5,11 +5,15 @@
 // the key is what's saved in the database.
 
 const STAGES = [
-  { key: 'new',         label: 'New lead' },
+  // Same stages as the GoHighLevel "Marketing Pipeline", plus Checkout Started
+  // (someone who began signing up on the website but hasn't paid yet).
+  // GoHighLevel's "Closed" stage is split into Won and Lost here.
+  { key: 'new',         label: 'New Lead' },
   { key: 'contacted',   label: 'Contacted' },
-  { key: 'call_booked', label: 'Call booked' },
-  { key: 'proposal',    label: 'Proposal sent' },
-  { key: 'checkout',    label: 'Checkout started' },
+  { key: 'qualified',   label: 'Qualified' },
+  { key: 'proposal',    label: 'Proposal Sent' },
+  { key: 'negotiation', label: 'Negotiation' },
+  { key: 'checkout',    label: 'Checkout Started' },
   { key: 'won',         label: 'Won',  closed: true },
   { key: 'lost',        label: 'Lost', closed: true },
 ];

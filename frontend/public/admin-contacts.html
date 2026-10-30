@@ -44,6 +44,7 @@
           <button data-type="lead">Leads</button>
           <button data-type="client">Clients</button>
         </div>
+        <button class="btn-secondary btn-sm" onclick="openImport()">Import from GoHighLevel</button>
         <button class="btn-primary btn-sm" onclick="openAdd()">+ Add contact</button>
       </div>
     </div>
@@ -77,6 +78,25 @@
     </div>
     <div class="drawer-body" id="dBody"></div>
   </aside>
+
+  <!-- Import from GoHighLevel dialog -->
+  <div class="dlg-back" id="impDlg">
+    <div class="dlg dlg-wide">
+      <h2>Import from GoHighLevel</h2>
+      <p class="cd-desc" style="margin-bottom:12px">
+        In GoHighLevel, export your <b>contacts</b> (Contacts → select all → Export) and your <b>opportunities</b>
+        (Opportunities → ⋮ → Export). Pick one or both CSV files here. Nothing is saved until you click Import,
+        and running it again later updates records instead of duplicating them.
+      </p>
+      <input type="file" id="impFiles" accept=".csv,text/csv" multiple />
+      <div id="impPreview"></div>
+      <div class="row-actions">
+        <span class="msg" id="impMsg"></span>
+        <button class="btn-secondary btn-sm" onclick="closeImport()">Cancel</button>
+        <button class="btn-primary btn-sm" id="impGo" onclick="runImport()" disabled>Import</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Add contact dialog -->
   <div class="dlg-back" id="addDlg">
@@ -333,6 +353,152 @@
       btn.disabled = false;
     }
 
+    // ── Import from GoHighLevel ──
+    // Reads GoHighLevel's export files right here in the browser, shows what's in
+    // them, and sends only the ticked rows to the portal.
+    let imp = { contacts: [], opportunities: [] };
+
+    function parseCsv(text) {
+      const rows = []; let row = []; let cell = ''; let q = false;
+      text = text.replace(/^﻿/, '');
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (q) {
+          if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+          else if (ch === '"') q = false;
+          else cell += ch;
+        } else if (ch === '"') q = true;
+        else if (ch === ',') { row.push(cell); cell = ''; }
+        else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(cell); rows.push(row); row = []; cell = '';
+        } else cell += ch;
+      }
+      if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+      const head = (rows.shift() || []).map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+      return rows.filter(r => r.some(c => c.trim())).map(r => {
+        const o = {}; head.forEach((h, i) => { if (!(h in o)) o[h] = (r[i] || '').trim(); }); return o;
+      }).map(o => ({ o, head }));
+    }
+
+    // First matching column wins
+    const pick = (o, ...names) => { for (const n of names) if (o[n]) return o[n]; return ''; };
+
+    function readContact(o) {
+      const first = pick(o, 'firstname'), last = pick(o, 'lastname');
+      return {
+        ghl_id: pick(o, 'contactid', 'id'),
+        first_name: first, last_name: last,
+        name: pick(o, 'name', 'fullname', 'contactname') || [first, last].filter(Boolean).join(' '),
+        email: pick(o, 'email', 'emailaddress'),
+        phone: pick(o, 'phone', 'phonenumber'),
+        company: pick(o, 'businessname', 'companyname', 'company'),
+        tags: pick(o, 'tags'),
+        source: pick(o, 'source', 'contactsource'),
+        created_at: pick(o, 'created', 'datecreated', 'createdon', 'createdat', 'createdpdt'),
+      };
+    }
+
+    function readOpportunity(o) {
+      return {
+        ghl_id: pick(o, 'opportunityid', 'id'),
+        title: pick(o, 'opportunityname', 'name'),
+        contact_ghl_id: pick(o, 'contactid'),
+        contact_name: pick(o, 'contactname', 'fullname'),
+        email: pick(o, 'email'),
+        phone: pick(o, 'phone'),
+        company: pick(o, 'businessname', 'companyname'),
+        pipeline: pick(o, 'pipeline', 'pipelinename'),
+        stage: pick(o, 'stage', 'pipelinestage', 'stagename'),
+        status: pick(o, 'status'),
+        value: pick(o, 'leadvalue', 'opportunityvalue', 'monetaryvalue', 'value'),
+        source: pick(o, 'source'),
+        notes: pick(o, 'notes'),
+        lost_reason: pick(o, 'lostreasonname', 'lostreason'),
+        created_at: pick(o, 'createdon', 'created', 'createdat'),
+        updated_at: pick(o, 'updatedon', 'updated', 'updatedat', 'laststagechangeat'),
+      };
+    }
+
+    // Suggest skipping obvious non-customers (you can still tick them)
+    function skipReason(c) {
+      const email = (c.email || '').toLowerCase();
+      if (!email && !c.phone) return 'No email or phone';
+      if (email.endsWith('@dfymarketinggroup.com')) return 'Your team';
+      if (/\btest\b/i.test([c.name, c.company, c.tags, email].join(' '))) return 'Looks like a test';
+      return '';
+    }
+
+    function openImport() {
+      imp = { contacts: [], opportunities: [] };
+      document.getElementById('impFiles').value = '';
+      document.getElementById('impPreview').innerHTML = '';
+      document.getElementById('impGo').disabled = true;
+      setMsg(document.getElementById('impMsg'), '');
+      document.getElementById('impDlg').classList.add('open');
+    }
+    function closeImport() { document.getElementById('impDlg').classList.remove('open'); }
+
+    document.getElementById('impFiles').addEventListener('change', async e => {
+      imp = { contacts: [], opportunities: [] };
+      const msg = document.getElementById('impMsg');
+      setMsg(msg, '');
+      for (const f of e.target.files) {
+        const parsed = parseCsv(await f.text());
+        if (!parsed.length) continue;
+        const head = parsed[0].head;
+        const isOpp = head.includes('opportunityname') || head.includes('opportunityid') || head.includes('pipeline');
+        parsed.forEach(({ o }) => isOpp ? imp.opportunities.push(readOpportunity(o)) : imp.contacts.push(readContact(o)));
+      }
+      imp.contacts.forEach(c => { c._why = skipReason(c); c._on = !c._why; });
+      imp.opportunities.forEach(o => { o._on = true; });
+      renderImport();
+      if (!imp.contacts.length && !imp.opportunities.length) setMsg(msg, 'No rows found in those files.', 'error');
+    });
+
+    function renderImport() {
+      const c = imp.contacts, o = imp.opportunities;
+      document.getElementById('impPreview').innerHTML = `
+        ${c.length ? `<h3 class="imp-h">Contacts <span>${c.filter(x => x._on).length} of ${c.length} ticked</span></h3>
+        <div class="imp-list">${c.map((x, i) => `
+          <label class="imp-row ${x._on ? '' : 'off'}">
+            <input type="checkbox" ${x._on ? 'checked' : ''} onchange="imp.contacts[${i}]._on = this.checked; renderImport()" />
+            <span><b>${esc(x.name || x.email || '(no name)')}</b>${x.company ? ' · ' + esc(x.company) : ''}
+              <small>${esc([x.email, x.phone].filter(Boolean).join(' · '))}${x.tags ? ' · tags: ' + esc(x.tags) : ''}</small></span>
+            ${x._why ? `<em>${esc(x._why)}</em>` : ''}
+          </label>`).join('')}</div>` : ''}
+        ${o.length ? `<h3 class="imp-h">Deals <span>${o.filter(x => x._on).length} of ${o.length} ticked</span></h3>
+        <div class="imp-list">${o.map((x, i) => `
+          <label class="imp-row ${x._on ? '' : 'off'}">
+            <input type="checkbox" ${x._on ? 'checked' : ''} onchange="imp.opportunities[${i}]._on = this.checked; renderImport()" />
+            <span><b>${esc(x.title || '(no name)')}</b>${x.contact_name ? ' · ' + esc(x.contact_name) : ''}
+              <small>${esc([x.stage, x.status, x.value && ('$' + x.value.replace(/^\$/, '')), x.source].filter(Boolean).join(' · '))}</small></span>
+          </label>`).join('')}</div>` : ''}`;
+      const n = c.filter(x => x._on).length + o.filter(x => x._on).length;
+      const go = document.getElementById('impGo');
+      go.disabled = !n;
+      go.textContent = n ? `Import ${n} record${n === 1 ? '' : 's'}` : 'Import';
+    }
+
+    async function runImport() {
+      const strip = list => list.filter(x => x._on).map(({ _on, _why, ...rest }) => rest);
+      const go = document.getElementById('impGo');
+      const msg = document.getElementById('impMsg');
+      go.disabled = true; setMsg(msg, 'Importing…');
+      try {
+        const r = await api('/api/admin/import/ghl', { method: 'POST', body: {
+          contacts: strip(imp.contacts), opportunities: strip(imp.opportunities),
+        }});
+        closeImport();
+        await loadList();
+        alert(`Done. Contacts: ${r.contacts_added} added, ${r.contacts_updated} matched to existing. ` +
+              `Deals: ${r.deals_added} added, ${r.deals_updated} updated.`);
+      } catch (err) {
+        setMsg(msg, err.message, 'error');
+        go.disabled = false;
+      }
+    }
+
     // ── Wiring ──
     let searchTimer;
     document.getElementById('search').addEventListener('input', () => {
@@ -346,7 +512,8 @@
     }));
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
-      if (document.getElementById('addDlg').classList.contains('open')) closeAdd();
+      if (document.getElementById('impDlg').classList.contains('open')) closeImport();
+      else if (document.getElementById('addDlg').classList.contains('open')) closeAdd();
       else if (current) closeDrawer();
     });
     Admin.bindLogout();

@@ -71,8 +71,8 @@ async function addInquiryLead(inquiry) {
   );
   if (!open.rows.length) {
     await pool.query(
-      `INSERT INTO opportunities (contact_id, title, stage, created_at, stage_changed_at)
-       VALUES ($1, $2, 'new', COALESCE($3, NOW()), COALESCE($3, NOW()))`,
+      `INSERT INTO opportunities (contact_id, title, stage, source, origin, created_at, stage_changed_at)
+       VALUES ($1, $2, 'new', 'Website contact form', 'website', COALESCE($3, NOW()), COALESCE($3, NOW()))`,
       [contact.id, `${clean(name) || email} — website inquiry`, created_at || null]
     );
   }
@@ -115,8 +115,8 @@ async function runSync() {
     if (!opps.length) {
       const stage = isPaying ? 'won' : 'checkout';
       await pool.query(
-        `INSERT INTO opportunities (contact_id, title, value, stage, plan, created_at, stage_changed_at, closed_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $6, $7)`,
+        `INSERT INTO opportunities (contact_id, title, value, stage, plan, source, origin, created_at, stage_changed_at, closed_at)
+         VALUES ($1, $2, $3, $4, $5, 'Portal signup', 'portal', $6, $6, $7)`,
         [contact.id, `${c.business_name || c.name}${c.plan ? ` — ${c.plan}` : ''}`, planValue(c.plan),
          stage, c.plan, c.created_at, stage === 'won' ? c.created_at : null]
       );
@@ -126,7 +126,7 @@ async function runSync() {
       }
     } else if (!isPaying && c.status === 'pending') {
       // A lead who has now started checkout: move their open deal forward (once)
-      const open = opps.find(o => ['new', 'contacted', 'call_booked', 'proposal'].includes(o.stage));
+      const open = opps.find(o => ['new', 'contacted', 'qualified', 'proposal', 'negotiation'].includes(o.stage));
       if (open && await logActivity(pool, contact.id, 'stage', 'Started checkout on the website', `checkout:client:${c.id}`)) {
         await pool.query(
           `UPDATE opportunities SET stage = 'checkout', stage_changed_at = NOW(), updated_at = NOW(),

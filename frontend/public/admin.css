@@ -163,3 +163,16 @@
 .client-posts-header .btn-secondary, .btn-sm { width: auto !important; white-space: nowrap; }
 .btn-danger-link { white-space: nowrap; }
 @media (max-width: 760px) { .crm-stats { display: grid; grid-template-columns: 1fr 1fr; } .crm-stat { min-width: 0; } .crm-main { padding: 20px 16px 48px; } }
+
+/* ── Import dialog ── */
+.dlg-wide { width: min(720px, 100%); }
+.imp-h { font-size: 14px; color: var(--text-heading); margin: 16px 0 6px; display: flex; justify-content: space-between; }
+.imp-h span { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+.imp-list { border: 1px solid var(--border-subtle); border-radius: 10px; max-height: 260px; overflow-y: auto; background: #fff; }
+.imp-row { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-bottom: 1px solid var(--border-subtle); font-size: 14px; cursor: pointer; }
+.imp-row:last-child { border-bottom: 0; }
+.imp-row input { margin-top: 3px; width: auto; }
+.imp-row span { flex: 1; min-width: 0; color: var(--text-heading); }
+.imp-row small { display: block; color: var(--text-muted); font-size: 12px; word-break: break-word; }
+.imp-row em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--color-rust); background: rgba(125,42,3,0.08); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.imp-row.off span { opacity: .55; }

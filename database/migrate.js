@@ -56,6 +56,14 @@ async function runMigrations(pool) {
       created_at  TIMESTAMPTZ DEFAULT NOW()
     )`,
     `CREATE UNIQUE INDEX IF NOT EXISTS contact_activity_ref ON contact_activity (ref) WHERE ref IS NOT NULL`,
+    // Where a record came from, so imports can run again without duplicating anything
+    `ALTER TABLE contacts      ADD COLUMN IF NOT EXISTS tags   TEXT`,
+    `ALTER TABLE contacts      ADD COLUMN IF NOT EXISTS ghl_id TEXT`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS contacts_ghl_id ON contacts (ghl_id) WHERE ghl_id IS NOT NULL`,
+    `ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS source TEXT`,
+    `ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS origin TEXT`,   // portal | website | admin | ghl
+    `ALTER TABLE opportunities ADD COLUMN IF NOT EXISTS ghl_id TEXT`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS opportunities_ghl_id ON opportunities (ghl_id) WHERE ghl_id IS NOT NULL`,
     `CREATE INDEX IF NOT EXISTS contact_activity_contact ON contact_activity (contact_id, created_at DESC)`,
   ];
 

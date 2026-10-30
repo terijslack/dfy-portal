@@ -15,6 +15,7 @@ const router = express.Router();
 const { requireAdmin } = require('../middleware/auth');
 const { STAGES, STAGE_KEYS } = require('../config/pipeline');
 const { pool, clean, logActivity, syncAll, stageLabel } = require('../services/crm');
+const { importFromGhl } = require('../services/ghlImport');
 
 const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 const toMoney = v => {
@@ -91,10 +92,10 @@ router.post('/contacts', requireAdmin, async (req, res) => {
     await logActivity(db, id, 'system', 'Contact added');
     if (b.create_opportunity) {
       await db.query(
-        `INSERT INTO opportunities (contact_id, title, value, stage, closed_at)
-         VALUES ($1, $2, $3, $4, $5)`,
+        `INSERT INTO opportunities (contact_id, title, value, stage, source, origin, closed_at)
+         VALUES ($1, $2, $3, $4, $5, 'admin', $6)`,
         [id, clean(b.title) || `${clean(b.company) || name} — new deal`, value, stage,
-         STAGES.find(s => s.key === stage).closed ? new Date() : null]
+         clean(b.source) || null, STAGES.find(s => s.key === stage).closed ? new Date() : null]
       );
     }
     await db.query('COMMIT');
@@ -232,9 +233,9 @@ router.post('/opportunities', requireAdmin, async (req, res) => {
     if (!c) return res.status(404).json({ error: 'Contact not found.' });
     const closed = STAGES.find(s => s.key === stage).closed;
     const r = await pool.query(
-      `INSERT INTO opportunities (contact_id, title, value, stage, plan, notes, closed_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-      [contactId, clean(b.title) || `${c.company || c.name} — new deal`, value, stage, clean(b.plan), clean(b.notes), closed ? new Date() : null]
+      `INSERT INTO opportunities (contact_id, title, value, stage, plan, notes, source, origin, closed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'admin', $8) RETURNING id`,
+      [contactId, clean(b.title) || `${c.company || c.name} — new deal`, value, stage, clean(b.plan), clean(b.notes), clean(b.source), closed ? new Date() : null]
     );
     await logActivity(pool, contactId, 'stage', `New deal added in “${stageLabel(stage)}”`);
     res.json({ success: true, id: r.rows[0].id });
@@ -254,7 +255,7 @@ router.put('/opportunities/:id', requireAdmin, async (req, res) => {
     b.value = toMoney(b.value);
     if (Number.isNaN(b.value)) return res.status(400).json({ error: 'Deal value must be a number.' });
   }
-  const FIELDS = ['title', 'value', 'stage', 'plan', 'notes', 'lost_reason'];
+  const FIELDS = ['title', 'value', 'stage', 'plan', 'source', 'notes', 'lost_reason'];
   const sent = FIELDS.filter(f => f in b);
   if (!sent.length) return res.json({ success: true });
 
@@ -295,6 +296,19 @@ router.delete('/opportunities/:id', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin delete opportunity error:', err);
     res.status(500).json({ error: 'Could not delete deal.' });
+  }
+});
+
+// ─── IMPORT FROM GOHIGHLEVEL ─────────────────────────────────
+// POST /api/admin/import/ghl → { contacts: [...], opportunities: [...] } read from
+// GoHighLevel's export files in the browser. Safe to run more than once.
+router.post('/import/ghl', requireAdmin, async (req, res) => {
+  try {
+    const summary = await importFromGhl(req.body || {});
+    res.json({ success: true, ...summary });
+  } catch (err) {
+    console.error('GoHighLevel import error:', err);
+    res.status(400).json({ error: `Import stopped, nothing was saved: ${err.message}` });
   }
 });
 
