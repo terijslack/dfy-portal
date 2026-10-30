@@ -27,7 +27,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 // Business-profile fields the admin can edit. These live in the same tables the
 // client's /profile page reads and writes, so there is only ever one copy of the data.
-const CLIENT_FIELDS = ['name', 'email', 'business_name', 'admin_notes', 'priority'];
+const CLIENT_FIELDS = ['name', 'email', 'business_name', 'admin_notes', 'priority', 'metricool_blog_id'];
 const PROFILE_FIELDS = [
   'industry', 'website', 'phone', 'address', 'city', 'state', 'zip',
   'business_email', 'timezone', 'brand_voice', 'target_audience', 'content_themes',
@@ -40,7 +40,7 @@ const KEY_PROFILE_FIELDS = [
   'content_themes', 'unique_selling_point', 'primary_goal',
 ];
 const LABELS = {
-  name: 'Contact name', email: 'Login email', business_name: 'Business name', industry: 'Industry',
+  name: 'Contact name', email: 'Login email', business_name: 'Business name', metricool_blog_id: 'Metricool brand ID', industry: 'Industry',
   website: 'Website', phone: 'Phone', address: 'Address', city: 'City', state: 'State', zip: 'ZIP',
   business_email: 'Business email', timezone: 'Time zone', brand_voice: 'Brand voice',
   target_audience: 'Target audience', content_themes: 'Customer pain points',
@@ -97,7 +97,8 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
     const [clientRes, profileRes, socialsRes, peopleRes, activityRes, dealsRes] = await Promise.all([
       pool.query(
         `SELECT id, name, email, business_name, created_at, plan, status, subscription_status,
-                billing_date, subscription_start_date, stripe_customer_id, admin_notes, priority
+                billing_date, subscription_start_date, stripe_customer_id, admin_notes, priority,
+                metricool_blog_id
          FROM clients WHERE id = $1 AND is_admin = false`,
         [id]
       ),
