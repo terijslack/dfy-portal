@@ -1,13 +1,13 @@
 // routes/posts.js — Everything to do with posts for clients
 // GET  /api/posts           → get all posts for the logged-in client
-// POST /api/posts/:id/approve        → client approves a post (sends to Buffer)
+// POST /api/posts/:id/approve        → client approves a post (schedules it in Metricool)
 // POST /api/posts/:id/request-changes → client requests changes with notes
 
 const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
-const axios = require('axios');
 const { requireLogin } = require('../middleware/auth');
+const { scheduleToMetricool } = require('../services/metricool');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -33,9 +33,14 @@ router.post('/:id/approve', requireLogin, async (req, res) => {
   const postId = req.params.id;
 
   try {
-    // First, fetch the post and make sure it belongs to this client
+    // First, fetch the post and make sure it belongs to this client — plus
+    // what we need to schedule it in Metricool (their brand id, their timezone)
     const postResult = await pool.query(
-      'SELECT * FROM posts WHERE id = $1 AND client_id = $2',
+      `SELECT p.*, c.metricool_blog_id, o.timezone
+       FROM posts p
+       JOIN clients c ON c.id = p.client_id
+       LEFT JOIN client_onboarding o ON o.client_id = p.client_id
+       WHERE p.id = $1 AND p.client_id = $2`,
       [postId, req.user.id]
     );
 
@@ -45,24 +50,31 @@ router.post('/:id/approve', requireLogin, async (req, res) => {
 
     const post = postResult.rows[0];
 
-    // Send to Buffer
-    let bufferPostId = null;
+    // Schedule it in Metricool. Quietly skipped if Metricool isn't configured
+    // yet for this client — approving a post never depends on this working.
+    let metricoolPostId = null;
     try {
-      bufferPostId = await sendToBuffer(post);
-    } catch (bufferErr) {
-      console.error('Buffer error (non-fatal):', bufferErr.message);
-      // We still mark as approved even if Buffer fails — you can re-queue manually
+      metricoolPostId = await scheduleToMetricool({
+        text: post.caption, platform: post.platform, scheduledDate: post.scheduled_date,
+        blogId: post.metricool_blog_id, timezone: post.timezone,
+      });
+    } catch (mcErr) {
+      console.error('Metricool error (non-fatal):', mcErr.response?.data || mcErr.message);
+      // We still mark as approved even if Metricool fails — you can schedule it there by hand
     }
 
     // Update status in the database
     await pool.query(
-      `UPDATE posts 
-       SET status = 'approved', buffer_post_id = $1, updated_at = NOW()
+      `UPDATE posts
+       SET status = 'approved', metricool_post_id = $1, updated_at = NOW()
        WHERE id = $2`,
-      [bufferPostId, postId]
+      [metricoolPostId, postId]
     );
 
-    res.json({ success: true, message: 'Post approved and sent to Buffer!' });
+    res.json({
+      success: true,
+      message: metricoolPostId ? 'Post approved and scheduled in Metricool!' : 'Post approved!',
+    });
 
   } catch (err) {
     console.error('Approve error:', err);
@@ -104,30 +116,5 @@ router.post('/:id/request-changes', requireLogin, async (req, res) => {
     res.status(500).json({ error: 'Could not submit changes.' });
   }
 });
-
-// Helper function: sends a post to Buffer
-async function sendToBuffer(post) {
-  const token = process.env.BUFFER_ACCESS_TOKEN;
-  const profileIds = process.env.BUFFER_PROFILE_IDS?.split(',').map(id => id.trim()) || [];
-
-  if (!token || profileIds.length === 0) {
-    throw new Error('Buffer not configured');
-  }
-
-  // Buffer API: create a scheduled post
-  const response = await axios.post(
-    'https://api.bufferapp.com/1/updates/create.json',
-    new URLSearchParams({
-      access_token: token,
-      text: post.caption,
-      'profile_ids[]': profileIds[0], // use first profile — customize as needed
-      scheduled_at: new Date(post.scheduled_date).toISOString(),
-      now: false
-    }),
-    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-  );
-
-  return response.data?.updates?.[0]?.id || null;
-}
 
 module.exports = router;
