@@ -896,7 +896,10 @@
     async function loadSocials() {
       const el = document.getElementById('socialList');
       try {
-        const { accounts = [] } = await fetch('/api/socials').then(r => r.json());
+        const { accounts: allAccounts = [] } = await fetch('/api/socials').then(r => r.json());
+        // Only show ones they've actually finished connecting — a platform they
+        // just picked on the Business Profile page isn't "Connected" yet.
+        const accounts = allAccounts.filter(a => a.completed);
         if (!accounts.length) {
           el.innerHTML = `<div class="empty-state">No accounts connected yet.<br><a href="/profile" style="color:#2D6B4F;font-weight:500;text-decoration:none;">Connect your socials →</a></div>`;
           return;
@@ -1014,7 +1017,8 @@
         /* Profile completion banner — same calculation as the Business Profile page */
         const { pct } = profileCompletion({
           businessName: data.user.business_name, industry: o.industry, city: o.city,
-          phone: o.phone, website: o.website, socialsCount: (sd.accounts || []).length,
+          phone: o.phone, website: o.website,
+          socialsCount: (sd.accounts || []).filter(a => a.completed).length,
           brandIdentityMode: o.brand_identity_mode, brandVoice: o.brand_voice,
           targetAudience: o.target_audience, primaryGoal: o.primary_goal,
         });

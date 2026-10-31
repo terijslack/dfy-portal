@@ -985,9 +985,13 @@
         accounts.forEach(acc => {
           const p = SC_PLATFORMS.find(x => x.id === acc.platform);
           if (!p) return;
-          savedSocials[acc.platform] = true;
-          scCompleted[acc.platform]  = true;
+          // Any saved row means they picked this platform, whether or not
+          // they've finished "Mark as done" for it yet.
           if (!scSelected.includes(acc.platform)) scSelected.push(acc.platform);
+          if (acc.completed) {
+            savedSocials[acc.platform] = true;
+            scCompleted[acc.platform]  = true;
+          }
           if (acc.profile_url) scUrls[acc.platform] = acc.profile_url;
         });
       } catch (e) {
@@ -1168,12 +1172,14 @@
       if (scSelected.includes(id)) {
         scSelected = scSelected.filter(x => x !== id);
         if (scOpenId === id) scOpenId = null;
-        if (scCompleted[id]) {
-          delete scCompleted[id];
-          delete savedSocials[id];
-          fetch('/api/socials/' + id, { method: 'DELETE' }).catch(console.error);
-          updateCompletion();
-        }
+        const wasCompleted = !!scCompleted[id];
+        delete scCompleted[id];
+        delete savedSocials[id];
+        // Picking a platform is saved right away (see the add branch below), so
+        // un-picking has to remove it from the server too, not just when it was
+        // already marked done.
+        fetch('/api/socials/' + id, { method: 'DELETE' }).catch(console.error);
+        if (wasCompleted) updateCompletion();
       } else {
         if (scSelected.length >= platformLimit) {
           const name = (SC_PLATFORMS.find(x => x.id === id) || {}).name || 'another platform';
@@ -1184,6 +1190,9 @@
         }
         scSelected.push(id);
         scOpenId = id;
+        // Save the pick immediately so it survives a reload even if they never
+        // get to "Mark as done" for it.
+        fetch('/api/socials/' + id + '/select', { method: 'PUT' }).catch(console.error);
       }
       scRender();
     }
