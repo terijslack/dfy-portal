@@ -1036,7 +1036,11 @@
 
       const atLimit = scSelected.length >= platformLimit;
       const total   = SC_PLATFORMS.length;
-      pill.textContent = `${scSelected.length} of ${platformLimit}`;
+      // If we've added extra platforms for them beyond what their plan includes,
+      // "3 of 2" would just look like a mistake — show the plain count instead.
+      pill.textContent = scSelected.length > platformLimit
+        ? `${scSelected.length} platform${scSelected.length === 1 ? '' : 's'}`
+        : `${scSelected.length} of ${platformLimit}`;
 
       /* Platform grid */
       grid.innerHTML = SC_PLATFORMS.map(p => {

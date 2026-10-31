@@ -21,6 +21,7 @@ const { requireAdmin } = require('../middleware/auth');
 const { planTier, accountStatus, PRIORITIES } = require('../config/accounts');
 const { syncAll } = require('../services/crm');
 const { logForClient } = require('../services/activity');
+const { SOCIAL_PLATFORMS, ALLOWED_PLATFORMS, platformName } = require('../config/socialPlatforms');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -106,7 +107,7 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
       ),
       pool.query('SELECT * FROM client_onboarding WHERE client_id = $1', [id]),
       pool.query(
-        `SELECT platform, username, profile_url, connected_at
+        `SELECT platform, username, profile_url, completed, connected_at
          FROM social_accounts WHERE client_id = $1 ORDER BY connected_at ASC`,
         [id]
       ),
@@ -160,6 +161,7 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
       },
       // Passwords are never sent to the browser, not even to admins
       socials: socialsRes.rows,
+      social_platforms: SOCIAL_PLATFORMS,
       people,
       contact_id: (people.find(x => x.client_id === id) || {}).id || null,
       activity: activityRes.rows,
@@ -317,6 +319,68 @@ router.delete('/clients/:id/messages/:mid', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin delete message error:', err);
     res.status(500).json({ error: 'Could not remove message.' });
+  }
+});
+
+// PUT /api/admin/clients/:id/socials/:platform — mark a platform as connected on
+// their behalf, for when they've granted us access but never ticked it off in
+// their own portal. { profile_url } optional.
+router.put('/clients/:id/socials/:platform', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const platform = String(req.params.platform || '').toLowerCase();
+  const url = typeof req.body?.profile_url === 'string' ? req.body.profile_url.trim() : '';
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  if (!ALLOWED_PLATFORMS.includes(platform)) return res.status(400).json({ error: 'Invalid platform.' });
+  if (url.length > 500) return res.status(400).json({ error: 'That link is too long.' });
+
+  try {
+    const exists = await pool.query('SELECT 1 FROM clients WHERE id = $1 AND is_admin = false', [id]);
+    if (!exists.rows.length) return res.status(404).json({ error: 'Account not found.' });
+
+    const saved = await pool.query('SELECT platform, completed FROM social_accounts WHERE client_id = $1', [id]);
+    const already = saved.rows.find(r => r.platform === platform);
+    if (!already && saved.rows.length >= 4) {
+      return res.status(400).json({ error: 'This account already has 4 platforms. Remove one first.' });
+    }
+
+    await pool.query(
+      `INSERT INTO social_accounts (client_id, platform, username, profile_url, completed)
+       VALUES ($1, $2, $3, $4, true)
+       ON CONFLICT (client_id, platform)
+       DO UPDATE SET completed    = true,
+                     profile_url  = COALESCE(NULLIF($4, ''), social_accounts.profile_url),
+                     username     = COALESCE(NULLIF($4, ''), NULLIF(social_accounts.username, ''), $3),
+                     connected_at = NOW()`,
+      [id, platform, platformName(platform), url || null]
+    );
+
+    // Only worth a timeline entry the first time it's marked connected
+    if (!already || !already.completed) {
+      await logForClient(id, 'dfy', `DFY marked ${platformName(platform)} as connected`);
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Admin mark social error:', err);
+    res.status(500).json({ error: 'Could not mark that as connected.' });
+  }
+});
+
+// DELETE /api/admin/clients/:id/socials/:platform — take a platform off the account
+router.delete('/clients/:id/socials/:platform', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const platform = String(req.params.platform || '').toLowerCase();
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  try {
+    const r = await pool.query(
+      'DELETE FROM social_accounts WHERE client_id = $1 AND platform = $2 RETURNING platform',
+      [id, platform]
+    );
+    if (!r.rows.length) return res.status(404).json({ error: 'That platform isn\'t on this account.' });
+    await logForClient(id, 'dfy', `DFY removed ${platformName(platform)} from this account`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Admin remove social error:', err);
+    res.status(500).json({ error: 'Could not remove that platform.' });
   }
 });
 
