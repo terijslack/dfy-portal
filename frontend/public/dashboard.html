@@ -904,17 +904,25 @@
           el.innerHTML = `<div class="empty-state">No accounts connected yet.<br><a href="/profile" style="color:#2D6B4F;font-weight:500;text-decoration:none;">Connect your socials →</a></div>`;
           return;
         }
-        el.innerHTML = accounts.map(a => `
+        el.innerHTML = accounts.map(a => {
+          const label = PLATFORM_NAMES[a.platform] || a.platform;
+          // When there's no real handle or link, the name alone says it — don't
+          // repeat "facebook" underneath "Facebook".
+          const handle = (a.username || '').trim();
+          const showHandle = handle && handle.toLowerCase() !== label.toLowerCase()
+                                    && handle.toLowerCase() !== a.platform.toLowerCase();
+          return `
           <div class="social-perf-row">
             <div class="social-perf-icon">${platformIcon(a.platform)}</div>
-            <div class="social-perf-name">${escapeHtml(PLATFORM_NAMES[a.platform] || a.platform)}</div>
+            <div class="social-perf-name">${escapeHtml(label)}</div>
             <div class="social-perf-followers">
-              <div class="social-perf-handle">${/^https?:\/\//i.test(a.profile_url || '')
-                ? `<a href="${escapeHtml(a.profile_url)}" target="_blank" rel="noopener" style="color:inherit">${escapeHtml(a.username || a.profile_url)}</a>`
-                : escapeHtml(a.username || '')}</div>
+              <div class="social-perf-handle">${!showHandle ? '' : /^https?:\/\//i.test(a.profile_url || '')
+                ? `<a href="${escapeHtml(a.profile_url)}" target="_blank" rel="noopener" style="color:inherit">${escapeHtml(handle)}</a>`
+                : escapeHtml(handle)}</div>
             </div>
             <span class="social-perf-gain">Connected</span>
-          </div>`).join('') +
+          </div>`;
+        }).join('') +
           `<div class="social-perf-note">Follower and engagement numbers will show here once we finish connecting your accounts to our reporting.</div>`;
       } catch {
         el.innerHTML = '<div class="empty-state">Could not load your accounts.</div>';

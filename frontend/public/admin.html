@@ -554,18 +554,86 @@
           </div>
         </div>
         <div class="cd-section">
-          <h3>Accounts we manage</h3><p class="cd-desc">Social accounts they've connected in their portal.</p>
+          <h3>Accounts we manage</h3>
+          <p class="cd-desc">Platforms they picked in their portal. If they've given us access but never marked it done themselves, mark it for them here.</p>
           <div class="cd-socials">
-            ${data.socials.length ? data.socials.map(s => `
-              <div class="cd-social">
-                <strong>${escapeHtml(s.platform)}</strong>
-                <span>${escapeHtml(s.username)}</span>
+            ${data.socials.length ? data.socials.map(s => {
+              const label = socialLabel(data, s.platform);
+              return `<div class="cd-social">
+                <strong>${escapeHtml(label)}</strong>
+                ${s.completed
+                  ? '<span class="pill ok">Connected</span>'
+                  : '<span class="pill warn">Picked &mdash; not set up yet</span>'}
                 ${s.profile_url ? `<a href="${escapeHtml(safeUrl(s.profile_url))}" target="_blank" rel="noopener">${escapeHtml(s.profile_url)}</a>` : ''}
-                <span class="when">${fmt(s.connected_at)}</span>
-              </div>`).join('') : '<div class="cd-readonly empty">None connected yet.</div>'}
+                <span class="when">${s.completed ? fmt(s.connected_at) : ''}</span>
+                ${s.completed ? '' : `<button class="btn-secondary btn-sm" onclick="markSocial('${s.platform}')">Mark connected</button>`}
+                <button class="btn-danger-link" onclick="removeSocial('${s.platform}', ${JSON.stringify(escapeHtml(label))})">Remove</button>
+              </div>`;
+            }).join('') : '<div class="cd-readonly empty">None picked yet.</div>'}
           </div>
+          ${socialAddRow(data)}
           <div class="cd-grid">${renderField(data, { key: 'social_notes', label: 'Their notes about these accounts', textarea: true, full: true })}</div>
         </div>`;
+    }
+
+    // 'facebook' → 'Facebook' (falls back to the raw value for anything unknown)
+    function socialLabel(data, platform) {
+      return (data.social_platforms || {})[platform] || platform;
+    }
+
+    // How many platforms their plan includes — same rule their own portal uses
+    const planPlatforms = plan => /starter/i.test(plan || '') ? 2 : 4;
+
+    // Row for adding a platform they haven't picked, already marked as connected
+    function socialAddRow(data) {
+      const all  = data.social_platforms || {};
+      const have = data.socials.map(s => s.platform);
+      const left = Object.keys(all).filter(p => !have.includes(p));
+      const included = planPlatforms(data.client.plan);
+      const over = data.socials.length > included
+        ? `<p class="cd-desc" style="color:var(--color-rust)">Heads up: that's ${data.socials.length} platforms on a plan that includes ${included}.</p>`
+        : '';
+      if (!left.length) return over;
+      const full = data.socials.length >= 4;
+      return over + `
+        <div class="cd-field full">
+          <label>Add a platform they've given us access to</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="socPlatform" style="flex:0 0 190px" ${full ? 'disabled' : ''}>
+              ${left.map(p => `<option value="${p}">${escapeHtml(all[p])}</option>`).join('')}
+            </select>
+            <input id="socUrl" style="flex:1;min-width:200px" placeholder="Link to their profile (optional)" ${full ? 'disabled' : ''} />
+            <button class="btn-secondary btn-sm" onclick="addSocial()" ${full ? 'disabled' : ''}>Mark as connected</button>
+          </div>
+        </div>
+        <div class="row-actions"><span class="msg" id="sMsg">${full ? 'This account already has 4 platforms. Remove one to add another.' : ''}</span></div>`;
+    }
+
+    async function markSocial(platform, url) {
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/socials/${platform}`, 'PUT', { profile_url: url || '' });
+        await loadClientDetail(selectedClientId);
+        showTab('brand');
+      } catch (err) {
+        const m = document.getElementById('sMsg');
+        if (m) { m.textContent = err.message; m.className = 'msg error'; } else { alert(err.message); }
+      }
+    }
+
+    function addSocial() {
+      const platform = document.getElementById('socPlatform').value;
+      const url = document.getElementById('socUrl').value.trim();
+      if (!platform) return;
+      markSocial(platform, url);
+    }
+
+    async function removeSocial(platform, label) {
+      if (!confirm(`Take ${label} off this account? It disappears from their portal too.`)) return;
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/socials/${platform}`, 'DELETE');
+        await loadClientDetail(selectedClientId);
+        showTab('brand');
+      } catch (err) { alert(err.message); }
     }
 
     // Activity: everything in and out

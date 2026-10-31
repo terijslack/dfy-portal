@@ -9,10 +9,9 @@ const router = express.Router();
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
 const { encrypt } = require('../utils/encrypt');
+const { ALLOWED_PLATFORMS, platformName } = require('../config/socialPlatforms');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
-const ALLOWED_PLATFORMS = ['instagram', 'facebook', 'linkedin', 'google', 'youtube', 'tiktok', 'twitter', 'pinterest', 'snapchat', 'threads'];
 
 // Create table if it doesn't exist yet
 pool.query(`
@@ -73,7 +72,7 @@ router.put('/:platform/select', requireLogin, async (req, res) => {
       `INSERT INTO social_accounts (client_id, platform, username, completed)
        VALUES ($1, $2, $3, false)
        ON CONFLICT (client_id, platform) DO NOTHING`,
-      [req.user.id, platform, platform]
+      [req.user.id, platform, platformName(platform)]
     );
 
     res.json({ success: true });
