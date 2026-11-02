@@ -10,7 +10,7 @@ const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { upsertGHLContact } = require('../services/ghl');
+const { sendWelcome, isConfigured: emailConfigured } = require('../services/email');
 const { requireAdmin } = require('../middleware/auth');
 const { PRICE_TO_PLAN, PLAN_KEY_TO_PRICE, PLAN_KEY_TO_NAME, VALID_PRICE_IDS } = require('../config/plans');
 
@@ -187,7 +187,7 @@ router.post('/create-checkout-session', async (req, res) => {
 // POST /api/stripe/create-test-checkout   (admin only)
 // Creates a REAL $1/month subscription checkout so you can run an
 // actual card through the whole pipeline — Stripe → webhook →
-// database → GHL tag → welcome email — without touching real plans
+// database → welcome email — without touching real plans
 // or real clients. Cancel/refund the resulting subscription in
 // Stripe afterward; it reuses the same test client row every run.
 // ─────────────────────────────────────────────────────────────
@@ -352,8 +352,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 //   • the portal signup page (the account already exists, found by userId)
 //   • a Stripe Payment Link / custom package (no account yet, so we create one)
 //   • the admin $1 test button
-// Steps: find or create the portal account → activate it → add the contact + new-client
-// tag in GoHighLevel. GHL's own workflow handles the welcome email and everything after.
+// Steps: find or create the portal account → activate it → send the welcome email.
+// Payment-link buyers have no password yet, so their welcome email carries a
+// set-your-password link (good for 7 days).
 // ─────────────────────────────────────────────────────────────
 async function handleCheckoutCompleted(session) {
   // One-time payments (not a recurring plan) don't create or activate a client
@@ -391,7 +392,7 @@ async function handleCheckoutCompleted(session) {
   // ── Find the client (by id from signup, otherwise by email) ──
   const findBy = async (col, val) => {
     const r = await pool.query(
-      `SELECT id, name, email, stripe_price_id FROM clients WHERE ${col} = $1`, [val]
+      `SELECT id, name, email, stripe_price_id, password_reset_token, password_reset_expires FROM clients WHERE ${col} = $1`, [val]
     );
     return r.rows[0] || null;
   };
@@ -408,12 +409,17 @@ async function handleCheckoutCompleted(session) {
   if (!client) {
     const randomPassword = await bcrypt.hash(crypto.randomBytes(24).toString('hex'), 10);
     const displayName = session.customer_details?.name || email.split('@')[0];
+    // They can't know the random password, so give them a set-password link (7 days).
+    // Saved with the account, so a retried webhook sends the same link, not none.
+    const setPasswordToken   = crypto.randomBytes(32).toString('hex');
+    const setPasswordExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const created = await pool.query(`
-      INSERT INTO clients (name, email, password, is_admin, status, subscription_status, plan)
-      VALUES ($1, $2, $3, false, 'active', 'active', $4)
+      INSERT INTO clients (name, email, password, is_admin, status, subscription_status, plan,
+                           password_reset_token, password_reset_expires)
+      VALUES ($1, $2, $3, false, 'active', 'active', $4, $5, $6)
       ON CONFLICT (email) DO NOTHING
-      RETURNING id, name, email, stripe_price_id
-    `, [displayName, email, randomPassword, planName]);
+      RETURNING id, name, email, stripe_price_id, password_reset_token, password_reset_expires
+    `, [displayName, email, randomPassword, planName, setPasswordToken, setPasswordExpires]);
     // If a retry or duplicate delivery got there first, the insert is skipped — just find it
     client = created.rows[0] || await findBy('email', email);
     console.log(`🆕 Account created for payment-link customer: ${email}`);
@@ -439,22 +445,24 @@ async function handleCheckoutCompleted(session) {
 
   console.log(`✅ Plan activated — plan: ${planName}, customer: ${session.customer}`);
 
-  // ── GoHighLevel: contact + new-client tag ──
-  // The account is already saved above, so a GHL problem never costs anyone their login.
-  // We still fail the webhook so Stripe retries until the tag lands and the welcome
-  // email can fire.
-  if (process.env.GHL_API_KEY && process.env.GHL_LOCATION_ID) {
-    await upsertGHLContact({
-      name:          client.name,
-      email:         client.email || email,
-      planName,
-      stripePriceId: priceId || client.stripe_price_id,
-      addons:        session.metadata?.addons || '',
-    });
-    console.log(`✅ GHL contact tagged new-client: ${client.email || email}`);
-  } else {
-    console.warn('GHL_API_KEY / GHL_LOCATION_ID not set — skipped GHL contact.');
+  // ── Welcome email ──
+  // The account is already saved above, so an email problem never costs anyone their
+  // login. We still fail the webhook so Stripe retries until the welcome lands.
+  if (!emailConfigured()) {
+    console.warn('SMTP_USER / SMTP_PASS not set — skipped welcome email.');
+    return;
   }
+  const tokenLive = client.password_reset_token
+    && client.password_reset_expires && new Date(client.password_reset_expires) > new Date();
+  await sendWelcome({
+    name:           client.name,
+    email:          client.email || email,
+    planName,
+    setPasswordUrl: tokenLive
+      ? `${appUrl()}/reset-password.html?token=${client.password_reset_token}&welcome=1`
+      : null,
+  });
+  console.log(`✅ Welcome email sent: ${client.email || email}`);
 }
 
 module.exports = router;
