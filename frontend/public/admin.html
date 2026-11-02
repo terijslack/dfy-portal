@@ -923,7 +923,7 @@
     });
 
     // Runs a real $1/month charge through the full pipeline (Stripe → webhook →
-    // database → GHL tag → welcome email) so you can confirm it all works end to end.
+    // database → welcome email) so you can confirm it all works end to end.
     // Cancel/refund the resulting subscription in Stripe afterward.
     document.getElementById('stripeTestBtn').addEventListener('click', async () => {
       if (!confirm('This will charge a real card $1/month to test the full payment pipeline. Continue?')) return;
@@ -944,7 +944,7 @@
     (function checkTestResult() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('test') === 'success') {
-        alert('Test payment submitted. Check Railway deploy logs for "Subscription activated", then check GHL for the stripe-test@dfymarketinggroup.com contact and the welcome email.');
+        alert('Test payment submitted. Check Railway deploy logs for "Plan activated" and "Welcome email sent", then check the stripe-test@dfymarketinggroup.com inbox for the welcome email.');
       } else if (params.get('test') === 'cancelled') {
         alert('Test checkout was cancelled — no charge was made.');
       }

@@ -1,127 +1,140 @@
-// services/email.js — sends transactional emails via GHL API
-// Uses send.dfymarketinggroup.com (already configured in GHL Email Services)
-// Requires: GHL_API_KEY, GHL_LOCATION_ID
+// services/email.js — sends the portal's one-at-a-time emails (welcome, password
+// reset, contact-form alerts) through Google Workspace from noreply@dfymarketinggroup.com.
+//
+// Settings (Railway → Variables):
+//   SMTP_USER        the Workspace mailbox that sends, e.g. noreply@dfymarketinggroup.com
+//   SMTP_PASS        an App Password for that mailbox (Google Account → Security → App passwords)
+//   SMTP_HOST        optional, default smtp.gmail.com
+//   SMTP_PORT        optional, default 465 (SSL). 587 switches to STARTTLS.
+//   EMAIL_FROM       optional, default "Done For You Marketing <SMTP_USER>"
+//   EMAIL_REPLY_TO   optional, default hello@dfymarketinggroup.com — where replies land
+//   EMAIL_TEAM       optional, default hello@dfymarketinggroup.com — where lead alerts go
+//
+// Bulk sends (newsletters, campaigns) never go through here — those belong on a
+// subdomain with a bulk-email platform, so the main domain's reputation stays clean.
 
-const axios = require('axios');
+const nodemailer = require('nodemailer');
 
-const GHL_BASE = 'https://services.leadconnectorhq.com';
+const TEAM_EMAIL = () => process.env.EMAIL_TEAM || 'hello@dfymarketinggroup.com';
+const REPLY_TO   = () => process.env.EMAIL_REPLY_TO || 'hello@dfymarketinggroup.com';
 
-const GHL_HEADERS = () => ({
-  Authorization: `Bearer ${process.env.GHL_API_KEY}`,
-  'Content-Type': 'application/json',
-  Version: '2021-07-28',
-});
-
-// Find existing GHL contact by email, or create a minimal one
-async function getOrCreateContact(email) {
-  const locationId = process.env.GHL_LOCATION_ID;
-
-  // Try to find existing contact
-  try {
-    const lookup = await axios.get(
-      `${GHL_BASE}/contacts/search/duplicate?email=${encodeURIComponent(email)}&locationId=${locationId}`,
-      { headers: GHL_HEADERS() }
-    );
-    if (lookup.data?.contact?.id) return lookup.data.contact.id;
-  } catch (_) {}
-
-  // Create minimal contact if not found
-  const created = await axios.post(
-    `${GHL_BASE}/contacts/`,
-    { locationId, email },
-    { headers: GHL_HEADERS() }
-  );
-  return created.data?.contact?.id;
+function isConfigured() {
+  return Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
-// Get or create a conversation for a contact
-async function getOrCreateConversation(contactId) {
-  const locationId = process.env.GHL_LOCATION_ID;
-
-      try {
-              const res = await axios.post(
-                        `${GHL_BASE}/conversations/`,
-                { contactId, locationId },
-                { headers: GHL_HEADERS() }
-                      );
-              return res.data?.conversation?.id || res.data?.id;
-      } catch (err) {
-              const data = err.response?.data;
-              if (data?.conversationId) return data.conversationId;
-              throw err;
-      }
+function appUrl() {
+  return (process.env.APP_URL || process.env.BASE_URL || 'https://dfymarketinggroup.com').replace(/\/$/, '');
 }
 
-// Send password reset email via GHL
+let transporter = null;
+function getTransporter() {
+  if (transporter) return transporter;
+  const port = parseInt(process.env.SMTP_PORT || '465', 10);
+  transporter = nodemailer.createTransport({
+    host:   process.env.SMTP_HOST || 'smtp.gmail.com',
+    port,
+    secure: port === 465,
+    auth:   { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  });
+  return transporter;
+}
+
+// Sends one email. Throws if email isn't set up, so callers can decide whether
+// that's fatal (welcome email: yes, Stripe retries) or not (contact alert: log it).
+async function sendMail({ to, subject, html, replyTo }) {
+  if (!isConfigured()) {
+    const err = new Error('Email is not set up: SMTP_USER / SMTP_PASS are missing.');
+    err.notConfigured = true;
+    throw err;
+  }
+  const from = process.env.EMAIL_FROM || `Done For You Marketing <${process.env.SMTP_USER}>`;
+  const info = await getTransporter().sendMail({
+    from, to, subject, html,
+    replyTo: replyTo || REPLY_TO(),
+    text: htmlToText(html),
+  });
+  console.log(`✅ Email sent: "${subject}" → ${to}`);
+  return info;
+}
+
+// ─── Templates ───────────────────────────────────────────────────────────────
+
+const STYLE = {
+  body:   'font-family:Inter,Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;',
+  h2:     'font-size:22px;color:#1F3D2C;margin:0 0 12px;',
+  p:      'color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 16px;',
+  button: 'display:inline-block;background:#2D6B4F;color:#F5F2EA;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;',
+  small:  'color:#9AA199;font-size:13px;margin-top:24px;',
+};
+
+function layout(inner) {
+  return `
+    <div style="${STYLE.body}">
+      <img src="${appUrl()}/logo.png" alt="Done For You Marketing" style="height:80px;margin-bottom:24px;" />
+      ${inner}
+    </div>`;
+}
+
+// Password reset: the link is good for 1 hour (set in routes/auth.js)
 async function sendPasswordReset(toEmail, resetUrl) {
-  const contactId      = await getOrCreateContact(toEmail);
-  const conversationId = await getOrCreateConversation(contactId);
-
-  await axios.post(
-    `${GHL_BASE}/conversations/messages`,
-    {
-      type:           'Email',
-      conversationId,
-      contactId,
-      subject:        'Reset your DFY Portal password',
-      html: `
-        <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;">
-          <img src="https://dfy-portal-production.up.railway.app/logo.png" alt="Done For You Marketing" style="height:80px;margin-bottom:24px;" />
-          <h2 style="font-size:22px;color:#1F3D2C;margin:0 0 12px;">Reset your password</h2>
-          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 24px;">
-            We received a request to reset the password for your DFY Marketing client portal account.
-            Click the button below to choose a new password. This link expires in 1 hour.
-          </p>
-          <a href="${resetUrl}" style="display:inline-block;background:#2D6B4F;color:#F5F2EA;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;">
-            Reset Password
-          </a>
-          <p style="color:#9AA199;font-size:13px;margin-top:24px;">
-            If you didn't request this, you can safely ignore this email — your password won't change.
-          </p>
-        </div>
-      `,
-    },
-    { headers: GHL_HEADERS() }
-  );
-
-  console.log(`✅ Password reset email sent via GHL to ${toEmail}`);
+  await sendMail({
+    to: toEmail,
+    subject: 'Reset your DFY Portal password',
+    html: layout(`
+      <h2 style="${STYLE.h2}">Reset your password</h2>
+      <p style="${STYLE.p}">
+        We received a request to reset the password for your DFY Marketing client portal account.
+        Click the button below to choose a new password. This link expires in 1 hour.
+      </p>
+      <a href="${resetUrl}" style="${STYLE.button}">Reset Password</a>
+      <p style="${STYLE.small}">
+        If you didn't request this, you can safely ignore this email — your password won't change.
+      </p>`),
+  });
 }
 
-// Send a contact-form inquiry to hello@dfymarketinggroup.com
+// Welcome: sent by the Stripe webhook once a plan is paid for.
+// setPasswordUrl is only given to clients who paid through a payment link and
+// don't have a password yet; clients who signed up on the site already chose one.
+async function sendWelcome({ name, email, planName, setPasswordUrl }) {
+  const firstName = escapeHtml((name || '').trim().split(/\s+/)[0] || 'there');
+  const plan = escapeHtml(planName || 'your plan');
+  const nextStep = setPasswordUrl
+    ? `<p style="${STYLE.p}">First, choose a password for your client portal. This link is good for 7 days.</p>
+       <a href="${setPasswordUrl}" style="${STYLE.button}">Set my password</a>`
+    : `<p style="${STYLE.p}">Your client portal is ready. Sign in and fill out your business profile — that's what we use to plan your content.</p>
+       <a href="${appUrl()}/login" style="${STYLE.button}">Open my portal</a>`;
+
+  await sendMail({
+    to: email,
+    subject: 'Welcome to Done For You Marketing',
+    html: layout(`
+      <h2 style="${STYLE.h2}">Welcome, ${firstName}</h2>
+      <p style="${STYLE.p}">Thanks for choosing Done For You Marketing. Your <strong>${plan}</strong> plan is active.</p>
+      ${nextStep}
+      <p style="${STYLE.p}" >
+        <br>What happens next: once your profile is in, we build your first posts and send them to your portal to approve.
+        You'll get an email whenever something's waiting for you.
+      </p>
+      <p style="${STYLE.small}">
+        Questions? Just reply to this email and it comes straight to our team.
+      </p>`),
+  });
+}
+
+// Contact-form inquiry → the team inbox. Reply-to is the visitor, so answering is one click.
 async function sendContactInquiry({ name, email, message }) {
-  const contactId      = await getOrCreateContact('hello@dfymarketinggroup.com');
-  const conversationId = await getOrCreateConversation(contactId);
-
-  await axios.post(
-    `${GHL_BASE}/conversations/messages`,
-    {
-      type:           'Email',
-      conversationId,
-      contactId,
-      subject:        `New website inquiry from ${name}`,
-      html: `
-        <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;">
-          <img src="https://dfy-portal-production.up.railway.app/logo.png" alt="Done For You Marketing" style="height:80px;margin-bottom:24px;" />
-          <h2 style="font-size:22px;color:#1F3D2C;margin:0 0 16px;">New website inquiry</h2>
-          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
-            <strong>Name:</strong> ${escapeHtml(name)}
-          </p>
-          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
-            <strong>Email:</strong> <a href="mailto:${escapeHtml(email)}" style="color:#2D6B4F;">${escapeHtml(email)}</a>
-          </p>
-          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 24px;">
-            <strong>Message:</strong><br>${escapeHtml(message)}
-          </p>
-          <p style="color:#9AA199;font-size:13px;margin-top:24px;">
-            Sent from the DFY Marketing contact form.
-          </p>
-        </div>
-      `,
-    },
-    { headers: GHL_HEADERS() }
-  );
-
-  console.log(`✅ Contact inquiry email sent for ${email}`);
+  await sendMail({
+    to: TEAM_EMAIL(),
+    replyTo: email,
+    subject: `New website inquiry from ${name}`,
+    html: layout(`
+      <h2 style="${STYLE.h2}">New website inquiry</h2>
+      <p style="${STYLE.p}"><strong>Name:</strong> ${escapeHtml(name)}</p>
+      <p style="${STYLE.p}"><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}" style="color:#2D6B4F;">${escapeHtml(email)}</a></p>
+      <p style="${STYLE.p}"><strong>Message:</strong><br>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
+      <p style="${STYLE.small}">Sent from the DFY Marketing contact form.</p>`),
+  });
 }
 
 function escapeHtml(str) {
@@ -132,4 +145,16 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-module.exports = { sendPasswordReset, sendContactInquiry };
+// Plain-text fallback for mail apps that don't show HTML
+function htmlToText(html) {
+  return String(html)
+    .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, '$2: $1')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|h\d|div)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    .replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+module.exports = { isConfigured, sendMail, sendPasswordReset, sendWelcome, sendContactInquiry, escapeHtml };
