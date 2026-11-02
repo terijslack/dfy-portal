@@ -6,7 +6,6 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
-const { syncContactToGHL } = require('../services/ghl');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -86,22 +85,6 @@ router.post('/', requireAuth, async (req, res) => {
     );
 
     res.json({ success: true });
-
-    // Fire-and-forget GHL sync — errors are logged but never exposed to the client
-    try {
-      const [clientRes, socialsRes] = await Promise.all([
-        pool.query('SELECT id, name, email, business_name FROM clients WHERE id = $1', [clientId]),
-        pool.query('SELECT platform, username FROM social_accounts WHERE client_id = $1', [clientId]),
-      ]);
-      const client = clientRes.rows[0];
-      if (client) {
-        syncContactToGHL(client, req.body, socialsRes.rows).catch(err =>
-          console.error('GHL sync error:', err.message)
-        );
-      }
-    } catch (ghlSetupErr) {
-      console.error('GHL sync setup error:', ghlSetupErr.message);
-    }
 
   } catch (err) {
     console.error('Onboarding save error:', err);

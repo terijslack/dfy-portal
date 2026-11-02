@@ -1,0 +1,6 @@
+node_modules/
+# Lockfiles generated in Replit point at a host Railway cannot reach; let npm resolve fresh
+package-lock.json
+.env
+.replit
+.DS_Store
