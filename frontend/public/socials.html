@@ -422,6 +422,10 @@
     }
 
     // ── Helpers ────────────────────────────────────────────────────
+    // Every platform a post goes to (Metricool posts can go to several)
+    function networksOf(p) {
+      return String(p.networks || p.platform || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+    }
     function platformLabel(p) {
       const map = { instagram:'Instagram', facebook:'Facebook', linkedin:'LinkedIn',
                     youtube:'YouTube', tiktok:'TikTok', twitter:'X (Twitter)' };
@@ -433,7 +437,7 @@
     }
     function statusLabel(s) {
       return { approved:'Approved', scheduled:'Scheduled', published:'Published',
-               pending:'Pending Review', changes_requested:'Changes Requested' }[s] || s;
+               pending:'Pending Review', changes_requested:'Changes Requested', queued:'Approved' }[s] || s;
     }
     function statusClass(s) {
       return { approved:'status-approved', scheduled:'status-scheduled', published:'status-published',
@@ -441,12 +445,13 @@
     }
     function formatDate(d) {
       if (!d) return '';
-      return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      // A calendar day (no time) — read in UTC so it doesn't show a day early in Pacific time
+      return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', timeZone:'UTC' });
     }
     function monthKey(d) {
       if (!d) return 'Unscheduled';
       const dt = new Date(d);
-      return dt.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+      return dt.toLocaleDateString('en-US', { month:'long', year:'numeric', timeZone:'UTC' });
     }
     function escHtml(s) {
       return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -472,7 +477,7 @@
       const container = document.getElementById('feedContainer');
       const filtered = activeFilter === 'all'
         ? allPosts
-        : allPosts.filter(p => (p.platform||'').toLowerCase() === activeFilter);
+        : allPosts.filter(p => networksOf(p).includes(activeFilter));
 
       if (!filtered.length) {
         container.innerHTML = `<div class="posts-empty">
@@ -498,7 +503,8 @@
         const rows = posts.map(post => {
           const isExp = expandedId === post.id;
           const caption = post.caption || post.content || '';
-          const platform = (post.platform || 'other').toLowerCase();
+          const nets = networksOf(post);
+          const platform = nets[0] || 'other';
 
           // Engagement stats — GHL data goes here once connected
           // Each stat checks for a field; falls back to dash if not present
@@ -510,14 +516,14 @@
               ${post.shares   != null ? `<div class="engagement-stat"><span class="engagement-value">${post.shares.toLocaleString()}</span><span class="engagement-label">Shares</span></div>` : ''}
               ${post.reach    != null ? `<div class="engagement-stat"><span class="engagement-value">${post.reach.toLocaleString()}</span><span class="engagement-label">Reach</span></div>` : ''}
             </div>
-          ` : `<span class="engagement-empty">Engagement data available once GHL is connected.</span>`;
+          ` : `<span class="engagement-empty">Likes, comments and reach will show here once your accounts are connected to our reporting.</span>`;
 
           return `
             <div class="post-row${isExp ? ' expanded' : ''}" onclick="toggleRow(${post.id})">
               <div class="post-row-main">
                 <div class="post-platform-bar ${barClass(platform)}"></div>
                 <div class="post-platform-info">
-                  <div class="post-platform-name">${platformLabel(platform)}</div>
+                  <div class="post-platform-name">${nets.map(platformLabel).join(' + ') || platformLabel(platform)}</div>
                   <div class="post-date-text">${formatDate(post.scheduled_date)}</div>
                 </div>
                 <div class="post-caption-preview">${escHtml(caption)}</div>
