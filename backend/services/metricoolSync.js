@@ -185,12 +185,13 @@ async function applyActions(clientId, actions, blogId) {
                 revised_at = CASE WHEN $9 THEN NOW() ELSE revised_at END,
                 metricool_post_id = $10, metricool_uuid = $11,
                 -- back in front of the client (revised, or pulled back to draft) → they get a fresh email
-                client_notified_at = CASE WHEN $8 = 'pending' AND $13 <> 'pending' THEN NULL ELSE client_notified_at END,
-                client_reminded_at = CASE WHEN $8 = 'pending' AND $13 <> 'pending' THEN NULL ELSE client_reminded_at END,
+                client_notified_at = CASE WHEN $13 THEN NULL ELSE client_notified_at END,
+                client_reminded_at = CASE WHEN $13 THEN NULL ELSE client_reminded_at END,
                 updated_at = NOW()
          WHERE id = $12`,
         [r.caption, r.platform, r.networks.join(','), r.date, r.time, JSON.stringify(r.media),
-         JSON.stringify(r.raw), a.status, a.revised, r.id, r.uuid, a.id, a.from]
+         JSON.stringify(r.raw), a.status, a.revised, r.id, r.uuid, a.id,
+         a.status === 'pending' && a.from !== 'pending']
       );
       counts.updated++;
       if (a.revised) { counts.revised++; revisedLabels.push(r); }
