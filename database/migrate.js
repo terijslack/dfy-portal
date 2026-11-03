@@ -151,6 +151,23 @@ async function runMigrations(pool) {
       created_at     TIMESTAMPTZ DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS newsletter_files_newsletter ON newsletter_files (newsletter_id, position)`,
+
+    // ── Client email notifications (Account → Email notifications) ──
+    // Account doesn't use Metricool (e.g. a test account) — hides the Dashboard warning
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_not_needed BOOLEAN NOT NULL DEFAULT false`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS notify_approvals BOOLEAN NOT NULL DEFAULT true`, // "ready for your review"
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS notify_reminders BOOLEAN NOT NULL DEFAULT true`, // "goes out tomorrow, still needs your OK"
+    // When we last emailed the client about an item. Added with DEFAULT NOW() so
+    // everything already waiting at launch counts as notified (no surprise
+    // emails on deploy); the default is then dropped so new items start empty.
+    `ALTER TABLE posts       ADD COLUMN IF NOT EXISTS client_notified_at TIMESTAMPTZ DEFAULT NOW()`,
+    `ALTER TABLE posts       ALTER COLUMN client_notified_at DROP DEFAULT`,
+    `ALTER TABLE posts       ADD COLUMN IF NOT EXISTS client_reminded_at TIMESTAMPTZ DEFAULT NOW()`,
+    `ALTER TABLE posts       ALTER COLUMN client_reminded_at DROP DEFAULT`,
+    `ALTER TABLE newsletters ADD COLUMN IF NOT EXISTS client_notified_at TIMESTAMPTZ DEFAULT NOW()`,
+    `ALTER TABLE newsletters ALTER COLUMN client_notified_at DROP DEFAULT`,
+    `ALTER TABLE newsletters ADD COLUMN IF NOT EXISTS client_reminded_at TIMESTAMPTZ DEFAULT NOW()`,
+    `ALTER TABLE newsletters ALTER COLUMN client_reminded_at DROP DEFAULT`,
   ];
 
   for (const sql of steps) {

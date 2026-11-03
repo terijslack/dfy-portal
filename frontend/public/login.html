@@ -67,12 +67,19 @@
   </div>
 
   <script>
+    // Where to go after signing in. ?next=/posts from an email link takes clients
+    // straight there; only same-site paths are allowed.
+    function nextFor(user) {
+      if (user.is_admin) return '/admin/dashboard';
+      const n = new URLSearchParams(location.search).get('next') || '';
+      return /^\/(?!\/)[\w\-/?=&%.]*$/.test(n) ? n : '/dashboard';
+    }
     // Check if already logged in — redirect immediately
     fetch('/api/auth/me')
       .then(r => r.json().then(data => ({ status: r.status, data })))
       .then(({ status, data }) => {
         if (data.user) {
-          window.location.href = data.user.is_admin ? '/admin/dashboard' : '/dashboard';
+          window.location.href = nextFor(data.user);
         } else if (status === 403 && data.redirect) {
           // Plan has ended — send them to the restart page
           window.location.href = data.redirect;
@@ -114,7 +121,7 @@
           return;
         }
 
-        window.location.href = data.user.is_admin ? '/admin/dashboard' : '/dashboard';
+        window.location.href = nextFor(data.user);
 
       } catch (err) {
         errorMsg.textContent = 'Network error. Check your connection.';

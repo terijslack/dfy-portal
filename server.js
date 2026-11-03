@@ -205,5 +205,7 @@ runMigrations(dbPool)
       console.log(`   Open: http://localhost:${PORT}`);
       // Pull clients' draft posts from Metricool into the portal on a timer
       require('./backend/services/metricoolSync').startMetricoolSync();
+      // Email clients when something needs their approval (if they've left it on)
+      require('./backend/services/clientNotify').startClientNotifications();
     });
   });

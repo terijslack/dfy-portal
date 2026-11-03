@@ -84,6 +84,14 @@ const RULES = [
   { method: 'POST', path: /^\/api\/newsletters\/(\d+)\/approve\/?$/, describe: async ({ m }) => `Approved ${await newsletterSummary(m[1])}` },
   { method: 'POST', path: /^\/api\/newsletters\/(\d+)\/request-changes\/?$/,
     describe: async ({ req, m }) => `Asked for changes to ${await newsletterSummary(m[1])}: “${short(req.body.notes)}”` },
+  { method: 'PUT', path: /^\/api\/account\/notifications\/?$/,
+    describe: ({ req }) => {
+      const b = req.body || {};
+      const parts = [];
+      if ('notify_approvals' in b) parts.push(`"ready for review" emails ${b.notify_approvals === true ? 'on' : 'off'}`);
+      if ('notify_reminders' in b) parts.push(`day-before reminders ${b.notify_reminders === true ? 'on' : 'off'}`);
+      return parts.length ? `Turned ${parts.join(' and ')}` : null;
+    } },
   { method: 'POST', path: /^\/api\/account\/change-plan\/?$/, describe: ({ req }) => `Changed their plan to ${req.body.new_plan}` },
   { method: 'POST', path: /^\/api\/account\/pause-plan\/?$/, describe: () => 'Paused their plan' },
   { method: 'POST', path: /^\/api\/account\/resume-plan\/?$/, describe: () => 'Resumed their plan' },
