@@ -60,6 +60,8 @@ function normalizeRemote(raw) {
     .map(url => ({ url, type: mediaType(url) }));
   return {
     id: String(raw.id),
+    // Stays the same when the post is edited (the id changes every time)
+    uuid: raw.uuid != null ? String(raw.uuid) : String(raw.id),
     draft: raw.draft === true,
     caption: raw.text || '',
     networks,
@@ -96,12 +98,17 @@ function localKey(row) {
 function planSync({ localRows, remoteRaw, today, windowStart, windowEnd }) {
   const actions = [];
   const remote = remoteRaw.map(normalizeRemote).filter(r => r.id && r.id !== 'undefined');
-  const byId = new Map(localRows.filter(r => r.metricool_post_id).map(r => [String(r.metricool_post_id), r]));
-  const seen = new Set();
+  // Match on uuid; fall back to id for rows saved before we stored uuids
+  const byKey = new Map();
+  for (const row of localRows) {
+    if (row.metricool_post_id) byKey.set(`id:${row.metricool_post_id}`, row);
+    if (row.metricool_uuid) byKey.set(`uuid:${row.metricool_uuid}`, row);
+  }
+  const seen = new Set(); // local row ids we matched
 
   for (const r of remote) {
-    seen.add(r.id);
-    const local = byId.get(r.id);
+    const local = byKey.get(`uuid:${r.uuid}`) || byKey.get(`id:${r.id}`);
+    if (local) seen.add(local.id);
 
     if (!local) {
       actions.push({ type: 'insert', remote: r, status: r.draft ? 'pending' : 'scheduled' });
@@ -134,7 +141,7 @@ function planSync({ localRows, remoteRaw, today, windowStart, windowEnd }) {
   // Linked posts Metricool no longer lists
   for (const local of localRows) {
     if (local.source !== 'metricool' || !local.metricool_post_id) continue;
-    if (seen.has(String(local.metricool_post_id))) continue;
+    if (seen.has(local.id)) continue;
     if (local.status === 'published') continue;
     const day = ymdOf(local.scheduled_date);
     if (!day || day > windowEnd) continue; // outside what we asked for — leave it alone
@@ -164,11 +171,11 @@ async function applyActions(clientId, actions, blogId) {
     if (a.type === 'insert') {
       const res = await pool.query(
         `INSERT INTO posts (client_id, caption, platform, networks, scheduled_date, scheduled_time, media,
-                            status, source, metricool_post_id, metricool_raw)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'metricool', $9, $10)
-         ON CONFLICT (client_id, metricool_post_id) WHERE metricool_post_id IS NOT NULL DO NOTHING`,
+                            status, source, metricool_post_id, metricool_uuid, metricool_raw)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'metricool', $9, $10, $11)
+         ON CONFLICT DO NOTHING`,
         [clientId, r.caption, r.platform, r.networks.join(','), r.date, r.time,
-         JSON.stringify(r.media), a.status, r.id, JSON.stringify(r.raw)]
+         JSON.stringify(r.media), a.status, r.id, r.uuid, JSON.stringify(r.raw)]
       );
       if (res.rowCount && a.status === 'pending') counts.added++;
     } else if (a.type === 'update') {
@@ -176,19 +183,21 @@ async function applyActions(clientId, actions, blogId) {
         `UPDATE posts SET caption = $1, platform = $2, networks = $3, scheduled_date = $4, scheduled_time = $5,
                 media = $6, metricool_raw = $7, status = $8,
                 revised_at = CASE WHEN $9 THEN NOW() ELSE revised_at END,
+                metricool_post_id = $10, metricool_uuid = $11,
                 updated_at = NOW()
-         WHERE id = $10`,
+         WHERE id = $12`,
         [r.caption, r.platform, r.networks.join(','), r.date, r.time, JSON.stringify(r.media),
-         JSON.stringify(r.raw), a.status, a.revised, a.id]
+         JSON.stringify(r.raw), a.status, a.revised, r.id, r.uuid, a.id]
       );
       counts.updated++;
       if (a.revised) { counts.revised++; revisedLabels.push(r); }
     } else if (a.type === 'refresh') {
-      await pool.query('UPDATE posts SET metricool_raw = $1 WHERE id = $2', [JSON.stringify(r.raw), a.id]);
+      await pool.query('UPDATE posts SET metricool_raw = $1, metricool_post_id = $2, metricool_uuid = $3 WHERE id = $4',
+        [JSON.stringify(r.raw), r.id, r.uuid, a.id]);
     } else if (a.type === 'release') {
       try {
-        await releasePost({ blogId, raw: r.raw });
-        await pool.query('UPDATE posts SET metricool_error = NULL, updated_at = NOW() WHERE id = $1', [a.id]);
+        const saved = await releasePost({ blogId, raw: r.raw });
+        await recordReleased(a.id, saved);
         counts.released++;
       } catch (err) {
         const msg = describeError(err);
@@ -216,6 +225,20 @@ async function applyActions(clientId, actions, blogId) {
   return counts;
 }
 
+// Metricool answers an update with the post under a new id — keep ours current
+async function recordReleased(postId, saved) {
+  const post = saved && (saved.data || saved);
+  if (post && post.id != null) {
+    await pool.query(
+      `UPDATE posts SET metricool_post_id = $1, metricool_uuid = COALESCE($2, metricool_uuid), metricool_raw = $3,
+              metricool_error = NULL, updated_at = NOW() WHERE id = $4`,
+      [String(post.id), post.uuid != null ? String(post.uuid) : null, JSON.stringify(post), postId]
+    );
+  } else {
+    await pool.query('UPDATE posts SET metricool_error = NULL, updated_at = NOW() WHERE id = $1', [postId]);
+  }
+}
+
 function describeError(err) {
   const d = err.response?.data;
   const detail = d ? (typeof d === 'string' ? d : (d.message || d.error || JSON.stringify(d))) : err.message;
@@ -239,7 +262,7 @@ async function runSync(clientId) {
   const remoteRaw = await listScheduledPosts({ blogId: c.metricool_blog_id, start: windowStart, end: windowEnd, timezone });
 
   const localRows = (await pool.query(
-    `SELECT id, metricool_post_id, source, status, caption, networks, scheduled_date, scheduled_time, media
+    `SELECT id, metricool_post_id, metricool_uuid, source, status, caption, networks, scheduled_date, scheduled_time, media
      FROM posts WHERE client_id = $1 AND metricool_post_id IS NOT NULL`, [clientId]
   )).rows;
 
@@ -297,4 +320,4 @@ function startMetricoolSync(intervalMs = Number(process.env.METRICOOL_SYNC_MINUT
   return t;
 }
 
-module.exports = { planSync, normalizeRemote, syncClient, syncIfStale, syncAll, startMetricoolSync, describeError };
+module.exports = { planSync, normalizeRemote, syncClient, syncIfStale, syncAll, startMetricoolSync, describeError, recordReleased };

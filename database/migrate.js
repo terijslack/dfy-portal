@@ -95,6 +95,10 @@ async function runMigrations(pool) {
     `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS revised_at        TIMESTAMPTZ`, // DFY revised it after a change request
     `CREATE UNIQUE INDEX IF NOT EXISTS posts_metricool_unique ON posts (client_id, metricool_post_id) WHERE metricool_post_id IS NOT NULL`,
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_synced_at TIMESTAMPTZ`,
+    // Metricool gives a post a NEW id every time it's edited; its uuid stays the same.
+    // So posts are matched on uuid, and metricool_post_id is just the latest id.
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_uuid    TEXT`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS posts_metricool_uuid_unique ON posts (client_id, metricool_uuid) WHERE metricool_uuid IS NOT NULL`,
 
     // ── Messages from DFY to a client ──
     // Shown on the client's dashboard under "From your marketing team".
