@@ -294,7 +294,7 @@
       const grid = document.getElementById('approvedGrid');
       const label = document.getElementById('approvedToggleLabel');
       const arrow = document.getElementById('toggleArrow');
-      const approvedPosts = allPosts.filter(p => p.status === 'approved' || p.status === 'queued');
+      const approvedPosts = allPosts.filter(isDone);
       grid.style.display = approvedOpen ? '' : 'none';
       arrow.textContent = approvedOpen ? '▲' : '▼';
       label.textContent = approvedOpen ? 'Hide Previously Approved Posts' : `Show Previously Approved Posts (${approvedPosts.length})`;
@@ -302,7 +302,7 @@
 
     function renderPosts(posts) {
       const activePosts = posts.filter(p => p.status === 'pending' || p.status === 'changes_requested');
-      const approvedPosts = posts.filter(p => p.status === 'approved' || p.status === 'queued');
+      const approvedPosts = posts.filter(isDone);
       const grid = document.getElementById('postsGrid');
       if (activePosts.length === 0) {
         grid.innerHTML = '<div class="empty-state">No posts awaiting review. Check back soon!</div>';
@@ -342,30 +342,38 @@
       return `
         <div class="post-card status-${post.status}" data-id="${post.id}">
           <div class="post-meta">
-            <span class="post-platform platform-${post.platform}">${platformSvg(post.platform)} ${capitalize(post.platform)}</span>
-            <span class="post-date">${calSvg} ${formatDate(post.scheduled_date)}</span>
+            ${networksOf(post).map(n => `<span class="post-platform platform-${n}">${platformSvg(n)} ${networkName(n)}</span>`).join('')}
+            <span class="post-date">${calSvg} ${formatDate(post.scheduled_date)}${post.scheduled_time ? ` at ${formatTime(post.scheduled_time)}` : ''}</span>
             <span class="post-status-badge status-badge-${post.status}">${statusLabel(post.status)}</span>
           </div>
+          ${mediaHtml(post.media)}
           <div class="post-caption">${escapeHtml(post.caption)}</div>
-          ${post.change_notes ? `<div class="change-notes-display">${noteSvg} Your notes: ${escapeHtml(post.change_notes)}</div>` : ''}
+          ${post.revised_at && post.status === 'pending' ? `<div class="post-revised-note">${approvedSvg} We updated this based on your notes</div>` : ''}
+          ${post.change_notes ? `<div class="change-notes-display">${noteSvg} ${post.revised_at && post.status === 'pending' ? 'You asked' : 'Your notes'}: ${escapeHtml(post.change_notes)}</div>` : ''}
           ${showActions && (post.status === 'pending' || post.status === 'changes_requested') ? `
             <div class="post-actions">
-              <button class="btn-approve" onclick="approvePost(${post.id})">${checkSvg} Approve</button>
+              <button class="btn-approve" onclick="approvePost(${post.id}, '${post.updated_at || ''}')">${checkSvg} Approve</button>
               <button class="btn-changes" onclick="openChangesModal(${post.id})">${editSvg} Request Changes</button>
             </div>
           ` : ''}
-          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">${approvedSvg} Approved — queued in Buffer</div>` : ''}
+          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">${approvedSvg} Approved — it will post on ${formatDate(post.scheduled_date)}</div>` : ''}
+          ${post.status === 'scheduled' ? `<div class="approved-note">${approvedSvg} Scheduled</div>` : ''}
+          ${post.status === 'published' ? `<div class="approved-note">${approvedSvg} Posted</div>` : ''}
         </div>
       `;
     }
 
-    async function approvePost(postId) {
+    async function approvePost(postId, seenUpdatedAt) {
       const card = document.querySelector(`[data-id="${postId}"]`);
       card.style.opacity = '0.6';
       try {
-        const res = await fetch(`/api/posts/${postId}/approve`, { method: 'POST' });
+        const res = await fetch(`/api/posts/${postId}/approve`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ seen_updated_at: seenUpdatedAt || null }),
+        });
         const data = await res.json();
-        if (res.ok) { loadPosts(); } else { alert(data.error || 'Could not approve. Try again.'); card.style.opacity = '1'; }
+        if (res.ok) { loadPosts(); }
+        else { alert(data.error || 'Could not approve. Try again.'); card.style.opacity = '1'; if (data.refresh) loadPosts(); }
       } catch (err) { alert('Network error. Try again.'); card.style.opacity = '1'; }
     }
 
@@ -402,8 +410,29 @@
 
     function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); }
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
-    function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[status] || status; }
-    function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued', scheduled: 'Scheduled', published: 'Posted' }[status] || status; }
+    function escapeHtml(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function attr(str) { return escapeHtml(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function isDone(p) { return ['approved', 'queued', 'scheduled', 'published'].includes(p.status); }
+    function networksOf(post) { return String(post.networks || post.platform || '').split(',').map(n => n.trim()).filter(Boolean); }
+    function networkName(n) { return { twitter: 'X', linkedin: 'LinkedIn', tiktok: 'TikTok', gmb: 'Google', youtube: 'YouTube' }[n] || capitalize(n); }
+    function formatTime(t) {
+      const [h, m] = String(t).split(':').map(Number);
+      if (isNaN(h)) return '';
+      return new Date(2000, 0, 1, h, m || 0).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+    function safeUrl(u) {
+      try { const url = new URL(u, window.location.origin); return ['http:', 'https:'].includes(url.protocol) ? url.href : ''; }
+      catch { return ''; }
+    }
+    // Images and video for the post, as they'll appear on the feed
+    function mediaHtml(media) {
+      const list = (Array.isArray(media) ? media : []).map(m => ({ ...m, url: safeUrl(m.url) })).filter(m => m.url);
+      if (!list.length) return '';
+      return `<div class="post-media${list.length === 1 ? ' single' : ''}">${list.map(m => m.type === 'video'
+        ? `<video src="${attr(m.url)}" controls playsinline preload="metadata"></video>`
+        : `<a href="${attr(m.url)}" target="_blank" rel="noopener"><img src="${attr(m.url)}" alt="Post image" loading="lazy"></a>`).join('')}</div>`;
+    }
 
     init();
   </script>

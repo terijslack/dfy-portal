@@ -177,5 +177,7 @@ runMigrations(dbPool)
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`   Open: http://localhost:${PORT}`);
+      // Pull clients' draft posts from Metricool into the portal on a timer
+      require('./backend/services/metricoolSync').startMetricoolSync();
     });
   });

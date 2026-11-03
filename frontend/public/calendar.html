@@ -281,7 +281,7 @@
         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const posts = postsByDate[dateStr] || [];
         const isToday = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === day;
-        const dots = posts.slice(0, 4).map(p => `<span class="cal-dot platform-${p.platform} ${p.status === 'approved' || p.status === 'queued' ? 'dot-approved' : p.status === 'changes_requested' ? 'dot-changes' : 'dot-pending'}" title="${capitalize(p.platform)}"></span>`).join('');
+        const dots = posts.slice(0, 4).map(p => `<span class="cal-dot platform-${p.platform} ${['approved','queued','scheduled','published'].includes(p.status) ? 'dot-approved' : p.status === 'changes_requested' ? 'dot-changes' : 'dot-pending'}" title="${capitalize(p.platform)}"></span>`).join('');
         const overflow = posts.length > 4 ? `<span class="cal-overflow">+${posts.length - 4}</span>` : '';
         cells += `<div class="cal-cell ${isToday ? 'cal-cell-today' : ''} ${posts.length ? 'cal-cell-has-posts' : ''}" data-date="${dateStr}" onclick="showDetail('${dateStr}')"><span class="cal-day-num">${day}</span>${posts.length ? `<div class="cal-dots">${dots}${overflow}</div>` : ''}</div>`;
       }
@@ -310,7 +310,7 @@
 
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
     function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued' }[status] || status; }
+    function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued', scheduled: 'Scheduled', published: 'Posted' }[status] || status; }
 
     init();
   </script>
