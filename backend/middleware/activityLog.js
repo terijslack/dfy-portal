@@ -32,10 +32,12 @@ function changedFields(body, before) {
 }
 
 async function postSummary(postId) {
-  const p = (await pool.query('SELECT platform, scheduled_date FROM posts WHERE id = $1', [postId])).rows[0];
+  const p = (await pool.query('SELECT platform, networks, scheduled_date FROM posts WHERE id = $1', [postId])).rows[0];
   if (!p) return 'a post';
   const day = p.scheduled_date ? new Date(p.scheduled_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : '';
-  return `the ${PLATFORM(p.platform)} post${day ? ` for ${day}` : ''}`;
+  // Name every platform the post goes to (Metricool posts can go to several)
+  const nets = String(p.networks || p.platform || '').split(',').map(n => n.trim()).filter(Boolean).map(PLATFORM);
+  return `the ${nets.join(' + ') || 'social'} post${day ? ` for ${day}` : ''}`;
 }
 
 async function newsletterSummary(id) {
