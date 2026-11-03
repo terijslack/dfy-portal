@@ -35,6 +35,7 @@
       <div class="header-left">
         <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
         <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin/dashboard">Dashboard</a>
           <a href="/admin" aria-current="page">Accounts</a>
           <a href="/admin/contacts">Contacts</a>
           <a href="/admin/pipeline">Pipeline</a>
@@ -242,7 +243,10 @@
       }
 
       await loadClients();
-      const cid = parseInt(new URLSearchParams(location.search).get('client'), 10);
+      const params = new URLSearchParams(location.search);
+      const cid = parseInt(params.get('client'), 10);
+      const tab = params.get('tab');
+      if (tab && document.querySelector(`.cd-tab[data-tab="${tab}"]`)) currentTab = tab; // e.g. from the Dashboard
       if (cid) selectClient(cid, { replace: true });
     }
 
