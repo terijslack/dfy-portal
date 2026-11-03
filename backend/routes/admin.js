@@ -540,6 +540,23 @@ router.post('/clients/:id/metricool-sync', requireAdmin, async (req, res) => {
   }
 });
 
+// POST /api/admin/test-email — send a test email to hello@ to check the Gmail setup
+router.post('/test-email', requireAdmin, async (req, res) => {
+  const mailer = require('../services/mailer');
+  if (!mailer.isConfigured()) return res.status(400).json({ error: 'GOOGLE_SERVICE_ACCOUNT_JSON is not set in Railway.' });
+  try {
+    const sent = await mailer.sendMail({
+      to: mailer.TEAM(),
+      subject: 'Test from the DFY portal',
+      html: '<div style="font-family:Inter,Arial,sans-serif;max-width:480px;padding:24px;background:#F5F2EA;color:#1F3D2C;"><h2 style="margin:0 0 8px;">Email is working</h2><p style="margin:0;color:#444;">The client portal can now send email through Google Workspace. Change requests and newsletter approvals will arrive here.</p></div>',
+    });
+    res.json({ success: true, to: mailer.TEAM(), from: mailer.FROM(), id: sent.id });
+  } catch (err) {
+    const g = err.response?.data;
+    res.status(502).json({ error: (g && (g.error_description || g.error?.message || g.error)) || err.message });
+  }
+});
+
 // DELETE /api/admin/posts/:id — delete a post
 router.delete('/posts/:id', requireAdmin, async (req, res) => {
   try {
