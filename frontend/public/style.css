@@ -1023,6 +1023,62 @@ a.contact-detail-value:hover { color: var(--accent); }
 .post-card.status-scheduled { border-color: rgba(76, 175, 125, 0.25); opacity: 0.75; }
 .post-card.status-published { opacity: 0.6; }
 
+/* ── POST APPROVAL TABS ──────────────────────────────── */
+.post-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border, rgba(31,61,44,0.10));
+  margin: 20px 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.post-tabs::-webkit-scrollbar { display: none; }
+.post-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-slate, #6B756B);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.post-tab:hover { color: var(--color-forest, #1F3D2C); }
+.post-tab.active { color: var(--color-forest, #1F3D2C); border-bottom-color: var(--color-green, #2D6B4F); }
+.post-tab:focus-visible { outline: 2px solid var(--color-green, #2D6B4F); outline-offset: -2px; border-radius: 6px; }
+.post-tab-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: rgba(31,61,44,0.07);
+  color: var(--color-slate, #6B756B);
+  text-align: center;
+}
+.post-tab-count.has-items { background: rgba(125,42,3,0.1); color: var(--color-rust, #7D2A03); }
+.post-tab .tab-short { display: none; }
+@media (max-width: 480px) {
+  .post-tab { padding: 10px 10px; gap: 6px; font-size: 0.88rem; }
+  .post-tab .tab-long { display: none; }
+  .post-tab .tab-short { display: inline; }
+}
+.post-card--focus { border-color: var(--color-green, #2D6B4F) !important; box-shadow: 0 0 0 3px rgba(45,107,79,0.15); opacity: 1 !important; }
+.post-card.status-approved, .post-card.status-scheduled { opacity: 1; }
+.post-toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+  background: var(--color-forest, #1F3D2C); color: var(--color-cream, #F5F2EA);
+  padding: 12px 18px; border-radius: 10px; font-size: 0.9rem; opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 1000; max-width: calc(100% - 32px); text-align: center;
+}
+.post-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
 /* ── CALENDAR ────────────────────────────────────────── */
 .cal-link-btn {
   display: inline-block;
@@ -1985,6 +2041,7 @@ h2 em {
 
 @media (max-width: 900px) {
   .portal-posts-layout { flex-direction: column; }
+  .portal-posts-col { align-self: stretch; width: 100%; }
   .portal-right-rail { width: 100%; }
   .portal-rail-cards { flex-direction: row; flex-wrap: wrap; }
   .portal-rail-card { flex: 1; min-width: 140px; }
