@@ -184,7 +184,7 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
       pool.query(
         `SELECT id, name, email, business_name, created_at, plan, status, subscription_status,
                 billing_date, subscription_start_date, stripe_customer_id, admin_notes, priority,
-                metricool_blog_id
+                metricool_blog_id, metricool_not_needed, notify_approvals, notify_reminders
          FROM clients WHERE id = $1 AND is_admin = false`,
         [id]
       ),
