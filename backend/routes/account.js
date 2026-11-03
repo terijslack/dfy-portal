@@ -4,6 +4,8 @@
 // POST /api/account/pause-plan    → pauses billing via Stripe pause_collection
 // POST /api/account/resume-plan   → clears pause_collection to resume billing
 // POST /api/account/cancel-plan   → sets cancel_at_period_end: true via Stripe
+// GET  /api/account/notifications → their email notification choices
+// PUT  /api/account/notifications → turn them on/off
 
 const express = require('express');
 const router = express.Router();
@@ -13,6 +15,36 @@ const { PLANS } = require('../config/plans');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const getStripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Email notification choices (Account → Email notifications)
+router.get('/notifications', requireLogin, async (req, res) => {
+  try {
+    const r = (await pool.query('SELECT notify_approvals, notify_reminders FROM clients WHERE id = $1', [req.user.id])).rows[0] || {};
+    res.json({ notify_approvals: r.notify_approvals !== false, notify_reminders: r.notify_reminders !== false });
+  } catch (err) {
+    console.error('Get notifications error:', err);
+    res.status(500).json({ error: 'Could not load your email settings.' });
+  }
+});
+
+router.put('/notifications', requireLogin, async (req, res) => {
+  const body = req.body || {};
+  const sets = [], vals = [];
+  for (const k of ['notify_approvals', 'notify_reminders']) {
+    if (k in body) { vals.push(body[k] === true); sets.push(`${k} = $${vals.length}`); }
+  }
+  if (!sets.length) return res.status(400).json({ error: 'Nothing to update.' });
+  try {
+    vals.push(req.user.id);
+    const r = (await pool.query(
+      `UPDATE clients SET ${sets.join(', ')} WHERE id = $${vals.length} RETURNING notify_approvals, notify_reminders`, vals
+    )).rows[0];
+    res.json({ success: true, ...r });
+  } catch (err) {
+    console.error('Update notifications error:', err);
+    res.status(500).json({ error: 'Could not save your email settings.' });
+  }
+});
 
 // GET /api/account/subscription
 router.get('/subscription', requireLogin, async (req, res) => {

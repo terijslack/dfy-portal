@@ -2125,3 +2125,24 @@ h2 em {
   .portal-rail-cards { flex-direction: row; flex-wrap: wrap; }
   .portal-rail-card { flex: 1; min-width: 140px; }
 }
+
+/* ── Account: email notification switches ── */
+.notify-intro { font-size: 0.9rem; color: var(--text-body, #6B756B); margin: -4px 0 12px; }
+.notify-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--border-subtle, rgba(31,61,44,0.10)); cursor: pointer; }
+.notify-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.notify-text strong { font-size: 0.95rem; font-weight: 600; color: var(--text-heading, #1F3D2C); }
+.notify-text span { font-size: 0.85rem; color: var(--text-muted, #9AA199); line-height: 1.45; }
+.notify-switch {
+  appearance: none; -webkit-appearance: none; flex-shrink: 0; width: 42px; height: 24px; border-radius: 999px;
+  background: rgba(31,61,44,0.18); position: relative; cursor: pointer; transition: background .15s; margin: 0;
+}
+.notify-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.2); transition: transform .15s;
+}
+.notify-switch:checked { background: var(--color-green, #2D6B4F); }
+.notify-switch:checked::after { transform: translateX(18px); }
+.notify-switch:focus-visible { outline: 2px solid var(--color-green, #2D6B4F); outline-offset: 2px; }
+.notify-switch:disabled { opacity: 0.6; }
+.notify-msg { font-size: 0.85rem; color: var(--color-green, #2D6B4F); min-height: 1.2em; margin-top: 6px; }
+.notify-msg.notify-err { color: var(--color-rust, #7D2A03); }

@@ -471,6 +471,10 @@
             ${readonly('Billing', escapeHtml(cap((c.subscription_status || '').replace('_', ' '))))}
             ${readonly('Client since', fmt(c.subscription_start_date || c.created_at))}
             ${readonly('Next billing date', fmt(c.billing_date))}
+            ${readonly('Email notifications', escapeHtml([
+              `Ready for review: ${c.notify_approvals === false ? 'off' : 'on'}`,
+              `Day-before reminders: ${c.notify_reminders === false ? 'off' : 'on'}`,
+            ].join(' · ')))}
             ${c.stripe_customer_id ? readonly('Stripe', `<a href="https://dashboard.stripe.com/customers/${encodeURIComponent(c.stripe_customer_id)}" target="_blank" rel="noopener">Open customer in Stripe ↗</a>`, true) : ''}
           </div>
         </div>`;

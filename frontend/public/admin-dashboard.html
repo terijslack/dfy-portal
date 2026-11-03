@@ -105,7 +105,7 @@
     const acct = (id, tab) => `/admin?client=${id}${tab ? `&tab=${tab}` : ''}`;
     const thumb = p => {
       const m = (Array.isArray(p.media) ? p.media : []).find(x => x && x.type !== 'video' && /^https:\/\//.test(x.url || ''));
-      return m ? `<img class="dash-thumb" src="${esc(m.url)}" alt="" loading="lazy">` : `<span class="dash-thumb dash-thumb--empty">${p.title ? 'NL' : ''}</span>`;
+      return m ? `<img class="dash-thumb" src="${esc(m.url)}" alt="" loading="lazy">` : `<span class="dash-thumb dash-thumb--empty">${p.thumbText || (p.title ? 'NL' : '')}</span>`;
     };
 
     let todayStr = '';
@@ -147,6 +147,10 @@
 
       const N = d.needs_you;
       const needs = [
+        ...(N.unlinked || []).map(c => item({ tag: 'Not linked to Metricool', tagClass: 'warn', p: { ...c, thumbText: 'MC' },
+          title: '<span class="muted">Their Metricool drafts can\'t reach their portal</span>',
+          when: 'Add their Metricool brand ID (the number after blogId= in Metricool\'s address bar).',
+          actions: `<a href="${acct(c.client_id, 'overview')}">Add brand ID</a><a href="#" onclick="notNeeded(${c.client_id}, this); return false;">Doesn't use Metricool</a>` })),
         ...N.schedule_errors.map(p => item({ tag: "Couldn't schedule", tagClass: 'warn', p, title: postTitle(p), when: postWhen(p),
           note: p.metricool_error, actions: `<a href="https://app.metricool.com/planner" target="_blank" rel="noopener">Schedule it in Metricool</a><a href="${acct(p.client_id, 'posts')}">Open account</a>` })),
         ...N.missed.map(p => item({ tag: 'Missed', tagClass: 'warn', p, title: postTitle(p), when: `Was set for ${postWhen(p)} — never approved, so it didn't post`,
@@ -198,6 +202,13 @@
         <div class="crm-stat ${risk.length ? 'crm-stat--alert' : ''}"><b>${risk.length}</b><span>at risk</span></div>
         <div class="crm-stat"><b>${wait.length}</b><span>waiting on clients</span></div>
         <div class="crm-stat"><b>${week.length}</b><span>going out this week</span></div>`;
+    }
+
+    // Test accounts etc. — stop warning about this one
+    async function notNeeded(id, el) {
+      el.textContent = 'Saving…';
+      try { await api(`/api/admin/clients/${id}`, { method: 'PUT', body: { metricool_not_needed: true } }); load(); }
+      catch (err) { el.textContent = err.message; }
     }
 
     async function load() {

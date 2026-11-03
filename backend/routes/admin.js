@@ -31,7 +31,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 // Business-profile fields the admin can edit. These live in the same tables the
 // client's /profile page reads and writes, so there is only ever one copy of the data.
-const CLIENT_FIELDS = ['name', 'email', 'business_name', 'admin_notes', 'priority', 'metricool_blog_id'];
+const CLIENT_FIELDS = ['name', 'email', 'business_name', 'admin_notes', 'priority', 'metricool_blog_id', 'metricool_not_needed'];
 const PROFILE_FIELDS = [
   'industry', 'website', 'phone', 'address', 'city', 'state', 'zip',
   'business_email', 'timezone', 'brand_voice', 'target_audience', 'content_themes',
@@ -44,7 +44,7 @@ const KEY_PROFILE_FIELDS = [
   'content_themes', 'unique_selling_point', 'primary_goal',
 ];
 const LABELS = {
-  name: 'Contact name', email: 'Login email', business_name: 'Business name', metricool_blog_id: 'Metricool brand ID', industry: 'Industry',
+  name: 'Contact name', email: 'Login email', business_name: 'Business name', metricool_blog_id: 'Metricool brand ID', metricool_not_needed: "Doesn't use Metricool", industry: 'Industry',
   website: 'Website', phone: 'Phone', address: 'Address', city: 'City', state: 'State', zip: 'ZIP',
   business_email: 'Business email', timezone: 'Time zone', brand_voice: 'Brand voice',
   target_audience: 'Target audience', content_themes: 'Customer pain points',
@@ -74,7 +74,7 @@ router.get('/dashboard', requireAdmin, async (req, res) => {
   const today = `(NOW() AT TIME ZONE '${TZ}')::date`;
   try {
     const q = sql => pool.query(sql).then(r => r.rows);
-    const [postChanges, nlChanges, nlReady, mcErrors, postsWaiting, nlWaiting, comingPosts, comingNl, activity, missed] = await Promise.all([
+    const [postChanges, nlChanges, nlReady, mcErrors, postsWaiting, nlWaiting, comingPosts, comingNl, activity, missed, unlinked] = await Promise.all([
       q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
          WHERE p.status = 'changes_requested' ORDER BY p.scheduled_date ASC NULLS LAST`),
       q(`SELECT ${nlCols} FROM newsletters n JOIN clients c ON c.id = n.client_id
@@ -107,6 +107,13 @@ router.get('/dashboard', requireAdmin, async (req, res) => {
          WHERE p.status IN ('pending', 'changes_requested') AND p.scheduled_date < ${today}
            AND p.scheduled_date >= ${today} - 14
          ORDER BY p.scheduled_date DESC`),
+      // Paying clients whose account isn't linked to a Metricool brand — their
+      // drafts would never reach their portal
+      q(`SELECT c.id AS client_id, ${who} AS client, c.email AS client_email, c.created_at
+         FROM clients c
+         WHERE c.is_admin = false AND COALESCE(c.metricool_blog_id, '') = '' AND c.metricool_not_needed IS NOT TRUE
+           AND c.subscription_status IN ('active', 'past_due', 'cancelling')
+         ORDER BY ${who}`),
     ]);
     const todayStr = (await q(`SELECT ${today}::text AS d`))[0].d;
     // Waiting on the client and going out within 2 days → at risk of never posting
@@ -115,7 +122,7 @@ router.get('/dashboard', requireAdmin, async (req, res) => {
       today: todayStr,
       needs_you: {
         post_changes: postChanges.filter(p => !p.scheduled_date || String(p.scheduled_date instanceof Date ? p.scheduled_date.toISOString() : p.scheduled_date).slice(0, 10) >= todayStr),
-        newsletter_changes: nlChanges, newsletters_ready: nlReady, schedule_errors: mcErrors, missed,
+        newsletter_changes: nlChanges, newsletters_ready: nlReady, schedule_errors: mcErrors, missed, unlinked,
       },
       at_risk: { posts: postsWaiting.filter(p => soon(p.scheduled_date)), newsletters: nlWaiting.filter(n => soon(n.send_date)) },
       waiting: { posts: postsWaiting.filter(p => !soon(p.scheduled_date)), newsletters: nlWaiting.filter(n => !soon(n.send_date)) },

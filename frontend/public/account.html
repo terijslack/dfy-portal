@@ -329,6 +329,22 @@
             </div>
           </div>
 
+          <div class="account-card" id="notifyCard">
+            <div class="account-section">
+              <h2>Email notifications</h2>
+              <p class="notify-intro">We'll email <strong id="notifyEmail">you</strong> when something needs your OK.</p>
+              <label class="notify-row">
+                <span class="notify-text"><strong>Ready for your review</strong><span>When new posts or your newsletter are ready for you to approve. Several at once come in one email.</span></span>
+                <input type="checkbox" class="notify-switch" id="notifyApprovals" checked onchange="saveNotify('notify_approvals', this)">
+              </label>
+              <label class="notify-row">
+                <span class="notify-text"><strong>Reminder the day before</strong><span>If something still isn't approved the day before it's scheduled to go out.</span></span>
+                <input type="checkbox" class="notify-switch" id="notifyReminders" checked onchange="saveNotify('notify_reminders', this)">
+              </label>
+              <div class="notify-msg" id="notifyMsg" role="status"></div>
+            </div>
+          </div>
+
           <div class="account-card" id="subscriptionCard">
             <div class="account-section">
               <h2>Marketing Plan</h2>
@@ -496,7 +512,34 @@
       document.getElementById('accountName').textContent = meData.user.name;
       document.getElementById('accountEmail').textContent = meData.user.email;
       initSidebar(meData.user.business_name || meData.user.name);
+      document.getElementById('notifyEmail').textContent = meData.user.email;
       loadSubscription();
+      loadNotify();
+    }
+
+    async function loadNotify() {
+      try {
+        const d = await (await fetch('/api/account/notifications')).json();
+        document.getElementById('notifyApprovals').checked = d.notify_approvals !== false;
+        document.getElementById('notifyReminders').checked = d.notify_reminders !== false;
+      } catch {}
+    }
+
+    async function saveNotify(key, el) {
+      const msg = document.getElementById('notifyMsg');
+      el.disabled = true; msg.textContent = '';
+      try {
+        const res = await fetch('/api/account/notifications', {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ [key]: el.checked }),
+        });
+        if (!res.ok) throw new Error();
+        msg.textContent = 'Saved.'; msg.className = 'notify-msg';
+        setTimeout(() => { msg.textContent = ''; }, 2000);
+      } catch {
+        el.checked = !el.checked;
+        msg.textContent = "Couldn't save. Try again."; msg.className = 'notify-msg notify-err';
+      }
+      el.disabled = false;
     }
 
     async function loadSubscription() {

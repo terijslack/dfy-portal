@@ -207,6 +207,7 @@ router.post('/admin/:id(\\d+)/revise', requireAdmin, withFiles, async (req, res)
     await db.query(
       `UPDATE newsletters SET ${[...sets,
         `status = 'pending'`, 'version = version + 1', 'approved_at = NULL', 'sent_at = NULL',
+        'client_notified_at = NULL', 'client_reminded_at = NULL',
         answeringNotes ? 'revised_at = NOW()' : 'revised_at = revised_at',
         'updated_at = NOW()'].join(', ')}
        WHERE id = $1`,
