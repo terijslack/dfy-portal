@@ -348,7 +348,9 @@
           ${showActions && (post.status === 'pending' || post.status === 'changes_requested') ? `
             <div class="post-actions">
               <button class="btn-approve" onclick="approvePost(${post.id}, '${post.updated_at || ''}')">${checkSvg} Approve</button>
-              <button class="btn-changes" onclick="openChangesModal(${post.id})">${editSvg} Request Changes</button>
+              ${post.status === 'changes_requested'
+                ? `<span class="btn-changes-sent" role="status">${noteSvg} Changes requested — we're working on it</span>`
+                : `<button class="btn-changes" onclick="openChangesModal(${post.id})">${editSvg} Request Changes</button>`}
             </div>
           ` : ''}
           ${['approved', 'queued', 'scheduled'].includes(post.status) ? `<div class="approved-note">${approvedSvg} ${post.status === 'scheduled' ? 'Scheduled' : 'You approved this'} — it goes out ${formatDate(post.scheduled_date)}${post.scheduled_time ? ' at ' + formatTime(post.scheduled_time) : ''}</div>` : ''}
