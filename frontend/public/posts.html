@@ -339,7 +339,10 @@
             <span class="post-status-badge status-badge-${post.status}">${statusLabel(post.status)}</span>
           </div>
           ${mediaHtml(post.media)}
-          <div class="post-caption">${escapeHtml(post.caption)}</div>
+          <div class="post-caption-box">
+            <div class="post-caption-label">Caption</div>
+            <div class="post-caption">${escapeHtml(post.caption)}</div>
+          </div>
           ${post.revised_at && post.status === 'pending' ? `<div class="post-revised-note">${approvedSvg} We updated this based on your notes</div>` : ''}
           ${post.change_notes ? `<div class="change-notes-display">${noteSvg} ${post.revised_at && post.status === 'pending' ? 'You asked' : 'Your notes'}: ${escapeHtml(post.change_notes)}</div>` : ''}
           ${showActions && (post.status === 'pending' || post.status === 'changes_requested') ? `
