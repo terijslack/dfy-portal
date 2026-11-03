@@ -25,6 +25,7 @@ const multer = require('multer');
 const { Pool } = require('pg');
 const { requireLogin, requireAdmin } = require('../middleware/auth');
 const { logForClient } = require('../services/activity');
+const alerts = require('../services/alerts');
 
 const router = express.Router();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -98,6 +99,7 @@ router.post('/:id(\\d+)/approve', requireLogin, async (req, res) => {
     }
     await pool.query(`UPDATE newsletters SET status = 'approved', approved_at = NOW(), updated_at = NOW() WHERE id = $1`, [n.id]);
     res.json({ success: true });
+    alerts.newsletterApproved(n.id); // email hello@ to send it
   } catch (err) {
     console.error('Approve newsletter error:', err);
     res.status(500).json({ error: 'Could not approve the newsletter.' });
@@ -118,6 +120,7 @@ router.post('/:id(\\d+)/request-changes', requireLogin, async (req, res) => {
       [notes, n.id]
     );
     res.json({ success: true });
+    alerts.newsletterChangesRequested(n.id); // email hello@
   } catch (err) {
     console.error('Newsletter changes error:', err);
     res.status(500).json({ error: 'Could not send your change request.' });
