@@ -8,7 +8,7 @@ const router = express.Router();
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
 const { scheduleToMetricool, releasePost } = require('../services/metricool');
-const { syncIfStale, syncClient, describeError } = require('../services/metricoolSync');
+const { syncIfStale, syncClient, describeError, recordReleased } = require('../services/metricoolSync');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -77,9 +77,10 @@ router.post('/:id/approve', requireLogin, async (req, res) => {
     // Metricool draft hand-off is retried by the background sync.
     let metricoolPostId = post.metricool_post_id || null;
     let metricoolError = null;
+    let released = null;
     try {
       if (post.source === 'metricool' && post.metricool_raw) {
-        await releasePost({ blogId: post.metricool_blog_id, raw: post.metricool_raw });
+        released = await releasePost({ blogId: post.metricool_blog_id, raw: post.metricool_raw });
       } else {
         metricoolPostId = await scheduleToMetricool({
           text: post.caption, platform: post.platform, scheduledDate: post.scheduled_date,
@@ -97,6 +98,8 @@ router.post('/:id/approve', requireLogin, async (req, res) => {
        WHERE id = $3`,
       [metricoolPostId, metricoolError, postId]
     );
+    // Metricool re-saves an updated post under a new id — remember it
+    if (released) await recordReleased(postId, released);
 
     res.json({
       success: true,

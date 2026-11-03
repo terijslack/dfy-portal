@@ -14,6 +14,7 @@ const windowEnd = '2027-02-08';
 function remote(overrides = {}) {
   return {
     id: 101,
+    uuid: '7021880',
     text: 'Fall collection is here',
     draft: true,
     providers: [{ network: 'instagram' }, { network: 'facebook' }],
@@ -26,7 +27,7 @@ function remote(overrides = {}) {
 // What a stored row looks like after the remote() post above was imported
 function local(overrides = {}) {
   return {
-    id: 1, metricool_post_id: '101', source: 'metricool', status: 'pending',
+    id: 1, metricool_post_id: '101', metricool_uuid: '7021880', source: 'metricool', status: 'pending',
     caption: 'Fall collection is here', networks: 'instagram,facebook',
     scheduled_date: '2026-11-15', scheduled_time: '10:30',
     media: [{ url: 'https://static.metricool.com/img/a.jpg', type: 'image' }],
@@ -114,6 +115,23 @@ describe('planSync', () => {
   test('portal-written posts are never touched by the sync', () => {
     const a = run([local({ source: 'portal', status: 'approved' })], [remote({ text: 'different' })]);
     expect(a).toEqual([]);
+  });
+
+  test('Metricool re-saves an edited post under a new id — still the same post (matched on uuid)', () => {
+    const a = run([local({ status: 'changes_requested' })], [remote({ id: 202, text: 'Revised copy' })]);
+    expect(a).toEqual([expect.objectContaining({ type: 'update', id: 1, status: 'pending', revised: true })]);
+    expect(a[0].remote.id).toBe('202');
+  });
+
+  test('new id, nothing else changed → not removed, just refreshed with the new id', () => {
+    const a = run([local({ status: 'approved' })], [remote({ id: 303, draft: false })]);
+    expect(a.map(x => x.type)).toEqual(['refresh']);
+    expect(a[0].remote.id).toBe('303');
+  });
+
+  test('rows saved before uuids were stored still match on id', () => {
+    const a = run([local({ metricool_uuid: null })], [remote()]);
+    expect(a[0].type).toBe('refresh');
   });
 
   test('pg Date objects for scheduled_date are read as calendar days', () => {
