@@ -211,3 +211,16 @@
 .timeline li.t-client::before { background: var(--color-rust); }
 .timeline li.t-dfy::before { background: var(--color-green); }
 #acctView .add-post-form { margin-bottom: 20px; }
+
+/* Metricool sync (Posts tab) */
+#acctView .mc-sync-bar { display: flex; gap: 16px; align-items: center; justify-content: space-between; background: var(--color-cream-2, #EFEBDF); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; }
+#acctView .mc-sync-bar strong { display: block; color: var(--color-forest, #1F3D2C); font-weight: 600; margin-bottom: 2px; }
+#acctView .mc-sync-bar span { font-size: 0.85rem; color: var(--color-slate, #6B756B); line-height: 1.5; }
+#acctView .mc-sync-bar .btn-secondary { flex-shrink: 0; width: auto; }
+#acctView .mc-sync-msg { font-size: 0.85rem; color: var(--color-green, #2D6B4F); min-height: 1.2em; margin-bottom: 16px; }
+#acctView .mc-sync-msg.mc-sync-err { color: var(--color-rust, #7D2A03); }
+.mc-thumbs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.mc-thumbs img, .mc-thumbs video { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; background: var(--color-cream-2, #EFEBDF); }
+.mc-source { font-size: 0.8rem; color: var(--color-slate-light, #9AA199); margin-bottom: 10px; }
+.mc-error { font-size: 0.85rem; color: var(--color-rust, #7D2A03); background: rgba(125, 42, 3, 0.06); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; }
+@media (max-width: 600px) { #acctView .mc-sync-bar { flex-direction: column; align-items: flex-start; } }

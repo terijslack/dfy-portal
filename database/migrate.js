@@ -83,6 +83,18 @@ async function runMigrations(pool) {
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_blog_id TEXT`,
     // Metricool's own id for a post, once it's been scheduled there
     `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_post_id TEXT`,
+    // Posts written in Metricool and pulled into the portal for approval.
+    // metricool_raw is Metricool's full copy of the post — sent back unchanged
+    // (except draft → false) when the client approves, so nothing gets lost.
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS source            TEXT DEFAULT 'portal'`,  // portal | metricool
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS media             JSONB DEFAULT '[]'::jsonb`, // image/video URLs
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS networks          TEXT`,  // e.g. "instagram,facebook"
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS scheduled_time    TEXT`,  // e.g. "10:00" (local to the brand)
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_raw     JSONB`,
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS metricool_error   TEXT`,  // last problem sending to Metricool
+    `ALTER TABLE posts   ADD COLUMN IF NOT EXISTS revised_at        TIMESTAMPTZ`, // DFY revised it after a change request
+    `CREATE UNIQUE INDEX IF NOT EXISTS posts_metricool_unique ON posts (client_id, metricool_post_id) WHERE metricool_post_id IS NOT NULL`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS metricool_synced_at TIMESTAMPTZ`,
 
     // ── Messages from DFY to a client ──
     // Shown on the client's dashboard under "From your marketing team".

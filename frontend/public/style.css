@@ -992,6 +992,37 @@ a.contact-detail-value:hover { color: var(--accent); }
   margin-top: 20px;
 }
 
+/* ── POST MEDIA (images / video from Metricool) ──────── */
+.post-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.post-media.single { grid-template-columns: minmax(0, 420px); }
+.post-media img,
+.post-media video {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-cream-2, #EFEBDF);
+  display: block;
+}
+.post-media.single img,
+.post-media.single video { aspect-ratio: auto; max-height: 520px; object-fit: contain; }
+.post-media a { display: block; }
+.post-revised-note {
+  font-size: 0.85rem;
+  color: var(--color-green, #2D6B4F);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.post-card.status-scheduled { border-color: rgba(76, 175, 125, 0.25); opacity: 0.75; }
+.post-card.status-published { opacity: 0.6; }
+
 /* ── CALENDAR ────────────────────────────────────────── */
 .cal-link-btn {
   display: inline-block;

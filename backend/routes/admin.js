@@ -15,6 +15,7 @@
 // "Clients" in the code = "Accounts" on screen: one per paying business.
 
 const express = require('express');
+const { syncClient, describeError } = require('../services/metricoolSync');
 const router = express.Router();
 const { Pool } = require('pg');
 const { requireAdmin } = require('../middleware/auth');
@@ -520,6 +521,20 @@ router.put('/posts/:id', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin update post error:', err);
     res.status(500).json({ error: 'Could not update post.' });
+  }
+});
+
+// POST /api/admin/clients/:id/metricool-sync — pull this client's posts from Metricool now
+router.post('/clients/:id/metricool-sync', requireAdmin, async (req, res) => {
+  try {
+    const result = await syncClient(req.params.id);
+    if (result.skipped) {
+      return res.status(400).json({ error: 'Add their Metricool brand ID (Account tab) and the Metricool API keys in Railway first.' });
+    }
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('Admin Metricool sync error:', describeError(err));
+    res.status(502).json({ error: `Metricool said: ${describeError(err)}` });
   }
 });
 

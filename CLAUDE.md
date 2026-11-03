@@ -16,7 +16,7 @@ server.js                        — app entry point, registers all routes
 backend/
   routes/
     auth.js                      — login, logout, /me
-    posts.js                     — post review/approval (currently uses local DB + Buffer)
+    posts.js                     — post review/approval (posts pulled from Metricool drafts; approve schedules them)
     admin.js                     — admin-only actions
     stripe.js                    — Stripe checkout + webhook handler
     account.js                   — pause/resume/cancel/change-plan (calls Stripe)
@@ -78,7 +78,7 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 - Plan: `plan` (plan name string), `billing_date`, `subscription_start_date`
 - GHL: `ghl_location_id`, `ghl_contact_id` — **may not exist yet in live DB**
 
-**`posts`** — social media posts (currently local DB; not yet wired to GHL Social Planner)
+**`posts`** — social media posts. `source = 'metricool'` rows are synced from Metricool drafts by `backend/services/metricoolSync.js` (every 10 min + when a client opens /posts). Edit those in Metricool, not in the portal.
 
 **`client_onboarding`** — intake form answers (industry, website, brand voice, etc.)
 
@@ -133,8 +133,8 @@ JWT_SECRET                — Used to sign login tokens
 ## Known Issues / Pending Decisions
 
 - **GHL sub-account creation does not work** — the approach in ~/dfy-portal was abandoned
-- **Posts page approach is undecided** — wiring posts.js to GHL Social Planner also will not work as originally planned; Teri is figuring out a new approach
-- Do not touch `posts.js` or `ghl.js` for these features until there is a clear new plan
+- **Posts run through Metricool (decided Oct 30, 2026).** DFY saves a post as a *draft* on the client's Metricool brand → it appears in the portal as "Needs approval" → Approve flips it to scheduled in Metricool; Request Changes stores notes, and when DFY edits the draft in Metricool it comes back as "Needs approval" marked revised. Needs METRICOOL_USER_TOKEN / METRICOOL_USER_ID in Railway and a Metricool brand ID per client (admin → Account).
+- Do not touch `ghl.js` for sub-accounts until there is a clear new plan
 
 ---
 
