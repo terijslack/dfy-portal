@@ -125,22 +125,14 @@
           <div class="portal-posts-col">
             <div class="page-header">
               <h1>Post Approval</h1>
-              <p id="monthLabel" style="font-family:var(--font-serif);color:var(--color-forest);font-size:1.15rem;font-weight:400;margin:4px 0 0;"></p>
+              <p style="font-family:var(--font-serif);color:var(--color-forest);font-size:1.05rem;font-weight:400;margin:4px 0 0;">Look over what we've written for you before it goes out.</p>
             </div>
 
-            <div class="summary-bar" id="summaryBar">
-              <div class="summary-item">
-                <span class="summary-number pending" id="pendingCount">—</span>
-                <span class="summary-label">Needs Approval</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-number changes" id="changesCount">—</span>
-                <span class="summary-label">Changes Requested</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-number" id="scheduledCount">—</span>
-                <span class="summary-label">Scheduled This Month</span>
-              </div>
+            <div class="post-tabs" role="tablist" aria-label="Posts">
+              <button class="post-tab" role="tab" data-view="approval" onclick="setView('approval')">
+                <span class="tab-long">Needs your approval</span><span class="tab-short">To approve</span> <span class="post-tab-count" id="countApproval">0</span></button>
+              <button class="post-tab" role="tab" data-view="scheduled" onclick="setView('scheduled')">Scheduled <span class="post-tab-count" id="countScheduled">0</span></button>
+              <button class="post-tab" role="tab" data-view="posted" onclick="setView('posted')">Posted <span class="post-tab-count" id="countPosted">0</span></button>
             </div>
 
             <div class="posts-section" id="pendingSection">
@@ -148,29 +140,12 @@
                 <div class="loading">Loading your posts…</div>
               </div>
             </div>
-
-            <div class="approved-history" id="approvedHistory" style="display:none">
-              <button class="approved-history-toggle" id="approvedToggle" onclick="toggleApproved()">
-                <span id="approvedToggleLabel">Show Previously Approved Posts</span>
-                <span class="toggle-arrow" id="toggleArrow">▼</span>
-              </button>
-              <div class="posts-grid approved-grid" id="approvedGrid" style="display:none"></div>
-            </div>
           </div>
 
           <!-- Right rail: section nav cards -->
           <aside class="portal-right-rail">
             <p class="portal-rail-label">Social Media</p>
             <div class="portal-rail-cards">
-              <a href="/posts" class="portal-rail-card portal-rail-card-active">
-                <span class="portal-rail-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </span>
-                <div>
-                  <div class="portal-rail-card-title">Post Approval</div>
-                  <div class="portal-rail-card-sub" id="railPendingSub">Loading…</div>
-                </div>
-              </a>
               <a href="/calendar" class="portal-rail-card">
                 <span class="portal-rail-card-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -249,37 +224,61 @@
       loadPosts();
     }
 
+    // Which tab each status lives under
+    const VIEW_OF = { pending: 'approval', changes_requested: 'approval', approved: 'scheduled', queued: 'scheduled', scheduled: 'scheduled', published: 'posted' };
+    let currentView = null;
+
     async function loadPosts() {
       try {
         const res = await fetch('/api/posts');
         const data = await res.json();
         allPosts = data.posts || [];
+        if (!currentView) currentView = startingView(allPosts);
+        renderTabs(allPosts);
         renderPosts(allPosts);
-        updateSummary(allPosts);
         updateRail(allPosts);
+        jumpToHashedPost();
       } catch (err) {
         document.getElementById('postsGrid').innerHTML = '<div class="error">Could not load posts. Try refreshing.</div>';
       }
     }
 
-    function updateSummary(posts) {
-      const now = new Date();
-      const thisMonth = now.getMonth();
-      const thisYear = now.getFullYear();
-      document.getElementById('monthLabel').textContent = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      document.getElementById('pendingCount').textContent = posts.filter(p => p.status === 'pending').length;
-      document.getElementById('changesCount').textContent = posts.filter(p => p.status === 'changes_requested').length;
-      document.getElementById('scheduledCount').textContent = posts.filter(p => {
-        if (!p.scheduled_date) return false;
-        const d = new Date(p.scheduled_date);
-        return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
-      }).length;
+    // Open on the tab they clicked from (?view=…); otherwise approvals if any are waiting
+    function startingView(posts) {
+      const asked = new URLSearchParams(location.search).get('view');
+      if (['approval', 'scheduled', 'posted'].includes(asked)) return asked;
+      const hashId = (location.hash.match(/^#post-(\d+)$/) || [])[1];
+      const hashed = hashId && posts.find(p => String(p.id) === hashId);
+      if (hashed) return VIEW_OF[hashed.status] || 'approval';
+      return posts.some(p => VIEW_OF[p.status] === 'approval') ? 'approval' : 'scheduled';
+    }
+
+    function setView(view) {
+      currentView = view;
+      const url = new URL(location.href);
+      url.searchParams.set('view', view); url.hash = '';
+      history.replaceState(null, '', url);
+      renderTabs(allPosts);
+      renderPosts(allPosts);
+    }
+
+    function renderTabs(posts) {
+      const count = v => posts.filter(p => VIEW_OF[p.status] === v).length;
+      // Only posts waiting on the client count here (change requests are waiting on us)
+      const waiting = posts.filter(p => p.status === 'pending').length;
+      document.getElementById('countApproval').textContent = waiting;
+      document.getElementById('countScheduled').textContent = count('scheduled');
+      document.getElementById('countPosted').textContent = count('posted');
+      document.getElementById('countApproval').classList.toggle('has-items', waiting > 0);
+      document.querySelectorAll('.post-tab').forEach(t => {
+        const on = t.dataset.view === currentView;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
     }
 
     function updateRail(posts) {
       const pending = posts.filter(p => p.status === 'pending').length;
-      const sub = document.getElementById('railPendingSub');
-      if (sub) sub.textContent = pending > 0 ? `${pending} awaiting review` : 'All caught up';
       const badge = document.getElementById('pendingBadge');
       if (badge) {
         if (pending > 0) { badge.textContent = pending; badge.style.display = ''; }
@@ -287,38 +286,31 @@
       }
     }
 
-    let approvedOpen = false;
-
-    function toggleApproved() {
-      approvedOpen = !approvedOpen;
-      const grid = document.getElementById('approvedGrid');
-      const label = document.getElementById('approvedToggleLabel');
-      const arrow = document.getElementById('toggleArrow');
-      const approvedPosts = allPosts.filter(isDone);
-      grid.style.display = approvedOpen ? '' : 'none';
-      arrow.textContent = approvedOpen ? '▲' : '▼';
-      label.textContent = approvedOpen ? 'Hide Previously Approved Posts' : `Show Previously Approved Posts (${approvedPosts.length})`;
-    }
+    const dayKey = p => `${String(p.scheduled_date || '').slice(0, 10)} ${p.scheduled_time || '99:99'}`;
 
     function renderPosts(posts) {
-      const activePosts = posts.filter(p => p.status === 'pending' || p.status === 'changes_requested');
-      const approvedPosts = posts.filter(isDone);
-      const grid = document.getElementById('postsGrid');
-      if (activePosts.length === 0) {
-        grid.innerHTML = '<div class="empty-state">No posts awaiting review. Check back soon!</div>';
-      } else {
-        grid.innerHTML = activePosts.map(post => postCardHtml(post, true)).join('');
-      }
-      const historySection = document.getElementById('approvedHistory');
-      const approvedGrid = document.getElementById('approvedGrid');
-      const toggleLabel = document.getElementById('approvedToggleLabel');
-      if (approvedPosts.length > 0) {
-        historySection.style.display = '';
-        toggleLabel.textContent = approvedOpen ? 'Hide Previously Approved Posts' : `Show Previously Approved Posts (${approvedPosts.length})`;
-        approvedGrid.innerHTML = approvedPosts.map(post => postCardHtml(post, false)).join('');
-      } else {
-        historySection.style.display = 'none';
-      }
+      const list = posts.filter(p => VIEW_OF[p.status] === currentView);
+      // Soonest first; Posted shows the most recent first
+      list.sort((a, b) => currentView === 'posted' ? dayKey(b).localeCompare(dayKey(a)) : dayKey(a).localeCompare(dayKey(b)));
+      const empty = {
+        approval: 'Nothing waiting on you. We\'ll let you know when new posts are ready to review.',
+        scheduled: 'Nothing scheduled right now. Approved posts show up here until they go out.',
+        posted: 'Nothing posted yet. Posts move here once they go live.',
+      }[currentView];
+      document.getElementById('postsGrid').innerHTML = list.length
+        ? list.map(post => postCardHtml(post, currentView === 'approval')).join('')
+        : `<div class="empty-state">${empty}</div>`;
+    }
+
+    // Arriving from the dashboard on one post: scroll to it and highlight it briefly
+    function jumpToHashedPost() {
+      const m = location.hash.match(/^#post-(\d+)$/);
+      if (!m) return;
+      const card = document.querySelector(`.post-card[data-id="${m[1]}"]`);
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('post-card--focus');
+      setTimeout(() => card.classList.remove('post-card--focus'), 2400);
     }
 
     function platformSvg(platform) {
@@ -340,7 +332,7 @@
 
     function postCardHtml(post, showActions) {
       return `
-        <div class="post-card status-${post.status}" data-id="${post.id}">
+        <div class="post-card status-${post.status}" data-id="${post.id}" id="post-${post.id}">
           <div class="post-meta">
             ${networksOf(post).map(n => `<span class="post-platform platform-${n}">${platformSvg(n)} ${networkName(n)}</span>`).join('')}
             <span class="post-date">${calSvg} ${formatDate(post.scheduled_date)}${post.scheduled_time ? ` at ${formatTime(post.scheduled_time)}` : ''}</span>
@@ -356,8 +348,7 @@
               <button class="btn-changes" onclick="openChangesModal(${post.id})">${editSvg} Request Changes</button>
             </div>
           ` : ''}
-          ${(post.status === 'approved' || post.status === 'queued') ? `<div class="approved-note">${approvedSvg} Approved — it will post on ${formatDate(post.scheduled_date)}</div>` : ''}
-          ${post.status === 'scheduled' ? `<div class="approved-note">${approvedSvg} Scheduled</div>` : ''}
+          ${['approved', 'queued', 'scheduled'].includes(post.status) ? `<div class="approved-note">${approvedSvg} ${post.status === 'scheduled' ? 'Scheduled' : 'You approved this'} — it goes out ${formatDate(post.scheduled_date)}${post.scheduled_time ? ' at ' + formatTime(post.scheduled_time) : ''}</div>` : ''}
           ${post.status === 'published' ? `<div class="approved-note">${approvedSvg} Posted</div>` : ''}
         </div>
       `;
@@ -372,7 +363,11 @@
           body: JSON.stringify({ seen_updated_at: seenUpdatedAt || null }),
         });
         const data = await res.json();
-        if (res.ok) { loadPosts(); }
+        if (res.ok) {
+          const p = allPosts.find(x => x.id === postId);
+          toast(p ? `Approved. It's scheduled for ${formatDate(p.scheduled_date)}${p.scheduled_time ? ' at ' + formatTime(p.scheduled_time) : ''}.` : 'Approved.');
+          loadPosts();
+        }
         else { alert(data.error || 'Could not approve. Try again.'); card.style.opacity = '1'; if (data.refresh) loadPosts(); }
       } catch (err) { alert('Network error. Try again.'); card.style.opacity = '1'; }
     }
@@ -397,7 +392,7 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notes })
         });
         const data = await res.json();
-        if (res.ok) { document.getElementById('modalOverlay').classList.remove('active'); loadPosts(); }
+        if (res.ok) { document.getElementById('modalOverlay').classList.remove('active'); toast('Thanks. We\'ll revise it and send it back for your approval.'); loadPosts(); }
         else { alert(data.error || 'Could not submit. Try again.'); }
       } catch (err) { alert('Network error. Try again.'); }
       btn.textContent = 'Send Request'; btn.disabled = false;
@@ -413,7 +408,12 @@
     function statusLabel(status) { return { pending: 'Needs Review', approved: 'Approved', changes_requested: 'Changes Requested', queued: 'Queued', scheduled: 'Scheduled', published: 'Posted' }[status] || status; }
     function escapeHtml(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function attr(str) { return escapeHtml(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
-    function isDone(p) { return ['approved', 'queued', 'scheduled', 'published'].includes(p.status); }
+    function toast(msg) {
+      let el = document.getElementById('postToast');
+      if (!el) { el = document.createElement('div'); el.id = 'postToast'; el.className = 'post-toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+      el.textContent = msg; el.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 3500);
+    }
     function networksOf(post) { return String(post.networks || post.platform || '').split(',').map(n => n.trim()).filter(Boolean); }
     function networkName(n) { return { twitter: 'X', linkedin: 'LinkedIn', tiktok: 'TikTok', gmb: 'Google', youtube: 'YouTube' }[n] || capitalize(n); }
     function formatTime(t) {

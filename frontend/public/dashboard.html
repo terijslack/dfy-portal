@@ -117,6 +117,11 @@
       text-decoration: none;
     }
     .hero-card-cta:hover { text-decoration: underline; }
+    /* Approval + Scheduled cards open the Post Approval page */
+    a.hero-card { display: block; color: inherit; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+    a.hero-card:hover { border-color: rgba(45,107,79,0.35); box-shadow: 0 2px 10px rgba(31,61,44,0.06); }
+    a.hero-card:focus-visible { outline: 2px solid #2D6B4F; outline-offset: 2px; }
+    .hero-card-cta.hero-card-cta--green { color: #2D6B4F; }
     .hero-stars { color: #EBC99B; font-size: 15px; letter-spacing: 1px; margin-bottom: 4px; }
     .hero-label {
       font-size: 10px;
@@ -190,6 +195,17 @@
       border-top: 0.5px solid rgba(31,61,44,0.08);
     }
     .feed-item:first-child { border-top: none; padding-top: 0; }
+    a.feed-item { color: inherit; text-decoration: none; align-items: center; border-radius: 8px; margin: 0 -8px; padding-left: 8px; padding-right: 8px; }
+    a.feed-item:hover { background: rgba(45,107,79,0.05); }
+    .feed-thumb {
+      width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+      background: rgba(45,107,79,0.08);
+    }
+    .feed-thumb--empty { display: flex; align-items: center; justify-content: center; }
+    .feed-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--color-slate-light); }
+    .feed-nets { display: inline-flex; gap: 4px; align-items: center; }
+    .feed-nets svg { width: 12px; height: 12px; }
+    .feed-arrow { color: var(--color-slate-light); flex-shrink: 0; }
     .feed-date {
       font-size: 11px;
       font-weight: 600;
@@ -545,6 +561,10 @@
     }
     @media (max-width: 540px) {
       .hero-row { grid-template-columns: 1fr 1fr; }
+      .profile-banner { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+      .profile-banner-text { flex-basis: calc(100% - 100px); }
+      .profile-banner-bar-wrap { display: none; }
+      .profile-banner-cta { flex: 1; text-align: center; }
     }
   </style>
 </head>
@@ -671,19 +691,20 @@
         <!-- Hero stats -->
         <div class="hero-row">
           <!-- Card 1: Needs Approval -->
-          <div class="hero-card" id="cardApproval">
+          <a href="/posts?view=approval" class="hero-card" id="cardApproval">
             <div class="hero-label">Needs your approval</div>
             <div class="hero-num" id="statPending">—</div>
             <div class="hero-sub" id="statPendingSub">items waiting on you</div>
-            <a href="/posts" class="hero-card-cta" id="statPendingCta" style="display:none;">Review now →</a>
-          </div>
+            <span class="hero-card-cta" id="statPendingCta" style="display:none;">Review now →</span>
+          </a>
 
           <!-- Card 2: Scheduled This Month -->
-          <div class="hero-card">
+          <a href="/posts?view=scheduled" class="hero-card" id="cardScheduled">
             <div class="hero-label">Scheduled this month</div>
             <div class="hero-num" id="statScheduled">—</div>
             <div class="hero-sub" id="statScheduledSub">pieces of content going out</div>
-          </div>
+            <span class="hero-card-cta hero-card-cta--green" id="statScheduledCta" style="display:none;">See what's scheduled →</span>
+          </a>
 
           <!-- Card 3: Google Reviews This Month (locked for base tier) -->
           <div class="hero-card hero-card--locked" id="cardReviews">
@@ -717,7 +738,7 @@
         <div class="db-card" style="margin-top:16px;">
           <div class="db-card-header">
             <div class="db-card-title">Coming up this month</div>
-            <a href="/calendar" class="db-card-link">View calendar →</a>
+            <a href="/posts" class="db-card-link">View all posts →</a>
           </div>
           <div id="monthFeed"><div class="empty-state">Loading…</div></div>
         </div>
@@ -783,6 +804,12 @@
     }
     function escapeHtml(str) {
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function escapeAttr(str) { return escapeHtml(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function formatClock(t) {
+      const [h, m] = String(t).split(':').map(Number);
+      if (isNaN(h)) return '';
+      return new Date(2000, 0, 1, h, m || 0).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     }
     function formatDate(dateStr) {
       if (!dateStr) return '';
@@ -1082,11 +1109,14 @@
         // scheduled_date is a plain date — read it as a calendar day, not a UTC midnight
         const dayOf      = s => { const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
         const thisMonth  = posts.filter(p => { const d = dayOf(p.scheduled_date); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); });
+        const WAITING    = ['pending', 'changes_requested'];
+        const LINED_UP   = ['approved', 'queued', 'scheduled'];
         const pending    = posts.filter(p => p.status === 'pending');
 
         /* Hero stats */
         const pendingCount   = pending.length;
-        const scheduledCount = thisMonth.filter(p => p.status === 'approved' || p.status === 'queued' || p.status === 'scheduled').length;
+        const scheduledCount = thisMonth.filter(p => LINED_UP.includes(p.status)).length;
+        const postedCount    = thisMonth.filter(p => p.status === 'published').length;
 
         /* Card 1: Needs Approval */
         document.getElementById('statPending').textContent = pendingCount;
@@ -1101,11 +1131,18 @@
 
         /* Card 2: Scheduled This Month */
         document.getElementById('statScheduled').textContent = scheduledCount;
-        document.getElementById('statScheduledSub').textContent = scheduledCount === 1 ? 'piece of content going out' : 'pieces of content going out';
+        document.getElementById('statScheduledSub').textContent =
+          (scheduledCount === 1 ? 'piece of content going out' : 'pieces of content going out') +
+          (postedCount ? ` · ${postedCount} already posted` : '');
+        if (scheduledCount > 0) document.getElementById('statScheduledCta').style.display = 'inline-block';
 
-        /* Month feed */
+        /* Coming up this month — waiting on them first, then by date */
         const feedEl     = document.getElementById('monthFeed');
-        const monthPosts = thisMonth.slice().sort((a, b) => dayOf(a.scheduled_date) - dayOf(b.scheduled_date));
+        const timeOf     = p => p.scheduled_time || '99:99';
+        const monthPosts = thisMonth.slice().sort((a, b) =>
+          (WAITING.includes(b.status) - WAITING.includes(a.status)) ||
+          (dayOf(a.scheduled_date) - dayOf(b.scheduled_date)) ||
+          timeOf(a).localeCompare(timeOf(b)));
 
         if (monthPosts.length === 0) {
           feedEl.innerHTML = `<div class="empty-state">No content scheduled this month yet.<br><a href="/posts" style="color:#2D6B4F;font-weight:500;text-decoration:none;">View all posts →</a></div>`;
@@ -1117,20 +1154,32 @@
             let badge = '';
             if (p.status === 'pending')        badge = `<span class="badge-pending">Needs approval</span>`;
             else if (p.status === 'changes_requested') badge = `<span class="badge-pending">Changes requested</span>`;
-            else if (p.status === 'published') badge = `<span class="badge-published">Published</span>`;
+            else if (p.status === 'published') badge = `<span class="badge-published">Posted</span>`;
             else                               badge = `<span class="badge-scheduled">Scheduled</span>`;
+            const view  = WAITING.includes(p.status) ? 'approval' : p.status === 'published' ? 'posted' : 'scheduled';
+            const nets  = String(p.networks || p.platform || '').split(',').filter(Boolean);
+            const media = (Array.isArray(p.media) ? p.media : []).find(m => m && /^https:\/\//.test(m.url || ''));
+            const thumb = media
+              ? (media.type === 'video'
+                  ? `<video class="feed-thumb" src="${escapeAttr(media.url)}" muted preload="metadata"></video>`
+                  : `<img class="feed-thumb" src="${escapeAttr(media.url)}" alt="" loading="lazy">`)
+              : `<span class="feed-thumb feed-thumb--empty">${platformIcon(nets[0])}</span>`;
             return `
-              <div class="feed-item">
-                <div class="feed-date">${dayStr}</div>
-                <div class="feed-platform">${platformIcon(p.platform)}</div>
+              <a class="feed-item" href="/posts?view=${view}#post-${p.id}">
+                ${thumb}
                 <div class="feed-body">
                   <div class="feed-caption">${escapeHtml(p.caption)}</div>
-                  <div>${badge}</div>
+                  <div class="feed-meta">
+                    <span>${dayStr}${p.scheduled_time ? ' · ' + formatClock(p.scheduled_time) : ''}</span>
+                    <span class="feed-nets">${nets.map(platformIcon).join('')}</span>
+                    ${badge}
+                  </div>
                 </div>
-              </div>`;
+                <svg class="feed-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>`;
           }).join('');
           if (monthPosts.length > 10) {
-            feedEl.innerHTML += `<div class="feed-more"><a href="/calendar">+ ${monthPosts.length - 10} more this month →</a></div>`;
+            feedEl.innerHTML += `<div class="feed-more"><a href="/posts">+ ${monthPosts.length - 10} more this month →</a></div>`;
           }
         }
 
