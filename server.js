@@ -93,6 +93,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/admin.html'));
 });
 
+app.get('/admin/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/admin-dashboard.html'));
+});
+
 app.get('/admin/contacts', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/admin-contacts.html'));
 });

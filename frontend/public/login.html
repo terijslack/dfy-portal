@@ -72,7 +72,7 @@
       .then(r => r.json().then(data => ({ status: r.status, data })))
       .then(({ status, data }) => {
         if (data.user) {
-          window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+          window.location.href = data.user.is_admin ? '/admin/dashboard' : '/dashboard';
         } else if (status === 403 && data.redirect) {
           // Plan has ended — send them to the restart page
           window.location.href = data.redirect;
@@ -114,7 +114,7 @@
           return;
         }
 
-        window.location.href = data.user.is_admin ? '/admin' : '/dashboard';
+        window.location.href = data.user.is_admin ? '/admin/dashboard' : '/dashboard';
 
       } catch (err) {
         errorMsg.textContent = 'Network error. Check your connection.';

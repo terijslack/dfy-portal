@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Dashboard — DFY Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/admin.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</head>
+<body class="admin-page">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="brand-wordmark"><span class="brand-wordmark-serif">Done For You</span><span class="brand-wordmark-sans">Marketing</span></a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="/admin/dashboard" aria-current="page">Dashboard</a>
+          <a href="/admin">Accounts</a>
+          <a href="/admin/contacts">Contacts</a>
+          <a href="/admin/pipeline">Pipeline</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <span class="admin-badge">Admin</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="crm-main">
+    <div class="crm-top">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="crm-sub" id="dashSub">What needs you across every client.</div>
+      </div>
+      <div class="crm-tools">
+        <button class="btn-secondary btn-sm" id="refreshBtn" type="button">Refresh</button>
+      </div>
+    </div>
+
+    <div class="crm-stats" id="stats"></div>
+
+    <div class="dash-grid">
+      <div class="dash-col">
+        <section class="dash-card dash-card--urgent">
+          <div class="dash-head"><h2>Needs you now</h2><span class="dash-count" id="needsCount"></span></div>
+          <p class="dash-hint">Change requests to fix, newsletters to send, and anything that didn't go out.</p>
+          <div id="needsList" class="dash-list"><div class="loading">Loading…</div></div>
+        </section>
+
+        <section class="dash-card">
+          <div class="dash-head"><h2>At risk</h2><span class="dash-count" id="riskCount"></span></div>
+          <p class="dash-hint">Still waiting on the client and going out today or tomorrow. If nobody approves, it won't post.</p>
+          <div id="riskList" class="dash-list"></div>
+        </section>
+
+        <section class="dash-card">
+          <div class="dash-head"><h2>Waiting on clients</h2><span class="dash-count" id="waitCount"></span></div>
+          <div id="waitList" class="dash-list"></div>
+        </section>
+      </div>
+
+      <div class="dash-col">
+        <section class="dash-card">
+          <div class="dash-head"><h2>Going out this week</h2><span class="dash-count" id="weekCount"></span></div>
+          <div id="weekList"></div>
+        </section>
+
+        <section class="dash-card">
+          <div class="dash-head"><h2>Recent client activity</h2></div>
+          <div id="activityList" class="dash-activity"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="/admin-common.js"></script>
+  <script>
+    const { esc, api, requireAdmin, ago, bindLogout } = window.Admin;
+
+    const NET = { instagram: 'Instagram', facebook: 'Facebook', twitter: 'X', linkedin: 'LinkedIn', tiktok: 'TikTok', youtube: 'YouTube', gmb: 'Google', pinterest: 'Pinterest', threads: 'Threads', bluesky: 'Bluesky' };
+    const nets = p => String(p.networks || p.platform || '').split(',').filter(Boolean).map(n => NET[n] || n).join(' + ') || 'Post';
+    const ymd = d => (d ? String(d).slice(0, 10) : '');
+    const dayLabel = (d, todayStr) => {
+      const s = ymd(d); if (!s) return '';
+      if (s === todayStr) return 'Today';
+      const t = new Date(todayStr + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() + 1);
+      if (s === t.toISOString().slice(0, 10)) return 'Tomorrow';
+      return new Date(s + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+    };
+    const clock = t => {
+      if (!t) return '';
+      const [h, m] = String(t).split(':').map(Number);
+      return new Date(2000, 0, 1, h, m || 0).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    };
+    const waited = d => {
+      const days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
+      return days <= 0 ? 'sent today' : days === 1 ? 'waiting 1 day' : `waiting ${days} days`;
+    };
+    const acct = (id, tab) => `/admin?client=${id}${tab ? `&tab=${tab}` : ''}`;
+    const thumb = p => {
+      const m = (Array.isArray(p.media) ? p.media : []).find(x => x && x.type !== 'video' && /^https:\/\//.test(x.url || ''));
+      return m ? `<img class="dash-thumb" src="${esc(m.url)}" alt="" loading="lazy">` : `<span class="dash-thumb dash-thumb--empty">${p.title ? 'NL' : ''}</span>`;
+    };
+
+    let todayStr = '';
+    // "12 min ago", "3 hr ago", then "yesterday", "4 days ago"
+    const since = d => {
+      const mins = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return `${mins} min ago`;
+      if (mins < 24 * 60) return `${Math.floor(mins / 60)} hr ago`;
+      return ago(d);
+    };
+
+    function item({ tag, tagClass, p, title, when, note, actions }) {
+      return `
+        <div class="dash-item">
+          ${thumb(p)}
+          <div class="dash-body">
+            <div class="dash-line">
+              ${tag ? `<span class="pill ${tagClass || ''}">${tag}</span>` : ''}
+              <a class="dash-client" href="${acct(p.client_id)}">${esc(p.client)}</a>
+              <span class="dash-what">${title}</span>
+            </div>
+            ${when ? `<div class="dash-when">${when}</div>` : ''}
+            ${note ? `<div class="dash-note">“${esc(note)}”</div>` : ''}
+            ${actions ? `<div class="dash-actions">${actions}</div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    const postWhen = p => `${dayLabel(p.scheduled_date, todayStr)}${p.scheduled_time ? ' at ' + clock(p.scheduled_time) : ''}`;
+    const postTitle = p => `${esc(nets(p))} post${p.caption ? ` · <span class="muted">${esc(String(p.caption).slice(0, 70))}${String(p.caption).length > 70 ? '…' : ''}</span>` : ''}`;
+    const nudge = (p, what) => p.client_email
+      ? `<a href="mailto:${esc(p.client_email)}?subject=${encodeURIComponent(`Quick approval needed: ${what}`)}&body=${encodeURIComponent(`Hi! Your ${what} is ready for your OK in your portal: https://dfymarketinggroup.com/login\n\nThanks!`)}">Email them</a>` : '';
+
+    function render(d) {
+      todayStr = d.today;
+      document.getElementById('dashSub').textContent =
+        `What needs you across every client · ${new Date(d.today + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' })}`;
+
+      const N = d.needs_you;
+      const needs = [
+        ...N.schedule_errors.map(p => item({ tag: "Couldn't schedule", tagClass: 'warn', p, title: postTitle(p), when: postWhen(p),
+          note: p.metricool_error, actions: `<a href="https://app.metricool.com/planner" target="_blank" rel="noopener">Schedule it in Metricool</a><a href="${acct(p.client_id, 'posts')}">Open account</a>` })),
+        ...N.missed.map(p => item({ tag: 'Missed', tagClass: 'warn', p, title: postTitle(p), when: `Was set for ${postWhen(p)} — never approved, so it didn't post`,
+          actions: `<a href="https://app.metricool.com/planner" target="_blank" rel="noopener">Reschedule in Metricool</a><a href="${acct(p.client_id, 'posts')}">Open account</a>` })),
+        ...N.post_changes.map(p => item({ tag: 'Post changes', tagClass: 'warn', p, title: postTitle(p), when: `Goes out ${postWhen(p)}`, note: p.change_notes,
+          actions: `<a href="https://app.metricool.com/planner" target="_blank" rel="noopener">Edit in Metricool</a><a href="${acct(p.client_id, 'posts')}">Open account</a>` })),
+        ...N.newsletter_changes.map(n => item({ tag: 'Newsletter changes', tagClass: 'warn', p: n, title: esc(n.title), when: n.send_date ? `Sends ${dayLabel(n.send_date, todayStr)}` : '', note: n.change_notes,
+          actions: `<a href="${acct(n.client_id, 'newsletter')}">Upload revised version</a>` })),
+        ...N.newsletters_ready.map(n => item({ tag: 'Ready to send', tagClass: 'ok', p: n, title: esc(n.title), when: n.send_date ? `Approved · send ${dayLabel(n.send_date, todayStr)}` : 'Approved',
+          actions: `<a href="${acct(n.client_id, 'newsletter')}">Mark as sent</a>` })),
+      ];
+      document.getElementById('needsList').innerHTML = needs.length ? needs.join('') : '<div class="dash-empty">Nothing needs you right now.</div>';
+      document.getElementById('needsCount').textContent = needs.length || '';
+
+      const risk = [
+        ...d.at_risk.posts.map(p => item({ tag: 'Not approved', tagClass: 'warn', p, title: postTitle(p), when: `Goes out ${postWhen(p)} · ${waited(p.sent_at)}`,
+          actions: `${nudge(p, `${nets(p)} post`)}<a href="${acct(p.client_id, 'posts')}">Open account</a>` })),
+        ...d.at_risk.newsletters.map(n => item({ tag: 'Not approved', tagClass: 'warn', p: n, title: esc(n.title), when: `Sends ${dayLabel(n.send_date, todayStr)} · ${waited(n.sent_at)}`,
+          actions: `${nudge(n, n.title)}<a href="${acct(n.client_id, 'newsletter')}">Open account</a>` })),
+      ];
+      document.getElementById('riskList').innerHTML = risk.length ? risk.join('') : '<div class="dash-empty">Nothing at risk.</div>';
+      document.getElementById('riskCount').textContent = risk.length || '';
+
+      const wait = [
+        ...d.waiting.posts.map(p => ({ p, sort: ymd(p.scheduled_date) || '9999', html: item({ p, title: postTitle(p), when: `Goes out ${postWhen(p)} · ${waited(p.sent_at)}${p.revised_at ? ' · revised' : ''}` }) })),
+        ...d.waiting.newsletters.map(n => ({ p: n, sort: ymd(n.send_date) || '9999', html: item({ p: n, title: esc(n.title), when: `${n.send_date ? `Sends ${dayLabel(n.send_date, todayStr)} · ` : ''}${waited(n.sent_at)}${n.revised_at ? ' · revised' : ''}` }) })),
+      ].sort((a, b) => a.sort.localeCompare(b.sort)).map(x => x.html);
+      document.getElementById('waitList').innerHTML = wait.length ? wait.join('') : '<div class="dash-empty">Nothing out for approval.</div>';
+      document.getElementById('waitCount').textContent = wait.length || '';
+
+      // This week, grouped by day
+      const week = [
+        ...d.coming_up.posts.map(p => ({ day: ymd(p.scheduled_date), time: p.scheduled_time || '99:99', html: `<a class="dash-week-row" href="${acct(p.client_id, 'posts')}"><span class="dash-week-time">${clock(p.scheduled_time) || ''}</span><span><b>${esc(p.client)}</b> · ${esc(nets(p))}</span></a>` })),
+        ...d.coming_up.newsletters.map(n => ({ day: ymd(n.send_date), time: '00:00', html: `<a class="dash-week-row" href="${acct(n.client_id, 'newsletter')}"><span class="dash-week-time">Email</span><span><b>${esc(n.client)}</b> · ${esc(n.title)}${n.status === 'sent' ? ' (sent)' : ''}</span></a>` })),
+      ].sort((a, b) => (a.day + a.time).localeCompare(b.day + b.time));
+      const byDay = {};
+      week.forEach(w => (byDay[w.day] = byDay[w.day] || []).push(w.html));
+      document.getElementById('weekList').innerHTML = week.length
+        ? Object.keys(byDay).map(day => `<div class="dash-week-day"><div class="dash-week-label">${dayLabel(day, todayStr)}</div>${byDay[day].join('')}</div>`).join('')
+        : '<div class="dash-empty">Nothing scheduled in the next 7 days.</div>';
+      document.getElementById('weekCount').textContent = week.length || '';
+
+      document.getElementById('activityList').innerHTML = d.activity.length
+        ? d.activity.map(a => `<a class="dash-act" href="${acct(a.client_id, 'activity')}"><span class="dash-act-when">${esc(since(a.created_at))}</span><span><b>${esc(a.client)}</b> ${esc(a.body)}</span></a>`).join('')
+        : '<div class="dash-empty">No client activity yet.</div>';
+
+      document.getElementById('stats').innerHTML = `
+        <div class="crm-stat ${needs.length ? 'crm-stat--alert' : ''}"><b>${needs.length}</b><span>need you now</span></div>
+        <div class="crm-stat ${risk.length ? 'crm-stat--alert' : ''}"><b>${risk.length}</b><span>at risk</span></div>
+        <div class="crm-stat"><b>${wait.length}</b><span>waiting on clients</span></div>
+        <div class="crm-stat"><b>${week.length}</b><span>going out this week</span></div>`;
+    }
+
+    async function load() {
+      try { render(await api('/api/admin/dashboard')); }
+      catch (err) { document.getElementById('needsList').innerHTML = `<div class="error">${esc(err.message)}</div>`; }
+    }
+
+    (async () => {
+      await requireAdmin();
+      bindLogout();
+      document.getElementById('refreshBtn').addEventListener('click', load);
+      load();
+      setInterval(load, 5 * 60 * 1000); // keep fresh if left open
+    })();
+  </script>
+</body>
+</html>

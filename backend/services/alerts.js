@@ -68,7 +68,7 @@ async function postChangesRequested(postId) {
         ['From', esc([c.name, c.email].filter(Boolean).join(' · '))],
       ],
       imageUrl: image && image.url,
-      button: { label: 'Open their account', url: `${APP_URL()}/admin?client=${p.client_id}` },
+      button: { label: 'Open their account', url: `${APP_URL()}/admin?client=${p.client_id}&tab=posts` },
     })
   );
 }
@@ -90,7 +90,7 @@ async function newsletterChangesRequested(newsletterId) {
         ['Subject line', esc(n.subject)],
         ['From', esc([c.name, c.email].filter(Boolean).join(' · '))],
       ],
-      button: { label: 'Open their Newsletter tab', url: `${APP_URL()}/admin?client=${n.client_id}` },
+      button: { label: 'Open their Newsletter tab', url: `${APP_URL()}/admin?client=${n.client_id}&tab=newsletter` },
     })
   );
 }
@@ -111,7 +111,7 @@ async function newsletterApproved(newsletterId) {
         ['Subject line', esc(n.subject)],
         ['Preview text', esc(n.preview_text)],
       ],
-      button: { label: 'Open their Newsletter tab', url: `${APP_URL()}/admin?client=${n.client_id}` },
+      button: { label: 'Open their Newsletter tab', url: `${APP_URL()}/admin?client=${n.client_id}&tab=newsletter` },
     })
   );
 }

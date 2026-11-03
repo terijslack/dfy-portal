@@ -61,6 +61,79 @@ async function synced(req, res, next) {
 
 const withAccountInfo = c => ({ ...c, plan_tier: planTier(c.plan), ...accountStatus(c) });
 
+// GET /api/admin/dashboard — everything across all clients that needs DFY,
+// in one place. Dates are judged in Pacific time (DFY's day).
+router.get('/dashboard', requireAdmin, async (req, res) => {
+  const TZ = 'America/Los_Angeles';
+  const who = `COALESCE(NULLIF(c.business_name, ''), c.name, c.email)`;
+  const postCols = `p.id, p.client_id, ${who} AS client, c.email AS client_email, p.caption, p.platform, p.networks, p.scheduled_date, p.scheduled_time,
+                    p.status, p.change_notes, p.media, p.metricool_error, p.revised_at,
+                    COALESCE(p.revised_at, p.created_at) AS sent_at, p.updated_at`;
+  const nlCols = `n.id, n.client_id, ${who} AS client, c.email AS client_email, n.title, n.subject, n.send_date, n.status, n.change_notes,
+                  n.revised_at, n.approved_at, COALESCE(n.revised_at, n.created_at) AS sent_at, n.updated_at`;
+  const today = `(NOW() AT TIME ZONE '${TZ}')::date`;
+  try {
+    const q = sql => pool.query(sql).then(r => r.rows);
+    const [postChanges, nlChanges, nlReady, mcErrors, postsWaiting, nlWaiting, comingPosts, comingNl, activity, missed] = await Promise.all([
+      q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
+         WHERE p.status = 'changes_requested' ORDER BY p.scheduled_date ASC NULLS LAST`),
+      q(`SELECT ${nlCols} FROM newsletters n JOIN clients c ON c.id = n.client_id
+         WHERE n.status = 'changes_requested' ORDER BY n.send_date ASC NULLS LAST`),
+      q(`SELECT ${nlCols} FROM newsletters n JOIN clients c ON c.id = n.client_id
+         WHERE n.status = 'approved' ORDER BY n.send_date ASC NULLS LAST`),
+      q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
+         WHERE p.metricool_error IS NOT NULL AND p.status = 'approved' ORDER BY p.scheduled_date ASC`),
+      q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
+         WHERE p.status = 'pending' AND (p.scheduled_date IS NULL OR p.scheduled_date >= ${today})
+         ORDER BY p.scheduled_date ASC NULLS LAST, p.scheduled_time ASC NULLS LAST`),
+      q(`SELECT ${nlCols} FROM newsletters n JOIN clients c ON c.id = n.client_id
+         WHERE n.status = 'pending' ORDER BY n.send_date ASC NULLS LAST`),
+      q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
+         WHERE p.status IN ('approved', 'scheduled', 'queued')
+           AND p.scheduled_date BETWEEN ${today} AND ${today} + 6
+         ORDER BY p.scheduled_date, p.scheduled_time NULLS LAST`),
+      q(`SELECT ${nlCols} FROM newsletters n JOIN clients c ON c.id = n.client_id
+         WHERE n.status IN ('approved', 'sent') AND n.send_date BETWEEN ${today} AND ${today} + 6
+         ORDER BY n.send_date`),
+      q(`SELECT a.id, a.type, a.body, a.created_at, cl.id AS client_id,
+                COALESCE(NULLIF(cl.business_name, ''), cl.name, ct.name) AS client
+         FROM contact_activity a
+         JOIN contacts ct ON ct.id = a.contact_id
+         JOIN clients cl ON cl.id = COALESCE(ct.client_id, ct.account_id)
+         WHERE a.type = 'client' AND cl.is_admin = false
+         ORDER BY a.created_at DESC LIMIT 20`),
+      // Drafts whose date passed without approval in the last 2 weeks — these never went out
+      q(`SELECT ${postCols} FROM posts p JOIN clients c ON c.id = p.client_id
+         WHERE p.status IN ('pending', 'changes_requested') AND p.scheduled_date < ${today}
+           AND p.scheduled_date >= ${today} - 14
+         ORDER BY p.scheduled_date DESC`),
+    ]);
+    const todayStr = (await q(`SELECT ${today}::text AS d`))[0].d;
+    // Waiting on the client and going out within 2 days → at risk of never posting
+    const soon = d => d && String(d instanceof Date ? d.toISOString() : d).slice(0, 10) <= addDays(todayStr, 1);
+    res.json({
+      today: todayStr,
+      needs_you: {
+        post_changes: postChanges.filter(p => !p.scheduled_date || String(p.scheduled_date instanceof Date ? p.scheduled_date.toISOString() : p.scheduled_date).slice(0, 10) >= todayStr),
+        newsletter_changes: nlChanges, newsletters_ready: nlReady, schedule_errors: mcErrors, missed,
+      },
+      at_risk: { posts: postsWaiting.filter(p => soon(p.scheduled_date)), newsletters: nlWaiting.filter(n => soon(n.send_date)) },
+      waiting: { posts: postsWaiting.filter(p => !soon(p.scheduled_date)), newsletters: nlWaiting.filter(n => !soon(n.send_date)) },
+      coming_up: { posts: comingPosts, newsletters: comingNl },
+      activity,
+    });
+  } catch (err) {
+    console.error('Admin dashboard error:', err);
+    res.status(500).json({ error: 'Could not load the dashboard.' });
+  }
+});
+
+function addDays(ymd, n) {
+  const d = new Date(`${ymd}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
 // GET /api/admin/clients — the Accounts list
 router.get('/clients', requireAdmin, synced, async (req, res) => {
   try {
