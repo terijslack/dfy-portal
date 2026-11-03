@@ -32,6 +32,23 @@ app.use((req, res, next) => {
   next();
 });
 
+// Make browsers fetch fresh CSS/JS after every deploy. Cloudflare tells browsers
+// to keep style.css etc. for hours, so each page we send adds ?v=<this deploy>
+// to its own stylesheet and script links — a new deploy means a new URL.
+const fs = require('fs');
+const ASSET_VERSION = (process.env.RAILWAY_DEPLOYMENT_ID || process.env.RAILWAY_GIT_COMMIT_SHA || String(Date.now())).slice(0, 12);
+function versionAssets(html) {
+  return html.replace(/(href|src)="(\/?[\w\-./]+\.(?:css|js))"/g, (m, attr, url) => `${attr}="${url}?v=${ASSET_VERSION}"`);
+}
+app.use((req, res, next) => {
+  const sendFile = res.sendFile.bind(res);
+  res.sendFile = (file, ...rest) => {
+    if (typeof file !== 'string' || !file.endsWith('.html')) return sendFile(file, ...rest);
+    fs.readFile(file, 'utf8', (err, html) => (err ? sendFile(file, ...rest) : res.type('html').send(versionAssets(html))));
+  };
+  next();
+});
+
 // Serve everything in frontend/public as static files
 // This is what your clients actually see in their browser
 app.use(express.static(path.join(__dirname, 'frontend/public')));
