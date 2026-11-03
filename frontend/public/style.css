@@ -2091,6 +2091,20 @@ h2 em {
   align-items: center;
   gap: 6px;
 }
+/* Shown instead of Request Changes once they've asked — darker, not clickable */
+.btn-changes-sent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #7D2A03;
+  color: #fff;
+  border: 1px solid #7D2A03;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: default;
+}
 
 .approved-note {
   display: inline-flex;
