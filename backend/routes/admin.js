@@ -77,6 +77,8 @@ router.get('/clients', requireAdmin, synced, async (req, res) => {
         (SELECT COUNT(*) FROM posts p WHERE p.client_id = c.id AND p.status = 'pending') AS pending,
         (SELECT COUNT(*) FROM posts p WHERE p.client_id = c.id AND p.status = 'approved') AS approved,
         (SELECT COUNT(*) FROM posts p WHERE p.client_id = c.id AND p.status = 'changes_requested') AS changes_requested,
+        (SELECT COUNT(*) FROM newsletters n WHERE n.client_id = c.id AND n.status = 'approved') AS nl_approved,
+        (SELECT COUNT(*) FROM newsletters n WHERE n.client_id = c.id AND n.status = 'changes_requested') AS nl_changes,
         (SELECT MAX(a.created_at) FROM contact_activity a JOIN contacts ct ON ct.id = a.contact_id
            WHERE ct.client_id = c.id OR ct.account_id = c.id) AS last_activity
       FROM clients c

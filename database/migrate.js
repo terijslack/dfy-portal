@@ -115,6 +115,42 @@ async function runMigrations(pool) {
       created_at    TIMESTAMPTZ DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS client_messages_client ON client_messages (client_id, created_at DESC)`,
+
+    // ── Monthly newsletters for client approval ──
+    // DFY uploads the Canva export (PNG/JPG/PDF) with the subject line and send
+    // date; the client approves or asks for changes in their portal; DFY sends it.
+    // source is 'upload' for now — room for pulling drafts from Mailchimp later.
+    `CREATE TABLE IF NOT EXISTS newsletters (
+      id            SERIAL PRIMARY KEY,
+      client_id     INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+      title         TEXT NOT NULL,          -- e.g. "December newsletter"
+      subject       TEXT,                   -- email subject line
+      preview_text  TEXT,                   -- the line inboxes show after the subject
+      send_date     DATE,
+      canva_url     TEXT,                   -- optional view link
+      status        TEXT NOT NULL DEFAULT 'pending',  -- pending | changes_requested | approved | sent
+      change_notes  TEXT,
+      version       INTEGER NOT NULL DEFAULT 1,
+      revised_at    TIMESTAMPTZ,
+      approved_at   TIMESTAMPTZ,
+      sent_at       TIMESTAMPTZ,
+      source        TEXT NOT NULL DEFAULT 'upload',
+      created_at    TIMESTAMPTZ DEFAULT NOW(),
+      updated_at    TIMESTAMPTZ DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS newsletters_client ON newsletters (client_id, send_date DESC)`,
+    // The preview files themselves, kept in the database (no extra storage service)
+    `CREATE TABLE IF NOT EXISTS newsletter_files (
+      id             SERIAL PRIMARY KEY,
+      newsletter_id  INTEGER NOT NULL REFERENCES newsletters(id) ON DELETE CASCADE,
+      filename       TEXT NOT NULL,
+      mimetype       TEXT NOT NULL,
+      size           INTEGER NOT NULL,
+      position       INTEGER NOT NULL DEFAULT 0,
+      data           BYTEA NOT NULL,
+      created_at     TIMESTAMPTZ DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS newsletter_files_newsletter ON newsletter_files (newsletter_id, position)`,
   ];
 
   for (const sql of steps) {
