@@ -1040,6 +1040,54 @@ a.contact-detail-value:hover { color: var(--accent); }
 }
 .post-caption-box .post-caption { margin-bottom: 0; color: var(--color-forest, #1F3D2C); }
 
+/* ── NEWSLETTER APPROVAL ─────────────────────────────── */
+.nl-wrap { max-width: 860px; }
+.nl-title { font-weight: 600; color: var(--color-forest, #1F3D2C); font-size: 0.95rem; }
+.nl-inbox {
+  background: var(--color-cream, #F5F2EA);
+  border-radius: var(--radius-md, 8px);
+  padding: 12px 16px 14px;
+  margin-bottom: 16px;
+}
+.nl-subject, .nl-preheader { font-size: 0.95rem; color: var(--color-forest, #1F3D2C); line-height: 1.5; }
+.nl-subject { font-weight: 600; }
+.nl-preheader { color: var(--color-slate, #6B756B); margin-top: 2px; }
+.nl-subject span, .nl-preheader span {
+  display: inline-block; min-width: 64px; margin-right: 8px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--color-slate-light, #9AA199);
+}
+.nl-preview { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.nl-img img {
+  display: block; width: 100%; max-width: 640px; height: auto;
+  border: 1px solid var(--color-border, rgba(31,61,44,0.10)); border-radius: var(--radius-md, 8px);
+  background: #fff;
+}
+.nl-pdf iframe {
+  display: block; width: 100%; max-width: 640px; height: 75vh; min-height: 480px;
+  border: 1px solid var(--color-border, rgba(31,61,44,0.10)); border-radius: var(--radius-md, 8px); background: #fff;
+}
+.nl-open {
+  display: inline-flex; align-items: center; gap: 6px; margin: 6px 0 14px;
+  font-size: 0.875rem; font-weight: 500; color: var(--color-green, #2D6B4F); text-decoration: none;
+}
+.nl-open:hover { text-decoration: underline; }
+.post-card.status-sent { opacity: 1; }
+@media (max-width: 480px) { .nl-subject span, .nl-preheader span { display: block; margin-bottom: 2px; } }
+
+/* Dashboard: newsletter waiting notice */
+.nl-notice {
+  display: flex; align-items: center; gap: 14px;
+  background: #fffaf8; border: 0.5px solid rgba(125,42,3,0.3); border-radius: 10px;
+  padding: 14px 18px; margin-bottom: 16px; text-decoration: none; color: inherit;
+}
+.nl-notice:hover { box-shadow: 0 2px 10px rgba(31,61,44,0.06); }
+.nl-notice-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(125,42,3,0.08); color: #7D2A03; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nl-notice-text { flex: 1; min-width: 0; }
+.nl-notice-text strong { display: block; font-size: 13px; color: #1F3D2C; }
+.nl-notice-text span { font-size: 12px; color: #6B756B; }
+.nl-notice-cta { font-size: 12px; font-weight: 600; color: #7D2A03; white-space: nowrap; }
+
 /* ── POST APPROVAL TABS ──────────────────────────────── */
 .post-tabs {
   display: flex;

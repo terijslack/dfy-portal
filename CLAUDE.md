@@ -56,6 +56,7 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 | `/dashboard` | dashboard.html | Logged-in clients |
 | `/posts` | posts.html | Logged-in clients |
 | `/calendar` | calendar.html | Logged-in clients |
+| `/newsletter` | newsletter.html | Logged-in clients |
 | `/analytics` | analytics.html | Logged-in clients |
 | `/gbp` | gbp.html | Logged-in clients |
 | `/socials` | socials.html | Logged-in clients |
@@ -79,6 +80,8 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 - GHL: `ghl_location_id`, `ghl_contact_id` — **may not exist yet in live DB**
 
 **`posts`** — social media posts. `source = 'metricool'` rows are synced from Metricool drafts by `backend/services/metricoolSync.js` (every 10 min + when a client opens /posts). Edit those in Metricool, not in the portal.
+
+**`newsletters`** / **`newsletter_files`** — monthly newsletters for client approval (`backend/routes/newsletters.js`). DFY uploads the Canva export (PNG/JPG/PDF, stored in `newsletter_files` in the DB) with subject line and send date in admin → account → Newsletter; the client approves or requests changes at `/newsletter`; DFY uploads a revised version or marks it sent. Every client sees the Newsletter link (added to the sidebar by `frontend/public/newsletter-nav.js`).
 
 **`client_onboarding`** — intake form answers (industry, website, brand voice, etc.)
 

@@ -224,3 +224,16 @@
 .mc-source { font-size: 0.8rem; color: var(--color-slate-light, #9AA199); margin-bottom: 10px; }
 .mc-error { font-size: 0.85rem; color: var(--color-rust, #7D2A03); background: rgba(125, 42, 3, 0.06); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; }
 @media (max-width: 600px) { #acctView .mc-sync-bar { flex-direction: column; align-items: flex-start; } }
+
+/* Newsletter tab */
+#acctView .nl-admin-hint { font-size: 0.85rem; color: var(--color-slate, #6B756B); margin: -4px 0 14px; line-height: 1.5; }
+#acctView .nl-opt { font-weight: 400; color: var(--color-slate-light, #9AA199); }
+#acctView #nlForm input[type="text"], #acctView #nlForm input[type="url"], #acctView #nlForm input[type="date"] { width: 100%; }
+#acctView .nl-form-msg { font-size: 0.85rem; color: var(--color-green, #2D6B4F); min-height: 1.2em; margin-bottom: 10px; }
+#acctView .nl-form-msg.nl-form-err { color: var(--color-rust, #7D2A03); }
+.nl-admin-pdf { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 6px; background: var(--color-cream-2, #EFEBDF); font-size: 0.85rem; color: var(--color-forest, #1F3D2C); text-decoration: none; }
+.mc-thumbs a img { width: 72px; height: 96px; object-fit: cover; object-position: top; }
+#acctView .nl-admin-bar { margin-bottom: 16px; }
+#acctView .nl-admin-bar .btn-primary, #acctView .nl-form-actions .btn-primary, #acctView .nl-form-actions .btn-secondary { width: auto; }
+#acctView .nl-form-actions { display: flex; gap: 10px; align-items: center; }
+#acctView #nlForm.hidden, #acctView .nl-admin-bar .hidden { display: none; }

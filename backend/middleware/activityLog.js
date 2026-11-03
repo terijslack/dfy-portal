@@ -38,6 +38,11 @@ async function postSummary(postId) {
   return `the ${PLATFORM(p.platform)} post${day ? ` for ${day}` : ''}`;
 }
 
+async function newsletterSummary(id) {
+  const n = (await pool.query('SELECT title FROM newsletters WHERE id = $1', [id])).rows[0];
+  return n ? `“${n.title}”` : 'their newsletter';
+}
+
 const RULES = [
   {
     method: 'POST', path: /^\/api\/onboarding\/?$/,
@@ -74,6 +79,9 @@ const RULES = [
   { method: 'POST', path: /^\/api\/posts\/(\d+)\/approve\/?$/, describe: async ({ m }) => `Approved ${await postSummary(m[1])}` },
   { method: 'POST', path: /^\/api\/posts\/(\d+)\/request-changes\/?$/,
     describe: async ({ req, m }) => `Asked for changes to ${await postSummary(m[1])}: “${short(req.body.notes)}”` },
+  { method: 'POST', path: /^\/api\/newsletters\/(\d+)\/approve\/?$/, describe: async ({ m }) => `Approved ${await newsletterSummary(m[1])}` },
+  { method: 'POST', path: /^\/api\/newsletters\/(\d+)\/request-changes\/?$/,
+    describe: async ({ req, m }) => `Asked for changes to ${await newsletterSummary(m[1])}: “${short(req.body.notes)}”` },
   { method: 'POST', path: /^\/api\/account\/change-plan\/?$/, describe: ({ req }) => `Changed their plan to ${req.body.new_plan}` },
   { method: 'POST', path: /^\/api\/account\/pause-plan\/?$/, describe: () => 'Paused their plan' },
   { method: 'POST', path: /^\/api\/account\/resume-plan\/?$/, describe: () => 'Resumed their plan' },

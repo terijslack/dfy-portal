@@ -75,7 +75,7 @@
               <th>Priority</th>
               <th class="hide-sm">City</th>
               <th>Plan</th>
-              <th class="hide-sm">Posts to review</th>
+              <th class="hide-sm">Content to review</th>
               <th class="hide-sm">Last activity</th>
             </tr>
           </thead>
@@ -95,6 +95,7 @@
         <button class="cd-tab" data-tab="brand" onclick="showTab('brand')">Brand &amp; socials</button>
         <button class="cd-tab" data-tab="activity" onclick="showTab('activity')">Activity</button>
         <button class="cd-tab" data-tab="posts" onclick="showTab('posts')">Posts</button>
+        <button class="cd-tab" data-tab="newsletter" onclick="showTab('newsletter')">Newsletter</button>
       </div>
 
       <div id="pane-overview" class="acct-pane"></div>
@@ -138,6 +139,32 @@
       </div>
 
       <div id="adminPostsGrid" class="posts-grid"></div>
+      </div>
+
+      <!-- NEWSLETTER TAB -->
+      <div id="pane-newsletter" class="acct-pane hidden">
+        <div class="nl-admin-bar">
+          <button class="btn-primary" type="button" id="nlNewBtn" onclick="toggleNewsletterForm(true)">+ New newsletter</button>
+        </div>
+        <form id="nlForm" class="add-post-form hidden" onsubmit="createNewsletter(event)">
+          <h3>Send a newsletter for approval</h3>
+          <p class="nl-admin-hint">Export it from Canva as PNG (one long image works best) or PDF, then upload it here. It shows on their Newsletter page right away, with a notice on their dashboard.</p>
+          <div class="form-row">
+            <div class="field"><label>Name</label><input type="text" id="nlTitle" placeholder="December newsletter" required></div>
+            <div class="field"><label>Send date</label><input type="date" id="nlDate"></div>
+          </div>
+          <div class="field"><label>Subject line</label><input type="text" id="nlSubject" placeholder="What the email's subject will say"></div>
+          <div class="field"><label>Preview text <span class="nl-opt">(optional)</span></label><input type="text" id="nlPreview" placeholder="The short line inboxes show after the subject"></div>
+          <div class="field"><label>Canva view link <span class="nl-opt">(optional)</span></label><input type="url" id="nlCanva" placeholder="https://www.canva.com/design/…/view"></div>
+          <div class="field"><label>Newsletter file(s)</label><input type="file" id="nlFiles" accept="image/png,image/jpeg,image/webp,application/pdf" multiple required></div>
+          <div class="nl-form-msg" id="nlFormMsg"></div>
+          <div class="nl-form-actions">
+            <button class="btn-primary" type="submit" id="nlSubmit">Send for approval</button>
+            <button class="btn-secondary" type="button" onclick="toggleNewsletterForm(false)">Cancel</button>
+          </div>
+        </form>
+        <div id="nlList" class="posts-grid"></div>
+        <input type="file" id="nlReviseFiles" accept="image/png,image/jpeg,image/webp,application/pdf" multiple hidden>
       </div>
 
       <div class="cd-savebar hidden" id="profileSaveBar">
@@ -263,8 +290,9 @@
           <td>${priorityPill(c.priority)}</td>
           <td class="hide-sm">${escapeHtml([c.city, c.state].filter(Boolean).join(', ')) || '<span class="muted">—</span>'}</td>
           <td>${tierPill(c)}</td>
-          <td class="hide-sm">${Number(c.pending) || Number(c.changes_requested)
-            ? `${Number(c.pending) ? `<span class="stat pending">${c.pending} pending</span>` : ''} ${Number(c.changes_requested) ? `<span class="stat changes">${c.changes_requested} changes</span>` : ''}`
+          <td class="hide-sm">${Number(c.pending) || Number(c.changes_requested) || Number(c.nl_approved) || Number(c.nl_changes)
+            ? `${Number(c.pending) ? `<span class="stat pending">${c.pending} pending</span>` : ''} ${Number(c.changes_requested) ? `<span class="stat changes">${c.changes_requested} changes</span>` : ''}
+               ${Number(c.nl_changes) ? `<span class="stat changes">Newsletter changes</span>` : ''} ${Number(c.nl_approved) ? `<span class="stat approved">Newsletter approved</span>` : ''}`
             : '<span class="muted">—</span>'}</td>
           <td class="hide-sm muted">${escapeHtml(ago(c.last_activity))}</td>
         </tr>`).join('');
@@ -302,6 +330,7 @@
       await loadClientDetail(clientId);
       showTab(currentTab);
       loadClientPosts(clientId);
+      loadNewsletters(clientId);
     }
 
     function showTab(tab) {
@@ -966,6 +995,110 @@
     }
 
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+    // ─── NEWSLETTERS ─────────────────────────────────────────────
+    const NL_STATUS = { pending: 'Waiting on client', changes_requested: 'Changes requested', approved: 'Approved — ready to send', sent: 'Sent' };
+    let nlReviseId = null;
+
+    async function loadNewsletters(clientId) {
+      const list = document.getElementById('nlList');
+      list.innerHTML = '<div class="loading">Loading newsletters…</div>';
+      try {
+        const res = await fetch(`/api/newsletters/admin/client/${clientId}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        renderNewsletters(data.newsletters || []);
+      } catch (err) {
+        list.innerHTML = '<div class="error">Could not load newsletters.</div>';
+      }
+    }
+
+    function toggleNewsletterForm(open) {
+      document.getElementById('nlForm').classList.toggle('hidden', !open);
+      document.getElementById('nlNewBtn').classList.toggle('hidden', open);
+      if (open) document.getElementById('nlTitle').focus();
+    }
+
+    function renderNewsletters(items) {
+      const list = document.getElementById('nlList');
+      // First one for this account: open the form straight away
+      toggleNewsletterForm(!items.length);
+      if (!items.length) { list.innerHTML = ''; return; }
+      list.innerHTML = items.map(n => `
+        <div class="post-card status-${n.status}">
+          <div class="post-meta">
+            <span class="post-platform"><strong>${escapeHtml(n.title)}</strong></span>
+            ${n.send_date ? `<span class="post-date">Sends ${formatDate(n.send_date)}</span>` : ''}
+            <span class="post-status-badge status-badge-${n.status}">${NL_STATUS[n.status] || n.status}</span>
+            ${n.version > 1 ? `<span class="mc-source" style="margin:0">Version ${n.version}</span>` : ''}
+          </div>
+          ${n.subject ? `<div class="post-caption" style="margin-bottom:6px"><strong>Subject:</strong> ${escapeHtml(n.subject)}</div>` : ''}
+          ${n.preview_text ? `<div class="mc-source">Preview: ${escapeHtml(n.preview_text)}</div>` : ''}
+          <div class="mc-thumbs">${(n.files || []).map(f => f.type === 'pdf'
+            ? `<a class="nl-admin-pdf" href="${escapeHtml(f.url)}" target="_blank" rel="noopener">PDF · ${escapeHtml(f.filename)}</a>`
+            : `<a href="${escapeHtml(f.url)}" target="_blank" rel="noopener"><img src="${escapeHtml(f.url)}" alt="" loading="lazy"></a>`).join('')}</div>
+          ${n.change_notes && (n.status === 'changes_requested' || n.revised_at) ? `<div class="change-notes-display">Client notes: <strong>${escapeHtml(n.change_notes)}</strong>${n.status === 'pending' ? ' <em>(revised version sent)</em>' : ''}</div>` : ''}
+          <div class="post-actions">
+            <button class="btn-edit" onclick="reviseNewsletter(${n.id})">Upload revised version</button>
+            ${n.status === 'approved' ? `<button class="btn-edit" onclick="markNewsletterSent(${n.id})">Mark as sent</button>` : ''}
+            <button class="btn-delete" onclick="deleteNewsletter(${n.id})">Delete</button>
+          </div>
+        </div>`).join('');
+    }
+
+    async function createNewsletter(e) {
+      e.preventDefault();
+      const msg = document.getElementById('nlFormMsg');
+      const btn = document.getElementById('nlSubmit');
+      const fd = new FormData();
+      fd.append('title', document.getElementById('nlTitle').value);
+      fd.append('send_date', document.getElementById('nlDate').value);
+      fd.append('subject', document.getElementById('nlSubject').value);
+      fd.append('preview_text', document.getElementById('nlPreview').value);
+      fd.append('canva_url', document.getElementById('nlCanva').value);
+      [...document.getElementById('nlFiles').files].forEach(f => fd.append('files', f));
+      btn.disabled = true; btn.textContent = 'Uploading…'; msg.textContent = '';
+      try {
+        const res = await fetch(`/api/newsletters/admin/client/${selectedClientId}`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not save.');
+        document.getElementById('nlForm').reset();
+        msg.textContent = '';
+        await loadNewsletters(selectedClientId);
+        toggleNewsletterForm(false);
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'nl-form-msg nl-form-err';
+      }
+      btn.disabled = false; btn.textContent = 'Send for approval';
+    }
+
+    function reviseNewsletter(id) {
+      nlReviseId = id;
+      const input = document.getElementById('nlReviseFiles');
+      input.value = '';
+      input.click();
+    }
+    document.getElementById('nlReviseFiles').addEventListener('change', async e => {
+      const files = [...e.target.files];
+      if (!files.length || !nlReviseId) return;
+      const fd = new FormData();
+      files.forEach(f => fd.append('files', f));
+      const res = await fetch(`/api/newsletters/admin/${nlReviseId}/revise`, { method: 'POST', body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) alert(data.error || 'Could not upload the revised version.');
+      loadNewsletters(selectedClientId);
+    });
+
+    async function markNewsletterSent(id) {
+      await fetch(`/api/newsletters/admin/${id}/sent`, { method: 'POST' });
+      loadNewsletters(selectedClientId);
+    }
+
+    async function deleteNewsletter(id) {
+      if (!confirm('Delete this newsletter? It will disappear from their portal too.')) return;
+      await fetch(`/api/newsletters/admin/${id}`, { method: 'DELETE' });
+      loadNewsletters(selectedClientId);
+    }
 
     function adminMediaHtml(media) {
       const list = Array.isArray(media) ? media : [];

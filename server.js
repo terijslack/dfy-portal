@@ -61,6 +61,7 @@ app.use(require('./backend/middleware/activityLog').activityLog());
 
 app.use('/api/auth', require('./backend/routes/auth'));     // login, logout, /me
 app.use('/api/posts', require('./backend/routes/posts'));   // client post actions
+app.use('/api/newsletters', require('./backend/routes/newsletters')); // monthly newsletter approval
 app.use('/api/admin', require('./backend/routes/admin'));   // admin-only actions
 app.use('/api/admin', require('./backend/routes/adminCrm')); // admin contacts + pipeline
 app.use('/api/stripe', require('./backend/routes/stripe')); // stripe checkout + webhooks
@@ -122,6 +123,10 @@ app.get('/payment-success', (req, res) => {
 
 app.get('/posts', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/posts.html'));
+});
+
+app.get('/newsletter', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/newsletter.html'));
 });
 
 app.get('/calendar', (req, res) => {
