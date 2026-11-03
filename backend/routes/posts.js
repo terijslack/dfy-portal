@@ -9,6 +9,7 @@ const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
 const { scheduleToMetricool, releasePost } = require('../services/metricool');
 const { syncIfStale, syncClient, describeError, recordReleased } = require('../services/metricoolSync');
+const alerts = require('../services/alerts');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -144,6 +145,7 @@ router.post('/:id/request-changes', requireLogin, async (req, res) => {
     );
 
     res.json({ success: true, message: 'Change request sent!' });
+    alerts.postChangesRequested(postId); // email hello@ (best-effort)
 
   } catch (err) {
     console.error('Request changes error:', err);
