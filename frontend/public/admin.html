@@ -1111,9 +1111,10 @@
     function adminMediaHtml(media) {
       const list = Array.isArray(media) ? media : [];
       if (!list.length) return '';
-      return `<div class="mc-thumbs">${list.slice(0, 4).map(m => m.type === 'video'
+      const label = list.length > 1 ? `<div class="mc-thumbs-label">Carousel · ${list.length} ${list.some(m => m.type === 'video') ? 'items' : 'photos'}</div>` : '';
+      return `${label}<div class="mc-thumbs">${list.map((m, i) => `<span class="mc-thumb">${m.type === 'video'
         ? `<video src="${escapeHtml(safeUrl(m.url))}" muted preload="metadata"></video>`
-        : `<img src="${escapeHtml(safeUrl(m.url))}" alt="" loading="lazy">`).join('')}</div>`;
+        : `<img src="${escapeHtml(safeUrl(m.url))}" alt="" loading="lazy">`}${list.length > 1 ? `<b>${i + 1}</b>` : ''}</span>`).join('')}</div>`;
     }
 
     async function syncMetricool() {

@@ -434,9 +434,11 @@
     function mediaHtml(media) {
       const list = (Array.isArray(media) ? media : []).map(m => ({ ...m, url: safeUrl(m.url) })).filter(m => m.url);
       if (!list.length) return '';
-      return `<div class="post-media${list.length === 1 ? ' single' : ''}">${list.map(m => m.type === 'video'
+      const many = list.length > 1;
+      const label = many ? `<div class="post-media-label">Carousel · ${list.length} ${list.some(m => m.type === 'video') ? 'items' : 'photos'}, in the order they'll appear</div>` : '';
+      return `${label}<div class="post-media${many ? '' : ' single'}">${list.map((m, i) => `<div class="post-media-item">${m.type === 'video'
         ? `<video src="${attr(m.url)}" controls playsinline preload="metadata"></video>`
-        : `<a href="${attr(m.url)}" target="_blank" rel="noopener"><img src="${attr(m.url)}" alt="Post image" loading="lazy"></a>`).join('')}</div>`;
+        : `<a href="${attr(m.url)}" target="_blank" rel="noopener"><img src="${attr(m.url)}" alt="Post image ${i + 1}" loading="lazy"></a>`}${many ? `<span class="post-media-num">${i + 1}</span>` : ''}</div>`).join('')}</div>`;
     }
 
     init();
