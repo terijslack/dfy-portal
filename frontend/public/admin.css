@@ -221,6 +221,9 @@
 #acctView .mc-sync-msg.mc-sync-err { color: var(--color-rust, #7D2A03); }
 .mc-thumbs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
 .mc-thumbs img, .mc-thumbs video { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; background: var(--color-cream-2, #EFEBDF); }
+.mc-thumb { position: relative; display: block; }
+.mc-thumb b { position: absolute; top: 4px; left: 4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: rgba(20, 30, 25, 0.72); color: #fff; font-size: 0.7rem; font-weight: 600; line-height: 18px; text-align: center; }
+.mc-thumbs-label { font-size: 0.8rem; color: var(--color-slate, #6B756B); margin-bottom: 6px; }
 .mc-source { font-size: 0.8rem; color: var(--color-slate-light, #9AA199); margin-bottom: 10px; }
 .mc-error { font-size: 0.85rem; color: var(--color-rust, #7D2A03); background: rgba(125, 42, 3, 0.06); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; }
 @media (max-width: 600px) { #acctView .mc-sync-bar { flex-direction: column; align-items: flex-start; } }

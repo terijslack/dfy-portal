@@ -1012,6 +1012,9 @@ a.contact-detail-value:hover { color: var(--accent); }
 .post-media.single img,
 .post-media.single video { aspect-ratio: auto; max-height: 520px; object-fit: contain; }
 .post-media a { display: block; }
+.post-media-item { position: relative; }
+.post-media-num { position: absolute; top: 6px; left: 6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: rgba(20, 30, 25, 0.72); color: #fff; font-size: 0.75rem; font-weight: 600; line-height: 22px; text-align: center; pointer-events: none; }
+.post-media-label { font-size: 0.85rem; color: var(--color-slate, #6B756B); margin-bottom: 8px; }
 .post-revised-note {
   font-size: 0.85rem;
   color: var(--color-green, #2D6B4F);
