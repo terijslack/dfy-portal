@@ -150,6 +150,53 @@ async function sendContactInquiry({ name, email, message }) {
   console.log(`✅ Contact inquiry email sent for ${email}`);
 }
 
+// A message a logged-in client sent from the portal's Contact Us page.
+// Goes to the team inbox (hello@). Throws if it can't be sent, so the client is told.
+function clientMessageHtml({ name, businessName, email, subject, message }) {
+  return `
+        <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;">
+          <img src="${APP_URL()}/logo.png" alt="Done For You Marketing" style="height:80px;margin-bottom:24px;" />
+          <h2 style="font-size:22px;color:#1F3D2C;margin:0 0 16px;">New message from a client</h2>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
+            <strong>Client:</strong> ${escapeHtml(name)}${businessName ? ` (${escapeHtml(businessName)})` : ''}
+          </p>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
+            <strong>Email:</strong> <a href="mailto:${escapeHtml(email)}" style="color:#2D6B4F;">${escapeHtml(email)}</a>
+          </p>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 8px;">
+            <strong>Subject:</strong> ${escapeHtml(subject)}
+          </p>
+          <p style="color:#6B756B;font-size:15px;line-height:1.6;margin:0 0 24px;">
+            <strong>Message:</strong><br>${escapeHtml(message).replace(/\n/g, '<br>')}
+          </p>
+          <p style="color:#9AA199;font-size:13px;margin-top:24px;">
+            Sent from the Contact Us page in the client portal. Hit Reply to answer the client directly.
+          </p>
+        </div>
+      `;
+}
+
+async function sendClientMessage({ name, businessName, email, subject, message }) {
+  const who = businessName || name;
+  const emailSubject = `Portal message from ${who}: ${subject}`;
+  const html = clientMessageHtml({ name, businessName, email, subject, message });
+  if (mailer.isConfigured()) {
+    await mailer.sendMail({ to: mailer.TEAM(), replyTo: email, subject: emailSubject, html });
+    console.log(`✅ Client portal message sent via Gmail for ${email}`);
+    return;
+  }
+
+  // Fallback while Google Workspace sending isn't set up (GHL is being retired)
+  const contactId      = await getOrCreateContact('hello@dfymarketinggroup.com');
+  const conversationId = await getOrCreateConversation(contactId);
+  await axios.post(
+    `${GHL_BASE}/conversations/messages`,
+    { type: 'Email', conversationId, contactId, subject: emailSubject, html },
+    { headers: GHL_HEADERS() }
+  );
+  console.log(`✅ Client portal message sent for ${email}`);
+}
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -158,4 +205,4 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-module.exports = { sendPasswordReset, sendContactInquiry };
+module.exports = { sendPasswordReset, sendContactInquiry, sendClientMessage };
