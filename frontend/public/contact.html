@@ -196,20 +196,32 @@
       initSidebar(data.user.business_name || data.user.name);
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const subject = document.getElementById('subject').value.trim();
       const message = document.getElementById('message').value.trim();
       const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
       errorMsg.textContent = '';
+      successMsg.style.display = 'none';
       if (!subject || !message) { errorMsg.textContent = 'Please fill in both fields.'; return; }
       const btn = document.getElementById('sendBtn');
       btn.textContent = 'Sending…'; btn.disabled = true;
-      setTimeout(() => {
-        document.getElementById('successMsg').style.display = 'block';
+      try {
+        const res = await fetch('/api/contact/client', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, message })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Your message didn't send. Please email hello@dfymarketinggroup.com or call (530) 753-2013.");
+        successMsg.style.display = 'block';
         document.getElementById('subject').value = '';
         document.getElementById('message').value = '';
+      } catch (err) {
+        errorMsg.textContent = err.message;
+      } finally {
         btn.textContent = 'Send Message'; btn.disabled = false;
-      }, 800);
+      }
     }
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {

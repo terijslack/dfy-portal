@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
-const { sendContactInquiry } = require('../services/email');
+const { sendContactInquiry, sendClientMessage } = require('../services/email');
 const { addInquiryLead } = require('../services/crm');
+const { requireLogin } = require('../middleware/auth');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -41,6 +42,35 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('Contact form error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+// Logged-in clients: the "Send a Message" form on the portal's Contact Us page.
+// Emails hello@ with the client's name/business; Reply goes straight to the client.
+router.post('/client', requireLogin, async (req, res) => {
+  const subject = (req.body.subject || '').trim();
+  const message = (req.body.message || '').trim();
+  if (!subject || !message) {
+    return res.status(400).json({ error: 'Please fill in both fields.' });
+  }
+  try {
+    let name = req.user.name || '';
+    let email = req.user.email || '';
+    let businessName = req.user.business_name || '';
+    try {
+      const r = await pool.query('SELECT name, email, business_name FROM clients WHERE id = $1', [req.user.id]);
+      if (r.rows[0]) {
+        name = r.rows[0].name || name;
+        email = r.rows[0].email || email;
+        businessName = r.rows[0].business_name || businessName;
+      }
+    } catch (_) { /* fall back to what's in the login token */ }
+
+    await sendClientMessage({ name, businessName, email, subject, message });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('[contact] Client portal message failed:', err.message);
+    res.status(500).json({ error: "Your message didn't send. Please email hello@dfymarketinggroup.com or call (530) 753-2013." });
   }
 });
 
