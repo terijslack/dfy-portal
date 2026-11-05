@@ -3,18 +3,18 @@
 // Tests for the Stripe webhook "front door":
 //  - a payment-link / custom-package buyer with no portal account gets one created
 //  - clients who signed up on the site are found and activated (no duplicate account)
-//  - the GoHighLevel contact + new-client tag are added after the account is saved
+//  - the welcome email goes out after the account is saved (set-password version for new accounts)
 //  - failures return 500 so Stripe retries; repeat deliveries do no harm
 //  - billing date and ended plans are recorded
 
 const mockDbQuery      = jest.fn();
 const mockConstructEvent = jest.fn();
 const mockRetrieve     = jest.fn();
-const mockUpsertGHL    = jest.fn();
+const mockWelcome      = jest.fn();
 
 jest.mock('pg', () => ({ Pool: jest.fn(() => ({ query: mockDbQuery })) }));
 jest.mock('bcryptjs', () => ({ hash: jest.fn().mockResolvedValue('hashed-random-password') }));
-jest.mock('../services/ghl', () => ({ upsertGHLContact: (...a) => mockUpsertGHL(...a) }));
+jest.mock('../services/welcomeEmail', () => ({ sendWelcomeEmail: (...a) => mockWelcome(...a) }));
 jest.mock('stripe', () => () => ({
   webhooks: { constructEvent: (...a) => mockConstructEvent(...a) },
   checkout: { sessions: { retrieve: (...a) => mockRetrieve(...a) } },
@@ -66,9 +66,8 @@ function paymentLinkEvent(overrides = {}) {
 }
 
 beforeEach(() => {
-  mockDbQuery.mockReset(); mockRetrieve.mockReset(); mockUpsertGHL.mockReset();
-  mockUpsertGHL.mockResolvedValue({});
-  delete process.env.GHL_API_KEY; delete process.env.GHL_LOCATION_ID;
+  mockDbQuery.mockReset(); mockRetrieve.mockReset(); mockWelcome.mockReset();
+  mockWelcome.mockResolvedValue({ sent: true });
   jest.spyOn(console, 'log').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -77,7 +76,6 @@ afterEach(() => jest.restoreAllMocks());
 
 describe('payment-link / custom-package buyer (no portal account yet)', () => {
   beforeEach(() => {
-    process.env.GHL_API_KEY = 'k'; process.env.GHL_LOCATION_ID = 'loc';
     mockRetrieve.mockResolvedValue({
       line_items: { data: [{ price: { id: 'price_custom', product: { name: "Lu'Ro Jewelers - Monthly Marketing Package" } } }] },
     });
@@ -98,10 +96,10 @@ describe('payment-link / custom-package buyer (no portal account yet)', () => {
     expect(update[1]).toEqual(['cus_1', 'sub_1', "Lu'Ro Jewelers - Monthly Marketing Package", 99]);
   });
 
-  test('adds the contact and new-client tag in GHL', async () => {
+  test('sends the welcome email with a set-password link (they never chose a password)', async () => {
     await fire(paymentLinkEvent());
-    expect(mockUpsertGHL).toHaveBeenCalledTimes(1);
-    expect(mockUpsertGHL.mock.calls[0][0]).toMatchObject({ email: 'lu@ro.com', planName: "Lu'Ro Jewelers - Monthly Marketing Package" });
+    expect(mockWelcome).toHaveBeenCalledTimes(1);
+    expect(mockWelcome.mock.calls[0][0]).toEqual({ clientId: 99, planName: "Lu'Ro Jewelers - Monthly Marketing Package", needsPassword: true });
   });
 
   test('falls back to "Custom Plan" if Stripe cannot say what was bought', async () => {
@@ -123,6 +121,7 @@ describe('client who signed up on the site', () => {
     await fire(paymentLinkEvent({ metadata: { userId: '5', plan: 'Growth Engine', email: 'dana@x.com' }, customer_details: null }));
     expect(sqlCalls(/INSERT INTO clients/)).toHaveLength(0);
     expect(sqlCalls(/UPDATE clients\s+SET\s+status/)[0][1]).toEqual(['cus_1', 'sub_1', 'Growth Engine', 5]);
+    expect(mockWelcome.mock.calls[0][0]).toEqual({ clientId: 5, planName: 'Growth Engine', needsPassword: false });
   });
 
   test('is found by email when there is no userId', async () => {
@@ -158,20 +157,27 @@ describe('repeat deliveries and failures', () => {
     expect(res.json).not.toHaveBeenCalledWith({ received: true });
   });
 
-  test('GHL failure returns 500 so Stripe retries — but the account is already saved', async () => {
-    process.env.GHL_API_KEY = 'k'; process.env.GHL_LOCATION_ID = 'loc';
+  test('welcome email failure returns 500 so Stripe retries — but the account is already saved', async () => {
     setDb({ existing: { id: 5, name: 'Dana', email: 'dana@x.com', stripe_price_id: null } });
-    mockUpsertGHL.mockRejectedValue(new Error('GHL down'));
+    mockWelcome.mockRejectedValue(new Error('Gmail down'));
     const res = await fire(paymentLinkEvent({ metadata: { userId: '5', plan: 'Growth Engine' } }));
     expect(sqlCalls(/UPDATE clients\s+SET\s+status/)).toHaveLength(1);
     expect(res.status).toHaveBeenCalledWith(500);
   });
 
-  test('GHL not configured: the account is still created and the webhook succeeds', async () => {
+  test('email not set up: the account is still activated and the webhook succeeds', async () => {
     setDb({ existing: { id: 5, name: 'Dana', email: 'dana@x.com', stripe_price_id: null } });
+    mockWelcome.mockResolvedValue({ skipped: 'not-configured' });
     const res = await fire(paymentLinkEvent({ metadata: { userId: '5', plan: 'Growth Engine' } }));
-    expect(mockUpsertGHL).not.toHaveBeenCalled();
+    expect(sqlCalls(/UPDATE clients\s+SET\s+status/)).toHaveLength(1);
     expect(res.json).toHaveBeenCalledWith({ received: true });
+  });
+
+  test('the admin $1 test clears the "already sent" mark so every test run gets the email', async () => {
+    setDb({ existing: { id: 7, name: 'Test', email: 'stripe-test@dfymarketinggroup.com', stripe_price_id: null } });
+    await fire(paymentLinkEvent({ metadata: { userId: '7', plan: 'Test Subscription', isTest: 'true' } }));
+    expect(sqlCalls(/welcome_email_sent_at = NULL/)[0][1]).toEqual([7]);
+    expect(mockWelcome).toHaveBeenCalledTimes(1);
   });
 
   test('a checkout with no email and no userId fails loudly (500) instead of guessing', async () => {
