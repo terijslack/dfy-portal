@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
       addInquiryLead({ id: row.id, name: name.trim(), email: email.trim(), message: message.trim(), created_at: row.created_at })
         .catch(err => console.error('[contact] Could not add lead to contacts:', err.message));
     }
-    // Best-effort — a GHL failure must never break the form response
+    // Best-effort — an email failure must never break the form response
     sendContactInquiry({ name: name.trim(), email: email.trim(), message: message.trim() })
       .catch(err => console.error('[contact] Email notification failed:', err.message));
     res.json({ success: true });

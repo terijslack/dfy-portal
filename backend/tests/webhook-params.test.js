@@ -39,7 +39,6 @@ describe('stripe webhook — checkout.session.completed UPDATE parameter count',
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ upsertGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY     = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';

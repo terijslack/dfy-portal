@@ -162,8 +162,6 @@ describe('stripe.js /create-checkout — price ID forwarded to Stripe', () => {
     // Mock bcryptjs
     jest.mock('bcryptjs', () => ({ hash: jest.fn().mockResolvedValue('hashed') }));
 
-    // Mock GHL service
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     // Set Stripe key so the handler takes the real checkout path
     process.env.STRIPE_SECRET_KEY = 'sk_test_dummy';
@@ -246,7 +244,6 @@ describe('stripe.js /create-checkout-session — plan key → price ID → Strip
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn().mockResolvedValue('hashed') }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY = 'sk_test_dummy';
     process.env.APP_URL = 'https://example.com';
@@ -333,7 +330,6 @@ describe('stripe.js webhook — checkout.session.completed activates correct pla
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ upsertGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY    = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';
@@ -445,7 +441,6 @@ describe('stripe.js webhook — customer.subscription.updated syncs plan + price
     }));
 
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY    = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';
@@ -517,7 +512,6 @@ describe('stripe.js webhook — customer.subscription.updated syncs plan + price
       Pool: jest.fn().mockImplementation(() => ({ query: mockQuery })),
     }));
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     const handler = buildWebhookHandler();
     const req = { headers: { 'stripe-signature': 'sig_dummy' }, body: Buffer.from('{}') };
@@ -559,7 +553,6 @@ describe('stripe.js /create-checkout — env-var override price IDs are validate
       })),
     }));
     jest.mock('bcryptjs', () => ({ hash: jest.fn().mockResolvedValue('hashed') }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY = 'sk_test_dummy';
     process.env.APP_URL = 'https://example.com';
@@ -614,7 +607,6 @@ describe('stripe.js /create-checkout-session — env-var override price IDs forw
       })),
     }));
     jest.mock('bcryptjs', () => ({ hash: jest.fn().mockResolvedValue('hashed') }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY = 'sk_test_dummy';
     process.env.APP_URL = 'https://example.com';
@@ -663,7 +655,6 @@ describe('stripe.js webhook — bad signature returns 400', () => {
       Pool: jest.fn().mockImplementation(() => ({ query: jest.fn() })),
     }));
     jest.mock('bcryptjs', () => ({ hash: jest.fn() }));
-    jest.mock('../services/ghl', () => ({ createGHLContact: jest.fn() }));
 
     process.env.STRIPE_SECRET_KEY     = 'sk_test_dummy';
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_dummy';
