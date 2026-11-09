@@ -83,43 +83,41 @@ describe('POST /api/contact/client — portal Send a Message', () => {
 });
 
 describe('sendClientMessage — goes to hello@', () => {
-  let mockAxios;
+  let mailer;
   let sendClientMessage;
 
   beforeAll(() => {
     jest.resetModules();
     jest.unmock('../services/email');
-    mockAxios = { get: jest.fn(), post: jest.fn() };
-    jest.mock('axios', () => mockAxios);
-    delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-    process.env.GHL_API_KEY = 'ghl_test';
-    process.env.GHL_LOCATION_ID = 'loc_test';
+    mailer = {
+      isConfigured: jest.fn(() => true),
+      sendMail: jest.fn().mockResolvedValue(),
+      TEAM: () => 'hello@dfymarketinggroup.com',
+    };
+    jest.doMock('../services/mailer', () => mailer);
     ({ sendClientMessage } = require('../services/email'));
   });
 
-  afterAll(() => {
-    delete process.env.GHL_API_KEY;
-    delete process.env.GHL_LOCATION_ID;
-  });
+  afterAll(() => jest.dontMock('../services/mailer'));
 
   test('sends to the hello@ inbox with a clear subject and escaped content', async () => {
-    mockAxios.get.mockResolvedValue({ data: { contact: { id: 'contact_hello' } } });
-    mockAxios.post.mockImplementation((url) => {
-      if (/conversations\/messages/.test(url)) return Promise.resolve({ data: {} });
-      return Promise.resolve({ data: { conversation: { id: 'conv_1' } } });
-    });
-
     await sendClientMessage({
       name: 'Lucy', businessName: "Lu'Ro", email: 'lucy@luro.test',
       subject: 'Question', message: '<b>hi</b>',
     });
+    const msg = mailer.sendMail.mock.calls[0][0];
+    expect(msg.to).toBe('hello@dfymarketinggroup.com');
+    expect(msg.replyTo).toBe('lucy@luro.test');
+    expect(msg.subject).toBe("Portal message from Lu'Ro: Question");
+    expect(msg.html).toContain('&lt;b&gt;hi&lt;/b&gt;');
+    expect(msg.html).not.toContain('<b>hi</b>');
+  });
 
-    expect(mockAxios.get).toHaveBeenCalledWith(
-      expect.stringContaining('hello%40dfymarketinggroup.com'), expect.anything()
-    );
-    const msg = mockAxios.post.mock.calls.find(c => /conversations\/messages/.test(c[0]));
-    expect(msg[1].subject).toBe("Portal message from Lu'Ro: Question");
-    expect(msg[1].html).toContain('&lt;b&gt;hi&lt;/b&gt;');
-    expect(msg[1].html).not.toContain('<b>hi</b>');
+  test('throws when Gmail sending is not set up, so the client sees an error', async () => {
+    mailer.isConfigured.mockReturnValue(false);
+    mailer.sendMail.mockClear();
+    await expect(sendClientMessage({ name: 'Lucy', email: 'l@x.test', subject: 'Q', message: 'hi' }))
+      .rejects.toThrow(/GOOGLE_SERVICE_ACCOUNT_JSON/);
+    expect(mailer.sendMail).not.toHaveBeenCalled();
   });
 });

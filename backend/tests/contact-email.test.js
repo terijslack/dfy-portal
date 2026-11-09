@@ -2,7 +2,7 @@
 
 // Tests for contact-form email notification (Task B).
 // Two describe blocks:
-//   1. sendContactInquiry unit tests (GHL API calls, HTML escaping)
+//   1. sendContactInquiry unit tests (Gmail send, HTML escaping)
 //   2. POST /api/contact route tests (email sent, failure handling, validation)
 
 const express = require('express');
@@ -10,66 +10,39 @@ const request = require('supertest');
 
 // ─── 1. sendContactInquiry — unit tests ──────────────────────────────────────
 
-describe('sendContactInquiry — sends correct GHL email', () => {
-  let mockAxios;
+describe('sendContactInquiry — sends the inquiry to hello@ through Gmail', () => {
+  let mailer;
   let sendContactInquiry;
 
   beforeAll(() => {
     jest.resetModules();
-
-    mockAxios = { get: jest.fn(), post: jest.fn() };
-    jest.mock('axios', () => mockAxios);
-
-    process.env.GHL_API_KEY     = 'ghl_test';
-    process.env.GHL_LOCATION_ID = 'loc_test';
-
+    mailer = {
+      isConfigured: jest.fn(() => true),
+      sendMail: jest.fn().mockResolvedValue(),
+      TEAM: () => 'hello@dfymarketinggroup.com',
+    };
+    jest.doMock('../services/mailer', () => mailer);
     ({ sendContactInquiry } = require('../services/email'));
   });
 
-  afterAll(() => {
-    delete process.env.GHL_API_KEY;
-    delete process.env.GHL_LOCATION_ID;
-  });
+  afterAll(() => jest.dontMock('../services/mailer'));
+  beforeEach(() => { mailer.sendMail.mockClear(); mailer.isConfigured.mockReturnValue(true); });
 
-  function setupGhlMocks() {
-    mockAxios.get.mockResolvedValue({ data: { contact: { id: 'contact_hello' } } });
-    mockAxios.post.mockImplementation((url) => {
-      if (/conversations\/messages/.test(url)) return Promise.resolve({ data: {} });
-      return Promise.resolve({ data: { conversation: { id: 'conv_123' } } });
-    });
-  }
-
-  test('looks up hello@ contact and sends an email with the correct subject', async () => {
-    setupGhlMocks();
-    mockAxios.get.mockClear();
-    mockAxios.post.mockClear();
-
+  test('sends to hello@ with the right subject, and Reply goes to the visitor', async () => {
     await sendContactInquiry({ name: 'Alice', email: 'alice@test.com', message: 'Hello there' });
-
-    expect(mockAxios.get).toHaveBeenCalledWith(
-      expect.stringContaining('hello%40dfymarketinggroup.com'),
-      expect.anything()
-    );
-
-    const msgCall = mockAxios.post.mock.calls.find(c => /conversations\/messages/.test(c[0]));
-    expect(msgCall).toBeDefined();
-    expect(msgCall[1].subject).toBe('New website inquiry from Alice');
-    expect(msgCall[1].type).toBe('Email');
+    const msg = mailer.sendMail.mock.calls[0][0];
+    expect(msg.to).toBe('hello@dfymarketinggroup.com');
+    expect(msg.replyTo).toBe('alice@test.com');
+    expect(msg.subject).toBe('New website inquiry from Alice');
   });
 
   test('HTML-escapes name, email, and message to prevent markup injection', async () => {
-    setupGhlMocks();
-    mockAxios.post.mockClear();
-
     await sendContactInquiry({
       name:    '<script>alert(1)</script>',
       email:   'evil@test.com',
       message: '<img src=x onerror=alert(2)>',
     });
-
-    const msgCall = mockAxios.post.mock.calls.find(c => /conversations\/messages/.test(c[0]));
-    const html = msgCall[1].html;
-
+    const html = mailer.sendMail.mock.calls[0][0].html;
     expect(html).not.toContain('<script>');
     expect(html).not.toContain('<img src=x');
     expect(html).toContain('&lt;script&gt;');
@@ -77,13 +50,15 @@ describe('sendContactInquiry — sends correct GHL email', () => {
   });
 
   test('includes visitor email as a mailto link in the body', async () => {
-    setupGhlMocks();
-    mockAxios.post.mockClear();
-
     await sendContactInquiry({ name: 'Bob', email: 'bob@test.com', message: 'Hi' });
+    expect(mailer.sendMail.mock.calls[0][0].html).toContain('href="mailto:bob@test.com"');
+  });
 
-    const msgCall = mockAxios.post.mock.calls.find(c => /conversations\/messages/.test(c[0]));
-    expect(msgCall[1].html).toContain('href="mailto:bob@test.com"');
+  test('throws (instead of pretending) when Gmail sending is not set up', async () => {
+    mailer.isConfigured.mockReturnValue(false);
+    await expect(sendContactInquiry({ name: 'Bob', email: 'bob@test.com', message: 'Hi' }))
+      .rejects.toThrow(/GOOGLE_SERVICE_ACCOUNT_JSON/);
+    expect(mailer.sendMail).not.toHaveBeenCalled();
   });
 });
 
@@ -127,7 +102,7 @@ describe('POST /api/contact — form submission with email notification', () => 
   });
 
   test('returns {success:true} even when email sending fails', async () => {
-    mockSendContactInquiry.mockRejectedValue(new Error('GHL is down'));
+    mockSendContactInquiry.mockRejectedValue(new Error('Gmail is down'));
 
     const res = await request(app)
       .post('/api/contact')

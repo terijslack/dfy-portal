@@ -1,61 +1,20 @@
 // services/email.js — password reset + contact form emails.
-// Sends through Google Workspace (services/mailer.js) once it's set up.
-// Until then it falls back to GoHighLevel (GHL_API_KEY, GHL_LOCATION_ID),
-// which is being retired — so set up GOOGLE_SERVICE_ACCOUNT_JSON.
+// Sends through Google Workspace (services/mailer.js, GOOGLE_SERVICE_ACCOUNT_JSON).
+// GoHighLevel used to be the backup route; it was removed when GHL was cancelled.
 
-const axios = require('axios');
 const mailer = require('./mailer');
 
-const GHL_BASE = 'https://services.leadconnectorhq.com';
 const APP_URL = () => process.env.APP_URL || 'https://dfymarketinggroup.com';
 
-const GHL_HEADERS = () => ({
-  Authorization: `Bearer ${process.env.GHL_API_KEY}`,
-  'Content-Type': 'application/json',
-  Version: '2021-07-28',
-});
-
-// Find existing GHL contact by email, or create a minimal one
-async function getOrCreateContact(email) {
-  const locationId = process.env.GHL_LOCATION_ID;
-
-  // Try to find existing contact
-  try {
-    const lookup = await axios.get(
-      `${GHL_BASE}/contacts/search/duplicate?email=${encodeURIComponent(email)}&locationId=${locationId}`,
-      { headers: GHL_HEADERS() }
-    );
-    if (lookup.data?.contact?.id) return lookup.data.contact.id;
-  } catch (_) {}
-
-  // Create minimal contact if not found
-  const created = await axios.post(
-    `${GHL_BASE}/contacts/`,
-    { locationId, email },
-    { headers: GHL_HEADERS() }
-  );
-  return created.data?.contact?.id;
+// Every email here needs Gmail sending. Fail loudly (callers log it) instead of
+// pretending the email went out.
+function requireMailer() {
+  if (!mailer.isConfigured()) {
+    throw new Error('Email is not set up: GOOGLE_SERVICE_ACCOUNT_JSON is missing in Railway');
+  }
 }
 
-// Get or create a conversation for a contact
-async function getOrCreateConversation(contactId) {
-  const locationId = process.env.GHL_LOCATION_ID;
-
-      try {
-              const res = await axios.post(
-                        `${GHL_BASE}/conversations/`,
-                { contactId, locationId },
-                { headers: GHL_HEADERS() }
-                      );
-              return res.data?.conversation?.id || res.data?.id;
-      } catch (err) {
-              const data = err.response?.data;
-              if (data?.conversationId) return data.conversationId;
-              throw err;
-      }
-}
-
-// Send password reset email via GHL
+// Password reset email
 function passwordResetHtml(resetUrl) {
   return `
         <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#F5F2EA;">
@@ -76,29 +35,9 @@ function passwordResetHtml(resetUrl) {
 }
 
 async function sendPasswordReset(toEmail, resetUrl) {
-  const subject = 'Reset your DFY Portal password';
-  if (mailer.isConfigured()) {
-    await mailer.sendMail({ to: toEmail, subject, html: passwordResetHtml(resetUrl) });
-    console.log(`✅ Password reset email sent via Gmail to ${toEmail}`);
-    return;
-  }
-
-  const contactId      = await getOrCreateContact(toEmail);
-  const conversationId = await getOrCreateConversation(contactId);
-
-  await axios.post(
-    `${GHL_BASE}/conversations/messages`,
-    {
-      type:           'Email',
-      conversationId,
-      contactId,
-      subject,
-      html: passwordResetHtml(resetUrl),
-    },
-    { headers: GHL_HEADERS() }
-  );
-
-  console.log(`✅ Password reset email sent via GHL to ${toEmail}`);
+  requireMailer();
+  await mailer.sendMail({ to: toEmail, subject: 'Reset your DFY Portal password', html: passwordResetHtml(resetUrl) });
+  console.log(`✅ Password reset email sent via Gmail to ${toEmail}`);
 }
 
 // Send a contact-form inquiry to hello@dfymarketinggroup.com
@@ -124,30 +63,14 @@ function contactInquiryHtml({ name, email, message }) {
 }
 
 async function sendContactInquiry({ name, email, message }) {
-  const subject = `New website inquiry from ${name}`;
-  if (mailer.isConfigured()) {
-    // Reply-To is the person who wrote in, so hitting Reply answers them directly
-    await mailer.sendMail({ to: mailer.TEAM(), replyTo: email, subject, html: contactInquiryHtml({ name, email, message }) });
-    console.log(`✅ Contact inquiry email sent via Gmail for ${email}`);
-    return;
-  }
-
-  const contactId      = await getOrCreateContact('hello@dfymarketinggroup.com');
-  const conversationId = await getOrCreateConversation(contactId);
-
-  await axios.post(
-    `${GHL_BASE}/conversations/messages`,
-    {
-      type:           'Email',
-      conversationId,
-      contactId,
-      subject,
-      html: contactInquiryHtml({ name, email, message }),
-    },
-    { headers: GHL_HEADERS() }
-  );
-
-  console.log(`✅ Contact inquiry email sent for ${email}`);
+  requireMailer();
+  // Reply-To is the person who wrote in, so hitting Reply answers them directly
+  await mailer.sendMail({
+    to: mailer.TEAM(), replyTo: email,
+    subject: `New website inquiry from ${name}`,
+    html: contactInquiryHtml({ name, email, message }),
+  });
+  console.log(`✅ Contact inquiry email sent via Gmail for ${email}`);
 }
 
 // A message a logged-in client sent from the portal's Contact Us page.
@@ -177,24 +100,14 @@ function clientMessageHtml({ name, businessName, email, subject, message }) {
 }
 
 async function sendClientMessage({ name, businessName, email, subject, message }) {
+  requireMailer();
   const who = businessName || name;
-  const emailSubject = `Portal message from ${who}: ${subject}`;
-  const html = clientMessageHtml({ name, businessName, email, subject, message });
-  if (mailer.isConfigured()) {
-    await mailer.sendMail({ to: mailer.TEAM(), replyTo: email, subject: emailSubject, html });
-    console.log(`✅ Client portal message sent via Gmail for ${email}`);
-    return;
-  }
-
-  // Fallback while Google Workspace sending isn't set up (GHL is being retired)
-  const contactId      = await getOrCreateContact('hello@dfymarketinggroup.com');
-  const conversationId = await getOrCreateConversation(contactId);
-  await axios.post(
-    `${GHL_BASE}/conversations/messages`,
-    { type: 'Email', conversationId, contactId, subject: emailSubject, html },
-    { headers: GHL_HEADERS() }
-  );
-  console.log(`✅ Client portal message sent for ${email}`);
+  await mailer.sendMail({
+    to: mailer.TEAM(), replyTo: email,
+    subject: `Portal message from ${who}: ${subject}`,
+    html: clientMessageHtml({ name, businessName, email, subject, message }),
+  });
+  console.log(`✅ Client portal message sent via Gmail for ${email}`);
 }
 
 function escapeHtml(str) {

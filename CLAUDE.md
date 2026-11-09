@@ -3,7 +3,7 @@
 ## What This Is
 A client-facing portal for Done For You Marketing (DFY). Clients log in to review/approve social posts, manage their subscription, and complete onboarding. Teri is the admin.
 
-**Stack:** Node.js/Express · PostgreSQL (Railway) · Stripe (subscriptions) · GoHighLevel/GHL (marketing backend)  
+**Stack:** Node.js/Express · PostgreSQL (Railway) · Stripe (subscriptions) · Gmail API (email) · Metricool (social posts)  
 **Deployed:** Railway  
 **Built in:** Replit, pushed to GitHub
 
@@ -25,8 +25,9 @@ backend/
     socials.js                   — social account connections
     brandAssets.js               — logo + content uploads
   services/
-    ghl.js                       — GoHighLevel API calls
-    email.js                     — email sending
+    mailer.js                    — sends email through Gmail (Google Workspace service account)
+    email.js                     — password reset + contact form emails (uses mailer.js)
+    crm.js                       — admin Contacts + Pipeline (leads from forms, clients)
     supabase-storage.js          — file uploads
   middleware/
     auth.js                      — requireLogin, requireAdmin middleware
@@ -79,7 +80,6 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 - Status: `status` ('pending' → 'active'), `subscription_status` ('active', 'paused', 'cancelling', 'cancelled', 'past_due')
 - Stripe: `stripe_customer_id`, `stripe_subscription_id`, `stripe_price_id`
 - Plan: `plan` (plan name string), `billing_date`, `subscription_start_date`
-- GHL: `ghl_location_id`, `ghl_contact_id` — **may not exist yet in live DB**
 
 **`posts`** — social media posts. `source = 'metricool'` rows are synced from Metricool drafts by `backend/services/metricoolSync.js` (every 10 min + when a client opens /posts). Edit those in Metricool, not in the portal.
 
@@ -98,7 +98,7 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 1. Client fills out signup form → POST `/api/stripe/create-checkout` (or `/create-checkout-session` for 2-step)
 2. Stripe checkout page collects card
 3. After payment, Stripe POSTs to `/api/stripe/webhook`
-4. Webhook activates the client in the DB and creates their GHL contact
+4. Webhook activates the client in the DB, moves their Pipeline deal to Won, and sends the welcome email
 5. Client lands on `/payment-success`
 
 **Subscription management** (account.js): pause, resume, cancel, and change-plan all make real Stripe API calls using `stripe_subscription_id`.
@@ -107,16 +107,9 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 
 ---
 
-## GHL (GoHighLevel) Integration
+## GoHighLevel (retired)
 
-**Current state:** `backend/services/ghl.js` has two functions:
-- `createGHLContact` — called from Stripe webhook when a client pays; creates a contact in the **agency master** GHL location
-- `syncContactToGHL` — called when client saves profile; updates that contact with full profile data
-
-**What's NOT yet done — and the planned approach needs rethinking:**
-- GHL sub-account creation (`createGHLSubAccount`) — attempted in ~/dfy-portal but does not work
-- Posts wired to GHL Social Planner — also will not work as originally planned; new approach TBD
-- Do NOT implement these until Teri decides on a new plan
+DFY no longer uses GoHighLevel (cancelled Nov 2026). The portal has no GHL connection: email goes through Gmail, leads and deals live in the admin Contacts and Pipeline, and social posts run through Metricool. The only GHL leftovers are on purpose: the admin "Import from GoHighLevel" button (reads exported CSV files, no connection) and the `ghl_id` columns on `contacts` and `opportunities` that remember where imported records came from.
 
 ---
 
@@ -126,9 +119,8 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 DATABASE_URL              — PostgreSQL connection string
 STRIPE_SECRET_KEY         — Stripe secret key
 STRIPE_WEBHOOK_SECRET     — Stripe webhook signing secret
-GHL_API_KEY               — GoHighLevel agency API key
-GHL_LOCATION_ID           — GHL agency master location ID
-GHL_AGENCY_ID             — GHL agency/company ID (needed for sub-accounts)
+GOOGLE_SERVICE_ACCOUNT_JSON — Gmail sending (all portal email)
+METRICOOL_USER_TOKEN / METRICOOL_USER_ID — Metricool posts
 APP_URL                   — Public URL (used for Stripe redirect URLs)
 JWT_SECRET                — Used to sign login tokens
 ```
@@ -137,9 +129,7 @@ JWT_SECRET                — Used to sign login tokens
 
 ## Known Issues / Pending Decisions
 
-- **GHL sub-account creation does not work** — the approach in ~/dfy-portal was abandoned
 - **Posts run through Metricool (decided Oct 30, 2026).** DFY saves a post as a *draft* on the client's Metricool brand → it appears in the portal as "Needs approval" → Approve flips it to scheduled in Metricool; Request Changes stores notes, and when DFY edits the draft in Metricool it comes back as "Needs approval" marked revised. Needs METRICOOL_USER_TOKEN / METRICOOL_USER_ID in Railway and a Metricool brand ID per client (admin → Account).
-- Do not touch `ghl.js` for sub-accounts until there is a clear new plan
 
 ---
 

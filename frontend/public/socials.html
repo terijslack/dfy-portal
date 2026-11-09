@@ -204,7 +204,7 @@
       margin-bottom: 14px;
     }
 
-    /* Engagement stats row — populated by GHL */
+    /* Engagement stats row */
     .post-engagement {
       display: flex;
       gap: 20px;
@@ -506,7 +506,7 @@
           const nets = networksOf(post);
           const platform = nets[0] || 'other';
 
-          // Engagement stats — GHL data goes here once connected
+          // Engagement stats (shown when the post has them)
           // Each stat checks for a field; falls back to dash if not present
           const hasEngagement = post.likes != null || post.shares != null || post.comments != null || post.reach != null;
           const engagementHtml = hasEngagement ? `
