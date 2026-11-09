@@ -66,6 +66,7 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 | `/admin/dashboard` | admin-dashboard.html | Admin — landing page after login: what needs DFY across all clients (`GET /api/admin/dashboard`) |
 | `/admin` | admin.html | Admin (Teri) only — Accounts; `?client=ID&tab=posts|newsletter|activity` opens an account on a tab |
 | `/landing` | landing.html | Public marketing |
+| `/free` | free.html | Public marketing — free guide + free GBP audit in one page (Instagram comment DMs link here) |
 | `/free-guide` | free-guide.html | Public marketing |
 | `/privacy` | privacy.html | Public |
 

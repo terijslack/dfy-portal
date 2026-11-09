@@ -118,6 +118,33 @@ async function addGbpAuditLead(request) {
   return contact.id;
 }
 
+// A free guide download ("7 Proven Posts Any Trade Can Steal") → contact +
+// timeline + a New Lead deal. Same as the old GoHighLevel "Guide download"
+// workflow (deal named after the person, no dollar value).
+async function addGuideLead(request) {
+  const { id, name, email, created_at } = request;
+  const contact = await upsertContact(pool, { name, email, source: 'Free guide' });
+  const ref = id ? `guide:${id}` : null;
+  const fresh = await logActivity(pool, contact.id, 'form',
+    'Downloaded the free guide: 7 Proven Posts Any Trade Can Steal', ref);
+  if (!fresh) return contact.id;
+  if (created_at && ref) {
+    await pool.query('UPDATE contact_activity SET created_at = $2 WHERE ref = $1', [ref, created_at]);
+  }
+  const open = await pool.query(
+    'SELECT id FROM opportunities WHERE contact_id = $1 AND stage = ANY($2)',
+    [contact.id, OPEN_STAGE_KEYS]
+  );
+  if (!open.rows.length) {
+    await pool.query(
+      `INSERT INTO opportunities (contact_id, title, stage, source, origin, created_at, stage_changed_at)
+       VALUES ($1, $2, 'new', 'Free guide', 'website', COALESCE($3, NOW()), COALESCE($3, NOW()))`,
+      [contact.id, `${clean(name) || email} — free guide`, created_at || null]
+    );
+  }
+  return contact.id;
+}
+
 // Bring the contacts list up to date with the clients table and any contact
 // form messages that came in before contacts existed. Safe to run any time.
 const BILLING_WORDS = {
@@ -239,6 +266,18 @@ async function runSync() {
   } catch (err) {
     if (err.code !== '42P01') throw err;
   }
+
+  // Free guide downloads that didn't make it into Contacts
+  try {
+    const guides = (await pool.query(
+      `SELECT g.* FROM guide_requests g
+       WHERE NOT EXISTS (SELECT 1 FROM contact_activity a WHERE a.ref = 'guide:' || g.id)
+       ORDER BY g.created_at ASC`
+    )).rows;
+    for (const g of guides) await addGuideLead(g);
+  } catch (err) {
+    if (err.code !== '42P01') throw err;
+  }
 }
 
-module.exports = { pool, clean, planValue, logActivity, upsertContact, addInquiryLead, addGbpAuditLead, syncAll, stageLabel };
+module.exports = { pool, clean, planValue, logActivity, upsertContact, addInquiryLead, addGbpAuditLead, addGuideLead, syncAll, stageLabel };

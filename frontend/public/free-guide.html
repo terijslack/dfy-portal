@@ -201,7 +201,6 @@
     }
 
     .form-card {
-      min-height: 780px;
       overflow: hidden;
       padding: 34px 28px 22px;
       background: var(--cream);
@@ -229,17 +228,39 @@
       line-height: 1.55;
     }
 
-    .form-frame {
+    /* Guide form (replaces the GoHighLevel form) */
+    .guide-form { display: grid; gap: 16px; }
+    .gf-field label { display: block; font-size: 13px; font-weight: 600; color: var(--forest); margin-bottom: 6px; }
+    .gf-field input {
       width: 100%;
-      height: 697px;
-      margin-top: -52px;
+      font: inherit;
+      font-size: 15px;
+      color: var(--forest);
+      background: #fff;
+      border: 1px solid rgba(31,61,44,0.18);
+      border-radius: 8px;
+      padding: 12px 14px;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-
-    #inline-kzv1Ob1IqTbQ8Wf05eMY {
-      display: block;
-      width: 100%;
-      height: 100%;
+    .gf-field input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(45,107,79,0.15); }
+    .gf-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .gf-submit {
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 22px;
+      cursor: pointer;
+      transition: opacity 0.15s;
     }
+    .gf-submit:hover { opacity: 0.9; }
+    .gf-submit:disabled { opacity: 0.6; cursor: default; }
+    .gf-error { display: none; font-size: 14px; color: var(--rust); background: #FBEDE6; border-radius: 8px; padding: 10px 14px; }
+    .gf-fine { font-size: 12px; color: var(--slate); line-height: 1.5; }
+    .gf-fine a { color: var(--green); }
 
     .guide-footer {
       padding: 24px 20px;
@@ -266,8 +287,7 @@
       .guide-grid { grid-template-columns: 1fr; gap: 42px; }
       .guide-copy { padding-top: 0; }
       h1 { max-width: 520px; font-size: clamp(2.85rem, 13vw, 4.1rem); }
-      .form-card { min-height: 780px; padding: 28px 16px 18px; }
-      .form-frame { margin-top: -42px; }
+      .form-card { padding: 28px 18px 22px; }
     }
 
     @media (max-width: 600px) {
@@ -322,30 +342,25 @@
       </section>
 
       <section class="form-card">
-        <h2>Get the guide in your inbox</h2>
-        <p>Leave your details below and we’ll send it your way.</p>
-        <div class="form-frame">
-          <iframe
-            src="https://api.leadconnectorhq.com/widget/form/kzv1Ob1IqTbQ8Wf05eMY"
-            style="width:100%;height:100%;border:none;border-radius:4px"
-            id="inline-kzv1Ob1IqTbQ8Wf05eMY"
-            data-layout="{'id':'INLINE'}"
-            data-trigger-type="alwaysShow"
-            data-trigger-value=""
-            data-activation-type="alwaysActivated"
-            data-activation-value=""
-            data-deactivation-type="neverDeactivate"
-            data-deactivation-value=""
-            data-form-name="Get Your Free Guide - 7 Posts You Can Steal"
-            data-height="697"
-            data-layout-iframe-id="inline-kzv1Ob1IqTbQ8Wf05eMY"
-            data-form-id="kzv1Ob1IqTbQ8Wf05eMY"
-            data-cookie-consent="true"
-            data-cookie-consent-provider="auto"
-            title="Get Your Free Guide - 7 Posts You Can Steal">
-          </iframe>
-          <script src="https://link.msgsndr.com/js/form_embed.js"></script>
-        </div>
+        <h2>Get the free guide</h2>
+        <p>Open it right away. We'll email you a copy too.</p>
+        <form class="guide-form" id="guideForm" novalidate>
+          <div class="gf-field">
+            <label for="gName">Name</label>
+            <input id="gName" name="name" type="text" autocomplete="name" required maxlength="120">
+          </div>
+          <div class="gf-field">
+            <label for="gEmail">Email</label>
+            <input id="gEmail" name="email" type="email" autocomplete="email" required maxlength="200">
+          </div>
+          <div class="gf-trap" aria-hidden="true">
+            <label for="gWebsite">Company website</label>
+            <input id="gWebsite" name="company_website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="gf-error" id="guideError" role="alert"></p>
+          <button type="submit" class="gf-submit" id="guideSubmit">Get the free guide</button>
+          <p class="gf-fine">We'll only use your email to send the guide and the occasional marketing tip. <a href="/privacy">Privacy Policy</a></p>
+        </form>
       </section>
     </div>
   </main>
@@ -354,5 +369,37 @@
     <p>&copy; 2026 Done For You Marketing &mdash; <a href="/">dfymarketinggroup.com</a></p>
     <p style="margin-top:8px;"><a href="/privacy">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/privacy?tab=tos">Terms of Service</a></p>
   </footer>
+
+  <script>
+    (function () {
+      const form = document.getElementById('guideForm');
+      const btn = document.getElementById('guideSubmit');
+      const errBox = document.getElementById('guideError');
+      const showError = m => { errBox.textContent = m; errBox.style.display = 'block'; };
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        errBox.style.display = 'none';
+        const d = Object.fromEntries(new FormData(form).entries());
+        for (const k of Object.keys(d)) d[k] = String(d[k]).trim();
+        d.page = 'free-guide';
+        if (!d.name || !d.email) return showError('Please fill in your name and email.');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return showError('Please check your email address.');
+        btn.disabled = true; btn.textContent = 'Sending...';
+        try {
+          const res = await fetch('/api/contact/guide', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
+          if (res.ok) {
+            try { if (window.fbq) fbq('track', 'Lead', { content_name: 'Free guide' }); } catch (_) {}
+            window.location.href = '/free-guide/thank-you';
+            return;
+          }
+          const out = await res.json().catch(() => ({}));
+          showError(out.error || 'Something went wrong. Please try again.');
+        } catch (_) {
+          showError('Network error. Please check your connection and try again.');
+        }
+        btn.disabled = false; btn.textContent = 'Get the free guide';
+      });
+    })();
+  </script>
 </body>
 </html>
