@@ -170,6 +170,11 @@ app.get('/landing', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/landing.html'));
 });
 
+// Free offers page (guide + GBP audit) — where the Instagram comment DMs link to
+app.get('/free', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/public/free.html'));
+});
+
 app.get('/free-guide', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/public/free-guide.html'));
 });

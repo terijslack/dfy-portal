@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const { sendContactInquiry, sendClientMessage } = require('../services/email');
-const { addInquiryLead, addGbpAuditLead } = require('../services/crm');
+const { addInquiryLead, addGbpAuditLead, addGuideLead } = require('../services/crm');
 const gbpAuditEmail = require('../services/gbpAuditEmail');
+const guideEmail = require('../services/guideEmail');
 const { requireLogin } = require('../middleware/auth');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -80,7 +81,7 @@ router.post('/gbp-audit', async (req, res) => {
     return res.status(400).json({ error: 'Please check your email address.' });
   }
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || 'unknown';
-  if (tooMany(ip)) {
+  if (tooMany(`audit:${ip}`)) {
     return res.status(429).json({ error: "We've already got your request. If you need us sooner, email hello@dfymarketinggroup.com or call (530) 753-2013." });
   }
 
@@ -104,6 +105,50 @@ router.post('/gbp-audit', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('[gbp-audit] Could not save request:', err.message);
+    res.status(500).json({ error: "Something went wrong. Please try again, or email hello@dfymarketinggroup.com." });
+  }
+});
+
+// Free guide form ("7 Proven Posts Any Trade Can Steal") on /free and
+// /free-guide (replaces the GoHighLevel form and its "Guide download"
+// workflow). Saves the request, adds the person to Contacts + Pipeline (New
+// Lead, source "Free guide"), emails them the guide, and returns the download
+// link so the page can show it right away.
+router.post('/guide', async (req, res) => {
+  const body = req.body || {};
+  if (body.company_website) return res.json({ success: true, downloadUrl: guideEmail.GUIDE_PATH });
+
+  const name = String(body.name || '').trim().slice(0, MAX_LEN.name);
+  const email = String(body.email || '').trim().slice(0, MAX_LEN.email);
+  const page = String(body.page || '').trim().slice(0, 40) || null;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Please fill in your name and email.' });
+  }
+  if (!EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Please check your email address.' });
+  }
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || 'unknown';
+  if (tooMany(`guide:${ip}`)) {
+    // They already have it: just hand over the link again
+    return res.json({ success: true, downloadUrl: guideEmail.GUIDE_PATH });
+  }
+
+  try {
+    const saved = await pool.query(
+      'INSERT INTO guide_requests (name, email, page) VALUES ($1, $2, $3) RETURNING id, created_at',
+      [name, email, page]
+    );
+    const row = saved && saved.rows && saved.rows[0];
+    const request = { name, email, page, id: row && row.id, created_at: row && row.created_at };
+
+    addGuideLead(request)
+      .catch(err => console.error('[guide] Could not add lead to contacts:', err.message));
+    guideEmail.sendGuide(request)
+      .catch(err => console.error('[guide] Guide email failed:', err.response?.data?.error?.message || err.message));
+
+    res.json({ success: true, downloadUrl: guideEmail.GUIDE_PATH });
+  } catch (err) {
+    console.error('[guide] Could not save request:', err.message);
     res.status(500).json({ error: "Something went wrong. Please try again, or email hello@dfymarketinggroup.com." });
   }
 });

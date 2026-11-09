@@ -182,6 +182,17 @@ async function runMigrations(pool) {
       notes          TEXT,
       created_at     TIMESTAMPTZ DEFAULT NOW()
     )`,
+
+    // ── Free guide ("7 Proven Posts Any Trade Can Steal") form ──
+    // Replaces the GoHighLevel "Get Your Free Guide" form. Each request also
+    // becomes a contact + a New Lead deal in the admin portal.
+    `CREATE TABLE IF NOT EXISTS guide_requests (
+      id          SERIAL PRIMARY KEY,
+      name        TEXT NOT NULL,
+      email       TEXT NOT NULL,
+      page        TEXT,
+      created_at  TIMESTAMPTZ DEFAULT NOW()
+    )`,
   ];
 
   for (const sql of steps) {
