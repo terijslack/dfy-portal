@@ -74,8 +74,8 @@ router.post('/gbp-audit', async (req, res) => {
 
   const f = {};
   for (const k of Object.keys(MAX_LEN)) f[k] = String(body[k] || '').trim().slice(0, MAX_LEN[k]);
-  if (!f.name || !f.business_name || !f.email || !f.phone) {
-    return res.status(400).json({ error: 'Please fill in your name, business name, email and phone.' });
+  if (!f.name || !f.business_name || !f.email) {
+    return res.status(400).json({ error: 'Please fill in your name, business name and email.' });
   }
   if (!EMAIL_RE.test(f.email)) {
     return res.status(400).json({ error: 'Please check your email address.' });
@@ -89,7 +89,7 @@ router.post('/gbp-audit', async (req, res) => {
     const saved = await pool.query(
       `INSERT INTO gbp_audit_requests (name, business_name, email, phone, gbp_link, notes)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, created_at`,
-      [f.name, f.business_name, f.email, f.phone, f.gbp_link || null, f.notes || null]
+      [f.name, f.business_name, f.email, f.phone || null, f.gbp_link || null, f.notes || null]
     );
     const row = saved && saved.rows && saved.rows[0];
     const request = { ...f, id: row && row.id, created_at: row && row.created_at };
