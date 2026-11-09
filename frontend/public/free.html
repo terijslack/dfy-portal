@@ -61,10 +61,12 @@
       background: #fff;
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo-link { display: inline-flex; align-items: center; flex: 0 0 auto; }
+    .nav-home { display: inline-flex; align-items: center; color: inherit; text-decoration: none; border-radius: 8px; }
+    .nav-home:hover .wordmark-serif { color: var(--green); }
+    .nav-home:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
     .nav-logo-crop { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; flex: 0 0 60px; }
     .nav-logo { display: block; width: 100%; height: 100%; object-fit: contain; }
-    .wordmark { display: inline-flex; align-items: baseline; gap: 7px; margin-left: -5px; color: inherit; line-height: 1; text-decoration: none; }
+    .wordmark { display: inline-flex; align-items: baseline; gap: 7px; margin-left: -5px; line-height: 1; }
     .wordmark-serif { color: var(--forest); font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; line-height: 1; letter-spacing: -0.01em; }
     .wordmark-sans { color: var(--green); font-size: 10px; font-weight: 600; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-1px); }
 
@@ -99,9 +101,46 @@
     .offers {
       display: grid;
       grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "guide audit"
+        "site  audit";
+      grid-template-rows: auto 1fr;
       gap: 24px;
       align-items: start;
     }
+    #guide { grid-area: guide; }
+    #audit { grid-area: audit; }
+    .site-card { grid-area: site; align-self: stretch; }
+
+    /* ── Visit our website card ── */
+    .site-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(235, 201, 155, 0.22), transparent 16rem),
+        var(--forest);
+      color: var(--cream);
+      border: 1px solid rgba(235, 201, 155, 0.35);
+      border-radius: 18px;
+      box-shadow: 0 18px 42px rgba(20, 54, 39, 0.28);
+      padding: 24px 28px;
+    }
+    .site-card h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .site-card h2 em { font-style: italic; font-weight: 300; color: var(--tan); }
+    .site-card > p { color: rgba(245,242,234,0.80); font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+    .btn-tan { background: var(--tan); color: var(--forest); font-weight: 700; }
+    .btn-tan svg { transition: transform 0.15s; }
+    .btn-tan:hover svg { transform: translateX(3px); }
     .offer {
       background: var(--cream);
       color: var(--slate);
@@ -240,13 +279,18 @@
     footer a:hover { color: var(--tan); }
 
     @media (max-width: 860px) {
-      .offers { grid-template-columns: 1fr; }
+      .offers {
+        grid-template-columns: 1fr;
+        grid-template-areas: "guide" "audit" "site";
+        grid-template-rows: none;
+      }
     }
     @media (max-width: 600px) {
       .site-nav { padding: 0 16px; }
       main { padding: 36px 16px 64px; }
       .intro { margin-bottom: 30px; }
-      .offer { padding: 26px 18px 22px; border-radius: 14px; }
+      .offer, .site-card { padding: 26px 18px 22px; border-radius: 14px; }
+      .site-card h2 { font-size: 24px; }
       .row { grid-template-columns: 1fr; }
       .question { padding: 18px; }
       .question-links, .question-links a { width: 100%; }
@@ -256,12 +300,12 @@
 </head>
 <body>
   <header class="site-nav">
-    <a href="/" class="nav-logo-link" aria-label="Done For You Marketing home">
+    <a href="/" class="nav-home" aria-label="Done For You Marketing, visit our website">
       <span class="nav-logo-crop" aria-hidden="true"><img class="nav-logo" src="/logo-green.png" alt="" /></span>
-    </a>
-    <a href="/" class="wordmark" aria-label="Done For You Marketing home">
-      <span class="wordmark-serif">Done For You</span>
-      <span class="wordmark-sans">Marketing</span>
+      <span class="wordmark" aria-hidden="true">
+        <span class="wordmark-serif">Done For You</span>
+        <span class="wordmark-sans">Marketing</span>
+      </span>
     </a>
   </header>
 
@@ -361,6 +405,16 @@
           <p class="fine">We'll only use your info to send your audit. <a href="/privacy">Privacy Policy</a></p>
         </form>
       </section>
+
+      <!-- Visit our website -->
+      <section class="site-card" aria-labelledby="siteTitle">
+        <h2 id="siteTitle">Rather we just <em>handle it</em> for you?</h2>
+        <p>See everything our local team does for small businesses: social media, Google Business Profile, email and websites.</p>
+        <a class="btn btn-tan" href="/">
+          Visit our website
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+        </a>
+      </section>
     </div>
 
     <section class="question" aria-label="Contact us">
@@ -372,10 +426,6 @@
         <a href="mailto:hello@dfymarketinggroup.com">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
           hello@dfymarketinggroup.com
-        </a>
-        <a href="/">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg>
-          Visit our website
         </a>
       </div>
     </section>
