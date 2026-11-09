@@ -168,6 +168,20 @@ async function runMigrations(pool) {
     `ALTER TABLE newsletters ALTER COLUMN client_notified_at DROP DEFAULT`,
     `ALTER TABLE newsletters ADD COLUMN IF NOT EXISTS client_reminded_at TIMESTAMPTZ DEFAULT NOW()`,
     `ALTER TABLE newsletters ALTER COLUMN client_reminded_at DROP DEFAULT`,
+
+    // ── Free Google Business Profile audit form (landing page) ──
+    // Replaces the GoHighLevel "GBP Survey". Each request also becomes a
+    // contact + a New Lead deal in the admin portal.
+    `CREATE TABLE IF NOT EXISTS gbp_audit_requests (
+      id             SERIAL PRIMARY KEY,
+      name           TEXT NOT NULL,
+      business_name  TEXT NOT NULL,
+      email          TEXT NOT NULL,
+      phone          TEXT,
+      gbp_link       TEXT,
+      notes          TEXT,
+      created_at     TIMESTAMPTZ DEFAULT NOW()
+    )`,
   ];
 
   for (const sql of steps) {
