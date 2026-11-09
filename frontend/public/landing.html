@@ -268,8 +268,8 @@
               <input id="aEmail" name="email" type="email" autocomplete="email" required maxlength="200">
             </div>
             <div class="audit-field">
-              <label for="aPhone">Phone</label>
-              <input id="aPhone" name="phone" type="tel" autocomplete="tel" required maxlength="40">
+              <label for="aPhone">Phone <span class="opt">(optional)</span></label>
+              <input id="aPhone" name="phone" type="tel" autocomplete="tel" maxlength="40">
             </div>
           </div>
           <div class="audit-field">
@@ -311,8 +311,8 @@
         errBox.style.display = 'none';
         const data = Object.fromEntries(new FormData(form).entries());
         for (const k of Object.keys(data)) data[k] = String(data[k]).trim();
-        if (!data.name || !data.business_name || !data.email || !data.phone) {
-          return showError('Please fill in your name, business name, email and phone.');
+        if (!data.name || !data.business_name || !data.email) {
+          return showError('Please fill in your name, business name and email.');
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
           return showError('Please check your email address.');

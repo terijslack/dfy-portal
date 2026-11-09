@@ -339,8 +339,8 @@
               <input id="aEmail" name="email" type="email" autocomplete="email" required maxlength="200">
             </div>
             <div class="field">
-              <label for="aPhone">Phone</label>
-              <input id="aPhone" name="phone" type="tel" autocomplete="tel" required maxlength="40">
+              <label for="aPhone">Phone <span class="opt">(optional)</span></label>
+              <input id="aPhone" name="phone" type="tel" autocomplete="tel" maxlength="40">
             </div>
           </div>
           <div class="field">
@@ -439,7 +439,7 @@
         e.preventDefault();
         aErr.style.display = 'none';
         const d = values(aForm);
-        if (!d.name || !d.business_name || !d.email || !d.phone) return aShow('Please fill in your name, business name, email and phone.');
+        if (!d.name || !d.business_name || !d.email) return aShow('Please fill in your name, business name and email.');
         if (!EMAIL_RE.test(d.email)) return aShow('Please check your email address.');
         aBtn.disabled = true; aBtn.textContent = 'Sending...';
         try {

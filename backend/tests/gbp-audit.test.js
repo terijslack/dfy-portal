@@ -54,14 +54,16 @@ describe('POST /api/contact/gbp-audit', () => {
     expect(res.status).toBe(200);
   });
 
-  test('requires name, business, email and phone; optional fields can be blank', async () => {
+  test('requires name, business and email; phone, link and notes are optional', async () => {
     const missing = await request(app).post('/api/contact/gbp-audit').set('X-Forwarded-For', '1.1.1.3')
-      .send({ ...good, phone: '' });
+      .send({ ...good, business_name: '' });
     expect(missing.status).toBe(400);
     const ok = await request(app).post('/api/contact/gbp-audit').set('X-Forwarded-For', '1.1.1.3')
-      .send({ ...good, gbp_link: '', notes: '' });
+      .send({ ...good, phone: '', gbp_link: '', notes: '' });
     expect(ok.status).toBe(200);
     expect(emails.sendThankYou).toHaveBeenCalledTimes(1);
+    const insert = mockQuery.mock.calls.filter(c => /INSERT INTO gbp_audit_requests/.test(c[0])).pop();
+    expect(insert[1][3]).toBeNull();
   });
 
   test('rejects a bad email address', async () => {
