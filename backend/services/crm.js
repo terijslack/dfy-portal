@@ -79,6 +79,45 @@ async function addInquiryLead(inquiry) {
   return contact.id;
 }
 
+// A free Google Business Profile audit request (landing page) → contact (with
+// business name and phone) + timeline + a New Lead deal. Same as the old
+// GoHighLevel workflows: deal named after the business, source "GBP Audit", $800.
+const GBP_AUDIT_VALUE = 800;
+
+function gbpAuditSummary({ business_name, phone, gbp_link, notes }) {
+  return [
+    `Free GBP audit request for ${clean(business_name) || 'their business'}`,
+    clean(phone) ? `Phone: ${clean(phone)}` : null,
+    clean(gbp_link) ? `Google Business Profile: ${clean(gbp_link)}` : null,
+    clean(notes) ? `Notes: ${clean(notes)}` : null,
+  ].filter(Boolean).join('\n');
+}
+
+async function addGbpAuditLead(request) {
+  const { id, name, business_name, email, phone, created_at } = request;
+  const contact = await upsertContact(pool, {
+    name, email, phone, company: business_name, source: 'Free GBP audit',
+  });
+  const ref = id ? `gbp-audit:${id}` : null;
+  const fresh = await logActivity(pool, contact.id, 'form', gbpAuditSummary(request), ref);
+  if (!fresh) return contact.id;
+  if (created_at && ref) {
+    await pool.query('UPDATE contact_activity SET created_at = $2 WHERE ref = $1', [ref, created_at]);
+  }
+  const open = await pool.query(
+    'SELECT id FROM opportunities WHERE contact_id = $1 AND stage = ANY($2)',
+    [contact.id, OPEN_STAGE_KEYS]
+  );
+  if (!open.rows.length) {
+    await pool.query(
+      `INSERT INTO opportunities (contact_id, title, value, stage, source, origin, created_at, stage_changed_at)
+       VALUES ($1, $2, $3, 'new', 'GBP Audit', 'website', COALESCE($4, NOW()), COALESCE($4, NOW()))`,
+      [contact.id, clean(business_name) || clean(name) || email, GBP_AUDIT_VALUE, created_at || null]
+    );
+  }
+  return contact.id;
+}
+
 // Bring the contacts list up to date with the clients table and any contact
 // form messages that came in before contacts existed. Safe to run any time.
 const BILLING_WORDS = {
@@ -188,6 +227,18 @@ async function runSync() {
   } catch (err) {
     if (err.code !== '42P01') throw err; // 42P01 = table doesn't exist yet; nothing to import
   }
+
+  // Free GBP audit requests that didn't make it into Contacts (e.g. a database hiccup)
+  try {
+    const audits = (await pool.query(
+      `SELECT g.* FROM gbp_audit_requests g
+       WHERE NOT EXISTS (SELECT 1 FROM contact_activity a WHERE a.ref = 'gbp-audit:' || g.id)
+       ORDER BY g.created_at ASC`
+    )).rows;
+    for (const g of audits) await addGbpAuditLead(g);
+  } catch (err) {
+    if (err.code !== '42P01') throw err;
+  }
 }
 
-module.exports = { pool, clean, planValue, logActivity, upsertContact, addInquiryLead, syncAll, stageLabel };
+module.exports = { pool, clean, planValue, logActivity, upsertContact, addInquiryLead, addGbpAuditLead, syncAll, stageLabel };
