@@ -439,6 +439,27 @@ async function handleCheckoutCompleted(session) {
     await pool.query('UPDATE clients SET stripe_price_id = $1 WHERE id = $2', [priceId, client.id]);
   }
 
+  // ── Next payment date ──
+  // Save it now so the account page never shows a blank date. The first
+  // invoice.payment_succeeded event can arrive before this account exists
+  // (Payment Link signups), so it can't be relied on for the first date.
+  if (session.subscription) {
+    try {
+      const sub = await getStripe().subscriptions.retrieve(session.subscription);
+      // Newer Stripe API versions keep the period end on the subscription item
+      const periodEnd = sub.items?.data?.[0]?.current_period_end || sub.current_period_end;
+      if (periodEnd) {
+        await pool.query(
+          'UPDATE clients SET billing_date = to_timestamp($1)::date WHERE id = $2',
+          [periodEnd, client.id]
+        );
+      }
+    } catch (err) {
+      // Not worth failing the whole signup over; the next payment event fills it in
+      console.warn('Could not save next payment date:', err.message);
+    }
+  }
+
   console.log(`✅ Plan activated — plan: ${planName}, customer: ${session.customer}`);
 
   // ── Welcome email (from Frankie, through Google Workspace) ──
