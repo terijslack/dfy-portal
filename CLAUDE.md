@@ -103,7 +103,7 @@ frontend/public/                 — all HTML, CSS, JS served to clients
 
 **Subscription management** (account.js): pause, resume, cancel, and change-plan all make real Stripe API calls using `stripe_subscription_id`.
 
-**Webhook events handled:** `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
+**Webhook events handled:** `checkout.session.completed`, `invoice.payment_succeeded` (keeps `billing_date` current), `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
 
 ---
 
