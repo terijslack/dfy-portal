@@ -114,6 +114,14 @@
         <button class="btn-secondary" id="mcSyncBtn" onclick="syncMetricool()">Sync now</button>
       </div>
       <div id="mcSyncMsg" class="mc-sync-msg"></div>
+      <div class="mc-sync-bar">
+        <div>
+          <strong>Analytics numbers from Metricool</strong>
+          <span>Followers, people reached, and Google profile clicks for their Analytics page and dashboard. Updates once a day.</span>
+        </div>
+        <button class="btn-secondary" id="statsSyncBtn" onclick="syncStatsNow()">Update numbers</button>
+      </div>
+      <div id="statsSyncMsg" class="mc-sync-msg"></div>
       <div id="addPostForm" class="add-post-form">
         <h3>Add New Post</h3>
         <div class="form-row">
@@ -1140,6 +1148,34 @@
         msg.className = 'mc-sync-msg mc-sync-err';
       }
       btn.disabled = false; btn.textContent = 'Sync now';
+    }
+
+    async function syncStatsNow() {
+      const btn = document.getElementById('statsSyncBtn');
+      const msg = document.getElementById('statsSyncMsg');
+      btn.disabled = true; btn.textContent = 'Updating…'; msg.textContent = '';
+      try {
+        const r = await fetch(`/api/admin/clients/${selectedClientId}/stats-sync`, { method: 'POST' });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Update failed');
+        if (d.error) throw new Error(`Metricool said: ${d.error}`);
+        const names = { instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok', linkedin: 'LinkedIn', google: 'Google' };
+        const got = {};
+        for (const x of d.report || []) {
+          if (x.error || !x.total) continue;
+          got[x.network] = true;
+        }
+        const found = Object.keys(got).map(n => names[n] || n);
+        msg.textContent = found.length
+          ? `Numbers updated (${d.from} to ${d.to}). Found: ${found.join(', ')}.`
+          : `Updated, but Metricool had no numbers yet for this brand (${d.from} to ${d.to}).`;
+        msg.className = 'mc-sync-msg';
+        msg.title = (d.report || []).map(x => `${x.network} ${x.metric}: ${x.error || `${x.days} days, total ${x.total}`}`).join('\n');
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.className = 'mc-sync-msg mc-sync-err';
+      }
+      btn.disabled = false; btn.textContent = 'Update numbers';
     }
 
     function statusLabel(status) {
