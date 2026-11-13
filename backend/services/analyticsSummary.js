@@ -8,11 +8,11 @@ const NAMES = { instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok', 
 
 // Which stored metrics make up each number on the page.
 // "Times seen" uses the first option that has any numbers for this client:
-// daily account views first (Meta's current numbers, all content), then
-// older per-post reach as a fallback.
+// Instagram: daily account views first, then daily reach, then per-post reach.
+// Facebook: reach of posts + reels (Meta retired page-level numbers).
 const SEEN = {
   instagram: [['views'], ['reach'], ['reach_posts', 'reach_reels']],
-  facebook:  [['media_views'], ['reach_posts']],
+  facebook:  [['reach_posts', 'reach_reels']],
   tiktok:    [['video_views']],
   linkedin:  [['impressions']],
 };

@@ -111,11 +111,11 @@ describe('summarize', () => {
       row('instagram', 'views', '2026-11-02', 300),
       row('instagram', 'reach', '2026-11-02', 90),
       row('instagram', 'reach_posts', '2026-11-02', 10),
-      row('facebook', 'media_views', '2026-11-02', 2000),
       row('facebook', 'reach_posts', '2026-11-02', 15),
+      row('facebook', 'reach_reels', '2026-11-03', 40),
     ], { period: 'this_month', today });
     const by = Object.fromEntries(s.platforms.map(p => [p.network, p.reached]));
-    expect(by).toEqual({ instagram: 300, facebook: 2000 });
+    expect(by).toEqual({ instagram: 300, facebook: 55 });
   });
 
   test('falls back to account reach when there are no views', () => {
