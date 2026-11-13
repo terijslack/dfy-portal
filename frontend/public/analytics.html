@@ -261,7 +261,7 @@
         html += `<div class="an-card">
           <div class="an-card-head"><div class="an-card-title">By platform</div><div class="an-card-note">${esc(words.now.replace(/^in /, ''))}</div></div>
           <table class="an-table">
-            <thead><tr><th>Platform</th><th>Followers</th><th>People reached</th><th>Likes, comments, shares</th><th class="an-hide-sm">Posts</th></tr></thead>
+            <thead><tr><th>Platform</th><th>Followers</th><th>Times seen</th><th>Likes, comments, shares</th><th class="an-hide-sm">Posts</th></tr></thead>
             <tbody>${d.platforms.map(p => `<tr>
               <td><span class="an-net"><span class="an-net-icon">${ICONS[p.network] || ''}</span>${esc(p.name)}</span></td>
               <td>${fmt(p.followers)}${gain(p.followersGained)}</td>

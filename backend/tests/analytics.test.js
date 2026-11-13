@@ -106,6 +106,23 @@ describe('summarize', () => {
     expect(s.totals.seenChange).toBeNull();
   });
 
+  test('daily account views win over per-post reach when Metricool has them', () => {
+    const s = summarize([
+      row('instagram', 'views', '2026-11-02', 300),
+      row('instagram', 'reach', '2026-11-02', 90),
+      row('instagram', 'reach_posts', '2026-11-02', 10),
+      row('facebook', 'media_views', '2026-11-02', 2000),
+      row('facebook', 'reach_posts', '2026-11-02', 15),
+    ], { period: 'this_month', today });
+    const by = Object.fromEntries(s.platforms.map(p => [p.network, p.reached]));
+    expect(by).toEqual({ instagram: 300, facebook: 2000 });
+  });
+
+  test('falls back to account reach when there are no views', () => {
+    const s = summarize([row('instagram', 'reach', '2026-11-02', 90), row('instagram', 'reach_posts', '2026-11-02', 10)], { period: 'this_month', today });
+    expect(s.platforms[0].reached).toBe(90);
+  });
+
   test('TikTok counts video views as reach and likes + comments + shares as interactions', () => {
     const s = summarize([
       row('tiktok', 'video_views', '2026-11-02', 900),
