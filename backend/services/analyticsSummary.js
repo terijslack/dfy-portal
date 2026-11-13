@@ -6,8 +6,16 @@
 const SOCIAL = ['instagram', 'facebook', 'tiktok', 'linkedin'];
 const NAMES = { instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok', linkedin: 'LinkedIn', google: 'Google profile' };
 
-// Which stored metrics make up each number on the page
-const REACHED = { instagram: ['reach_posts', 'reach_reels'], facebook: ['reach_posts'], tiktok: ['video_views'], linkedin: ['impressions'] };
+// Which stored metrics make up each number on the page.
+// "Times seen" uses the first option that has any numbers for this client:
+// daily account views first (Meta's current numbers, all content), then
+// older per-post reach as a fallback.
+const SEEN = {
+  instagram: [['views'], ['reach'], ['reach_posts', 'reach_reels']],
+  facebook:  [['media_views'], ['reach_posts']],
+  tiktok:    [['video_views']],
+  linkedin:  [['impressions']],
+};
 const INTERACTIONS = { instagram: ['interactions'], facebook: ['interactions'], tiktok: ['likes', 'comments', 'shares'], linkedin: ['interactions'] };
 const POSTS = { instagram: ['posts'], facebook: ['posts'], linkedin: ['posts'] };
 const GOOGLE_ACTIONS = ['calls', 'website', 'directions', 'messages'];
@@ -57,6 +65,12 @@ function index(rows) {
   }
   for (const list of by.values()) list.sort((a, b) => a.day.localeCompare(b.day));
   return by;
+}
+
+function seenMetrics(by, network) {
+  const options = SEEN[network] || [];
+  const has = m => (by.get(`${network}|${m}`) || []).some(p => p.value !== 0);
+  return options.find(group => group.some(has)) || options[0] || [];
 }
 
 function sumIn(by, network, metrics, range) {
@@ -120,8 +134,9 @@ function summarize(rows, { period = 'this_month', today }) {
 
   for (const network of SOCIAL) {
     if (!hasAnyData(by, network)) continue;
-    const reached = sumIn(by, network, REACHED[network], current);
-    const reachedPrev = sumIn(by, network, REACHED[network], previous);
+    const seenM = seenMetrics(by, network);
+    const reached = sumIn(by, network, seenM, current);
+    const reachedPrev = sumIn(by, network, seenM, previous);
     const inter = sumIn(by, network, INTERACTIONS[network], current);
     const interPrev = sumIn(by, network, INTERACTIONS[network], previous);
     const posts = POSTS[network] ? sumIn(by, network, POSTS[network], current).total : null;

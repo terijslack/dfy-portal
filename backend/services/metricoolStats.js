@@ -31,12 +31,15 @@ const METRICS = [
   { network: 'instagram', key: 'followers',    subject: 'account',  metric: 'followers',          agg: 'last' },
   { network: 'instagram', key: 'posts',        subject: 'account',  metric: 'postsCount',         agg: 'sum'  },
   { network: 'instagram', key: 'interactions', subject: 'account',  metric: 'postsInteractions',  agg: 'sum'  },
+  { network: 'instagram', key: 'views',        subject: 'account',  metric: 'views',              agg: 'sum'  },
+  { network: 'instagram', key: 'reach',        subject: 'account',  metric: 'reach',              agg: 'sum'  },
   { network: 'instagram', key: 'reach_posts',  subject: 'posts',    metric: 'reach',              agg: 'sum'  },
   { network: 'instagram', key: 'reach_reels',  subject: 'reels',    metric: 'reach',              agg: 'sum'  },
 
   { network: 'facebook',  key: 'followers',    subject: 'account',  metric: 'pageFollows',        agg: 'last' },
   { network: 'facebook',  key: 'posts',        subject: 'account',  metric: 'postsCount',         agg: 'sum'  },
   { network: 'facebook',  key: 'interactions', subject: 'account',  metric: 'postsInteractions',  agg: 'sum'  },
+  { network: 'facebook',  key: 'media_views',  subject: 'account',  metric: 'pageMediaView',      agg: 'sum'  },
   { network: 'facebook',  key: 'reach_posts',  subject: 'posts',    metric: 'impressionsunique',  agg: 'sum'  },
   { network: 'facebook',  key: 'page_views',   subject: 'account',  metric: 'pageViews',          agg: 'sum'  },
 

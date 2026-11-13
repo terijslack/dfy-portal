@@ -625,7 +625,8 @@ router.post('/clients/:id/metricool-sync', requireAdmin, async (req, res) => {
 router.post('/clients/:id/stats-sync', requireAdmin, async (req, res) => {
   try {
     const { syncStats } = require('../services/metricoolStats');
-    const result = await syncStats(req.params.id);
+    // The button always pulls the full ~7 months, so newly added metrics fill in history too
+    const result = await syncStats(req.params.id, { days: 200 });
     if (result.skipped) {
       return res.status(400).json({ error: 'Add their Metricool brand ID (Account tab) and the Metricool API keys in Railway first.' });
     }
