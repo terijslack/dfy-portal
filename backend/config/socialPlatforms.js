@@ -17,7 +17,12 @@ const SOCIAL_PLATFORMS = {
 
 const ALLOWED_PLATFORMS = Object.keys(SOCIAL_PLATFORMS);
 
+// Not a social platform: Google Business Profile access is set up alongside
+// the socials but never counts toward a plan's platform limit.
+const NOT_COUNTED = ['google'];
+const countsTowardLimit = id => !NOT_COUNTED.includes(id);
+
 // 'facebook' → 'Facebook'. Falls back to whatever was passed in.
 const platformName = id => SOCIAL_PLATFORMS[id] || id;
 
-module.exports = { SOCIAL_PLATFORMS, ALLOWED_PLATFORMS, platformName };
+module.exports = { SOCIAL_PLATFORMS, ALLOWED_PLATFORMS, platformName, countsTowardLimit };
