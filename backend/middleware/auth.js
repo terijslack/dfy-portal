@@ -21,8 +21,10 @@ async function requireLogin(req, res, next) {
     return res.status(401).json({ error: 'Session expired. Please log in again.' });
   }
 
-  // Admins always pass through — no status check needed
-  if (decoded.is_admin) {
+  // Admins always pass through — no status check needed. Same for an admin
+  // viewing DFY's own client account (admin_id is set by /api/auth/house-view):
+  // that account has no paid plan, so billing status shouldn't lock it.
+  if (decoded.is_admin || decoded.admin_id) {
     req.user = decoded;
     return next();
   }

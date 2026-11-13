@@ -208,6 +208,13 @@ async function runMigrations(pool) {
     )`,
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS stats_synced_at TIMESTAMPTZ`,
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS stats_error TEXT`,
+
+    // DFY's own client account, which the admin opens with "DFY's client view"
+    // (routes/auth.js /house-view). Starts as the teri@dfymarketinggroup.com account.
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS is_house_account BOOLEAN DEFAULT FALSE`,
+    `UPDATE clients SET is_house_account = TRUE
+      WHERE lower(email) = 'teri@dfymarketinggroup.com' AND NOT COALESCE(is_admin, FALSE)
+        AND NOT EXISTS (SELECT 1 FROM clients WHERE is_house_account = TRUE)`,
   ];
 
   for (const sql of steps) {

@@ -69,7 +69,65 @@ router.post('/login', async (req, res) => {
 // POST /api/auth/logout
 router.post('/logout', (req, res) => {
   res.clearCookie('token');
+  res.clearCookie('admin_token');
   res.json({ success: true });
+});
+
+// ── One login: admin ↔ DFY's own client account ───────────────────────────
+// The admin can open the client portal as DFY's own client account (the row
+// with is_house_account = TRUE) without a second login. The admin's own
+// session is parked in an admin_token cookie so "Back to admin" can restore it.
+const cookieOpts = maxAge => ({ httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge });
+const WEEK = 7 * 24 * 60 * 60 * 1000;
+
+function verify(token) {
+  try { return jwt.verify(token, process.env.JWT_SECRET); } catch { return null; }
+}
+
+// POST /api/auth/house-view — admin switches to DFY's client account
+router.post('/house-view', requireLogin, async (req, res) => {
+  if (!req.user.is_admin) return res.status(403).json({ error: 'Admin access only.' });
+  try {
+    const house = (await pool.query(
+      'SELECT id, name, email, business_name FROM clients WHERE is_house_account = TRUE AND NOT COALESCE(is_admin, FALSE) ORDER BY id LIMIT 1'
+    )).rows[0];
+    if (!house) return res.status(404).json({ error: "DFY's own client account isn't set up yet." });
+
+    const token = jwt.sign(
+      { id: house.id, email: house.email, name: house.name, is_admin: false, business_name: house.business_name || null, admin_id: req.user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    res.cookie('admin_token', req.cookies.token, cookieOpts(WEEK));
+    res.cookie('token', token, cookieOpts(WEEK));
+    res.json({ success: true, redirect: '/dashboard' });
+  } catch (err) {
+    console.error('House view error:', err);
+    res.status(500).json({ error: 'Could not switch. Try again.' });
+  }
+});
+
+// POST /api/auth/back-to-admin — return from DFY's client account to the admin
+router.post('/back-to-admin', async (req, res) => {
+  const admin = verify(req.cookies?.admin_token);
+  if (!admin || !admin.is_admin) {
+    res.clearCookie('admin_token');
+    return res.status(401).json({ error: 'Please log in again.', redirect: '/login' });
+  }
+  try {
+    // Still an admin? (in case access was removed since)
+    const row = (await pool.query('SELECT is_admin FROM clients WHERE id = $1', [admin.id])).rows[0];
+    if (!row || !row.is_admin) {
+      res.clearCookie('admin_token');
+      return res.status(403).json({ error: 'Admin access only.', redirect: '/login' });
+    }
+    res.cookie('token', req.cookies.admin_token, cookieOpts(WEEK));
+    res.clearCookie('admin_token');
+    res.json({ success: true, redirect: '/admin/dashboard' });
+  } catch (err) {
+    console.error('Back to admin error:', err);
+    res.status(500).json({ error: 'Could not switch back. Try again.' });
+  }
 });
 
 // GET /api/auth/me
@@ -81,7 +139,8 @@ router.get('/me', requireLogin, async (req, res) => {
     );
     const client = result.rows[0];
     if (!client) return res.status(401).json({ error: 'Account not found.' });
-    res.json({ user: client });
+    // viewing_as_admin: the admin is looking at DFY's own client account
+    res.json({ user: { ...client, viewing_as_admin: Boolean(req.user.admin_id) } });
   } catch (err) {
     console.error('Me error:', err);
     res.status(500).json({ error: 'Could not load user.' });
