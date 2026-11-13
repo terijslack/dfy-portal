@@ -193,6 +193,21 @@ async function runMigrations(pool) {
       page        TEXT,
       created_at  TIMESTAMPTZ DEFAULT NOW()
     )`,
+
+    // ── Analytics numbers from Metricool (services/metricoolStats.js) ──
+    // One row per client, network, metric and day. Pages read from here,
+    // never straight from Metricool.
+    `CREATE TABLE IF NOT EXISTS stats_daily (
+      client_id   INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+      network     TEXT NOT NULL,
+      metric      TEXT NOT NULL,
+      day         DATE NOT NULL,
+      value       NUMERIC NOT NULL DEFAULT 0,
+      updated_at  TIMESTAMPTZ DEFAULT NOW(),
+      PRIMARY KEY (client_id, network, metric, day)
+    )`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS stats_synced_at TIMESTAMPTZ`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS stats_error TEXT`,
   ];
 
   for (const sql of steps) {

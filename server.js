@@ -71,6 +71,7 @@ app.use('/api/onboarding', require('./backend/routes/onboarding')); // client in
 app.use('/api/contact', require('./backend/routes/contact'));       // public contact form
 app.use('/api/socials', require('./backend/routes/socials'));       // social account connections
 app.use('/api/brand-assets', require('./backend/routes/brandAssets')); // logo + content uploads
+app.use('/api/analytics', require('./backend/routes/analytics'));  // client Analytics page + dashboard numbers
 app.use('/api/messages', require('./backend/routes/messages'));    // messages from DFY on the client dashboard
 
 // ─── FRONTEND CATCH-ALL ───────────────────────────────────────
@@ -210,6 +211,8 @@ runMigrations(dbPool)
       console.log(`   Open: http://localhost:${PORT}`);
       // Pull clients' draft posts from Metricool into the portal on a timer
       require('./backend/services/metricoolSync').startMetricoolSync();
+      // Pull each client's daily numbers (followers, reach, Google clicks) for Analytics
+      require('./backend/services/metricoolStats').startStatsSync();
       // Email clients when something needs their approval (if they've left it on)
       require('./backend/services/clientNotify').startClientNotifications();
     });

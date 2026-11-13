@@ -620,6 +620,22 @@ router.post('/clients/:id/metricool-sync', requireAdmin, async (req, res) => {
   }
 });
 
+// POST /api/admin/clients/:id/stats-sync — pull this client's analytics numbers from Metricool now.
+// Returns what came back for each metric, so a missing platform is easy to spot.
+router.post('/clients/:id/stats-sync', requireAdmin, async (req, res) => {
+  try {
+    const { syncStats } = require('../services/metricoolStats');
+    const result = await syncStats(req.params.id);
+    if (result.skipped) {
+      return res.status(400).json({ error: 'Add their Metricool brand ID (Account tab) and the Metricool API keys in Railway first.' });
+    }
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('Admin stats sync error:', err.message);
+    res.status(502).json({ error: `Could not update numbers: ${err.message}` });
+  }
+});
+
 // POST /api/admin/test-email — send a test email to hello@ to check the Gmail setup
 router.post('/test-email', requireAdmin, async (req, res) => {
   const mailer = require('../services/mailer');
