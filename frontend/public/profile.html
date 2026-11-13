@@ -269,6 +269,9 @@
     .sc-platform-card:hover:not(:disabled) { box-shadow: 0 4px 12px rgba(0,0,0,0.09); }
     .sc-platform-card.sel  { background: #2D6B4F; border-color: #2D6B4F; box-shadow: 0 5px 16px rgba(45,107,79,0.22); }
     .sc-platform-card.done { background: rgba(45,107,79,0.06); border-color: #2D6B4F; }
+    .sc-platform-card.wide { grid-column: 1 / -1; }
+    .sc-card-extra { font-size: 11px; font-weight: 500; color: #6B7280; }
+    .sc-platform-card.sel .sc-card-extra { color: rgba(255,255,255,0.85); }
     .sc-platform-card:disabled, .sc-platform-card.over-limit { opacity: 0.4; }
     .sc-card-check { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .sc-platform-card.sel:not(.done) .sc-card-check { background: rgba(255,255,255,0.25); }
@@ -876,7 +879,29 @@
         note: "TikTok's admin access is more limited than other platforms, so we'll discuss what this covers during your kickoff call.",
         note2: null,
       },
+      {
+        // Not a social platform, so it doesn't count toward the plan's platform limit
+        id: 'google', name: 'Google Business Profile', separate: true,
+        icon: `<span style="font-family:Inter,sans-serif;font-size:22px;font-weight:300;line-height:22px;">G</span>`,
+        smallIcon: `<span style="font-family:Inter,sans-serif;font-size:15px;font-weight:300;line-height:16px;color:#2D6B4F;">G</span>`,
+        urlLabel: 'Your Google Maps link (on Google Maps, search your business, click Share, then Copy link)',
+        urlPlaceholder: 'https://maps.app.goo.gl/...',
+        steps: [
+          "On a computer, go to google.com and sign in with the Google account you use for your business listing.",
+          "Search for your business name. Your Business Profile appears with a management panel at the top of the results.",
+          "Click the three-dot menu (⋮) in that panel, then click Business Profile settings.",
+          "Click People and access (it may say Managers).",
+          "Click Add, then enter our email: frankie@dfymarketinggroup.com",
+          "Set the access level to Manager (not Owner), then click Invite.",
+        ],
+        note: "Frankie will get an email from Google and accept the invite, usually within one business day. You stay the owner. Manager access lets us post updates, reply to reviews, and see how many people call or visit your website from Google. You can remove us anytime from the same screen.",
+        note2: null,
+      },
     ];
+
+    // Platforms that count toward the plan's limit (everything except Google)
+    const scIsSeparate = id => !!(SC_PLATFORMS.find(x => x.id === id) || {}).separate;
+    const scCountedCount = () => scSelected.filter(id => !scIsSeparate(id)).length;
 
     /* ── Helpers ── */
     function escHtml(s) {
@@ -974,6 +999,17 @@
 
       await loadSavedSocials();
       updateCompletion();
+      openConnectFromLink();
+    }
+
+    /* ── /profile?connect=google opens that platform's steps (used by the GBP page) ── */
+    function openConnectFromLink() {
+      const id = new URLSearchParams(location.search).get('connect');
+      if (!id || !SC_PLATFORMS.some(x => x.id === id)) return;
+      if (!scSelected.includes(id)) scToggle(id);   // picks it and opens its steps
+      else { scOpenId = id; scRender(); }
+      const area = document.getElementById('scAccordionArea');
+      if (area) area.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /* ── Load saved social accounts + init checklist ── */
@@ -1034,13 +1070,14 @@
       const banner  = document.getElementById('scLimitBanner');
       if (!grid) return;
 
-      const atLimit = scSelected.length >= platformLimit;
+      const counted = scCountedCount();
+      const atLimit = counted >= platformLimit;
       const total   = SC_PLATFORMS.length;
       // If we've added extra platforms for them beyond what their plan includes,
       // "3 of 2" would just look like a mistake — show the plain count instead.
-      pill.textContent = scSelected.length > platformLimit
-        ? `${scSelected.length} platform${scSelected.length === 1 ? '' : 's'}`
-        : `${scSelected.length} of ${platformLimit}`;
+      pill.textContent = counted > platformLimit
+        ? `${counted} platform${counted === 1 ? '' : 's'}`
+        : `${counted} of ${platformLimit}`;
 
       /* Platform grid */
       grid.innerHTML = SC_PLATFORMS.map(p => {
@@ -1048,7 +1085,8 @@
         const isDone = !!scCompleted[p.id];
         const cls = [
           'sc-platform-card',
-          !isSel && atLimit ? 'over-limit' : '',
+          p.separate ? 'wide' : '',
+          !isSel && atLimit && !p.separate ? 'over-limit' : '',
           isSel && !isDone ? 'sel' : '',
           isDone ? 'done' : '',
         ].filter(Boolean).join(' ');
@@ -1059,6 +1097,7 @@
           ${checkSvg}
           <span style="color:${isSel && !isDone ? 'white' : 'var(--forest)'}">${p.icon}</span>
           <span class="sc-card-name">${p.name}</span>
+          ${p.separate && !isDone ? `<span class="sc-card-extra">Doesn't count toward your platforms</span>` : ''}
           ${isDone ? `<span class="sc-done-label">Connected</span>` : ''}
         </button>`;
       }).join('');
@@ -1110,7 +1149,7 @@
         </div>` : '';
 
       const urlHtml = `
-        <label class="sc-url-label">Your ${p.name} profile URL (paste it here once done)</label>
+        <label class="sc-url-label">${p.urlLabel || `Your ${p.name} profile URL (paste it here once done)`}</label>
         <div class="sc-url-wrap">
           <svg class="sc-url-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <input class="sc-url-input" id="sc-url-${id}" type="url" placeholder="${p.urlPlaceholder}"
@@ -1155,6 +1194,7 @@
         instagram: "Your Instagram account must be a Business or Creator account and must be linked to a Facebook Page. Personal Instagram accounts cannot be connected.",
         linkedin: "You must be a Super Admin of your LinkedIn Company Page to add other admins. If you're not sure, go to your Page and look for the Admin Tools menu.",
         tiktok: "Your TikTok account must be a Business Account (not a personal account). You can switch in the TikTok app under Settings → Account → Switch to Business Account.",
+        google: "You need to be an Owner of your Business Profile to add us. If someone else set it up (a past marketing company or web designer, for example), they may need to do these steps or make you an owner first. Not sure you have a profile? Search your business name on Google Maps. If nothing comes up, let us know and we'll set one up with you.",
       };
       const text = bysMap[p.id];
       if (!text) return '';
@@ -1185,7 +1225,7 @@
         fetch('/api/socials/' + id, { method: 'DELETE' }).catch(console.error);
         if (wasCompleted) updateCompletion();
       } else {
-        if (scSelected.length >= platformLimit) {
+        if (!scIsSeparate(id) && scCountedCount() >= platformLimit) {
           const name = (SC_PLATFORMS.find(x => x.id === id) || {}).name || 'another platform';
           const banner = document.getElementById('scLimitBanner');
           banner.textContent = `Your plan includes ${platformLimit} platforms. To add ${name}, tap one you've picked above to remove it first, or upgrade your plan on Your Account.`;

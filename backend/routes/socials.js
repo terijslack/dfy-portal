@@ -9,7 +9,7 @@ const router = express.Router();
 const { Pool } = require('pg');
 const { requireLogin } = require('../middleware/auth');
 const { encrypt } = require('../utils/encrypt');
-const { ALLOWED_PLATFORMS, platformName } = require('../config/socialPlatforms');
+const { ALLOWED_PLATFORMS, platformName, countsTowardLimit } = require('../config/socialPlatforms');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -62,7 +62,8 @@ router.put('/:platform/select', requireLogin, async (req, res) => {
       [req.user.id]
     );
     const platforms = existing.rows.map(r => r.platform);
-    if (!platforms.includes(platform) && platforms.length >= 4) {
+    const counted = platforms.filter(countsTowardLimit);
+    if (countsTowardLimit(platform) && !platforms.includes(platform) && counted.length >= 4) {
       return res.status(400).json({ error: 'You can connect up to 4 accounts. Remove one first.' });
     }
 
@@ -101,7 +102,8 @@ router.put('/:platform', requireLogin, async (req, res) => {
       [req.user.id]
     );
     const platforms = existing.rows.map(r => r.platform);
-    if (!platforms.includes(platform) && platforms.length >= 4) {
+    const counted = platforms.filter(countsTowardLimit);
+    if (countsTowardLimit(platform) && !platforms.includes(platform) && counted.length >= 4) {
       return res.status(400).json({ error: 'You can connect up to 4 accounts. Remove one first.' });
     }
 
