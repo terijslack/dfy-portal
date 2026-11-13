@@ -39,8 +39,10 @@ const METRICS = [
   { network: 'facebook',  key: 'followers',    subject: 'account',  metric: 'pageFollows',        agg: 'last' },
   { network: 'facebook',  key: 'posts',        subject: 'account',  metric: 'postsCount',         agg: 'sum'  },
   { network: 'facebook',  key: 'interactions', subject: 'account',  metric: 'postsInteractions',  agg: 'sum'  },
-  { network: 'facebook',  key: 'media_views',  subject: 'account',  metric: 'pageMediaView',      agg: 'sum'  },
+  // Meta retired Facebook page-level reach/impressions (June 2026) and Metricool's API has no
+  // page views replacement, so Facebook "times seen" = reach of posts + reach of reels.
   { network: 'facebook',  key: 'reach_posts',  subject: 'posts',    metric: 'impressionsunique',  agg: 'sum'  },
+  { network: 'facebook',  key: 'reach_reels',  subject: 'reels',    metric: 'post_impressions_unique', agg: 'sum' },
   { network: 'facebook',  key: 'page_views',   subject: 'account',  metric: 'pageViews',          agg: 'sum'  },
 
   { network: 'tiktok',    key: 'followers',    subject: 'account',  metric: 'followers_count',    agg: 'last' },
@@ -119,7 +121,7 @@ async function fetchTimeline({ blogId, def, from, to, timezone }) {
 function shortError(err) {
   const d = err.response?.data;
   const msg = (d && (d.message || d.error || d.detail)) || err.message || 'error';
-  return `${err.response?.status ? err.response.status + ' ' : ''}${String(typeof msg === 'string' ? msg : JSON.stringify(msg)).slice(0, 160)}`;
+  return `${err.response?.status ? err.response.status + ' ' : ''}${String(typeof msg === 'string' ? msg : JSON.stringify(msg)).slice(0, 600)}`;
 }
 
 // ─── Sync one client ────────────────────────────────────────────────────────
