@@ -89,6 +89,16 @@ describe('summarize', () => {
     expect(s.totals).toMatchObject({ seen: 250, seenChange: 67, newFollowers: 7, followers: 187 });
   });
 
+  test('Google compares the same number of days when its numbers run behind', () => {
+    const s = summarize([
+      row('google', 'directions', '2026-10-03', 4),   // inside Oct 1–8: counts
+      row('google', 'directions', '2026-10-11', 20),  // after Oct 8: left out
+      row('google', 'directions', '2026-11-05', 2),
+      row('google', 'views', '2026-11-08', 10),       // Google's latest day
+    ], { period: 'this_month', today });
+    expect(s.google).toMatchObject({ actions: 2, actionsChange: -50, dataThrough: '2026-11-08' });
+  });
+
   test('platforms with no numbers at all are left out', () => {
     const s = summarize([row('facebook', 'followers', '2026-11-02', 0)], { period: 'this_month', today });
     expect(s.platforms).toEqual([]);

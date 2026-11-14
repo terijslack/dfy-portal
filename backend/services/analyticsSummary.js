@@ -158,12 +158,23 @@ function summarize(rows, { period = 'this_month', today }) {
   }
 
   let google = null;
+  let gPrev = previous;
   if (hasAnyData(by, 'google')) {
-    const views = sumIn(by, 'google', ['views'], current);
-    const viewsPrev = sumIn(by, 'google', ['views'], previous);
-    const actions = sumIn(by, 'google', GOOGLE_ACTIONS, current);
-    const actionsPrev = sumIn(by, 'google', GOOGLE_ACTIONS, previous);
-    const one = m => Math.round(sumIn(by, 'google', [m], current).total);
+    // Google's numbers arrive about a week late. Compare the same number of
+    // days in both periods (e.g. Nov 1–8 vs Oct 1–8), not 8 days against 13.
+    const through = lastDayWithData(by, 'google');
+    let gCur = current;
+    if (through && through >= current.start && through < current.end) {
+      gCur = { start: current.start, end: through };
+      const days = Math.round((Date.parse(through) - Date.parse(current.start)) / 86400000);
+      const end = addDays(previous.start, days);
+      gPrev = { start: previous.start, end: end < previous.end ? end : previous.end };
+    }
+    const views = sumIn(by, 'google', ['views'], gCur);
+    const viewsPrev = sumIn(by, 'google', ['views'], gPrev);
+    const actions = sumIn(by, 'google', GOOGLE_ACTIONS, gCur);
+    const actionsPrev = sumIn(by, 'google', GOOGLE_ACTIONS, gPrev);
+    const one = m => Math.round(sumIn(by, 'google', [m], gCur).total);
     google = {
       views: Math.round(views.total), viewsChange: pctChange(views.total, viewsPrev.total, viewsPrev.any),
       actions: Math.round(actions.total), actionsChange: pctChange(actions.total, actionsPrev.total, actionsPrev.any),
@@ -175,7 +186,7 @@ function summarize(rows, { period = 'this_month', today }) {
   // "Times people saw your business" = social reach + Google profile views
   const seen = totals.reached + (google ? google.views : 0);
   const seenPrevAny = totals.prevReached || Boolean(google && google.viewsChange != null);
-  const seenPrev = totals.reachedPrev + (google ? sumIn(by, 'google', ['views'], previous).total : 0);
+  const seenPrev = totals.reachedPrev + (google ? sumIn(by, 'google', ['views'], gPrev).total : 0);
 
   return {
     period: ranges.period,
