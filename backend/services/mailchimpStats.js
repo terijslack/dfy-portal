@@ -140,6 +140,24 @@ async function matchNewsletters(clientId) {
       WHERE ec.client_id = $1 AND ec.campaign_id = m.campaign_id`,
     [clientId, MIN_REAL_SEND]
   );
+  // Then by name: the Mailchimp campaign name contains the portal newsletter's
+  // name (e.g. "Lu'Ro November Newsletter 2026" ↔ "November Newsletter"),
+  // closest to its send date
+  await pool.query(
+    `UPDATE email_campaigns ec SET newsletter_id = m.newsletter_id
+       FROM (
+         SELECT DISTINCT ON (n.id) n.id AS newsletter_id, ec2.campaign_id
+           FROM newsletters n JOIN email_campaigns ec2 ON ec2.client_id = n.client_id
+          WHERE n.client_id = $1 AND ec2.emails_sent >= $2 AND ec2.newsletter_id IS NULL
+            AND length(trim(n.title)) >= 4
+            AND position(lower(trim(n.title)) in lower(coalesce(ec2.title, ''))) > 0
+            AND NOT EXISTS (SELECT 1 FROM email_campaigns x WHERE x.client_id = $1 AND x.newsletter_id = n.id)
+          ORDER BY n.id, abs(extract(epoch FROM (ec2.sent_at - COALESCE(n.send_date::timestamptz, ec2.sent_at)))), ec2.emails_sent DESC
+       ) m
+      WHERE ec.client_id = $1 AND ec.campaign_id = m.campaign_id AND ec.newsletter_id IS NULL`,
+    [clientId, MIN_REAL_SEND]
+  );
+  // Last resort: the biggest real send within 3 days of its send date
   await pool.query(
     `UPDATE email_campaigns ec SET newsletter_id = m.newsletter_id
        FROM (
@@ -154,11 +172,12 @@ async function matchNewsletters(clientId) {
       WHERE ec.client_id = $1 AND ec.campaign_id = m.campaign_id AND ec.newsletter_id IS NULL`,
     [clientId, MIN_REAL_SEND, DEFAULT_TIMEZONE]
   );
-  // It went out in Mailchimp, so it's sent
+  // It went out in Mailchimp, so it's sent — at the time Mailchimp says
   await pool.query(
-    `UPDATE newsletters n SET status = 'sent', sent_at = COALESCE(n.sent_at, ec.sent_at), updated_at = NOW()
+    `UPDATE newsletters n SET status = 'sent', sent_at = ec.sent_at, updated_at = NOW()
        FROM email_campaigns ec
-      WHERE ec.client_id = $1 AND ec.newsletter_id = n.id AND n.status = 'approved'`,
+      WHERE ec.client_id = $1 AND ec.newsletter_id = n.id AND n.status IN ('approved', 'sent')
+        AND (n.status = 'approved' OR n.sent_at IS DISTINCT FROM ec.sent_at)`,
     [clientId]
   );
 }
@@ -203,7 +222,11 @@ async function runSync(clientId) {
     }
     await matchNewsletters(clientId);
     await pool.query(`UPDATE clients SET newsletter_synced_at = NOW(), newsletter_error = NULL, mailchimp_list_name = $2 WHERE id = $1`, [clientId, list.name || null]);
-    return { audience: list.name, subscribers, sends: sends.length };
+    const matched = (await pool.query(
+      `SELECT ec.title, ec.subject, ec.sent_at, ec.emails_sent, n.title AS newsletter
+         FROM email_campaigns ec LEFT JOIN newsletters n ON n.id = ec.newsletter_id
+        WHERE ec.client_id = $1 ORDER BY ec.sent_at DESC NULLS LAST LIMIT 20`, [clientId])).rows;
+    return { audience: list.name, subscribers, sends: sends.length, campaigns: matched };
   } catch (err) {
     const error = mcError(err);
     await pool.query(`UPDATE clients SET newsletter_synced_at = NOW(), newsletter_error = $2 WHERE id = $1`, [clientId, error]);
