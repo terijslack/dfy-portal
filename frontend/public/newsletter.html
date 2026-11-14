@@ -247,7 +247,9 @@
                 : `<button class="btn-changes" onclick="openChanges(${n.id})">${editSvg} Request Changes</button>`}
             </div>` : ''}
           ${n.status === 'approved' ? `<div class="approved-note">${doneSvg} You approved this${n.send_date ? ` — it goes out ${fmtDate(n.send_date)}` : ''}</div>` : ''}
-          ${n.status === 'sent' ? `<div class="approved-note">${doneSvg} Sent${n.sent_at ? ` ${fmtDate(n.sent_at)}` : ''}</div>` : ''}
+          ${n.status === 'sent' ? `<div class="approved-note">${doneSvg} Sent${n.sent_at ? ` ${fmtDate(n.sent_at)}` : ''}${n.results
+            ? ` · went to ${n.results.sentTo.toLocaleString('en-US')} people · ${n.results.opened}% opened · ${n.results.clicked}% clicked a link`
+            : ''}</div>` : ''}
         </div>`;
     }
 

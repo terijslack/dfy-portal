@@ -211,6 +211,30 @@ async function runMigrations(pool) {
 
     // DFY's own client account, which the admin opens with "DFY's client view"
     // (routes/auth.js /house-view). Starts as the teri@dfymarketinggroup.com account.
+    // Newsletter results from the client's own Mailchimp account (services/mailchimpStats.js).
+    // The API key is stored encrypted (utils/encrypt.js).
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS mailchimp_api_key TEXT`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS mailchimp_list_id TEXT`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS mailchimp_list_name TEXT`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS newsletter_synced_at TIMESTAMPTZ`,
+    `ALTER TABLE clients ADD COLUMN IF NOT EXISTS newsletter_error TEXT`,
+    `CREATE TABLE IF NOT EXISTS email_campaigns (
+      client_id      INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+      campaign_id    TEXT NOT NULL,
+      newsletter_id  INTEGER REFERENCES newsletters(id) ON DELETE SET NULL,
+      title          TEXT,
+      subject        TEXT,
+      sent_at        TIMESTAMPTZ,
+      emails_sent    INTEGER DEFAULT 0,
+      unique_opens   INTEGER DEFAULT 0,
+      open_rate      NUMERIC DEFAULT 0,
+      clicks         INTEGER DEFAULT 0,
+      click_rate     NUMERIC DEFAULT 0,
+      unsubscribed   INTEGER DEFAULT 0,
+      updated_at     TIMESTAMPTZ DEFAULT NOW(),
+      PRIMARY KEY (client_id, campaign_id)
+    )`,
+
     `ALTER TABLE clients ADD COLUMN IF NOT EXISTS is_house_account BOOLEAN DEFAULT FALSE`,
     `UPDATE clients SET is_house_account = TRUE
       WHERE lower(email) = 'teri@dfymarketinggroup.com' AND NOT COALESCE(is_admin, FALSE)

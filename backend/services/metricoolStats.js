@@ -194,11 +194,16 @@ async function syncAllStats() {
 
 // Checks hourly; each client is only pulled once a day
 function startStatsSync() {
-  if (!isConfigured()) return null;
-  setTimeout(() => syncAllStats().catch(() => {}), 2 * 60 * 1000);
-  const t = setInterval(() => syncAllStats().catch(() => {}), 60 * 60 * 1000);
+  // Newsletter results (Mailchimp) ride along on the same hourly check
+  const { syncAllNewsletters } = require('./mailchimpStats');
+  const runAll = () => {
+    syncAllStats().catch(err => console.error('Stats sync error:', err.message));
+    syncAllNewsletters().catch(err => console.error('Newsletter results sync error:', err.message));
+  };
+  setTimeout(runAll, 2 * 60 * 1000);
+  const t = setInterval(runAll, 60 * 60 * 1000);
   t.unref?.();
-  console.log('✅ Analytics numbers sync on (daily per client)');
+  console.log('✅ Analytics numbers sync on (daily per client, social + newsletter)');
   return t;
 }
 

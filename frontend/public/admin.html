@@ -152,6 +152,7 @@
 
       <!-- NEWSLETTER TAB -->
       <div id="pane-newsletter" class="acct-pane hidden">
+        <div id="mcBox" class="mc-sync-bar" style="flex-wrap:wrap;margin-bottom:14px;"></div>
         <div class="nl-admin-bar">
           <button class="btn-primary" type="button" id="nlNewBtn" onclick="toggleNewsletterForm(true)">+ New newsletter</button>
         </div>
@@ -358,6 +359,7 @@
         if (!res.ok) throw new Error(data.error || 'Could not load account.');
         currentDetail = data;
         renderAccount(data);
+        renderMailchimpBox();
       } catch (err) {
         document.getElementById('clientPostsHeader').innerHTML = `<div class="error">${escapeHtml(err.message)}</div>`;
       }
@@ -1036,7 +1038,80 @@
     const NL_STATUS = { pending: 'Waiting on client', changes_requested: 'Changes requested', approved: 'Approved — ready to send', sent: 'Sent' };
     let nlReviseId = null;
 
+    // Mailchimp results box (newsletter opens and clicks for their Analytics and Newsletter pages)
+    function renderMailchimpBox() {
+      const box = document.getElementById('mcBox');
+      const c = (currentDetail && currentDetail.client) || {};
+      if (c.mailchimp_connected) {
+        const when = c.newsletter_synced_at ? new Date(c.newsletter_synced_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'not yet';
+        box.innerHTML = `
+          <div style="flex:1;min-width:240px;">
+            <strong>Newsletter results from Mailchimp</strong>
+            <span>Connected to the "${escapeHtml(c.mailchimp_list_name || 'their')}" audience. Opens and clicks show on their Analytics and Newsletter pages and update daily. Last updated ${escapeHtml(when)}.</span>
+            ${c.newsletter_error ? `<span class="mc-sync-err" style="display:block;margin-top:4px;">Last update failed: ${escapeHtml(c.newsletter_error)}</span>` : ''}
+            <span id="mcBoxMsg" class="mc-sync-msg" style="display:block;"></span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-secondary" type="button" id="mcSyncNowBtn" onclick="mailchimpSyncNow()">Update results</button>
+            <button class="btn-danger-link" type="button" onclick="mailchimpDisconnect()">Disconnect</button>
+          </div>`;
+      } else {
+        box.innerHTML = `
+          <div style="flex:1;min-width:240px;">
+            <strong>Newsletter results from Mailchimp</strong>
+            <span>Paste the API key from their Mailchimp account (Profile → Extras → API keys → Create A Key) to show newsletter opens and clicks in their portal. It's checked with Mailchimp and stored encrypted.</span>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+              <input type="password" id="mcKeyInput" autocomplete="off" placeholder="Mailchimp API key (ends in -us…)" style="flex:1;min-width:220px;" />
+              <button class="btn-primary" type="button" id="mcConnectBtn" onclick="mailchimpConnect()">Connect</button>
+            </div>
+            <span id="mcBoxMsg" class="mc-sync-msg" style="display:block;"></span>
+          </div>`;
+      }
+    }
+    async function mailchimpConnect() {
+      const input = document.getElementById('mcKeyInput');
+      const msg = document.getElementById('mcBoxMsg');
+      const btn = document.getElementById('mcConnectBtn');
+      if (!input.value.trim()) { msg.textContent = 'Paste their Mailchimp API key first.'; msg.className = 'mc-sync-msg mc-sync-err'; return; }
+      btn.disabled = true; btn.textContent = 'Checking…'; msg.textContent = '';
+      try {
+        const d = await postJSON(`/api/admin/clients/${selectedClientId}/mailchimp`, 'PUT', { apiKey: input.value.trim() });
+        input.value = '';
+        await loadClientDetail(selectedClientId);
+        showTab('newsletter');
+        const m = document.getElementById('mcBoxMsg');
+        if (m) m.textContent = `Connected: ${d.subscribers} subscribers, ${d.sends} sends found.${d.error ? ' ' + d.error : ''}`;
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'mc-sync-msg mc-sync-err';
+        btn.disabled = false; btn.textContent = 'Connect';
+      }
+    }
+    async function mailchimpSyncNow() {
+      const btn = document.getElementById('mcSyncNowBtn');
+      const msg = document.getElementById('mcBoxMsg');
+      btn.disabled = true; btn.textContent = 'Updating…';
+      try {
+        const d = await postJSON(`/api/admin/clients/${selectedClientId}/newsletter-sync`, 'POST');
+        await loadClientDetail(selectedClientId);
+        showTab('newsletter');
+        const m = document.getElementById('mcBoxMsg');
+        if (m) m.textContent = `Updated: ${d.subscribers} subscribers, ${d.sends} sends.`;
+      } catch (err) {
+        msg.textContent = err.message; msg.className = 'mc-sync-msg mc-sync-err';
+        btn.disabled = false; btn.textContent = 'Update results';
+      }
+    }
+    async function mailchimpDisconnect() {
+      if (!confirm('Disconnect their Mailchimp account? Results already saved stay in their portal, but nothing new comes in.')) return;
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/mailchimp`, 'DELETE');
+        await loadClientDetail(selectedClientId);
+        showTab('newsletter');
+      } catch (err) { alert(err.message); }
+    }
+
     async function loadNewsletters(clientId) {
+      renderMailchimpBox();
       const list = document.getElementById('nlList');
       list.innerHTML = '<div class="loading">Loading newsletters…</div>';
       try {

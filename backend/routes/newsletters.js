@@ -61,8 +61,23 @@ async function listFor(clientId) {
      GROUP BY n.id
      ORDER BY n.send_date DESC NULLS FIRST, n.created_at DESC`, [clientId]
   )).rows;
+  // How each sent newsletter did, from Mailchimp (services/mailchimpStats.js)
+  const results = {};
+  try {
+    const r = await pool.query(
+      `SELECT newsletter_id, emails_sent, open_rate, click_rate FROM email_campaigns
+        WHERE client_id = $1 AND newsletter_id IS NOT NULL`, [clientId]);
+    r.rows.forEach(x => {
+      results[x.newsletter_id] = {
+        sentTo: Number(x.emails_sent) || 0,
+        opened: Math.round((Number(x.open_rate) || 0) * 100),
+        clicked: Math.round((Number(x.click_rate) || 0) * 1000) / 10,
+      };
+    });
+  } catch { /* table not there yet */ }
   return rows.map(n => ({
     ...n,
+    results: results[n.id] || null,
     files: n.files.map(f => ({ ...f, url: `/api/newsletters/files/${f.id}`, type: f.mimetype === 'application/pdf' ? 'pdf' : 'image' })),
   }));
 }
