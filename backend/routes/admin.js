@@ -387,6 +387,30 @@ router.post('/clients/:id/messages', requireAdmin, async (req, res) => {
   }
 });
 
+// POST /api/admin/clients/:id/email — { subject, body } emails the client from
+// Frankie (services/clientEmail.js) and adds it to their timeline.
+router.post('/clients/:id/email', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const subject = typeof req.body?.subject === 'string' ? req.body.subject.trim() : '';
+  const body = typeof req.body?.body === 'string' ? req.body.body.trim() : '';
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  if (!subject) return res.status(400).json({ error: 'Add a subject line.' });
+  if (subject.length > 150) return res.status(400).json({ error: 'Keep the subject under 150 characters.' });
+  if (!body) return res.status(400).json({ error: 'Write the email first.' });
+  if (body.length > 5000) return res.status(400).json({ error: 'Keep it under 5,000 characters.' });
+  try {
+    const client = (await pool.query('SELECT email FROM clients WHERE id = $1 AND is_admin = false', [id])).rows[0];
+    if (!client || !client.email) return res.status(404).json({ error: 'Account not found.' });
+    const { sendClientEmail } = require('../services/clientEmail');
+    await sendClientEmail({ to: client.email, subject, body });
+    await logForClient(id, 'dfy', `DFY emailed them (${client.email}): “${subject}”`);
+    res.json({ success: true, to: client.email });
+  } catch (err) {
+    console.error('Admin email client error:', err.message);
+    res.status(502).json({ error: `Email not sent: ${err.message}` });
+  }
+});
+
 // DELETE /api/admin/clients/:id/messages/:mid — take back a message they haven't answered yet
 router.delete('/clients/:id/messages/:mid', requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id, 10);

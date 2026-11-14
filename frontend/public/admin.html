@@ -721,6 +721,13 @@
           }).join('')}</ul>` : ''}
         </div>
         <div class="cd-section">
+          <h3>Email them</h3>
+          <p class="cd-desc">Sent from Frankie to ${escapeHtml((data.client && data.client.email) || 'their login email')}, so replies go to her inbox. Save this for things that matter. Blank lines start a new paragraph, and a line like [Open the steps](https://…) becomes a button.</p>
+          <div class="cd-field full"><input id="emSubject" type="text" maxlength="150" placeholder="Subject: make it clear what it's about" /></div>
+          <div class="cd-field full"><textarea id="emBody" rows="6" placeholder="Hi there,&#10;&#10;…&#10;&#10;Thanks,&#10;Frankie"></textarea></div>
+          <div class="row-actions"><span class="msg" id="emMsg"></span><button class="btn-primary btn-sm" onclick="emailClient()">Send email</button></div>
+        </div>
+        <div class="cd-section">
           <h3>Add an internal note</h3>
           <div class="cd-field full"><textarea id="noteText" rows="2" placeholder="A call, a meeting, what they asked for… (the client won't see this)"></textarea></div>
           <div class="row-actions"><span class="msg" id="nMsg"></span><button class="btn-primary btn-sm" onclick="addNote()">Add note</button></div>
@@ -759,6 +766,19 @@
       if (!text) { m.textContent = 'Write a message first.'; m.className = 'msg error'; return; }
       try {
         await postJSON(`/api/admin/clients/${selectedClientId}/messages`, 'POST', { body: text, ask: document.getElementById('msgAsk').checked });
+        await loadClientDetail(selectedClientId);
+        showTab('activity');
+      } catch (err) { m.textContent = err.message; m.className = 'msg error'; }
+    }
+    async function emailClient() {
+      const subject = document.getElementById('emSubject').value.trim();
+      const body = document.getElementById('emBody').value.trim();
+      const m = document.getElementById('emMsg');
+      if (!subject || !body) { m.textContent = 'Add a subject and a message first.'; m.className = 'msg error'; return; }
+      const to = (currentDetail && currentDetail.client && currentDetail.client.email) || 'this client';
+      if (!confirm(`Send this email from Frankie to ${to}?\n\nSubject: ${subject}`)) return;
+      try {
+        await postJSON(`/api/admin/clients/${selectedClientId}/email`, 'POST', { subject, body });
         await loadClientDetail(selectedClientId);
         showTab('activity');
       } catch (err) { m.textContent = err.message; m.className = 'msg error'; }
