@@ -10,6 +10,7 @@ const { requireLogin } = require('../middleware/auth');
 const { pool } = require('../services/crm');
 const { summarize, periodRanges, addDays } = require('../services/analyticsSummary');
 const { DEFAULT_TIMEZONE } = require('../services/metricool');
+const { MIN_REAL_SEND } = require('../services/mailchimpStats'); // smaller sends are tests
 
 const PERIODS = ['this_month', 'last_month', '90d'];
 
@@ -36,8 +37,8 @@ router.get('/', requireLogin, async (req, res) => {
       pool.query(
         `SELECT ec.subject, ec.title, ec.sent_at, ec.emails_sent, ec.open_rate, ec.click_rate, ec.unsubscribed, n.title AS newsletter_title
            FROM email_campaigns ec LEFT JOIN newsletters n ON n.id = ec.newsletter_id
-          WHERE ec.client_id = $1 AND ec.sent_at IS NOT NULL ORDER BY ec.sent_at DESC LIMIT 60`,
-        [req.user.id]
+          WHERE ec.client_id = $1 AND ec.sent_at IS NOT NULL AND ec.emails_sent >= $2 ORDER BY ec.sent_at DESC LIMIT 60`,
+        [req.user.id, MIN_REAL_SEND]
       ).catch(() => ({ rows: [] })),
     ]);
 
