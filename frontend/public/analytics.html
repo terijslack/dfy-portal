@@ -291,6 +291,29 @@
         </div>`;
       }
 
+      if (d.newsletter) {
+        const n = d.newsletter;
+        const list = n.sends.length ? n.sends : n.recent;
+        const rowsHtml = list.map(s => `<tr>
+            <td><div style="font-weight:500;">${esc(s.subject)}</div><div class="an-sub">${new Date(s.sentAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}${s.name ? ' · ' + esc(s.name) : ''}</div></td>
+            <td>${fmt(s.sentTo)}</td><td>${s.opened}%</td><td>${s.clicked}%</td></tr>`).join('');
+        const subChange = n.subscribersChange ? ` <span class="an-gain ${n.subscribersChange < 0 ? 'down' : ''}">${n.subscribersChange > 0 ? '+' : '−'}${fmt(Math.abs(n.subscribersChange))}</span>` : '';
+        html += `<div class="an-card">
+          <div class="an-card-head">
+            <div class="an-card-title">Newsletter</div>
+            <div class="an-card-note">${n.subscribers != null ? `${fmt(n.subscribers)} subscribers${subChange}` : ''}</div>
+          </div>
+          ${list.length ? `
+            ${n.sends.length ? '' : `<div class="an-sub" style="margin-bottom:6px;">No newsletter went out ${esc(words.now.replace(/^in /, 'in '))}. Your most recent:</div>`}
+            <table class="an-table">
+              <thead><tr><th>Sent</th><th>Went to</th><th>Opened</th><th>Clicked a link</th></tr></thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+            <div class="an-sub" style="margin-top:8px;">Opens leave out automatic opens by Apple Mail, so the numbers aren't inflated.</div>`
+            : '<div class="an-sub">Results show here after your first newsletter goes out.</div>'}
+        </div>`;
+      }
+
       body.innerHTML = html;
     }
 

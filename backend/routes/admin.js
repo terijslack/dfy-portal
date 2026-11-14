@@ -184,7 +184,9 @@ router.get('/clients/:id', requireAdmin, synced, async (req, res) => {
       pool.query(
         `SELECT id, name, email, business_name, created_at, plan, status, subscription_status,
                 billing_date, subscription_start_date, stripe_customer_id, admin_notes, priority,
-                metricool_blog_id, metricool_not_needed, notify_approvals, notify_reminders
+                metricool_blog_id, metricool_not_needed, notify_approvals, notify_reminders,
+                (mailchimp_api_key IS NOT NULL) AS mailchimp_connected, mailchimp_list_name,
+                newsletter_synced_at, newsletter_error
          FROM clients WHERE id = $1 AND is_admin = false`,
         [id]
       ),
@@ -384,6 +386,53 @@ router.post('/clients/:id/messages', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin send message error:', err);
     res.status(500).json({ error: 'Could not send message.' });
+  }
+});
+
+// ── Newsletter results (Mailchimp) ──────────────────────────────────────────
+// PUT /api/admin/clients/:id/mailchimp — { apiKey } connects their Mailchimp
+// account (key checked with Mailchimp, then stored encrypted) and pulls results.
+router.put('/clients/:id/mailchimp', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const key = typeof req.body?.apiKey === 'string' ? req.body.apiKey.trim() : '';
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  if (!key || key.length > 200) return res.status(400).json({ error: 'Paste their Mailchimp API key.' });
+  try {
+    const exists = await pool.query('SELECT 1 FROM clients WHERE id = $1 AND is_admin = false', [id]);
+    if (!exists.rows.length) return res.status(404).json({ error: 'Account not found.' });
+    const mc = require('../services/mailchimpStats');
+    const info = await mc.connect(id, key);
+    const result = await mc.syncNewsletter(id);
+    await logForClient(id, 'system', `Mailchimp connected for newsletter results (audience: ${info.audience})`);
+    res.json({ success: true, ...info, sends: result.sends ?? 0, error: result.error || null });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE /api/admin/clients/:id/mailchimp — forget their key (results already saved stay)
+router.delete('/clients/:id/mailchimp', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  try {
+    await require('../services/mailchimpStats').disconnect(id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not disconnect.' });
+  }
+});
+
+// POST /api/admin/clients/:id/newsletter-sync — pull their newsletter results now
+router.post('/clients/:id/newsletter-sync', requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (!id) return res.status(400).json({ error: 'Invalid client id.' });
+  try {
+    const result = await require('../services/mailchimpStats').syncNewsletter(id);
+    if (result.skipped) return res.status(400).json({ error: 'Connect their Mailchimp account first.' });
+    if (result.error) return res.status(502).json({ error: result.error });
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ error: `Could not update results: ${err.message}` });
   }
 });
 
