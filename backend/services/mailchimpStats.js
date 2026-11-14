@@ -118,25 +118,48 @@ function fromReport(r) {
   };
 }
 
+// Sends to fewer people than this are tests (e.g. sent to ourselves) and are
+// never matched to a newsletter or shown to the client.
+const MIN_REAL_SEND = 10;
+
 // Link each Mailchimp send to the portal newsletter it was: same subject line
-// first, otherwise sent within 3 days of the newsletter's send date.
+// first, otherwise the biggest real send within 3 days of the newsletter's
+// send date. Worked out fresh every time, so a test send can't hold the spot.
+// A matched newsletter that was approved but never marked sent is marked sent.
 async function matchNewsletters(clientId) {
+  await pool.query('UPDATE email_campaigns SET newsletter_id = NULL WHERE client_id = $1', [clientId]);
   await pool.query(
-    `UPDATE email_campaigns ec SET newsletter_id = n.id
-       FROM newsletters n
-      WHERE ec.client_id = $1 AND ec.newsletter_id IS NULL AND n.client_id = $1
-        AND n.subject IS NOT NULL AND lower(trim(n.subject)) = lower(trim(ec.subject))
-        AND NOT EXISTS (SELECT 1 FROM email_campaigns x WHERE x.newsletter_id = n.id)`,
-    [clientId]
+    `UPDATE email_campaigns ec SET newsletter_id = m.newsletter_id
+       FROM (
+         SELECT DISTINCT ON (n.id) n.id AS newsletter_id, ec2.campaign_id
+           FROM newsletters n JOIN email_campaigns ec2 ON ec2.client_id = n.client_id
+          WHERE n.client_id = $1 AND ec2.emails_sent >= $2
+            AND n.subject IS NOT NULL AND lower(trim(n.subject)) = lower(trim(ec2.subject))
+          ORDER BY n.id, ec2.emails_sent DESC
+       ) m
+      WHERE ec.client_id = $1 AND ec.campaign_id = m.campaign_id`,
+    [clientId, MIN_REAL_SEND]
   );
   await pool.query(
-    `UPDATE email_campaigns ec SET newsletter_id = n.id
-       FROM newsletters n
-      WHERE ec.client_id = $1 AND ec.newsletter_id IS NULL AND n.client_id = $1
-        AND n.status IN ('approved', 'sent') AND n.send_date IS NOT NULL AND ec.sent_at IS NOT NULL
-        AND abs((ec.sent_at AT TIME ZONE $2)::date - n.send_date) <= 3
-        AND NOT EXISTS (SELECT 1 FROM email_campaigns x WHERE x.newsletter_id = n.id)`,
-    [clientId, DEFAULT_TIMEZONE]
+    `UPDATE email_campaigns ec SET newsletter_id = m.newsletter_id
+       FROM (
+         SELECT DISTINCT ON (n.id) n.id AS newsletter_id, ec2.campaign_id
+           FROM newsletters n JOIN email_campaigns ec2 ON ec2.client_id = n.client_id
+          WHERE n.client_id = $1 AND ec2.emails_sent >= $2 AND ec2.newsletter_id IS NULL
+            AND n.status IN ('approved', 'sent') AND n.send_date IS NOT NULL AND ec2.sent_at IS NOT NULL
+            AND abs((ec2.sent_at AT TIME ZONE $3)::date - n.send_date) <= 3
+            AND NOT EXISTS (SELECT 1 FROM email_campaigns x WHERE x.client_id = $1 AND x.newsletter_id = n.id)
+          ORDER BY n.id, ec2.emails_sent DESC
+       ) m
+      WHERE ec.client_id = $1 AND ec.campaign_id = m.campaign_id AND ec.newsletter_id IS NULL`,
+    [clientId, MIN_REAL_SEND, DEFAULT_TIMEZONE]
+  );
+  // It went out in Mailchimp, so it's sent
+  await pool.query(
+    `UPDATE newsletters n SET status = 'sent', sent_at = COALESCE(n.sent_at, ec.sent_at), updated_at = NOW()
+       FROM email_campaigns ec
+      WHERE ec.client_id = $1 AND ec.newsletter_id = n.id AND n.status = 'approved'`,
+    [clientId]
   );
 }
 
@@ -210,4 +233,4 @@ async function syncAllNewsletters() {
   }
 }
 
-module.exports = { dataCenter, fromReport, connect, disconnect, syncNewsletter, syncAllNewsletters, ensureTables };
+module.exports = { MIN_REAL_SEND, dataCenter, fromReport, connect, disconnect, syncNewsletter, syncAllNewsletters, ensureTables };
